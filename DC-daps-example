@@ -1,16 +1,16 @@
 ##
 ## Doc config file for the DAPS example document 
-## defined by MAIN-cap-deployment.xml
+## defined by MAIN-daps-example.xml
 ##
 ## See /etc/daps/config for documentation of the settings below
 ##
-## These values are settings for the document defined by MAIN-cap-deployment.xml
+## These values are settings for the document defined by MAIN-daps-example.xml
 ## only. Please do not add additional settings here - if you need to
 ## customize other settings from /etc/daps/config, do so in
 ## ~/.config/daps/dapsrc
 
 ## Mandatory Parameter
-MAIN="MAIN-cap-deployment.xml"
+MAIN="MAIN-daps-example.xml"
 
 ##--------------------
 ## Optional Parameters
