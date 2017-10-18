@@ -7,7 +7,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<book version="5.1" xml:lang="en" xml:id="book.caasp.deployment"
+<book version="5.1" xml:lang="en" xml:id="book.cap.deployment"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -19,23 +19,16 @@
   <xi:include href="authors.xml"/>
   <abstract>
    <para>
-    <remark>FIXME</remark>
+    <remark>FIXMEeeee hey wut, hello?</remark>
    </para>
   </abstract>
   <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
    <dm:translation>no</dm:translation>
   </dm:docmanager>
  </info>
-<!--
- <xi:include href="deployment_intro.xml"/>
- <xi:include href="deployment_about.xml"/>
- <xi:include href="deployment_installation.xml"/>
- <xi:include href="deployment_configuration.xml"/>
- <xi:include href="deployment_cluster_administration.xml"/>
- <xi:include href="deployment_additional.xml"/>
- <xi:include href="deployment_integration.xml"/> -->
+<xi:include href="cap_deployment_intro.xml"/>
 <!-- ===================================================================== -->
 <!-- Appendix                                                              -->
 <!-- ===================================================================== -->
-<!-- <xi:include href="common_legal.xml"/> -->
+ <!-- <xi:include href="common_legal.xml"/> -->
 </book>

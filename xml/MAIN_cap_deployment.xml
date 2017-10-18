@@ -16,7 +16,7 @@
  <title>&productname; &productnumber; Documentation</title>
  <info>
   <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
-   <dm:maintainer>jsindelarova@suse.com</dm:maintainer>
+   <dm:maintainer>cschroder@suse.com</dm:maintainer>
    <dm:status>editing</dm:status>
    <dm:deadline></dm:deadline>
    <dm:priority></dm:priority>
@@ -32,10 +32,5 @@
   </dm:docmanager>
  </info>
 <?dbhtml filename="index.html"?>
-<!--SUSE CaaSP Installation Quick Start Guide-->
-<!-- Removed now as the content has been added to the deployment guide.
- <xi:include href="book_quick_start.xml" parse="xml"/>
- -->
-<!--SUSE CaaSP Deployment Guide-->
- <xi:include href="book-cap-deployment.xml" parse="xml"/>
+ <xi:include href="book_cap_deployment.xml" parse="xml"/>
 </set>
