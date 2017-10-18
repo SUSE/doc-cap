@@ -15,8 +15,8 @@
   <title>&deploy;</title><productname>&productname;</productname>
   <productnumber>&productnumber;</productnumber><date>
 <?dbtimestamp format="B d, Y"?></date>
-<!--  <xi:include href="common_copyright_gfdl.xml"/> -->
-  <xi:include href="authors.xml"/>
+<xi:include href="common_copyright_gfdl.xml"/>
+<xi:include href="authors.xml"/>
   <abstract>
    <para>
     <remark>FIXMEeeee hey wut, hello?</remark>
@@ -26,9 +26,10 @@
    <dm:translation>no</dm:translation>
   </dm:docmanager>
  </info>
-<xi:include href="cap_deployment_guide_intro.xml"/>
+<xi:include href="cap_depl_intro.xml"/>
+<xi:include href="cap_depl_prerequisites.xml"/>
 <!-- ===================================================================== -->
 <!-- Appendix                                                              -->
 <!-- ===================================================================== -->
- <!-- <xi:include href="common_legal.xml"/> -->
+<xi:include href="common_legal.xml"/>
 </book>
