@@ -1,16 +1,11 @@
-##
-## Doc config file for the DAPS example document 
-## defined by MAIN-cap-deployment.xml
-##
-## See /etc/daps/config for documentation of the settings below
-##
-## These values are settings for the document defined by MAIN-cap-deployment.xml
-## only. Please do not add additional settings here - if you need to
-## customize other settings from /etc/daps/config, do so in
-## ~/.config/daps/dapsrc
+## ----------------------------
+## Doc Config File for SUSE CAP
+## Deployment Guide
+## ----------------------------
 
-## Mandatory Parameter
+## Basics
 MAIN="MAIN_cap_deployment.xml"
+ROOTID="book.cap.deployment"
 
 ## Profiling
 #PROFOS="sles"
