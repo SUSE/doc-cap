@@ -11,6 +11,11 @@
 <!-- Company and Products                                                   -->
 <!-- ====================================================================== -->
 
+<!ENTITY susecaasp    "&suse; CaaS Platform">
+<!ENTITY susecaaspreg "&suse;&reg; CaaS Platform">
+<!ENTITY cf           "Cloud Foundry">
+<!ENTITY susecf       "&suse; Cloud Foundry">
+
 <!ENTITY suse      "SUSE">
 <!ENTITY novell    "Novell">
 <!ENTITY suselinux "&suse; Linux">
@@ -145,6 +150,7 @@
 <!-- Virtualization                                                -->
 <!-- ============================================================= -->
 
+<!ENTITY bosh          "BOSH">
 <!ENTITY xenstore      "XenStore">
 <!ENTITY lxc           "LXC">
 <!ENTITY xen           "Xen">
