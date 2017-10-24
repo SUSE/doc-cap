@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="deployment.about"
+<chapter version="5.0" xml:id="cha.cap.depl.about"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -16,9 +16,11 @@
   <title>About &productname;</title>
  </info>
  <para>
-Most Cloud Foundry distributions run on virtual machines managed by &bosh;. 
-&productname; (&susecap;) runs in Linux containers managed by &kube;. Containerizing the 
-components of the platform itself has these advantages:
+&productname; is a &cf;-based software platform for 
+cloud-native application development. Most Cloud Foundry distributions run on 
+virtual machines managed by &bosh;. &productname; (&susecap;) runs in Linux 
+containers managed by &kube;. Containerizing the components of the platform 
+itself has these advantages:
 </para>
 
  <itemizedlist>
@@ -119,6 +121,29 @@ Make the software development workflow more efficient
 </listitem>
 </itemizedlist>
 
+<sect1 xml:id="sec.cap.depl.architecture">
+  <title>&productname; Architecture</title>
+  
+<para>
+Installing &productname; on &susecaasp; the simplest way to set up a working
+system. &susecaasp; is a specialized application development and hosting platform
+that provides &susemicros;, container orchestration with &kube;, and &salt; for 
+automating installation and configuration. All you need is the &susecaasp; 
+<link xlink:href="https://www.suse.com/products/caas-platform/">installation image</link>,
+and sufficient resources, either physical or virtual, to create a minimum of 
+four nodes: one admin node and three &kube; nodes. <xref linkend="cap.architecture"/>
+shows a simple &cap; deployment that also includes a log server, a &suse; &smtool; 
+server, and a &scc; server. 
+</para>
+  
+    <figure xml:id="cap.architecture">
+   <title>&productname; Nodes Architecture</title>
+   <mediaobject>
+    <imageobject>
+     <imagedata fileref="cap_architecture.png" format="PNG" width="100%"/>
+    </imageobject>
+   </mediaobject>
+  </figure>
 
-
+  </sect1>
  </chapter>

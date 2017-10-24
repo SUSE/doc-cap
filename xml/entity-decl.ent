@@ -5,7 +5,7 @@
 <!ENTITY productname    "&suse; Cloud Application Platform">
 <!ENTITY productnamereg "&suse;&reg; Cloud Application Platform">
 <!ENTITY productnumber  "1.0">
-<!ENTITY github.url   "https://github.com/SUSE/doc-cap">
+<!ENTITY github.url     "https://github.com/SUSE/doc-cap">
 
 <!-- ====================================================================== -->
 <!-- Company and Products                                                   -->
@@ -16,6 +16,8 @@
 <!ENTITY cf           "Cloud Foundry">
 <!ENTITY susecf       "&suse; Cloud Foundry">
 <!ENTITY susecap      "&suse; CAP">
+<!ENTITY susemicros   "&suse; MicroOS">
+<!ENTITY cap          "CAP">
 
 <!ENTITY suse      "SUSE">
 <!ENTITY novell    "Novell">
