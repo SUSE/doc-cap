@@ -19,7 +19,7 @@
 <xi:include href="authors.xml"/>
   <abstract>
    <para>
-    <remark>FIXMEeeee hey wut, hello?</remark>
+    <remark>FIXME</remark>
    </para>
   </abstract>
   <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
@@ -27,6 +27,7 @@
   </dm:docmanager>
  </info>
 <xi:include href="cap_depl_intro.xml"/>
+<xi:include href="cap_depl_about.xml"/>
 <xi:include href="cap_depl_prerequisites.xml"/>
 <!-- ===================================================================== -->
 <!-- Appendix                                                              -->

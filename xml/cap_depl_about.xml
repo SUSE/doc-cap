@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<!-- Converted by suse-upgrade version 1.1 -->
+<chapter version="5.0" xml:id="deployment.about"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+  <title>About &productname;</title>
+ </info>
+ <para>
+Most Cloud Foundry distributions run on virtual machines managed by &bosh;. 
+&productname; (&susecap;) runs in Linux containers managed by &kube;. Containerizing the 
+components of the platform itself has these advantages:
+</para>
+
+ <itemizedlist>
+  <listitem>
+   <para>
+Improves fault tolerance. &kube; monitors the health of all containers, and
+automatically restarts faulty containers faster than virtual machines can be
+restarted or replaced.
+   </para>
+</listitem>
+  <listitem>
+   <para>
+    Reduces physical memory overhead. &susecap; components deployed in containers consume
+substantially less memory, as host-level operations are shared between containers by
+&kube;.
+   </para>
+</listitem>
+</itemizedlist>
+
+   <para>
+&productname; builds on work pioneered in HPE Helion Stackato. &susecap; consumes
+upstream Cloud Foundry &bosh; releases to produce containers and configurations, 
+and customers will deploy these containers to their &kube; clusters using &helm;.
+</para>
+ <para>
+&susecap; serves different and complementary purposes for operators and application
+developers.
+ </para>
+ <para>
+For operators, the platform goals are to:
+</para>
+ <itemizedlist>
+  <listitem>
+   <para>
+       Be easy to install, manage, and maintain
+   </para>
+</listitem>
+  <listitem>
+   <para>
+Be secure by design
+   </para>
+</listitem>
+  <listitem>
+   <para>
+Be fault tolerant and self-healing
+   </para>
+</listitem>
+  <listitem>
+   <para>
+Offer high availability for critical components
+   </para>
+</listitem>
+  <listitem>
+   <para>
+Use industry-standard components
+   </para>
+</listitem>
+  <listitem>
+   <para>
+Avoid single vendor lock-in
+   </para>
+</listitem>
+</itemizedlist>
+
+   <para>       
+For developers, the platform must:
+</para>
+ <itemizedlist>
+  <listitem>
+   <para>
+Allocate computing resources on demand via API or Web interface
+   </para>
+</listitem>
+  <listitem>
+   <para>
+Offer users a choice of language and Web framework
+</para>
+</listitem>
+  <listitem>
+   <para>
+Give access to databases and other data services
+   </para>
+</listitem>
+  <listitem>
+   <para>
+Emit and aggregate application log streams
+</para>
+</listitem>
+  <listitem>
+   <para>
+Track resource usage for users and groups
+</para>
+</listitem>
+  <listitem>
+   <para>
+Make the software development workflow more efficient
+   </para>
+</listitem>
+</itemizedlist>
+
+
+
+ </chapter>

@@ -18,25 +18,21 @@
  </info>
  <para>
 &productname; is a software platform for 
-cloud-native application development based on &cf;, with additional 
-supporting services and components. At the core of the platform is a &cf; 
-distribution for &kube; which runs on &sle; containers: 
-&susecf;. The platform will serve different but complementary purposes for 
-operators and application developers.
+cloud-native application development, based on &cf;, with additional 
+supporting services and components. The core of the platform is &susecf;, a &cf; 
+distribution for &kube; which runs on &sle; containers.
 </para>
-
 
 <para>
-The &cf; code base provides the majority of the functionality to fulfill these 
-requirements. &productname; will differentiate itself from other &cf; 
-distributions by running on Linux containers managed by &kube;, rather than 
-virtual machines managed with &bosh;, while providing compatibility with upstream
-&cf; &bosh; releases. This provides greater fault tolerance and lower memory
-use.
+The &cf; code base provides the majority of the functionality. &productname; 
+differentiates itself from other &cf; distributions by running in Linux 
+containers managed by &kube;, rather than virtual machines managed with &bosh;,
+for greater fault tolerance and lower memory use.
 </para>
 
-
- 
+<para>
+This guide describes how to deploy &cf; on <link xlink:href="https://www.suse.com/documentation/suse-caasp-1/singlehtml/book_caasp_deployment/book_caasp_deployment.html">SUSE Container as a Service (CaaS) Platform 1.0</link>, and on generic &kube; clusters. 
+</para>
 
  <xi:include href="common_intro_target_audience_i.xml"/>
  <xi:include href="common_intro_available_doc_i.xml"/>
