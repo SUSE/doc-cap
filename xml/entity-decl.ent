@@ -15,6 +15,7 @@
 <!ENTITY susecaaspreg "&suse;&reg; CaaS Platform">
 <!ENTITY cf           "Cloud Foundry">
 <!ENTITY susecf       "&suse; Cloud Foundry">
+<!ENTITY susecap      "&suse; CAP">
 
 <!ENTITY suse      "SUSE">
 <!ENTITY novell    "Novell">
@@ -139,11 +140,12 @@
 <!ENTITY cpufreq       "CPUfreq">
 <!ENTITY powertop      "powerTOP">
 <!ENTITY gpg           "GPG"> <!-- or GnuGP -->
-<!ENTITY kexec          "Kexec">
-<!ENTITY kdump          "Kdump">
-<!ENTITY kprobes        "Kprobes">
-<!ENTITY salt        "Salt">
-<!ENTITY kube        "Kubernetes">
+<!ENTITY kexec         "Kexec">
+<!ENTITY kdump         "Kdump">
+<!ENTITY kprobes       "Kprobes">
+<!ENTITY salt          "Salt">
+<!ENTITY kube          "Kubernetes">
+<!ENTITY helm          "Helm">
 
 
 <!-- ============================================================= -->
