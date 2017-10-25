@@ -11,13 +11,13 @@
 <!-- Company and Products                                                   -->
 <!-- ====================================================================== -->
 
-<!ENTITY susecaasp    "&suse; CaaS Platform">
+
+<!ENTITY cap          "CAP">
+<!ENTITY caasp        "CaaS Platform">
 <!ENTITY susecaaspreg "&suse;&reg; CaaS Platform">
 <!ENTITY cf           "Cloud Foundry">
 <!ENTITY susecf       "&suse; Cloud Foundry">
-<!ENTITY susecap      "&suse; CAP">
 <!ENTITY susemicros   "&suse; MicroOS">
-<!ENTITY cap          "CAP">
 
 <!ENTITY suse      "SUSE">
 <!ENTITY novell    "Novell">
