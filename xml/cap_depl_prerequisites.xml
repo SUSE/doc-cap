@@ -60,7 +60,7 @@ and configurations are performed on the Kubernetes nodes, unless noted otherwise
 	  </term>
 	<listitem>
         <para>
-            <command>docker info| grep Storage Driver'</command> should return 
+            <command>docker info| grep 'Storage Driver'</command> should return 
             <literal>Storage Driver: btrfs</literal>, and not 
             <literal>Storage Driver: aufs</literal>.
 	  </para>
