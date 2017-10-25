@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="deployment.about"
+<chapter version="5.0" xml:id="cha.cap.depl.about"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -16,9 +16,11 @@
   <title>About &productname;</title>
  </info>
  <para>
-Most Cloud Foundry distributions run on virtual machines managed by &bosh;. 
-&productname; (&susecap;) runs in Linux containers managed by &kube;. Containerizing the 
-components of the platform itself has these advantages:
+&productname; is a &cf;-based software platform for 
+cloud-native application development. Most Cloud Foundry distributions run on 
+virtual machines managed by &bosh;. &productname; (&suse; &cap;) runs in Linux 
+containers managed by &kube;. Containerizing the components of the platform 
+itself has these advantages:
 </para>
 
  <itemizedlist>
@@ -31,7 +33,7 @@ restarted or replaced.
 </listitem>
   <listitem>
    <para>
-    Reduces physical memory overhead. &susecap; components deployed in containers consume
+    Reduces physical memory overhead. &suse; &cap; components deployed in containers consume
 substantially less memory, as host-level operations are shared between containers by
 &kube;.
    </para>
@@ -39,12 +41,12 @@ substantially less memory, as host-level operations are shared between container
 </itemizedlist>
 
    <para>
-&productname; builds on work pioneered in HPE Helion Stackato. &susecap; consumes
+&productname; builds on work pioneered in HPE Helion Stackato. &suse; &cap; consumes
 upstream Cloud Foundry &bosh; releases to produce containers and configurations, 
 and customers will deploy these containers to their &kube; clusters using &helm;.
 </para>
  <para>
-&susecap; serves different and complementary purposes for operators and application
+&suse; &cap; serves different and complementary purposes for operators and application
 developers.
  </para>
  <para>
@@ -119,6 +121,33 @@ Make the software development workflow more efficient
 </listitem>
 </itemizedlist>
 
-
-
+<sect1 xml:id="sec.cap.depl.architecture">
+  <title>&productname; Architecture</title>
+  
+<para>
+Installing &productname; on &suse; &caasp; is the fast way to set up a working
+system. &suse; &caasp; is a specialized application development and hosting platform
+that provides &susemicros;, container orchestration with &kube;, and &salt; for 
+automating installation and configuration. All you need is the &suse; &caasp; 
+<link xlink:href="https://www.suse.com/products/caas-platform/">installation image</link>,
+and sufficient resources, either physical or virtual, to create a minimum of 
+four nodes: one admin node and three &kube; nodes. <xref linkend="cap.architecture"/>
+shows a simple &cap; on &caasp; deployment that also includes an optional log server, a 
+&suse; &smtool; server, and a &scc; server.
+</para>
+  
+    <figure xml:id="cap.architecture">
+   <title>&productname; Nodes Architecture</title>
+   <mediaobject>
+    <imageobject>
+     <imagedata fileref="cap_architecture-2.svg" format="SVG" width="75%"/>
+    </imageobject>
+   </mediaobject>
+  </figure>
+  
+  <para>
+      A four-node system is not sufficient for most production deployments. 
+      However, as a test lab and proof-of-concept it is fast and easy to set up.
+  </para>
+  </sect1>
  </chapter>
