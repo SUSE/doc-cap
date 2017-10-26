@@ -183,7 +183,7 @@ kubectl get storageclass
        Helm is the package manager for Kubernetes. It includes the client, Helm, 
        and the server, Tiller. To install Helm, download and unpack 
        <link xlink:href="https://github.com/kubernetes/helm/releases">the current
-       release</link> to an external host, and then copy the binary to 
+       release</link> to an external host, and then copy the Helm binary to 
        <filename>/root/bin</filename> on the &kube; master. The Helm tarball
        unpacks to <filename>linux-amd64</filename> and includes three files:
        <filename>helm</filename>, <filename>LICENSE</filename>, and 
@@ -191,11 +191,11 @@ kubectl get storageclass
        </para>
        <para>
        By default, SSH access to the &kube; nodes is allowed only from the &caasp; 
-       admin node. You can log in to the &kube; nodes directly by copying the 
-       SSH keys from the admin node to an external host, using the password you 
-       created during the  &caasp; admin node installation. Copy the keys to 
-       their own directory to avoid key name collisions, then specify the key in 
-       your SCP command, using your own hostnames, filenames, and key name:
+       admin node, with direct login enabled only for the admin node. You can 
+       log in to the &kube; nodes directly by copying the SSH keys from the 
+       admin node to an external host. Copy the keys to their own directory to 
+       avoid key name collisions, then specify the key in your SCP command. 
+       Replace the hostnames, filenames, and key name in the example with your own:
        <screen>
 external_host:~ mkdir caasp-ssh
 external_host:~ cd caasp-ssh
