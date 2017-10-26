@@ -17,7 +17,7 @@
  </info>
  <para>
 These are the minimum prerequisites to set up &productname;. All of these commands
-and configurations are performed on the Kubernetes nodes, unless noted otherwise.
+and configurations are performed on the Kubernetes master node, unless noted otherwise.
  </para>
   <variablelist>
 	<varlistentry>
@@ -26,10 +26,24 @@ and configurations are performed on the Kubernetes nodes, unless noted otherwise
 	  </term>
 	<listitem>
 	  <para>
-	    This needs a minimum of four physical or virtual nodes: one admin, one 
+	    This requires a minimum of four physical or virtual nodes: one admin, one 
         Kubernetes master, and two Kubernetes minions. (See the 
-        <link xlink:href="https://www.suse.com/documentation/suse-caasp-1/">CaaSP documentation)</link>
+        <link xlink:href="https://www.suse.com/documentation/suse-caasp-1/">CaaSP 
+        documentation</link>). You also need an Internet connection, as the 
+        installer downloads additional packages, and the &kube;
+        minions will download 8-10GB of Docker images each.
 	  </para>
+      <para>
+          The easiest way to create the Kubernetes nodes, after you create the 
+          admin node, is to use AutoYaST; see 
+          <link xlink:href="https://www.suse.com/documentation/suse-caasp-1/
+          singlehtml/book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.node.ay">
+              Installation with AutoYaST</link>. When you have completed 
+          <link xlink:href="https://www.suse.com/documentation/suse-caasp-1/
+                singlehtml/book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.bootstrap">
+              Bootstrapping the Cluster</link> you can proceed to 
+          satisfying the remaining prerequisites, and then installing &suse; &cap;.
+      </para>
 	</listitem>
 	</varlistentry>
     	<varlistentry>
@@ -76,10 +90,133 @@ and configurations are performed on the Kubernetes nodes, unless noted otherwise
           runs on the Kubernetes nodes. Use the <command>ps</command> command 
           to verify:
           <screen>ps ax | grep 'ntp\|timesyncd'
-1121 ?  Ssl  0:00 /usr/lib/systemd/systemd-timesyncd</screen>
+  1121 ?  Ssl  0:00 /usr/lib/systemd/systemd-timesyncd</screen>
 	  </para>
 	</listitem>
 	</varlistentry>
- </variablelist>
+<varlistentry>
+ <term>
+     kube-dns must be installed and running
+ </term>
+  <listitem>
+   <para>
+     Install kube-dns on your kube-master and verify with these commands:
+     <screen>kubectl apply -f \
+  https://raw.githubusercontent.com/SUSE/caasp-services/master/contrib/addons/kubedns/dns.yaml
+ 
+kubectl cluster-info 
+  Kubernetes master is running at http://localhost:8080
+  KubeDNS is running at http://localhost:8080/api/v1/proxy/namespaces/kube-system/services/kube-dns  
+</screen> 
+(See (<link xlink:href="https://www.suse.com/documentation/suse-caasp-1/singlehtml/book_caasp_deployment/book_caasp_deployment.html#installing.dns">Installing Kubernetes DNS</link>)
+  </para>
+ </listitem>
+</varlistentry>    
+<varlistentry>
+ <term>
+   The &kube; cluster must have a storage class to use   
+ </term>
+  <listitem>
+   <para>
+    &kube;'s database components require persistent data storage. See 
+    <link xlink:href="http://blog.kubernetes.io/2017/03/dynamic-provisioning-and-storage-classes-kubernetes.html">Dynamic Provisioning and Storage Classes in Kubernetes </link>
+    and <link xlink:href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">Persistent Volumes</link> for detailed information.
+  </para>
+  <para>
+      For testing and proof-of-concept, you can quickly set up a <literal>hostpath</literal> 
+      storage class. This is not for production deployments. Run these commands to
+      create the <literal>hostpath</literal> storage class, and to confirm that 
+      it was created:
+      <screen>
+echo '{"kind":"StorageClass","apiVersion":"storage.k8s.io/v1beta1","metadata" \
+:{"name":"hostpath"},"provisioner":"kubernetes.io/host-path"}' | \
+kubectl create -f -
+
+kubectl get storageclass
+  NAME       TYPE
+  hostpath   kubernetes.io/host-path
+</screen>
+</para>
+</listitem>
+</varlistentry>    
+   <varlistentry>
+ <term>
+     TODO Docker must be configured to allow privileged containers.     
+ </term>
+  <listitem>
+   <para>
+      TODO How?
+  </para>
+ </listitem>
+</varlistentry> 
+ <varlistentry>
+ <term>
+  Privileged container must be enabled in kube-apiserver
+ </term>
+  <listitem>
+   <para>
+       This should already be enabled. Look for <literal>KUBE_ALLOW_PRIV="--allow-privileged=true"</literal> in <filename>/etc/kubernetes/config</filename>.
+       (See <link xlink:href="https://kubernetes.io/docs/admin/kube-apiserver">kube-apiserver</link>)
+  </para>
+ </listitem>
+</varlistentry>   
+ <varlistentry>
+ <term>
+     TODO The TasksMax property of the containerd service definition must be set to infinity.     
+ </term>
+  <listitem>
+   <para>
+     TODO how? Are these relevant:
+     <screen>
+/etc/systemd/logind.conf:#UserTasksMax=12288
+/etc/systemd/system.conf:#DefaultTasksMax=512
+</screen>
+  </para>
+ </listitem>
+</varlistentry>
+<varlistentry>
+ <term>
+     Helm must be installed and active     
+ </term>
+  <listitem>
+   <para>
+       Helm is the package manager for Kubernetes. It includes the client, Helm, 
+       and the server, Tiller. To install Helm, download and unpack 
+       <link xlink:href="https://github.com/kubernetes/helm/releases">the current
+       release</link> to an external host, and then copy the binary to 
+       <filename>/root/bin</filename> on the &kube; master. The Helm tarball
+       unpacks to <filename>linux-amd64</filename> and includes three files:
+       <filename>helm</filename>, <filename>LICENSE</filename>, and 
+       <filename>README.md</filename>.
+       </para>
+       <para>
+       By default, SSH access to the &kube; nodes is allowed only from the &caasp; 
+       admin node. You can log in to the &kube; nodes directly by copying the 
+       SSH keys from the admin node to an external host, using the password you 
+       created during the  &caasp; admin node installation. Copy the keys to 
+       their own directory to avoid key name collisions, then specify the key in 
+       your SCP command, using your own hostnames, filenames, and key name:
+       <screen>
+external_host:~ mkdir caasp-ssh
+external_host:~ cd caasp-ssh
+external_host:~ scp -r root@caasp-admin:.ssh .
+ Password: 
+ id_rsa            100% 3247     3.2KB/s   00:00    
+ id_rsa.pub        100%  741     0.7KB/s   00:00    
+ authorized_keys   100%    0     0.0KB/s   00:00    
+ known_hosts       100% 1032     1.0KB/s   00:00
+ 
+external_host:~ scp -i .ssh/id_rsa linux-amd64/helm root@kube-master:/root/bin/
+</screen>
+<!-- TODO: explanation of readonly/overlay fs -->               
+  </para>
+ </listitem>
+</varlistentry>
+</variablelist>
+<para>
+    Now that you have completed the prerequisites, continue to the next chapter
+    to learn how to verify that your system is ready to install &productname;,
+    and then install it.
+</para>
 
 </chapter>
