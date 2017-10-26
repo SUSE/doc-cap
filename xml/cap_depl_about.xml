@@ -41,13 +41,14 @@ substantially less memory, as host-level operations are shared between container
 </itemizedlist>
 
    <para>
-&productname; builds on work pioneered in HPE Helion Stackato. &suse; &cap; consumes
-upstream Cloud Foundry &bosh; releases to produce containers and configurations, 
-and customers will deploy these containers to their &kube; clusters using &helm;.
+&productname; builds on work pioneered in HPE Helion Stackato. &suse; &cap;
+incorporates upstream Cloud Foundry &bosh; releases to produce containers and 
+configurations, then customers will deploy these containers to their &kube; 
+clusters using &helm;.
 </para>
  <para>
-&suse; &cap; serves different and complementary purposes for operators and application
-developers.
+&suse; &cap; serves different and complementary purposes for operators and 
+application developers.
  </para>
  <para>
 For operators, the platform goals are to:
@@ -125,12 +126,14 @@ Make the software development workflow more efficient
   <title>&productname; Architecture</title>
   
 <para>
-Installing &productname; on &suse; &caasp; is the fast way to set up a working
-system. &suse; &caasp; is a specialized application development and hosting platform
-that provides &susemicros;, container orchestration with &kube;, and &salt; for 
-automating installation and configuration. All you need is the &suse; &caasp; 
+In this guide we will detail the steps for deploying &productname; on &suse; 
+&caasp;. &caasp; is a specialized application development and hosting platform
+built on the &susemicros; container host operating system, container 
+orchestration with &kube;, and &salt; for automating installation and 
+configuration. All you need is the &suse; &caasp; 
 <link xlink:href="https://www.suse.com/products/caas-platform/">installation image</link>,
-and sufficient resources, either physical or virtual, to create a minimum of 
+an Internet connection (&kube; will download 8-10 GB of Docker images on each 
+minion), and sufficient resources, either physical or virtual, to create a minimum of 
 four nodes: one admin node and three &kube; nodes. <xref linkend="cap.architecture"/>
 shows a simple &cap; on &caasp; deployment that also includes an optional log server, a 
 &suse; &smtool; server, and a &scc; server.
@@ -148,6 +151,7 @@ shows a simple &cap; on &caasp; deployment that also includes an optional log se
   <para>
       A four-node system is not sufficient for most production deployments. 
       However, as a test lab and proof-of-concept it is fast and easy to set up.
+      
   </para>
   </sect1>
  </chapter>
