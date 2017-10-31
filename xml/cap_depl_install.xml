@@ -174,7 +174,7 @@ running, start it:
 </para>
 <para>
     Run the <command>cert-generator.sh</command> script to generate the required
-    custom SSL certificates. Replace example.com with your domain:
+    custom SSL certificates. Replace host.example.com with your domain:
     <screen>
 &prompt.root;sh cert-generator.sh -d <replaceable>host.example.com</replaceable> -n scf -o certs     
     </screen>
