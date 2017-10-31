@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha.cap.depl.install"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <title>&productname; Installation</title>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+ </info>
+
+ <para>
+     Installing &productname; is a little different than the usual method of
+     installing software. Rather than installing packages in the usual way with
+     YaST or Zypper, install the Helm charts package on your Kubernetes master
+     with Zypper, and then use Helm to install the required Kubernetes 
+     applications to set up &productname;.
+ </para>
+ <para>
+     The Helm package includes a helper script that tests and verifies
+     that your Kubernetes nodes are ready for Helm, and a script to generate SSL
+     certificates.
+ </para>
+ 
+<sect1  xml:id="sec.cap.install">
+    <title>Install Helm</title>
+<!-- TODO update when real package & registry are available -->
+<para>
+    TODO update when real package and registry are available
+</para>
+<para>
+    Install the Helm package with Zypper, and then initialize and install Tiller:
+    <screen>
+&prompt.root;zypper in helmpkg
+&prompt.root;helm init
+</screen>    
+</para>
+<para>
+    <filename>helmpkg</filename> installs the following files and directories in 
+    <filename>/root/deploy</filename>:
+    <screen>
+&prompt.root;ls -c1 deploy/*
+deploy/scf-config-values.yaml
+deploy/kube-ready-state-check.sh
+deploy/cert-generator.sh
+
+deploy/certs:
+scf-cert-values.yaml
+uaa-cert-values.yaml
+
+deploy/scripts:
+certstrap
+generate-scf-certs.sh
+generate-uaa-certs.sh
+
+deploy/kube:
+uaa
+cf
+
+deploy/helm:
+uaa
+cf
+</screen>
+</para>
+</sect1>
+
+<sect1  xml:id="sec.cap.checkkube">
+    <title>Verify that &kube; is Ready</title>
+<para>
+    Use the <filename>kube-ready-state-check.sh</filename> script to verify
+    that Kubernetes is ready. The script takes several options. 
+    <command>-h</command> displays a help screen:
+<screen>
+&prompt.root;cd deploy
+&prompt.root;sh kube-ready-state-check.sh -h
+Usage: kube-ready-state-check.sh [options] [category]
+
+  -h: Displays this help message
+
+  Supported categories: all, api, kube, node
+  Defaults to: all
+</screen>
+</para>
+<para>
+    
+
+ <informaltable xml:id="table.cap.checkkube">
+  <tgroup cols="2">
+    <thead>
+      <row>
+        <entry>Category</entry>
+        <entry>Explanation</entry>
+      </row>
+    </thead>
+    <tbody>
+      <row>
+        <entry>api</entry>
+        <entry>Requirements on the hosts for the kube master nodes (running apiserver)</entry>
+      </row>
+      <row>
+        <entry>kube</entry>
+        <entry>Requirements of the cluster itself, via kubectl</entry>
+      </row>
+        <row>
+        <entry>node</entry>
+        <entry>Requirements on the hosts for the kube worker nodes (running kubelet)</entry>
+      </row>
+    </tbody>
+  </tgroup>
+</informaltable>
+
+</para>   
+
+
+
+
+
+
+<para>
+<screen>
+&prompt.root;sh kube-ready-state-check.sh
+</screen>
+</para>
+<para>
+The output looks like this example:
+<screen>
+Testing all
+Verified: swapaccount enable
+Verified: docker info should not show aufs
+Verified: kube-dns should be running (show 4/4 ready)
+Verified: tiller should be running (1/1 ready)
+Verified: An ntp daemon or systemd-timesyncd must be installed and active
+Verified: A storage class should exist in K8s
+Verified: Privileged must be enabled in 'kube-apiserver'
+Configuration problem detected: Privileged must be enabled in 'kubelet'
+Verified: TasksMax must be set to infinity
+</screen>
+</para>
+<para>
+    <!-- TODO shouldn't kubelet start by default?-->
+    TODO shouldn't kubelet start by default?
+</para>
+<para>
+In this example one problem is detected, <literal>Privileged must be enabled 
+in 'kubelet'</literal>. Check if kubelet.service is running, and if it is not 
+running, start it:
+<screen>
+&prompt.root;systemctl status kubelet
+   ● kubelet.service - Kubernetes Kubelet Server
+   Loaded: loaded (/usr/lib/systemd/system/kubelet.service; disabled; vendor 
+   preset: disabled)
+   Active: inactive (dead)
+&prompt.root;systemctl start kubelet   
+</screen>
+</para>
+
+</sect1>
+<sect1  xml:id="sec.cap.certs"> 
+    <title>Create SSL Certificates</title>
+    <para>
+        Change to the <filename>deploy</filename> directory and create the 
+        <filename>certs</filename> directory:
+    <screen>
+&prompt.root;cd deploy
+&prompt.root;mkdir certs
+</screen>
+</para>
+<para>
+    Run the <command>cert-generator.sh</command> script to generate the required
+    custom SSL certificates. Replace example.com with your domain:
+    <screen>
+&prompt.root;sh cert-generator.sh -d <replaceable>host.example.com</replaceable> -n scf -o certs     
+    </screen>
+</para>
+</sect1>
+<sect1 xml:id="sec.cap.configure">
+    <title>Configuring the &productname; Deployment</title>
+    <para>
+        Create a new configuration file for Helm to use. In this example it is
+        called <filename>deploy/scf-cert-values.yaml</filename>, which matches
+        the default Helm chart names. If you change this, change the Helm charts
+        to match.
+        <screen>
+env:
+    # Password for the cluster
+    CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
+    <!-- TODO is this kube dns? -->
+    TODO is this kube dns?
+    # DNS for *.DOMAIN must point to the &kube; node's
+    # external IP address. This must match the value passed to the
+    # cert-generator.sh script.
+    DOMAIN: <replaceable>host.example.com</replaceable>
+
+    <!-- TODO is this created here, or does it come from somewhere else? -->
+    TODO is this created here, or does it come from somewhere else?
+    # Password for &caasp; to authenticate with UAA
+    UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
+
+    # UAA host/port that &caasp; will talk to
+    UAA_HOST: <replaceable>uaa.host.example.com</replaceable>
+    UAA_PORT: <replaceable>2793</replaceable>
+
+kube:
+    # Replace the example with the IP address of your &kube; node.
+    external_ip: <replaceable>10.0.0.154</replaceable>
+    storage_class:
+        persistent: fast
+    </screen>
+</para>
+</sect1>
+<sect1  xml:id="sec.cap.setup">
+    <title>Deploy with Helm</title>
+ <para>
+Run the following Helm commands to complete the deployment.
+<screen>
+&prompt.root;kubectl create namespace uaa
+&prompt.root;kubectl get secret ceph-secret -o json --namespace default | \
+ jq ".metadata.namespace = \"uaa\"" | kubectl create -f -
+ 
+&prompt.root;helm install helm/uaa \
+    --namespace uaa \
+    --values certs/uaa-cert-values.yaml \
+    --values scf-config-values.yaml
+
+&prompt.root;kubectl create namespace scf
+&prompt.root;kubectl get secret ceph-secret -o json --namespace default | \
+ jq ".metadata.namespace = \"scf\"" | kubectl create -f -
+
+&prompt.root;helm install helm/cf \
+    --namespace scf \
+    --values certs/scf-cert-values.yaml \
+    --values scf-config-values.yaml 
+    </screen>
+</para>
+<para>
+    Now sit back and wait for everything to be ready. Run this command to watch
+    the pods come online:
+    <screen>
+&prompt.root;watch -c 'kubectl get pods --all-namespaces'
+</screen>
+</para>
+<para>
+You should see output similar to this (which is shortened for this example):
+<screen>
+NAMESPACE     NAME                           READY     STATUS              RESTARTS   AGE
+kube-system   kube-dns-2830115714-tdl38      3/3       Completed           18         1m
+kube-system   tiller-deploy-833494864-33ndq  0/1       ContainerCreating   0          1m
+scf           api-0                          0/1       ContainerCreating   0          1m
+scf           api-worker-3486565911-dptbh    0/1       ContainerCreating   0          1m
+scf           blobstore-0                    0/1       Pending             0          1m
+</screen>
+
+</para>
+
+</sect1>
+</chapter>
