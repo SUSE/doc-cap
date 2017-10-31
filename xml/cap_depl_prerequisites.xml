@@ -19,6 +19,8 @@
 These are the minimum prerequisites to set up &productname;. All of these commands
 and configurations are performed on the Kubernetes master node, unless noted otherwise.
  </para>
+<sect1 xml:id="sec.cap.prereqs">
+ <title>Prerequisites to Installing &productname;</title>
   <variablelist>
 	<varlistentry>
 	  <term>
@@ -48,7 +50,7 @@ and configurations are performed on the Kubernetes master node, unless noted oth
 	</varlistentry>
     	<varlistentry>
 	  <term>
-	    Kubernetes API versions 1.5.x-1.6.x
+	    Kubernetes API versions 1.5.x and above
 	  </term>
 	<listitem>
         <para>
@@ -89,7 +91,7 @@ and configurations are performed on the Kubernetes master node, unless noted oth
           NTP is set up during the &caasp; installation, and systemd-timesyncd 
           runs on the Kubernetes nodes. Use the <command>ps</command> command 
           to verify:
-          <screen>ps ax | grep 'ntp\|timesyncd'
+          <screen>&prompt.root;ps ax | grep 'ntp\|timesyncd'
   1121 ?  Ssl  0:00 /usr/lib/systemd/systemd-timesyncd</screen>
 	  </para>
 	</listitem>
@@ -101,10 +103,10 @@ and configurations are performed on the Kubernetes master node, unless noted oth
   <listitem>
    <para>
      Install kube-dns on your kube-master and verify with these commands:
-     <screen>kubectl apply -f \
+     <screen>&prompt.root;kubectl apply -f \
   https://raw.githubusercontent.com/SUSE/caasp-services/master/contrib/addons/kubedns/dns.yaml
  
-kubectl cluster-info 
+&prompt.root;kubectl cluster-info 
   Kubernetes master is running at http://localhost:8080
   KubeDNS is running at http://localhost:8080/api/v1/proxy/namespaces/kube-system/services/kube-dns  
 </screen> 
@@ -119,20 +121,34 @@ kubectl cluster-info
   <listitem>
    <para>
     &kube;'s database components require persistent data storage. See 
-    <link xlink:href="http://blog.kubernetes.io/2017/03/dynamic-provisioning-and-storage-classes-kubernetes.html">Dynamic Provisioning and Storage Classes in Kubernetes </link>
-    and <link xlink:href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">Persistent Volumes</link> for detailed information.
+    <link xlink:href="http://blog.kubernetes.io/2017/03/dynamic-provisioning-and-storage-classes-kubernetes.html">
+    Dynamic Provisioning and Storage Classes in Kubernetes </link>
+    and <link xlink:href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">Persistent Volumes</link> 
+    for detailed information.
   </para>
   <para>
       For testing and proof-of-concept, you can quickly set up a <literal>hostpath</literal> 
       storage class. This is not for production deployments. Run these commands to
       create the <literal>hostpath</literal> storage class, and to confirm that 
-      it was created:
+      it was created. For Kubernetes 1.5.x:
       <screen>
-echo '{"kind":"StorageClass","apiVersion":"storage.k8s.io/v1beta1","metadata" \
-:{"name":"hostpath"},"provisioner":"kubernetes.io/host-path"}' | \
-kubectl create -f -
-
-kubectl get storageclass
+&prompt.root;echo '{"kind":"StorageClass","apiVersion":"storage.k8s.io/v1beta1",\
+ "metadata":{"name":"hostpath"},"provisioner":"kubernetes.io/host-path"}' | \
+ kubectl create -f -
+</screen>
+</para>
+<para>
+    For Kubernetes 1.6.x:
+    <screen>
+&prompt.root;echo '{"kind":"StorageClass","apiVersion":"storage.k8s.io/v1", \
+ "metadata":{"name":"hostpath"},"provisioner":"kubernetes.io/host-path"}' | \
+ kubectl create -f -
+</screen>
+</para>
+<para>
+Then verify:
+<screen>
+&prompt.root;kubectl get storageclass
   NAME       TYPE
   hostpath   kubernetes.io/host-path
 </screen>
@@ -162,32 +178,28 @@ kubectl get storageclass
 </varlistentry>   
  <varlistentry>
  <term>
-     TODO The TasksMax property of the containerd service definition must be set to infinity.     
+<!-- TODO The TasksMax property of the containerd service definition 
+must be set to infinity. How?-->
  </term>
   <listitem>
    <para>
-     TODO how? Are these relevant:
+<!--     TODO how? Are these relevant:
      <screen>
 /etc/systemd/logind.conf:#UserTasksMax=12288
-/etc/systemd/system.conf:#DefaultTasksMax=512
-</screen>
+/etc/systemd/system.conf:#DefaultTasksMax=512 
+</screen>-->
   </para>
  </listitem>
 </varlistentry>
 <varlistentry>
  <term>
-     Helm must be installed and active     
+     Helm and Tiller must be installed and active     
  </term>
   <listitem>
    <para>
-       Helm is the package manager for Kubernetes. It includes the client, Helm, 
-       and the server, Tiller. To install Helm, download and unpack 
-       <link xlink:href="https://github.com/kubernetes/helm/releases">the current
-       release</link> to an external host, and then copy the Helm binary to 
-       <filename>/root/bin</filename> on the &kube; master. The Helm tarball
-       unpacks to <filename>linux-amd64</filename> and includes three files:
-       <filename>helm</filename>, <filename>LICENSE</filename>, and 
-       <filename>README.md</filename>.
+       Helm is the package manager for Kubernetes. It has a client, Helm, 
+       and a server, Tiller. To install Helm, Tiller, and the &caasp; Helm
+       charts see <xref linkend="sec.cap.install"/>.
        </para>
        <para>
        By default, SSH access to the &kube; nodes is allowed only from the &caasp; 
@@ -196,27 +208,29 @@ kubectl get storageclass
        admin node to an external host. Copy the keys to their own directory to 
        avoid key name collisions, then specify the key in your SCP command. 
        Replace the hostnames, filenames, and key name in the example with your own:
-       <screen>
-external_host:~ mkdir caasp-ssh
-external_host:~ cd caasp-ssh
-external_host:~ scp -r root@caasp-admin:.ssh .
+ 
+<screen>
+&prompt.root;external_host:~ mkdir caasp-ssh
+&prompt.root;external_host:~ cd caasp-ssh
+&prompt.root;external_host:~ scp -r root@caasp-admin:.ssh .
  Password: 
  id_rsa            100% 3247     3.2KB/s   00:00    
  id_rsa.pub        100%  741     0.7KB/s   00:00    
  authorized_keys   100%    0     0.0KB/s   00:00    
- known_hosts       100% 1032     1.0KB/s   00:00
- 
-external_host:~ scp -i .ssh/id_rsa linux-amd64/helm root@kube-master:/root/bin/
+ known_hosts       100% 1032     1.0KB/s   00:00 
+&prompt.root;external_host:~ scp -i .ssh/id_rsa /pathto/linux-amd64/helm root@kube-master:/root/bin/
 </screen>
-<!-- TODO: explanation of readonly/overlay fs -->               
   </para>
+<!-- TODO: explanation of readonly/overlay fs -->               
+
  </listitem>
 </varlistentry>
 </variablelist>
+
 <para>
     Now that you have completed the prerequisites, continue to the next chapter
     to learn how to verify that your system is ready to install &productname;,
     and then install it.
 </para>
-
+</sect1>
 </chapter>
