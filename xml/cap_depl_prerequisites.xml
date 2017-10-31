@@ -132,7 +132,7 @@ and configurations are performed on the Kubernetes master node, unless noted oth
       create the <literal>hostpath</literal> storage class, and to confirm that 
       it was created. For Kubernetes 1.5.x:
       <screen>
-&prompt.root;echo '{"kind":"StorageClass","apiVersion":"storage.k8s.io/v1beta1",\
+&prompt.root;echo '{"kind":"StorageClass","apiVersion":"storage.k8s.io/v1beta1", \
  "metadata":{"name":"hostpath"},"provisioner":"kubernetes.io/host-path"}' | \
  kubectl create -f -
 </screen>
@@ -201,6 +201,12 @@ must be set to infinity. How?-->
        and a server, Tiller. To install Helm, Tiller, and the &caasp; Helm
        charts see <xref linkend="sec.cap.install"/>.
        </para>
+   </listitem>
+ </varlistentry>
+</variablelist>
+
+<tip>
+    <title>SSH directly into the &kube; nodes</title>
        <para>
        By default, SSH access to the &kube; nodes is allowed only from the &caasp; 
        admin node, with direct login enabled only for the admin node. You can 
@@ -218,14 +224,13 @@ must be set to infinity. How?-->
  id_rsa.pub        100%  741     0.7KB/s   00:00    
  authorized_keys   100%    0     0.0KB/s   00:00    
  known_hosts       100% 1032     1.0KB/s   00:00 
-&prompt.root;external_host:~ scp -i .ssh/id_rsa /pathto/linux-amd64/helm root@kube-master:/root/bin/
+&prompt.root;external_host:~ scp -i .ssh/id_rsa /pathto/linux-amd64/helm \
+ root@kube-master:/root/bin/
 </screen>
   </para>
+</tip>
 <!-- TODO: explanation of readonly/overlay fs -->               
 
- </listitem>
-</varlistentry>
-</variablelist>
 
 <para>
     Now that you have completed the prerequisites, continue to the next chapter
