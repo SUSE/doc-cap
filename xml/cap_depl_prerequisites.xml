@@ -46,6 +46,16 @@ and configurations are performed on the Kubernetes master node, unless noted oth
       </para>
 	</listitem>
 	</varlistentry>
+	<varlistentry>
+	  <term>
+	    Name services
+	  </term>
+      <listitem>
+      <para>
+    &suse; &caasp; requires a DNS and DHCP server. This serves &suse; &cap; as well.
+       </para>
+	</listitem>
+	</varlistentry>   
     	<varlistentry>
 	  <term>
 	    Kubernetes API versions 1.5.x and above

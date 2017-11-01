@@ -71,6 +71,9 @@ cf
 </para>
 </sect1>
 
+<!-- TODO will the kube-check script be included in the release? -->
+TODO will the kube-check script be included in the release?
+
 <sect1  xml:id="sec.cap.checkkube">
     <title>Verify that &kube; is Ready</title>
 <para>
@@ -89,9 +92,7 @@ Usage: kube-ready-state-check.sh [options] [category]
 </screen>
 </para>
 <para>
-    
-
- <informaltable xml:id="table.cap.checkkube">
+<informaltable xml:id="table.cap.checkkube">
   <tgroup cols="2">
     <thead>
       <row>
@@ -115,13 +116,7 @@ Usage: kube-ready-state-check.sh [options] [category]
     </tbody>
   </tgroup>
 </informaltable>
-
 </para>   
-
-
-
-
-
 
 <para>
 <screen>
@@ -191,17 +186,10 @@ running, start it:
 env:
     # Password for the cluster
     CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
-    <!-- TODO is this kube dns? -->
-    TODO is this kube dns?
     # DNS for *.DOMAIN must point to the &kube; master node's
     # external IP address. This must match the value passed to the
     # cert-generator.sh script.
     DOMAIN: <replaceable>host.example.com</replaceable>
-
-    <!-- TODO is this created here, or does it come from somewhere else? -->
-    TODO is this created here, or does it come from somewhere else?
-    # Password for &cap; to authenticate with UAA
-    UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
 
     # UAA host/port that &cap; will talk to
     # You may use an existing UAA instance, or
@@ -209,9 +197,12 @@ env:
     UAA_HOST: <replaceable>uaa.host.example.com</replaceable>
     UAA_PORT: <replaceable>2793</replaceable>
 
+    # Password for &cap; to authenticate with UAA
+    UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
+
 kube:
     # Replace the example with the IP address of your &kube; node.
-    external_ip: <replaceable>10.0.0.154</replaceable>
+    external_ip: <replaceable>192.168.10.100</replaceable>
     storage_class:
         persistent: fast
     </screen>
