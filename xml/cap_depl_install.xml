@@ -193,7 +193,7 @@ env:
     CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
     <!-- TODO is this kube dns? -->
     TODO is this kube dns?
-    # DNS for *.DOMAIN must point to the &kube; node's
+    # DNS for *.DOMAIN must point to the &kube; master node's
     # external IP address. This must match the value passed to the
     # cert-generator.sh script.
     DOMAIN: <replaceable>host.example.com</replaceable>
