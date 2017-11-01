@@ -71,11 +71,11 @@ cf
 </para>
 </sect1>
 
-<!-- TODO will the kube-check script be included in the release? -->
-TODO will the kube-check script be included in the release?
-
 <sect1  xml:id="sec.cap.checkkube">
     <title>Verify that &kube; is Ready</title>
+    
+<!-- TODO will the kube-check script be included in the release? -->
+<para>TODO will the kube-check script be included in the release?</para>
 <para>
     Use the <filename>kube-ready-state-check.sh</filename> script to verify
     that Kubernetes is ready. The script takes several options. 
