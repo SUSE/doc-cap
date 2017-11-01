@@ -184,7 +184,7 @@ running, start it:
     <title>Configuring the &productname; Deployment</title>
     <para>
         Create a new configuration file for Helm to use. In this example it is
-        called <filename>deploy/scf-cert-values.yaml</filename>, which matches
+        called <filename>deploy/scf-config-values.yaml</filename>, which matches
         the default Helm chart names. If you change this, change the Helm charts
         to match.
         <screen>
@@ -200,10 +200,12 @@ env:
 
     <!-- TODO is this created here, or does it come from somewhere else? -->
     TODO is this created here, or does it come from somewhere else?
-    # Password for &caasp; to authenticate with UAA
+    # Password for &cap; to authenticate with UAA
     UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
 
-    # UAA host/port that &caasp; will talk to
+    # UAA host/port that &cap; will talk to
+    # You may use an existing UAA instance, or
+    # deploy a new instance (see <xref linkend="sec.cap.setup"/>
     UAA_HOST: <replaceable>uaa.host.example.com</replaceable>
     UAA_PORT: <replaceable>2793</replaceable>
 
