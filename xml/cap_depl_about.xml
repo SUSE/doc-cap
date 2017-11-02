@@ -127,16 +127,18 @@ Make the software development workflow more efficient
   
 <para>
 In this guide we will detail the steps for deploying &productname; on &suse; 
-&caasp;. &caasp; is a specialized application development and hosting platform
+&caasp;, and include some tips for deployment on any &kube; cluster. 
+&caasp; is a specialized application development and hosting platform
 built on the &susemicros; container host operating system, container 
 orchestration with &kube;, and &salt; for automating installation and 
 configuration. All you need is the &suse; &caasp; 
 <link xlink:href="https://www.suse.com/products/caas-platform/">installation image</link>,
 an Internet connection (&kube; will download 8-10 GB of Docker images on each 
-minion), and sufficient resources, either physical or virtual, to create a minimum of 
-four nodes: one admin node and three &kube; nodes. <xref linkend="cap.architecture"/>
-shows a simple &cap; on &caasp; deployment that also includes an optional log server, a 
-&suse; &smtool; server, and a &scc; server.
+minion), and sufficient resources, either physical or virtual, to create a 
+minimum of four nodes: one admin node and three &kube; nodes. 
+<xref linkend="cap.architecture"/>
+shows a simple &cap; on &caasp; deployment that also includes an optional log 
+server, a &suse; &smtool; server, and a &scc; server.
 </para>
   
     <figure xml:id="cap.architecture">

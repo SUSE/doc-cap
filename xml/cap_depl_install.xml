@@ -24,8 +24,7 @@
      applications to set up &productname;.
  </para>
  <para>
-     The Helm package includes a helper script that tests and verifies
-     that your Kubernetes nodes are ready for Helm, and a script to generate SSL
+     The Helm package includes a helper script for generating SSL
      certificates.
  </para>
  
@@ -36,7 +35,8 @@
     TODO update when real package and registry are available
 </para>
 <para>
-    Install the Helm package with Zypper, and then initialize and install Tiller:
+    Install the Helm package with Zypper on the kube-master, and then initialize 
+    and install Tiller:
     <screen>
 &prompt.root;zypper in helmpkg
 &prompt.root;helm init
@@ -48,7 +48,6 @@
     <screen>
 &prompt.root;ls -c1 deploy/*
 deploy/scf-config-values.yaml
-deploy/kube-ready-state-check.sh
 deploy/cert-generator.sh
 
 deploy/certs:
@@ -71,12 +70,12 @@ cf
 </para>
 </sect1>
 
+<!-- kube-ready-state-check.sh will not be in the release
 <sect1  xml:id="sec.cap.checkkube">
     <title>Verify that &kube; is Ready</title>
     
-<!-- TODO will the kube-check script be included in the release? -->
-<para>TODO will the kube-check script be included in the release?</para>
-<para>
+ TODO will the kube-check script be included in the release? 
+
     Use the <filename>kube-ready-state-check.sh</filename> script to verify
     that Kubernetes is ready. The script takes several options. 
     <command>-h</command> displays a help screen:
@@ -138,10 +137,7 @@ Configuration problem detected: Privileged must be enabled in 'kubelet'
 Verified: TasksMax must be set to infinity
 </screen>
 </para>
-<para>
-    <!-- TODO shouldn't kubelet start by default?-->
-    TODO shouldn't kubelet start by default?
-</para>
+
 <para>
 In this example one problem is detected, <literal>Privileged must be enabled 
 in 'kubelet'</literal>. Check if kubelet.service is running, and if it is not 
@@ -155,8 +151,7 @@ running, start it:
 &prompt.root;systemctl start kubelet   
 </screen>
 </para>
-
-</sect1>
+</sect1> -->
 <sect1  xml:id="sec.cap.certs"> 
     <title>Create SSL Certificates</title>
     <para>

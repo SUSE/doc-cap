@@ -4,7 +4,6 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<!-- Converted by suse-upgrade version 1.1 -->
 <preface version="5.0" xml:id="preface.deployment"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
@@ -24,14 +23,15 @@ distribution for &kube; which runs on &sle; containers.
 </para>
 
 <para>
-The &cf; code base provides the majority of the functionality. &productname; 
+The &cf; code base provides the basic functionality. &productname; 
 differentiates itself from other &cf; distributions by running in Linux 
 containers managed by &kube;, rather than virtual machines managed with &bosh;,
 for greater fault tolerance and lower memory use.
 </para>
 
 <para>
-This guide describes how to deploy &cf; on <link xlink:href="https://www.suse.com/documentation/suse-caasp-1/singlehtml/book_caasp_deployment/book_caasp_deployment.html">SUSE Container as a Service (CaaS) Platform 1.0</link>. 
+&productname; is designed to run on any Kubernetes cluster. This guide describes 
+how to deploy it on <link xlink:href="https://www.suse.com/documentation/suse-caasp-1/singlehtml/book_caasp_deployment/book_caasp_deployment.html">SUSE Container as a Service (CaaS) Platform 1.0</link>, and includes guidance for deploying it on any Kubernetes cluster.
 </para>
 
  <xi:include href="common_intro_target_audience_i.xml"/>
