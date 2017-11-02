@@ -16,9 +16,22 @@
   </dm:docmanager>
  </info>
  <para>
-These are the minimum prerequisites to set up &productname;. All of these commands
-and configurations are performed on the Kubernetes master node, unless noted otherwise.
+This chapter lists the minimum prerequisites to set up &productname; on &suse; &caasp;. 
+Some of the commands are particular to either the &kube; master node or a worker 
+node. These prerequisites also provide guidance for installing &cap; on any 
+Kubernetes cluster. <xref linkend="kube.services"/> shows which services run on
+the &kube; master and workers.
  </para>
+ 
+     <figure xml:id="kube.services">
+   <title>&suse; &caasp; &kube; Services</title>
+   <mediaobject>
+    <imageobject>
+     <imagedata fileref="cap_architecture-3.svg" format="SVG" width="75%"/>
+    </imageobject>
+   </mediaobject>
+  </figure>
+ 
 <sect1 xml:id="sec.cap.prereqs">
  <title>Prerequisites to Installing &productname;</title>
   <variablelist>
@@ -34,7 +47,15 @@ and configurations are performed on the Kubernetes master node, unless noted oth
         documentation</link>). You also need an Internet connection, as the 
         installer downloads additional packages, and the &kube;
         minions will download 8-10GB of Docker images each.
+        </para>
+        <para>System requirements depend on the workload; for a test system 60GB 
+        of storage should be adequate for each of the &kube; nodes, and 40GB for 
+        the admin node.
 	  </para>
+      <para>
+          Any quad-core AMD64/Intel* EM64T processor, and a minimum of 8GB of
+          memory per node.
+      </para>
       <para>
           The easiest way to create the Kubernetes nodes, after you create the 
           admin node, is to use AutoYaST; see 
@@ -52,7 +73,7 @@ and configurations are performed on the Kubernetes master node, unless noted oth
 	  </term>
       <listitem>
       <para>
-    &suse; &caasp; requires a DNS and DHCP server. This serves &suse; &cap; as well.
+    &suse; &cap; (and &suse; &caasp;) requires an external DNS and DHCP server.
        </para>
 	</listitem>
 	</varlistentry>   
@@ -73,8 +94,9 @@ and configurations are performed on the Kubernetes master node, unless noted oth
 	  </term>
 	<listitem>
         <para>
-            This should already be set in <filename>/etc/default/grub</filename>. 
-            Look for the line <literal>GRUB_CMDLINE_LINUX_DEFAULT="swapaccount=1".</literal> 
+            This should already be set in <filename>/etc/default/grub</filename>
+            on &caasp;. Look for the line 
+            <literal>GRUB_CMDLINE_LINUX_DEFAULT="swapaccount=1".</literal> 
 	  </para>
 	</listitem>
 	</varlistentry>
@@ -84,9 +106,10 @@ and configurations are performed on the Kubernetes master node, unless noted oth
 	  </term>
 	<listitem>
         <para>
-            <command>docker info| grep 'Storage Driver'</command> should return 
-            <literal>Storage Driver: btrfs</literal>, and not 
-            <literal>Storage Driver: aufs</literal>.
+            On &caasp; <command>docker info| grep 'Storage Driver'</command> 
+            should return <literal>Storage Driver: btrfs</literal>, and not 
+            <literal>Storage Driver: aufs</literal>. On other systems it may not 
+            be btrfs. The only requirement is something other than aufs.
 	  </para>
 	</listitem>
 	</varlistentry>
@@ -136,9 +159,9 @@ and configurations are performed on the Kubernetes master node, unless noted oth
   </para>
   <para>
       For testing and proof-of-concept, you can quickly set up a <literal>hostpath</literal> 
-      storage class. This is not for production deployments. Run these commands to
-      create the <literal>hostpath</literal> storage class, and to confirm that 
-      it was created. For Kubernetes 1.5.x:
+      storage class. This is not for production deployments. Run these commands 
+      on the kube-master to create the <literal>hostpath</literal> storage 
+      class, and to confirm that it was created. For Kubernetes 1.5.x:
       <screen>
 &prompt.root;echo '{"kind":"StorageClass","apiVersion":"storage.k8s.io/v1beta1", \
  "metadata":{"name":"hostpath"},"provisioner":"kubernetes.io/host-path"}' | \
@@ -179,11 +202,27 @@ Then verify:
  </term>
   <listitem>
    <para>
-       This should already be enabled. Look for <literal>KUBE_ALLOW_PRIV="--allow-privileged=true"</literal> in <filename>/etc/kubernetes/config</filename>.
+       This should already be enabled on the &caasp; kube-master. Look for <literal>KUBE_ALLOW_PRIV="--allow-privileged=true"</literal> in 
+       <filename>/etc/kubernetes/config</filename>
        (See <link xlink:href="https://kubernetes.io/docs/admin/kube-apiserver">kube-apiserver</link>)
   </para>
  </listitem>
-</varlistentry>   
+</varlistentry>
+ <varlistentry>
+ <term>
+  Privileged must be enabled in kubelet
+ </term>
+  <listitem>
+   <para>
+       This is configured in <filename>/etc/kubernetes/kubelet</filename> on a
+       kube-minion.
+<screen>
+KUBELET_ARGS="\
+    --allow-privileged \
+</screen>
+   </para>
+ </listitem>
+</varlistentry> 
  <varlistentry>
  <term>
 <!-- TODO The TasksMax property of the containerd service definition 
@@ -217,12 +256,11 @@ must be set to infinity. How?-->
     <title>SSH directly into the &kube; nodes</title>
        <para>
        By default, SSH access to the &kube; nodes is allowed only from the &caasp; 
-       admin node, with direct login enabled only for the admin node. You can 
-       log in to the &kube; nodes directly by copying the SSH keys from the 
-       admin node to an external host. Copy the keys to their own directory to 
-       avoid key name collisions, then specify the key in your SCP command. 
-       Replace the hostnames, filenames, and key name in the example with your own:
- 
+       admin node. You can log in to the &kube; nodes directly by copying the 
+       SSH keys from the admin node to an external host. Copy the keys to their 
+       own directory to avoid key name collisions, then specify the key in your 
+       SCP command. Replace the hostnames, filenames, and key name in the 
+       example with your own: 
 <screen>
 &prompt.root;external_host:~ mkdir caasp-ssh
 &prompt.root;external_host:~ cd caasp-ssh
