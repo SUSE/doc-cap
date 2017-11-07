@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.depl.about"
+<chapter version="5.0" xml:id="cha.cap.about"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -122,38 +122,62 @@ Make the software development workflow more efficient
 </listitem>
 </itemizedlist>
 
-<sect1 xml:id="sec.cap.depl.architecture">
+<sect1 xml:id="sec.cap.architecture">
   <title>&productname; Architecture</title>
   
 <para>
 In this guide we will detail the steps for deploying &productname; on &suse; 
-&caasp;, and include some tips for deployment on any &kube; cluster. 
-&caasp; is a specialized application development and hosting platform
+&caasp;. &caasp; is a specialized application development and hosting platform
 built on the &susemicros; container host operating system, container 
 orchestration with &kube;, and &salt; for automating installation and 
-configuration. All you need is the &suse; &caasp; 
+configuration. You need the &suse; &caasp; 
 <link xlink:href="https://www.suse.com/products/caas-platform/">installation image</link>,
 an Internet connection (&kube; will download 8-10 GB of Docker images on each 
-minion), and sufficient resources, either physical or virtual, to create a 
-minimum of four nodes: one admin node and three &kube; nodes. 
-<xref linkend="cap.architecture"/>
-shows a simple &cap; on &caasp; deployment that also includes an optional log 
-server, a &suse; &smtool; server, and a &scc; server.
+minion), a <link xlink:href="https://www.suse.com/documentation/suse-caasp-1/book_caasp_deployment/data/integration.html">&ses;</link> server for a 
+storage backend, and sufficient resources, either physical or virtual, to create 
+a minimum of four nodes: one admin node and three &kube; nodes, which is the 
+minimum to deploy &caasp;.
+</para>
+<para>
+   &productname; includes an entitlement of &suse; &caasp; and &ses;. 
+   A supported deployment includes &cap; installed on 
+   &caasp; 2.x, with &ses; > 4.x as a storage backend.
+</para>
+<para>
+The minimum 4-node deployment is not sufficient for a production deployment, 
+but it is enough for a test deployment, which you can run on a single workstation 
+or laptop. Chapter Foo describes how to install a minimal test deployment, and 
+Chapter Foo describes a minimal production deployment with high availability (HA).
+</para>
+
+<!--<xref linkend="fig.cap.architecture"/>
+shows a simple deployment that also includes a &suse; &smtool; 
+server, and a &scc; server.
 </para>
   
-    <figure xml:id="cap.architecture">
+    <figure xml:id="fig.cap.architecture">
    <title>&productname; Nodes Architecture</title>
    <mediaobject>
     <imageobject>
-     <imagedata fileref="cap_architecture-2.svg" format="SVG" width="75%"/>
+     <imagedata fileref="cap-arch.png" format="PNG" width="75%"/>
+    </imageobject>
+   </mediaobject>
+  </figure>-->
+
+<para>
+    <xref linkend="fig.cap.architecture-layers"/> shows a simple diagram of
+    the &cap; architecture. Install &suse; &caasp; and &ses; on bare 
+    metal or virtual machines, install &cap; on &caasp;, and then &cap; 
+    supports your workloads.
+</para> 
+  
+      <figure xml:id="fig.cap.architecture-layers">
+   <title>Simple &cap; Architecture Layer Diagram</title>
+   <mediaobject>
+    <imageobject>
+     <imagedata fileref="cap-arch-2.png" format="PNG" width="75%"/>
     </imageobject>
    </mediaobject>
   </figure>
-  
-  <para>
-      A four-node system is not sufficient for most production deployments. 
-      However, as a test lab and proof-of-concept it is fast and easy to set up.
-      
-  </para>
-  </sect1>
- </chapter>
+  </sect1>  
+</chapter>
