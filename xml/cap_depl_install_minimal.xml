@@ -4,18 +4,90 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.depl.install"
+<chapter version="5.0" xml:id="cha.cap.install-minimal"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
  <info>
-  <title>&productname; Installation</title>
+  <title>Minimal &cap; Installation for Testing</title>
   <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
    <dm:bugtracker></dm:bugtracker>
    <dm:translation>yes</dm:translation>
   </dm:docmanager>
  </info>
+ <para>
+     You can set up a minimal &productname; deployment in a hypervisor, such as 
+     KVM or VirtualBox, on a laptop or PC for testing. You need a total of five 
+     nodes: four for &suse; &caasp;, and one for &ses;.
+ </para>
+ <para> 
+ <xref linkend="fig.cap.architecture"/>
+shows a minimal deployment with &suse; &caasp;, &ses;, and &suse; &cap;.
 
+  
+    <figure xml:id="fig.cap.architecture">
+   <title>Minimal &productname; test deployment</title>
+   <mediaobject>
+    <imageobject>
+     <imagedata fileref="cap-arch-minimal.png" format="PNG" width="75%"/>
+    </imageobject>
+   </mediaobject>
+  </figure>
+ </para>
+ 
+<sect1 xml:id="sec.cap.prereqs">
+ <title>Prerequisites to Installing &productname;</title>
+  <variablelist>
+	<varlistentry>
+	  <term>
+	    Install &suse; &caasp;
+	  </term>
+	<listitem>
+	  <para>
+	    &caasp; requires a minimum of four physical or virtual nodes: one admin, one 
+        Kubernetes master, and two Kubernetes minions. (See the 
+        <link xlink:href="https://www.suse.com/documentation/suse-caasp-1/">CaaSP 
+        documentation</link>). You also need an Internet connection, as the 
+        installer downloads additional packages, and the &kube;
+        minions will download 8-10GB of Docker images each.
+        </para>
+        <para>System requirements depend on the workload; for a test system 60GB 
+        of storage should be adequate for each of the &kube; nodes, and 40GB for 
+        the admin node.
+	  </para>
+      <para>
+          Any quad-core AMD64/Intel* EM64T processor, and a minimum of 8GB of
+          memory per node.
+      </para>
+      <para>
+          The easiest way to create the Kubernetes nodes, after you create the 
+          admin node, is to use AutoYaST; see 
+<link xlink:href="https://www.suse.com/documentation/suse-caasp-1/singlehtml/book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.node.ay">
+              Installation with AutoYaST</link>. When you have completed 
+<link xlink:href="https://www.suse.com/documentation/suse-caasp-1/singlehtml/book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.bootstrap">
+              Bootstrapping the Cluster</link> you can proceed to 
+          the next steps.
+      </para>
+	</listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>
+          Install &ses;
+      </term>
+      <listitem>
+      <para>
+          See the <link xlink:href="https://www.suse.com/documentation/suse-enterprise-storage-5/">&ses; Deployment Guide</link> for instructions.
+      </para>
+      	</listitem>
+	</varlistentry>
+</variablelist>
+  <variablelist>
+	<varlistentry>
+	  <term>
+          Install &suse; &cap;
+      </term>
+      <listitem>
  <para>
      Installing &productname; is a little different than the usual method of
      installing software. Rather than installing packages in the usual way with
@@ -23,11 +95,11 @@
      with Zypper, and then use Helm to install the required Kubernetes 
      applications to set up &productname;.
  </para>
- <para>
-     The Helm package includes a helper script for generating SSL
-     certificates.
- </para>
- 
+
+ </listitem>
+ 	</varlistentry>
+</variablelist>
+ </sect1>
 <sect1  xml:id="sec.cap.install">
     <title>Install Helm</title>
 <!-- TODO update when real package & registry are available -->
@@ -70,92 +142,11 @@ cf
 </para>
 </sect1>
 
-<!-- kube-ready-state-check.sh will not be in the release
-<sect1  xml:id="sec.cap.checkkube">
-    <title>Verify that &kube; is Ready</title>
-    
- TODO will the kube-check script be included in the release? 
-
-    Use the <filename>kube-ready-state-check.sh</filename> script to verify
-    that Kubernetes is ready. The script takes several options. 
-    <command>-h</command> displays a help screen:
-<screen>
-&prompt.root;cd deploy
-&prompt.root;sh kube-ready-state-check.sh -h
-Usage: kube-ready-state-check.sh [options] [category]
-
-  -h: Displays this help message
-
-  Supported categories: all, api, kube, node
-  Defaults to: all
-</screen>
-</para>
-<para>
-<informaltable xml:id="table.cap.checkkube">
-  <tgroup cols="2">
-    <thead>
-      <row>
-        <entry>Category</entry>
-        <entry>Explanation</entry>
-      </row>
-    </thead>
-    <tbody>
-      <row>
-        <entry>api</entry>
-        <entry>Requirements on the hosts for the kube master nodes (running apiserver)</entry>
-      </row>
-      <row>
-        <entry>kube</entry>
-        <entry>Requirements of the cluster itself, via kubectl</entry>
-      </row>
-        <row>
-        <entry>node</entry>
-        <entry>Requirements on the hosts for the kube worker nodes (running kubelet)</entry>
-      </row>
-    </tbody>
-  </tgroup>
-</informaltable>
-</para>   
-
-<para>
-<screen>
-&prompt.root;sh kube-ready-state-check.sh
-</screen>
-</para>
-<para>
-The output looks like this example:
-<screen>
-Testing all
-Verified: swapaccount enable
-Verified: docker info should not show aufs
-Verified: kube-dns should be running (show 4/4 ready)
-Verified: tiller should be running (1/1 ready)
-Verified: An ntp daemon or systemd-timesyncd must be installed and active
-Verified: A storage class should exist in K8s
-Verified: Privileged must be enabled in 'kube-apiserver'
-Configuration problem detected: Privileged must be enabled in 'kubelet'
-Verified: TasksMax must be set to infinity
-</screen>
-</para>
-
-<para>
-In this example one problem is detected, <literal>Privileged must be enabled 
-in 'kubelet'</literal>. Check if kubelet.service is running, and if it is not 
-running, start it:
-<screen>
-&prompt.root;systemctl status kubelet
-   ● kubelet.service - Kubernetes Kubelet Server
-   Loaded: loaded (/usr/lib/systemd/system/kubelet.service; disabled; vendor 
-   preset: disabled)
-   Active: inactive (dead)
-&prompt.root;systemctl start kubelet   
-</screen>
-</para>
-</sect1> -->
 <sect1  xml:id="sec.cap.certs"> 
     <title>Create SSL Certificates</title>
     <para>
-        Change to the <filename>deploy</filename> directory and create the 
+     The Helm package includes a helper script for generating SSL
+     certificates. Change to the <filename>deploy</filename> directory and create the 
         <filename>certs</filename> directory:
     <screen>
 &prompt.root;cd deploy

@@ -29,7 +29,8 @@
 <xi:include href="cap_depl_intro.xml"/>
 <xi:include href="cap_depl_about.xml"/>
 <!--<xi:include href="cap_depl_prerequisites.xml"/>-->
-<xi:include href="cap_depl_install.xml"/>
+<xi:include href="cap_depl_install_minimal.xml"/>
+<xi:include href="cap_depl_install_production.xml"/>
 <!-- ===================================================================== -->
 <!-- Appendix                                                              -->
 <!-- ===================================================================== -->
