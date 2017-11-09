@@ -150,21 +150,6 @@ or laptop. <xref linkend="cha.cap.install-minimal"/> describes how to install a
 minimal test deployment, and <xref linkend="cha.cap.install-production"/> 
 details a minimal production deployment with high availability (HA).
 </para>
-
-<!--<xref linkend="fig.cap.architecture"/>
-shows a simple deployment that also includes a &suse; &smtool; 
-server, and a &scc; server.
-</para>
-  
-    <figure xml:id="fig.cap.architecture">
-   <title>&productname; Nodes Architecture</title>
-   <mediaobject>
-    <imageobject>
-     <imagedata fileref="cap-arch.png" format="PNG" width="75%"/>
-    </imageobject>
-   </mediaobject>
-  </figure>-->
-
 <para>
     <xref linkend="fig.cap.architecture-layers"/> shows a simple diagram of
     the &cap; architecture. Install &suse; &caasp; and &ses; on bare 
