@@ -43,6 +43,10 @@ shows a minimal deployment with &suse; &caasp;, &ses;, and &suse; &cap;.
 	    Install &suse; &caasp;
 	  </term>
 	<listitem>
+        <para>
+            When you install &caasp;, be sure to select Helm as an installation
+            option.
+        </para>
 	  <para>
 	    &caasp; requires a minimum of four physical or virtual nodes: one admin, one 
         Kubernetes master, and two Kubernetes minions. (See the 
@@ -179,7 +183,7 @@ env:
 
     # UAA host/port that &cap; will talk to
     # You may use an existing UAA instance, or
-    # deploy a new instance (see <xref linkend="sec.cap.setup"/>
+    # deploy a new instance (see <xref linkend="sec.cap.setup"/>)
     UAA_HOST: <replaceable>uaa.host.example.com</replaceable>
     UAA_PORT: <replaceable>2793</replaceable>
 
@@ -235,8 +239,33 @@ scf           api-0                          0/1       ContainerCreating   0    
 scf           api-worker-3486565911-dptbh    0/1       ContainerCreating   0          1m
 scf           blobstore-0                    0/1       Pending             0          1m
 </screen>
-
 </para>
-
+</sect1>
+<sect1 xml:id="sec.cap.stratos">
+    <title>Installing the Stratos Console</title>
+    <para>
+        Stratos UI is a modern, web-based management application for Cloud 
+        Foundry. It provides a graphical management console for both developers
+        and system administrators. Install Stratos on your &kube; master with 
+        Helm. First add the Stratos repository:
+        <screen>
+&prompt.root;helm repo add stratos-ui https://suse.github.io/stratos-ui
+</screen>
+    </para>
+    <para>
+        Change to the directory where your <filename>scf-config-values.yaml</filename>
+        is stored, and run these commands:
+        <screen>
+&prompt.root;helm install stratos-ui/console \
+    --namespace stratos \
+    --values scf-config-values.yaml 
+</screen>
+</para>
+<para>
+    Point a Web browser to your domain at port 8443, for example 
+    https://host:example.com:8443, and log in with your &suse; &caasp; 
+    credentials. If you see an upgrade message, wait a few minutes and try
+    again.
+</para>
 </sect1>
 </chapter>
