@@ -16,147 +16,145 @@
   <title>About &productname;</title>
  </info>
  <para>
-&productname; is a &cf;-based software platform for 
-cloud-native application development. Most Cloud Foundry distributions run on 
-virtual machines managed by &bosh;. &productname; (&suse; &cap;) runs in Linux 
-containers managed by &kube;. Containerizing the components of the platform 
-itself has these advantages:
-</para>
-
- <itemizedlist>
-  <listitem>
-   <para>
-Improves fault tolerance. &kube; monitors the health of all containers, and
-automatically restarts faulty containers faster than virtual machines can be
-restarted or replaced.
-   </para>
-</listitem>
-  <listitem>
-   <para>
-    Reduces physical memory overhead. &suse; &cap; components deployed in containers consume
-substantially less memory, as host-level operations are shared between containers by
-&kube;.
-   </para>
-</listitem>
-</itemizedlist>
-
-   <para>
-&productname; builds on work pioneered in HPE Helion Stackato. &suse; &cap;
-incorporates upstream Cloud Foundry &bosh; releases to produce containers and 
-configurations, then customers will deploy these containers to their &kube; 
-clusters using &helm;.
-</para>
- <para>
-&suse; &cap; serves different and complementary purposes for operators and 
-application developers.
+&productname; (&cap;) is a software platform for cloud-native application
+deployment based on &cf; and &kube;. It serves different but complementary
+purposes for operators and application developers.
  </para>
  <para>
-For operators, the platform goals are to:
+For operators, the platform is:
 </para>
  <itemizedlist>
   <listitem>
    <para>
-       Be easy to install, manage, and maintain
+Easy to install, manage, and maintain
    </para>
 </listitem>
   <listitem>
    <para>
-Be secure by design
+Secure by design
    </para>
 </listitem>
   <listitem>
    <para>
-Be fault tolerant and self-healing
+Fault tolerant and self-healing
    </para>
 </listitem>
   <listitem>
    <para>
-Offer high availability for critical components
+Offers high availability for critical components
    </para>
 </listitem>
   <listitem>
    <para>
-Use industry-standard components
+Uses industry-standard components
    </para>
 </listitem>
   <listitem>
    <para>
-Avoid single vendor lock-in
+Avoids single vendor lock-in
    </para>
 </listitem>
 </itemizedlist>
 
-   <para>       
-For developers, the platform must:
+   <para>
+For developers, the platform:
 </para>
  <itemizedlist>
   <listitem>
    <para>
-Allocate computing resources on demand via API or Web interface
+Allocates computing resources on demand via API or Web interface
    </para>
 </listitem>
   <listitem>
    <para>
-Offer users a choice of language and Web framework
+Offers users a choice of language and Web framework
 </para>
 </listitem>
   <listitem>
    <para>
-Give access to databases and other data services
+Gives access to databases and other data services
    </para>
 </listitem>
   <listitem>
    <para>
-Emit and aggregate application log streams
+Emits and aggregates application log streams
 </para>
 </listitem>
   <listitem>
    <para>
-Track resource usage for users and groups
+Tracks resource usage for users and groups
 </para>
 </listitem>
   <listitem>
    <para>
-Make the software development workflow more efficient
+Makes the software development workflow more efficient
    </para>
 </listitem>
 </itemizedlist>
 
+<para>
+The principle interface and API for deploying applications to &productname; is
+&cf;. Most Cloud Foundry distributions run on virtual machines managed by
+&bosh;. &susecf; runs in SUSE Linux Enterprise containers managed by &kube;.
+Containerizing the components of the platform itself has these advantages:
+</para>
+
+ <itemizedlist>
+  <listitem>
+   <para>
+    Improves fault tolerance. &kube; monitors the health of all containers, and
+    automatically restarts faulty containers faster than virtual machines can be
+    restarted or replaced.
+   </para>
+</listitem>
+  <listitem>
+   <para>
+    Reduces physical memory overhead. &suse; &cap; components deployed in
+    containers consume substantially less memory, as host-level operations are
+    shared between containers by &kube;.
+   </para>
+</listitem>
+</itemizedlist>
+
+   <para>
+&susecf; packages upstream Cloud Foundry &bosh; releases to produce containers
+and configurations which are deployed to &kube; clusters using &helm;.
+</para>
 <sect1 xml:id="sec.cap.architecture">
   <title>&productname; Architecture</title>
-  
+
 <para>
-In this guide we will detail the steps for deploying &productname; on &suse; 
+In this guide we will detail the steps for deploying &productname; on &suse;
 &caasp;. &caasp; is a specialized application development and hosting platform
-built on the &susemicros; container host operating system, container 
-orchestration with &kube;, and &salt; for automating installation and 
-configuration. You need the &suse; &caasp; 
+built on the &susemicros; container host operating system, container
+orchestration with &kube;, and &salt; for automating installation and
+configuration. You need the &suse; &caasp;
 <link xlink:href="https://www.suse.com/products/caas-platform/">installation image</link>,
-an Internet connection (&kube; will download 8-10 GB of Docker images on each 
-minion), a <link xlink:href="https://www.suse.com/documentation/suse-caasp-1/book_caasp_deployment/data/integration.html">&ses;</link> server for a 
-storage backend, and sufficient resources, either physical or virtual, to create 
-a minimum of four nodes: one admin node and three &kube; nodes, which is the 
+an Internet connection (&kube; will download 8-10 GB of Docker images on each
+minion), a <link xlink:href="https://www.suse.com/documentation/suse-caasp-1/book_caasp_deployment/data/integration.html">&ses;</link> server for a
+storage backend, and sufficient resources, either physical or virtual, to create
+a minimum of four nodes: one admin node and three &kube; nodes, which is the
 minimum to deploy &caasp;.
 </para>
 <para>
-   &productname; includes an entitlement of &suse; &caasp; and &ses;. 
-   A supported deployment includes &cap; installed on 
+   &productname; includes an entitlement of &suse; &caasp; and &ses;.
+   A supported deployment includes &cap; installed on
    &caasp; 2.x, with &ses; > 4.x as a storage backend.
 </para>
 <para>
-The minimum 4-node deployment is not sufficient for a production deployment, 
-but it is enough for a test deployment, which you can run on a single workstation 
-or laptop. <xref linkend="cha.cap.install-minimal"/> describes how to install a 
-minimal test deployment, and <xref linkend="cha.cap.install-production"/> 
+The minimum 4-node deployment is not sufficient for a production deployment,
+but it is enough for a test deployment, which you can run on a single workstation
+or laptop. <xref linkend="cha.cap.install-minimal"/> describes how to install a
+minimal test deployment, and <xref linkend="cha.cap.install-production"/>
 details a minimal production deployment with high availability (HA).
 </para>
 <para>
     <xref linkend="fig.cap.architecture-layers"/> shows a simple diagram of
-    the &cap; architecture. Install &suse; &caasp; and &ses; on bare 
-    metal or virtual machines, install &cap; on &caasp;, and then &cap; 
+    the &cap; architecture. Install &suse; &caasp; and &ses; on bare
+    metal or virtual machines, install &cap; on &caasp;, and then &cap;
     supports your workloads.
-</para> 
-  
+</para>
+
       <figure xml:id="fig.cap.architecture-layers">
    <title>Simple &cap; Architecture Layer Diagram</title>
    <mediaobject>
@@ -165,5 +163,5 @@ details a minimal production deployment with high availability (HA).
     </imageobject>
    </mediaobject>
   </figure>
-  </sect1>  
+  </sect1>
 </chapter>
