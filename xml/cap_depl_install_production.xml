@@ -26,7 +26,7 @@
  <xref linkend="fig.cap.architecture-production"/>
 shows a minimal production deployment with &suse; &caasp;, &ses;, &suse; &cap;,
 a &smtool; server, and a &scc; server.
-
+ </para>
   
     <figure xml:id="fig.cap.architecture-production">
    <title>Basic &productname; production deployment</title>
@@ -36,7 +36,7 @@ a &smtool; server, and a &scc; server.
     </imageobject>
    </mediaobject>
   </figure>
- </para>
+
  
 <sect1 xml:id="sec.cap.prereqs-production">
  <title>Prerequisites to Installing &productname;</title>
@@ -117,15 +117,16 @@ a &smtool; server, and a &scc; server.
 </para>
 <para>
     Install the Helm charts package with Zypper on the kube-master, and then 
-    initialize and install Tiller:
+    initialize and install Tiller:</para>
     <screen>
 &prompt.root;zypper in helmpkg
 &prompt.root;helm init
 </screen>    
-</para>
+
 <para>
     <filename>helmpkg</filename> installs the following files and directories in 
     <filename>/root/deploy</filename>:
+</para>
     <screen>
 &prompt.root;ls -c1 deploy/*
 deploy/scf-config-values.yaml
@@ -148,7 +149,7 @@ deploy/helm:
 uaa
 cf
 </screen>
-</para>
+
 </sect1>
 
 <sect1  xml:id="sec.cap.certs-production"> 
@@ -157,18 +158,19 @@ cf
      The Helm package includes a helper script for generating SSL
      certificates. Change to the <filename>deploy</filename> directory and create the 
         <filename>certs</filename> directory:
+    </para>
     <screen>
 &prompt.root;cd deploy
 &prompt.root;mkdir certs
 </screen>
-</para>
 <para>
     Run the <command>cert-generator.sh</command> script to generate the required
     custom SSL certificates. Replace host.example.com with your domain:
+</para>
     <screen>
 &prompt.root;sh cert-generator.sh -d <replaceable>host.example.com</replaceable> -n scf -o certs     
     </screen>
-</para>
+
 </sect1>
 <sect1 xml:id="sec.cap.configure-production">
     <title>Configuring the &productname; Deployment</title>
@@ -176,7 +178,7 @@ cf
         Create a new configuration file for Helm to use. In this example it is
         called <filename>deploy/scf-config-values.yaml</filename>, which matches
         the default Helm chart names. If you change this, change the Helm charts
-        to match.
+        to match.</para>
         <screen>
 env:
     # Password for the cluster
@@ -240,7 +242,7 @@ sizing:
    clock_global:
       count: 2        
     </screen>
-</para>
+
 <para>
     The HA pods with the following roles will enter in passive state, and won't 
     show a ready state:
@@ -281,6 +283,7 @@ state <literal>.consul-lock.acquiring-lock.</literal>
     <title>Deploy with Helm</title>
  <para>
 Run the following Helm commands to complete the deployment.
+</para>
 <screen>
 &prompt.root;kubectl create namespace uaa
 &prompt.root;kubectl get secret ceph-secret -o json --namespace default | \
@@ -300,16 +303,18 @@ Run the following Helm commands to complete the deployment.
     --values certs/scf-cert-values.yaml \
     --values scf-config-values.yaml 
     </screen>
-</para>
+
 <para>
     Now sit back and wait for everything to be ready. Run this command to watch
     the pods come online:
+</para>
     <screen>
 &prompt.root;watch -c 'kubectl get pods --all-namespaces'
 </screen>
-</para>
+
 <para>
 You should see output similar to this (which is shortened for this example):
+</para>
 <screen>
 NAMESPACE     NAME                           READY     STATUS              RESTARTS   AGE
 kube-system   kube-dns-2830115714-tdl38      3/3       Completed           18         1m
@@ -319,7 +324,6 @@ scf           api-worker-3486565911-dptbh    0/1       ContainerCreating   0    
 scf           blobstore-0                    0/1       Pending             0          1m
 </screen>
 
-</para>
 </sect1>
 <sect1 xml:id="sec.cap.stratos-2">
     <title>Installing the Stratos Console</title>
@@ -328,19 +332,21 @@ scf           blobstore-0                    0/1       Pending             0    
         Foundry. It provides a graphical management console for both developers
         and system administrators. Install Stratos on your &kube; master with 
         Helm. First add the Stratos repository:
+    </para>
         <screen>
 &prompt.root;helm repo add stratos-ui https://suse.github.io/stratos-ui
 </screen>
-    </para>
+
     <para>
         Change to the directory where your <filename>scf-config-values.yaml</filename>
         is stored, and run these commands:
+    </para>
         <screen>
 &prompt.root;helm install stratos-ui/console \
     --namespace stratos \
     --values scf-config-values.yaml 
 </screen>
-</para>
+
 <para>
     Point a Web browser to your domain at port 8443, for example 
     https://host:example.com:8443, and log in with your &suse; &caasp; 
