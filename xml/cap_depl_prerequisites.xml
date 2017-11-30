@@ -4,6 +4,10 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
+
+<!-- this chapter is not used 
+leaving in place until I'm sure it's not needed - cs -->
+
 <chapter version="5.0" xml:id="cha.cap.depl.req"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
