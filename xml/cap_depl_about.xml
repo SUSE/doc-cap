@@ -125,32 +125,41 @@ and configurations which are deployed to &kube; clusters using &helm;.
 
 <para>
 In this guide we will detail the steps for deploying &productname; on &suse;
-&caasp;. &caasp; is a specialized application development and hosting platform
+&caasp; v2. &caasp; is a specialized application development and hosting platform
 built on the &susemicros; container host operating system, container
 orchestration with &kube;, and &salt; for automating installation and
-configuration. You need the &suse; &caasp;
-<link xlink:href="https://www.suse.com/products/caas-platform/">installation image</link>,
-an Internet connection (&kube; will download 8-10 GB of Docker images on each
-minion), a <link xlink:href="https://www.suse.com/documentation/suse-caasp-1/book_caasp_deployment/data/integration.html">&ses;</link> server for a
-storage backend, and sufficient resources, either physical or virtual, to create
-a minimum of four nodes: one admin node and three &kube; nodes, which is the
-minimum to deploy &caasp;.
+configuration. 
 </para>
 <para>
-   &productname; includes an entitlement of &suse; &caasp; and &ses;.
+You need sufficient resources, either physical or virtual, to create
+a minimum of five nodes: one admin node and three &kube; nodes, which is the
+minimum to deploy &caasp;, and one node for a
+<link xlink:href="https://www.suse.com/documentation/suse-enterprise-storage-5/">&ses;</link> 
+server for the storage backend.
+</para>
+<para>
+    You need an Internet connection as the &caasp; installer will download 
+    packages, and after installation the &kube; minions will each download ~10GB 
+    of Docker images.
+</para>
+      <para>
+    &suse; &cap; (and &suse; &caasp;) require a DNS/DHCP server.
+       </para>
+<para>
+   &productname; includes an entitlement of &suse; &caasp; 1.0 and &ses; 5.
    A supported deployment includes &cap; installed on
    &caasp; 2.x, with &ses; > 4.x as a storage backend.
 </para>
 <para>
-The minimum 4-node deployment is not sufficient for a production deployment,
+The minimum 5-node deployment is not sufficient for a production deployment,
 but it is enough for a test deployment, which you can run on a single workstation
 or laptop. <xref linkend="cha.cap.install-minimal"/> describes how to install a
 minimal test deployment, and <xref linkend="cha.cap.install-production"/>
 details a minimal production deployment with high availability (HA).
 </para>
 <para>
-    <xref linkend="fig.cap.architecture-layers"/> shows a simple diagram of
-    the &cap; architecture. Install &suse; &caasp; and &ses; on bare
+    <xref linkend="fig.cap.architecture-layers"/> shows where &cap; fits in
+    your deployment. Install &suse; &caasp; and &ses; on bare
     metal or virtual machines, install &cap; on &caasp;, and then &cap;
     supports your workloads.
 </para>

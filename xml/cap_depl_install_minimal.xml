@@ -18,11 +18,14 @@
  <para>
      You can set up a minimal &productname; deployment in a hypervisor, such as 
      KVM or VirtualBox, on a laptop or PC for testing. You need a total of five 
-     nodes: four for &suse; &caasp;, and one for &ses;.
+     nodes: four for &suse; &caasp;, and one for &ses;. You also need to provide
+     name services, either from a separate DNS/DHCP server, or use the
+     <filename>/etc/hosts</filename> files on your &caasp; nodes. Your &cap; 
+     cluster requires its own subnet and domain.    
  </para>
  <para> 
  <xref linkend="fig.cap.architecture"/>
-shows a minimal deployment with &suse; &caasp;, &ses;, and &suse; &cap;.
+shows a minimal deployment with &suse; &caasp;, &ses;, and &suse; &cap;. 
  </para>
 
     <figure xml:id="fig.cap.architecture">
@@ -39,20 +42,20 @@ shows a minimal deployment with &suse; &caasp;, &ses;, and &suse; &cap;.
   <variablelist>
 	<varlistentry>
 	  <term>
-	    Install &suse; &caasp;
+	    Install &suse; &caasp; 2.
 	  </term>
 	<listitem>
         <para>
-            When you install &caasp;, be sure to select Helm as an installation
-            option.
+            After installing &caasp;, check the box in Velum to install Tiller 
+            (Helm's server component). 
         </para>
 	  <para>
 	    &caasp; requires a minimum of four physical or virtual nodes: one admin, one 
         Kubernetes master, and two Kubernetes minions. (See the 
-        <link xlink:href="https://www.suse.com/documentation/suse-caasp-1/">CaaSP 
+        <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/">CaaSP 
         documentation</link>). You also need an Internet connection, as the 
         installer downloads additional packages, and the &kube;
-        minions will download 8-10GB of Docker images each.
+        minions will each download 8-10GB of Docker images.
         </para>
         <para>System requirements depend on the workload; for a test system 60GB 
         of storage should be adequate for each of the &kube; nodes, and 40GB for 
@@ -63,11 +66,11 @@ shows a minimal deployment with &suse; &caasp;, &ses;, and &suse; &cap;.
           memory per node.
       </para>
       <para>
-          The easiest way to create the Kubernetes nodes, after you create the 
+          The easiest way to create the &kube; nodes, after you create the 
           admin node, is to use AutoYaST; see 
-<link xlink:href="https://www.suse.com/documentation/suse-caasp-1/singlehtml/book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.node.ay">
+<link xlink:href="https://www.suse.com/documentation/suse-caasp-2/singlehtml/book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.node.ay">
               Installation with AutoYaST</link>. When you have completed 
-<link xlink:href="https://www.suse.com/documentation/suse-caasp-1/singlehtml/book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.bootstrap">
+<link xlink:href="https://www.suse.com/documentation/suse-caasp-2/singlehtml/book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.bootstrap">
               Bootstrapping the Cluster</link> you can proceed to 
           the next steps.
       </para>
@@ -80,7 +83,9 @@ shows a minimal deployment with &suse; &caasp;, &ses;, and &suse; &cap;.
       </term>
       <listitem>
       <para>
-          See the <link xlink:href="https://www.suse.com/documentation/suse-enterprise-storage-5/">&ses; Deployment Guide</link> for instructions.
+          See the <link xlink:href="https://www.suse.com/documentation/suse-enterprise-storage-5/">&ses; Deployment Guide</link> for instructions, and see
+          <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/data/integration.html">&suse; &caasp; Integration with &ses;</link> 
+          for information on integrating &ses; with &caasp;.
       </para>
       	</listitem>
 	</varlistentry>
@@ -121,14 +126,14 @@ shows a minimal deployment with &suse; &caasp;, &ses;, and &suse; &cap;.
  </sect1>
  
 <sect1  xml:id="sec.cap.install">
-    <title>Install Helm</title>
+    <title>Install Helm Charts</title>
 <!-- TODO update when real package & registry are available -->
 <para>
     TODO update when real package and registry are available
 </para>
 <para>
-    Install the Helm package with Zypper on the kube-master, and then initialize 
-    and install Tiller:
+    Install the Helm package with Zypper on the &kube; master, and then initialize 
+    Tiller:
 </para>
     <screen>
 &prompt.root;zypper in helmpkg
