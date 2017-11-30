@@ -24,8 +24,8 @@
  <xref linkend="fig.cap.architecture"/>
 shows a minimal deployment with &suse; &caasp;, &ses;, and &suse; &cap;.
  </para>
-  
-  <figure xml:id="fig.cap.architecture">
+
+    <figure xml:id="fig.cap.architecture">
    <title>Minimal &productname; test deployment</title>
    <mediaobject>
     <imageobject>
@@ -33,7 +33,6 @@ shows a minimal deployment with &suse; &caasp;, &ses;, and &suse; &cap;.
     </imageobject>
    </mediaobject>
   </figure>
-
  
 <sect1 xml:id="sec.cap.prereqs">
  <title>Prerequisites to Installing &productname;</title>
@@ -85,8 +84,24 @@ shows a minimal deployment with &suse; &caasp;, &ses;, and &suse; &cap;.
       </para>
       	</listitem>
 	</varlistentry>
-</variablelist>
-  <variablelist>
+    
+    <varlistentry>
+	  <term>
+          Set up name services for &cap;
+      </term>
+      <listitem>
+ <para>
+     &productname; needs its own domain and network.You may use your own name 
+     server, or add your &cap; hostnames and domain to the 
+     <filename>/etc/hosts</filename> files on your 
+     nodes. The Salt manager on &caasp; uses <filename>/etc/hosts</filename> to 
+     create the internal &caasp; network, <literal>infra.caasp.local</literal>. 
+     Do not use this domain for the &cap; cluster as it is exclusively for 
+     &caasp; internal use.
+ </para>
+
+ </listitem>
+ 	</varlistentry>
 	<varlistentry>
 	  <term>
           Install &suse; &cap;
@@ -104,6 +119,7 @@ shows a minimal deployment with &suse; &caasp;, &ses;, and &suse; &cap;.
  	</varlistentry>
 </variablelist>
  </sect1>
+ 
 <sect1  xml:id="sec.cap.install">
     <title>Install Helm</title>
 <!-- TODO update when real package & registry are available -->
@@ -118,14 +134,12 @@ shows a minimal deployment with &suse; &caasp;, &ses;, and &suse; &cap;.
 &prompt.root;zypper in helmpkg
 &prompt.root;helm init
 </screen>    
-
 <para>
     <filename>helmpkg</filename> installs the following files and directories in 
     <filename>/root/deploy</filename>:
- </para>
+</para>
     <screen>
 &prompt.root;ls -c1 deploy/*
-deploy/scf-config-values.yaml
 deploy/cert-generator.sh
 
 deploy/certs:
@@ -154,19 +168,20 @@ cf
      certificates. Change to the <filename>deploy</filename> directory and create the 
         <filename>certs</filename> directory:
     </para>
-    <screen>
+        <screen>
 &prompt.root;cd deploy
 &prompt.root;mkdir certs
 </screen>
 
 <para>
     Run the <command>cert-generator.sh</command> script to generate the required
-    custom SSL certificates. Replace host.example.com with your domain:
+    custom SSL certificates, using your &cap; cluster domain.
 </para>
     <screen>
-&prompt.root;sh cert-generator.sh -d <replaceable>host.example.com</replaceable> -n scf -o certs     
+&prompt.root;sh cert-generator.sh -d <replaceable>example.com</replaceable> -n scf -o certs     
     </screen>
 </sect1>
+
 <sect1 xml:id="sec.cap.configure">
     <title>Configuring the &productname; Deployment</title>
     <para>
@@ -177,38 +192,40 @@ cf
     </para>
         <screen>
 env:
-    # Password for the cluster
+    # Create a password for your &cap; cluster
     CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
-    # DNS for *.DOMAIN must point to the &kube; master node's
-    # external IP address. This must match the value passed to the
-    # cert-generator.sh script.
-    DOMAIN: <replaceable>host.example.com</replaceable>
-
-    # UAA host/port that &cap; will talk to
-    # You may use an existing UAA instance, or
-    # deploy a new instance (see <xref linkend="sec.cap.setup"/>)
-    UAA_HOST: <replaceable>uaa.host.example.com</replaceable>
-    UAA_PORT: <replaceable>2793</replaceable>
-
-    # Password for &cap; to authenticate with UAA
+    
+    # Enter the domain you created for your &cap; cluster
+    DOMAIN: <replaceable>&exampledomain;</replaceable>
+    
+    # The fully-qualified domain name of your UAA host,
+    # which is your &kube; master node
+    UAA_HOST: <replaceable>uaa-host.&exampledomain;</replaceable>
+    
+    # The default is 2793
+    UAA_PORT: 2793
+    
+    # Create a password for your UAA client secret
     UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
 
 kube:
-    # Replace the example with the IP address of your &kube; node.
-    external_ip: <replaceable>192.168.10.100</replaceable>
+    # The IP address of the &kube; master
+    external_ip: <replaceable>&kubeip;</replaceable>
     storage_class:
         persistent: fast
     </screen>
-
+            
 </sect1>
+
 <sect1  xml:id="sec.cap.setup">
     <title>Deploy with Helm</title>
  <para>
-  Run the following Helm commands to complete the deployment.</para>
+Run the following Helm commands to complete the deployment.
+</para>
 <screen>
 &prompt.root;kubectl create namespace uaa
-&prompt.root;kubectl get secret ceph-secret -o json --namespace default | \
- jq ".metadata.namespace = \"uaa\"" | kubectl create -f -
+&prompt.root;kubectl get secret ceph-secret-admin -o json --namespace default | \
+sed 's/"namespace": "default"/"namespace": "uaa"/' | kubectl create -f -"
  
 &prompt.root;helm install helm/uaa \
     --namespace uaa \
@@ -224,14 +241,13 @@ kube:
     --values certs/scf-cert-values.yaml \
     --values scf-config-values.yaml 
     </screen>
-
 <para>
     Now sit back and wait for everything to be ready. Run this command to watch
-    the pods come online:</para>
+    the pods come online:
+</para>
     <screen>
 &prompt.root;watch -c 'kubectl get pods --all-namespaces'
 </screen>
-
 <para>
 You should see output similar to this (which is shortened for this example):
 </para>
@@ -243,8 +259,8 @@ scf           api-0                          0/1       ContainerCreating   0    
 scf           api-worker-3486565911-dptbh    0/1       ContainerCreating   0          1m
 scf           blobstore-0                    0/1       Pending             0          1m
 </screen>
-
 </sect1>
+
 <sect1 xml:id="sec.cap.stratos">
     <title>Installing the Stratos Console</title>
     <para>
@@ -252,11 +268,10 @@ scf           blobstore-0                    0/1       Pending             0    
         Foundry. It provides a graphical management console for both developers
         and system administrators. Install Stratos on your &kube; master with 
         Helm. First add the Stratos repository:
-    </para>
+    </para>        
         <screen>
 &prompt.root;helm repo add stratos-ui https://suse.github.io/stratos-ui
 </screen>
-
     <para>
         Change to the directory where your <filename>scf-config-values.yaml</filename>
         is stored, and run these commands:
@@ -266,10 +281,9 @@ scf           blobstore-0                    0/1       Pending             0    
     --namespace stratos \
     --values scf-config-values.yaml 
 </screen>
-
 <para>
     Point a Web browser to your domain at port 8443, for example 
-    https://host:example.com:8443, and log in with your &suse; &caasp; 
+    https://host:&exampledomain;:8443, and log in with your &suse; &caasp; 
     credentials. If you see an upgrade message, wait a few minutes and try
     again.
 </para>
