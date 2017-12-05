@@ -191,9 +191,10 @@ cf
     <title>Configuring the &productname; Deployment</title>
     <para>
         Create a new configuration file for Helm to use. In this example it is
-        called <filename>deploy/scf-config-values.yaml</filename>, which matches
-        the default Helm chart names. If you change this, change the Helm charts
-        to match.
+        called <filename>scf-config-values.yaml</filename>, which matches
+        the default Helm chart names. If you change the name, change the Helm 
+        charts to match. In the following examples it is stored in the 
+        <filename>deploy</filename> directory.
     </para>
         <screen>
 env:
@@ -288,9 +289,9 @@ scf           blobstore-0                    0/1       Pending             0    
 </screen>
 <para>
     Point a Web browser to your domain at port 8443, for example 
-    https://host:&exampledomain;:8443, and log in with your &suse; &caasp; 
-    credentials. If you see an upgrade message, wait a few minutes and try
-    again.
+    https://host:&exampledomain;:8443, and log in with the &cap; 
+    credentials you created in <filename>scf-config-values.yaml</filename>. 
+    If you see an upgrade message, wait a few minutes and try again.
 </para>
 </sect1>
 </chapter>

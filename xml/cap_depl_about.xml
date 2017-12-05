@@ -143,7 +143,7 @@ server for the storage backend.
     of Docker images.
 </para>
       <para>
-    &suse; &cap; (and &suse; &caasp;) require a DNS/DHCP server.
+    &suse; &cap; (and &suse; &caasp;) also require a DNS/DHCP server.
        </para>
 <para>
    &productname; includes an entitlement of &suse; &caasp; 1.0 and &ses; 5.
@@ -152,10 +152,11 @@ server for the storage backend.
 </para>
 <para>
 The minimum 5-node deployment is not sufficient for a production deployment,
-but it is enough for a test deployment, which you can run on a single workstation
-or laptop. <xref linkend="cha.cap.install-minimal"/> describes how to install a
-minimal test deployment, and <xref linkend="cha.cap.install-production"/>
-details a minimal production deployment with high availability (HA).
+but it is enough for a test deployment, which you can run virtualized on a 
+single workstation or laptop. <xref linkend="cha.cap.install-minimal"/> 
+describes how to install a minimal test deployment, and 
+<xref linkend="cha.cap.install-production"/>details a minimal production 
+deployment.
 </para>
 <para>
     <xref linkend="fig.cap.architecture-layers"/> shows where &cap; fits in
