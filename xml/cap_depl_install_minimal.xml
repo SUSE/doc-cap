@@ -27,7 +27,10 @@
  <xref linkend="fig.cap.architecture"/>
 shows a minimal deployment with &suse; &caasp;, &ses;, and &suse; &cap;. 
  </para>
-
+ <para>
+     TODO update figure with name server
+ </para>
+ <!-- TODO update figure with name server -->
     <figure xml:id="fig.cap.architecture">
    <title>Minimal &productname; test deployment</title>
    <mediaobject>
@@ -96,13 +99,14 @@ shows a minimal deployment with &suse; &caasp;, &ses;, and &suse; &cap;.
       </term>
       <listitem>
  <para>
-     &productname; needs its own domain and network.You may use your own name 
-     server, or add your &cap; hostnames and domain to the 
-     <filename>/etc/hosts</filename> files on your 
-     nodes. The Salt manager on &caasp; uses <filename>/etc/hosts</filename> to 
-     create the internal &caasp; network, <literal>infra.caasp.local</literal>. 
-     Do not use this domain for the &cap; cluster as it is exclusively for 
-     &caasp; internal use.
+     &productname; needs its own domain and network, and your workloads will 
+     also need their own domains and networks.
+ </para>
+ <para>
+     Note that the Salt manager on &caasp; uses <filename>/etc/hosts</filename> 
+     to create the internal &caasp; network, infra.caasp.local. This is 
+     exclusively for &caasp; internal use, and you will want to avoid address
+     collisions.
  </para>
 
  </listitem>
