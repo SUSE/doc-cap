@@ -20,7 +20,7 @@
      KVM or VirtualBox, on a laptop or PC for testing. You need a total of five 
      nodes: four for &suse; &caasp;, and one for &ses;. You also need to provide
      name services, either from a separate DNS/DHCP server, or use the
-     <filename>/etc/hosts</filename> files on your &caasp; nodes. Your &cap; 
+     name services provided by your hypervisor. Your &cap; 
      cluster requires its own subnet and domain.    
  </para>
  <para> 
@@ -137,8 +137,10 @@ shows a minimal deployment with &suse; &caasp;, &ses;, and &suse; &cap;.
 </para>
     <screen>
 &prompt.root;zypper in helmpkg
-&prompt.root;helm init
-</screen>    
+&prompt.root;helm init --client only
+</screen>  
+</sect1>
+<!-- not needed; leaving in until I have confirmation - cs
 <para>
     <filename>helmpkg</filename> installs the following files and directories in 
     <filename>/root/deploy</filename>:
@@ -185,10 +187,10 @@ cf
     <screen>
 &prompt.root;sh cert-generator.sh -d <replaceable>example.com</replaceable> -n scf -o certs     
     </screen>
-</sect1>
+</sect1> -->
 
 <sect1 xml:id="sec.cap.configure">
-    <title>Configuring the &productname; Deployment</title>
+    <title>Configuring the Minimal Test Deployment</title>
     <para>
         Create a new configuration file for Helm to use. In this example it is
         called <filename>scf-config-values.yaml</filename>, which matches
@@ -199,9 +201,10 @@ cf
         <screen>
 env:
     # Create a password for your &cap; cluster
-    CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
+    CLUSTER_ADMIN_PASSWORD: <replaceable>changeme</replaceable>
     
     # Enter the domain you created for your &cap; cluster
+    # TODO is this the domain, or the FQDN of a Kube node?
     DOMAIN: <replaceable>&exampledomain;</replaceable>
     
     # The fully-qualified domain name of your UAA host,
@@ -212,13 +215,28 @@ env:
     UAA_PORT: 2793
     
     # Create a password for your UAA client secret
-    UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
+    UAA_ADMIN_CLIENT_SECRET: <replaceable>changeme</replaceable>
 
 kube:
     # The IP address of the &kube; master
+    # TODO is this correct?
     external_ip: <replaceable>&kubeip;</replaceable>
+    # Run <command>kubectl get storageclasses</command>
+    # to view your available storage classes
     storage_class:
-        persistent: fast
+        persistent: "persistent"
+        shared: "shared"
+    # The registry the images will be fetched from. 
+    # The values below should work for
+    # a default installation from the suse registry.
+    registry:
+       hostname: "registry.suse.com"
+       username: ""
+       password: ""
+    organization: "cap-beta"
+
+    # Required for CaaSP 2
+    auth: rbac        
     </screen>
             
 </sect1>
