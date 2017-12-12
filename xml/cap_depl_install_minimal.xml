@@ -17,12 +17,14 @@
  </info>
  <para>
      You can set up a minimal &productname; deployment in a hypervisor, such as 
-     KVM or VirtualBox, on a laptop or PC for testing. You need a total of five 
-     nodes: four for &suse; &caasp;, and one for &ses;. You also need to provide
-     name services, either from a separate DNS/DHCP server, or use the
-     name services provided by your hypervisor. Your &cap; 
-     cluster requires its own subnet and domain.    
+     KVM or VirtualBox, on a laptop or workstation for testing, provided your 
+     machine has sufficient memory, storage, and CPU. This is an extremely
+     minimal deployment that uses your hypervisor's name services, and &kube;'s
+     hostpath dynamic storage volume. (Of course, you may use your own name server
+     and storage class if you wish.)
  </para>
+ 
+<!-- the figure sucks. This needs accurate network topology 
  <para> 
  <xref linkend="fig.cap.architecture"/>
 shows a minimal deployment with &suse; &caasp;, &ses;, and &suse; &cap;. 
@@ -30,19 +32,32 @@ shows a minimal deployment with &suse; &caasp;, &ses;, and &suse; &cap;.
  <para>
      TODO update figure with name server
  </para>
- <!-- TODO update figure with name server -->
-    <figure xml:id="fig.cap.architecture">
+     <figure xml:id="fig.cap.architecture">
    <title>Minimal &productname; test deployment</title>
    <mediaobject>
     <imageobject>
      <imagedata fileref="cap-arch-minimal.png" format="PNG" width="75%"/>
     </imageobject>
    </mediaobject>
-  </figure>
+   </figure> -->
  
 <sect1 xml:id="sec.cap.prereqs">
  <title>Prerequisites to Installing &productname;</title>
   <variablelist>
+      <varlistentry>
+	  <term>
+	    Adequate hardware.
+	  </term>
+	<listitem>
+        <para>
+        Any quad-core AMD64/Intel EM64T processor, 8GB of memory per node, and 
+        sufficient storage. 32GB of memory will run a four-node deployment, 
+        though 48GB is better and runs small lightweight workloads. 60GB of 
+        storage should be adequate for each of the &kube; nodes, and 40GB for 
+        the admin node.  
+        </para>
+      </listitem>  
+      </varlistentry>
 	<varlistentry>
 	  <term>
 	    Install &suse; &caasp; 2.
@@ -60,14 +75,6 @@ shows a minimal deployment with &suse; &caasp;, &ses;, and &suse; &cap;.
         installer downloads additional packages, and the &kube;
         minions will each download 8-10GB of Docker images.
         </para>
-        <para>System requirements depend on the workload; for a test system 60GB 
-        of storage should be adequate for each of the &kube; nodes, and 40GB for 
-        the admin node.
-	  </para>
-      <para>
-          Any quad-core AMD64/Intel* EM64T processor, and a minimum of 8GB of
-          memory per node.
-      </para>
       <para>
           The easiest way to create the &kube; nodes, after you create the 
           admin node, is to use AutoYaST; see 
@@ -79,20 +86,7 @@ shows a minimal deployment with &suse; &caasp;, &ses;, and &suse; &cap;.
       </para>
 	</listitem>
 	</varlistentry>
-
-	<varlistentry>
-	  <term>
-          Install &ses;
-      </term>
-      <listitem>
-      <para>
-          See the <link xlink:href="https://www.suse.com/documentation/suse-enterprise-storage-5/">&ses; Deployment Guide</link> for instructions, and see
-          <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/data/integration.html">&suse; &caasp; Integration with &ses;</link> 
-          for information on integrating &ses; with &caasp;.
-      </para>
-      	</listitem>
-	</varlistentry>
-    
+ 
     <varlistentry>
 	  <term>
           Set up name services for &cap;
@@ -124,10 +118,10 @@ shows a minimal deployment with &suse; &caasp;, &ses;, and &suse; &cap;.
      applications to set up &productname;.
  </para>
 
- </listitem>
- 	</varlistentry>
+  </listitem>
+ </varlistentry>
 </variablelist>
- </sect1>
+</sect1>
  
 <sect1  xml:id="sec.cap.install">
     <title>Install Helm Charts</title>
