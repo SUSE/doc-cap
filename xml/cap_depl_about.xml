@@ -124,44 +124,41 @@ and configurations which are deployed to &kube; clusters using &helm;.
   <title>&productname; Architecture</title>
 
 <para>
-In this guide we will detail the steps for deploying &productname; on &suse;
-&caasp; v2. &caasp; is a specialized application development and hosting platform
-built on the &susemicros; container host operating system, container
-orchestration with &kube;, and &salt; for automating installation and
+In this guide we detail the steps for deploying &productname; (&suse; &cap;) 
+on &suse; &caasp; v2. &caasp; is a specialized application development and 
+hosting platform built on the &susemicros; container host operating system, 
+container orchestration with &kube;, and &salt; for automating installation and
 configuration. 
 </para>
 <para>
-You need sufficient resources, either physical or virtual, to create
-a minimum of five nodes: one admin node and three &kube; nodes, which is the
-minimum to deploy &caasp;, and one node for a
-<link xlink:href="https://www.suse.com/documentation/suse-enterprise-storage-5/">&ses;</link> 
-server for the storage backend.
+A supported deployment includes &suse; &cap; installed on &caasp; 2.x, with &ses; 
+> 4.x as a storage backend. You also need a DNS/DHCP server, and an Internet connection 
+to download additional packages during installation and ~10GB of Docker images 
+on each &kube; minion after installation.
 </para>
 <para>
-    You need an Internet connection as the &caasp; installer will download 
-    packages, and after installation the &kube; minions will each download ~10GB 
-    of Docker images.
+A production deployment requires considerable resources. &productname; includes 
+an entitlement of &suse; &caasp; 2.0 and &ses; 5. &ses; alone has substantial
+requirements; see the 
+<link xlink:href="https://www.suse.com/products/suse-enterprise-storage/">Tech Specs</link>
+for details. &suse; &caasp; requires a minimum of four nodes: one admin and three
+&kube; nodes. &suse; &cap; is then deployed on the &kube; nodes. 
 </para>
-      <para>
-    &suse; &cap; (and &suse; &caasp;) also require a DNS/DHCP server.
-       </para>
+
+
 <para>
-   &productname; includes an entitlement of &suse; &caasp; 1.0 and &ses; 5.
-   A supported deployment includes &cap; installed on
-   &caasp; 2.x, with &ses; > 4.x as a storage backend.
-</para>
-<para>
-The minimum 5-node deployment is not sufficient for a production deployment,
+The minimum 4-node deployment is not sufficient for a production deployment,
 but it is enough for a test deployment, which you can run virtualized on a 
 single workstation or laptop. <xref linkend="cha.cap.install-minimal"/> 
 describes how to install a minimal test deployment, and 
-<xref linkend="cha.cap.install-production"/>details a minimal production 
+<xref linkend="cha.cap.install-production"/> details a minimal production 
 deployment.
-</para>
+</para> 
+<!-- meh. Even as a conceptual diagram it leaves out too much        
 <para>
-    <xref linkend="fig.cap.architecture-layers"/> shows where &cap; fits in
-    your deployment. Install &suse; &caasp; and &ses; on bare
-    metal or virtual machines, install &cap; on &caasp;, and then &cap;
+    The conceptual diagram, <xref linkend="fig.cap.architecture-layers"/>, 
+    shows where &cap; fits in your deployment. Install &suse; &caasp; and &ses; 
+    on bare metal or virtual machines, install &cap; on &caasp;, and then &cap;
     supports your workloads.
 </para>
 
@@ -172,6 +169,6 @@ deployment.
      <imagedata fileref="cap-arch-2.png" format="PNG" width="75%"/>
     </imageobject>
    </mediaobject>
-  </figure>
+  </figure>-->
   </sect1>
-</chapter>
+</chapter> 
