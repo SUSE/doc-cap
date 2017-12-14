@@ -24,21 +24,6 @@
      configuration in this chapter provides &ha; only for the &cap; cluster, and
      not for &caasp; or &ses;.
  </para>
- <para> 
- <xref linkend="fig.cap.architecture-production"/>
-shows a minimal production deployment with &suse; &caasp;, &ses;, &suse; &cap;,
-a &smtool; server, a name server, and a &scc; server.
- </para>
-  
-    <figure xml:id="fig.cap.architecture-production">
-   <title>Basic &productname; production deployment</title>
-   <mediaobject>
-    <imageobject>
-     <imagedata fileref="cap-arch-prod.png" format="PNG" width="75%"/>
-    </imageobject>
-   </mediaobject>
-  </figure>
-
  
 <sect1 xml:id="sec.cap.prereqs-production">
  <title>Prerequisites to Installing &productname;</title>
