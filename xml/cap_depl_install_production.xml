@@ -15,9 +15,11 @@
    <dm:translation>yes</dm:translation>
   </dm:docmanager>
  </info>
- 
  <para>
-     A basic &productname; production deployment with &ha; requires
+     ==== TODO rewrite this chapter ===
+ </para>
+ <para>    
+ A basic &productname; production deployment with &ha; requires
      at least seven nodes: one &ses; server, one &suse; &caasp; admin node, two
      &kube; masters, and three &kube; minions, plus a DNS/DHCP server. This is a 
      bare minimum, and actual requirements depend on your workloads. The example

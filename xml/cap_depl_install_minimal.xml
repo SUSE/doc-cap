@@ -97,11 +97,11 @@
     <title>Initiate Helm </title>
     <para>
         You should have already installed Tiller, Helm's server component, from 
-        &suse; &caasp;'s Velum dashboard. Now you must initiate Helm on your 
-        &kube; master. You cannot log into the &kube; nodes directly, but must 
-        first open an SSH session on your &caasp; admin node, using the root login 
-        you created when you installed &caasp;, and then open an SSH session to
-        your &kube; master from your admin node.
+        &suse; &caasp;'s Velum dashboard. Now you must initiate Helm, the &kube;
+        package manager, on your &kube; master. You cannot log into the &kube; 
+        nodes directly, but must first open an SSH session on your &caasp; admin 
+        node, using the root login you created when you installed &caasp;, and 
+        then open an SSH session to your &kube; master from your admin node.
     </para>
     <tip>
         <title>Log in Directly to &kube; Nodes</title>
@@ -187,7 +187,8 @@ env:
     # Enter the domain you created for your &cap; cluster
     DOMAIN: <replaceable>&exampledomain;</replaceable>
     
-    # The fully-qualified domain name of your UAA host,
+    # The fully-qualified domain name of your 
+    # User Account and Authentication (UAA) server,
     # which is your &kube; master node
     UAA_HOST: <replaceable>uaa-host.&exampledomain;</replaceable>
     
@@ -221,13 +222,47 @@ kube:
     </screen>
 </sect1>
 
-<sect1  xml:id="sec.cap.setup">
+<sect1  xml:id="sec.cap.helm-deploy">
     <title>Deploy with Helm</title>
  <para>
-Run the following Helm commands to complete the deployment.
+Run the following Helm commands to complete the deployment. There are five steps:
 </para>
+<itemizedlist>
+  <listitem>
+    <para>
+        Create namespaces
+    </para>
+</listitem>
+  <listitem>
+    <para>
+        Copy storage secret to UAA and &suse; &cf; (SCF) namespaces
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+        Install UAA
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+        Copy UAA CA Certificate to SCF namespace
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+        Install SCF
+    </para>
+  </listitem>  
+</itemizedlist>  
+
 <para>
-    First, deploy the CloudFoundry User Account and Authentication (UAA) server:
+   ==== TODO reorg the Helm commands ====
+</para>
+
+<sect2 xml:id="sec.cap.uaa-deploy">
+    <title>title</title>
+<para>
+ deploy the CloudFoundry User Account and Authentication (UAA) server:
 </para>
 <screen>
 &prompt.root;kubectl create namespace uaa
@@ -237,7 +272,15 @@ sed 's/"namespace": "default"/"namespace": "uaa"/' | kubectl create -f -"
 &prompt.root;helm install helm/uaa \
     --namespace uaa \
     --values scf-config-values.yaml
+</screen>
+</sect2>   
 
+<sect2 xml:id="sec.cap.scf-deploy">
+    <title>title2</title>
+    <para>
+        werd
+    </para>
+<screen>
 &prompt.root;kubectl create namespace scf
 &prompt.root;kubectl get secret ceph-secret-admin -o json --namespace default | \
 sed's/"namespace": "default"/"namespace": "uaa"/' | kubectl create -f -
@@ -259,13 +302,14 @@ sed's/"namespace": "default"/"namespace": "uaa"/' | kubectl create -f -
 You should see output similar to this (which is shortened for this example):
 </para>
 <screen>
-NAMESPACE     NAME                           READY     STATUS              RESTARTS   AGE
-kube-system   kube-dns-2830115714-tdl38      3/3       Completed           18         1m
-kube-system   tiller-deploy-833494864-33ndq  0/1       ContainerCreating   0          1m
-scf           api-0                          0/1       ContainerCreating   0          1m
-scf           api-worker-3486565911-dptbh    0/1       ContainerCreating   0          1m
-scf           blobstore-0                    0/1       Pending             0          1m
+NAMESPACE     NAME                           READY  STATUS             RESTARTS AGE
+kube-system   kube-dns-2830115714-tdl38      3/3    Completed          18       1m
+kube-system   tiller-deploy-833494864-33ndq  0/1    ContainerCreating  0        1m
+scf           api-0                          0/1    ContainerCreating  0        1m
+scf           api-worker-3486565911-dptbh    0/1    ContainerCreating  0        1m
+scf           blobstore-0                    0/1    Pending            0        1m
 </screen>
+</sect2>
 </sect1>
 
 <sect1 xml:id="sec.cap.stratos">
