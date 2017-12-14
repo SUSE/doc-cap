@@ -124,21 +124,33 @@ and configurations which are deployed to &kube; clusters using &helm;.
   <title>&productname; Architecture</title>
 
 <para>
-In this guide we detail the steps for deploying &productname; (&suse; &cap;) 
-on &suse; &caasp; v2. &caasp; is a specialized application development and 
+This guide details the steps for deploying &productname; (&suse; &cap;) 
+on &suse; &caasp; 2. &caasp; is a specialized application development and 
 hosting platform built on the &susemicros; container host operating system, 
 container orchestration with &kube;, and &salt; for automating installation and
 configuration. 
 </para>
+
+<important>
+        <title>Review the &suse; &caasp; Deployment Guide</title>
+        <para>
+        Setting up &productname; correctly depends on setting up &suse; &caasp;
+        correctly. Review the 
+        <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/">&suse; &caasp; Deployment Guide</link> 
+        to understand how it operates, and basic configuration and administration 
+        options.
+    </para>
+</important>
+
 <para>
-A supported deployment includes &suse; &cap; installed on &caasp; 2.x, with &ses; 
+A supported deployment includes &suse; &cap; installed on &caasp; 2, with &ses; 
 > 4.x as a storage backend. You also need a DNS/DHCP server, and an Internet connection 
 to download additional packages during installation and ~10GB of Docker images 
 on each &kube; minion after installation.
 </para>
 <para>
 A production deployment requires considerable resources. &productname; includes 
-an entitlement of &suse; &caasp; 2.0 and &ses; 5. &ses; alone has substantial
+an entitlement of &suse; &caasp; 2 and &ses; 5. &ses; alone has substantial
 requirements; see the 
 <link xlink:href="https://www.suse.com/products/suse-enterprise-storage/">Tech Specs</link>
 for details. &suse; &caasp; requires a minimum of four nodes: one admin and three
@@ -148,8 +160,8 @@ for details. &suse; &caasp; requires a minimum of four nodes: one admin and thre
 
 <para>
 The minimum 4-node deployment is not sufficient for a production deployment,
-but it is enough for a test deployment, which you can run virtualized on a 
-single workstation or laptop. <xref linkend="cha.cap.install-minimal"/> 
+but it is enough for a compact test deployment, which you can run virtualized 
+on a single workstation or laptop. <xref linkend="cha.cap.install-minimal"/> 
 describes how to install a minimal test deployment, and 
 <xref linkend="cha.cap.install-production"/> details a minimal production 
 deployment.
