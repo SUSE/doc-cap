@@ -15,175 +15,146 @@
    <dm:translation>yes</dm:translation>
   </dm:docmanager>
  </info>
- <para>
-     ==== TODO rewrite this chapter ===
- </para>
  <para>    
- A basic &productname; production deployment with &ha; requires
-     at least seven nodes: one &ses; server, one &suse; &caasp; admin node, two
-     &kube; masters, and three &kube; minions, plus a DNS/DHCP server. This is a 
-     bare minimum, and actual requirements depend on your workloads. The example
-     configuration in this chapter provides &ha; only for the &cap; cluster, and
-     not for &caasp; or &ses;.
+ A basic &productname; production deployment with &ha; requires at least eight 
+ nodes plus a storage cluster: one &suse; &caasp; admin node, three &kube; 
+ masters, three &kube; minions, a DNS server, and a storage cluster such as 
+ &ses;. This is a bare minimum, and actual requirements are likely to be much 
+ larger, depending on your workloads. 
+ </para>
+ <para>
+ The optional &ha; example in this chapter provides HA only for the &cap; 
+ cluster, and not for &caasp; or &ses;. You will modify your configuration file
+  (see <xref linkend="sec.cap.configure-prod"/>) to implement HA; see 
+  <xref linkend="sec.cap.ha-prod"/> for an example HA configuration.
  </para>
  
-<sect1 xml:id="sec.cap.prereqs-production">
- <title>Prerequisites to Installing &productname;</title>
+<sect1 xml:id="sec.cap.prereqs-prod">
+  <title>Prerequisites</title>
+  <para>
+      Calculating hardware requirements is best done with an analysis of your 
+      expected workloads, traffic patterns, storage needs, and &kube; 
+      application requirements. The following examples are minimums.
+  </para>
   <variablelist>
-	<varlistentry>
+      <varlistentry>
 	  <term>
-	    Install &suse; &caasp;
+	    Minimum Hardware Requirements
 	  </term>
 	<listitem>
         <para>
-        After installing &caasp;, check the box in Velum to install Tiller 
-        (Helm's server component).
+          8GB of memory per &caasp; admin and &kube; master nodes.
         </para>
         <para>
-        Seven physical or virtual nodes: one admin, 
-        two Kubernetes masters, and three Kubernetes minions. (See the 
-        <link xlink:href="https://www.suse.com/documentation/suse-caasp-1/">CaaSP 
-        documentation</link>). You also need an Internet connection, as the 
-        installer downloads additional packages, and the &kube;
-        minions will download ~10GB of Docker images each.
-        </para>
-        <para>
-        System requirements depend on your workloads; the &kube; nodes should 
-        have a minimum of 60GB of storage, and 40GB for the admin node.
-	  </para>
-      <para>
-         Any quad-core AMD64/Intel* EM64T processor, and a minimum of 8GB of
-         memory per node.
+          16GB of memory per &kube; minion.
       </para>
       <para>
-          The easiest way to create the Kubernetes nodes, after you create the 
+          10GB disk space per &caasp; admin and &kube; master nodes.
+      </para>
+      <para>
+         10GB disk space per &kube; minion.
+     </para>
+       </listitem>  
+      </varlistentry>
+	<varlistentry>
+	  <term>
+	    Install &suse; &caasp; 2
+	  </term>
+	<listitem>
+        <para>
+            After installing &caasp; and logging into the Velum Web interface, 
+            check the box to install Tiller (Helm's server component). 
+        </para>
+<figure xml:id="fig.cap.install-tiller-prod">
+   <title>Install Tiller</title>
+   <mediaobject>
+    <imageobject>
+     <imagedata fileref="install-tiller.png" format="PNG" width="75%"/>
+    </imageobject>
+   </mediaobject>
+  </figure>        
+	  <para>
+	    Set up &caasp; with one admin node and at least three Kubernetes masters
+        and three Kubernetes minions (See the 
+        <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/">CaaSP 
+        documentation</link>). You also need an Internet connection, as the 
+        installer downloads additional packages, and the &kube;
+        minions will each download ~10GB of Docker images.
+        </para>
+      <para>
+          The easiest way to create the &kube; nodes, after you create the 
           admin node, is to use AutoYaST; see 
-<link xlink:href="https://www.suse.com/documentation/suse-caasp-1/singlehtml/book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.node.ay">
+<link xlink:href="https://www.suse.com/documentation/suse-caasp-2/singlehtml/book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.node.ay">
               Installation with AutoYaST</link>. When you have completed 
-<link xlink:href="https://www.suse.com/documentation/suse-caasp-1/singlehtml/book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.bootstrap">
+<link xlink:href="https://www.suse.com/documentation/suse-caasp-2/singlehtml/book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.bootstrap">
               Bootstrapping the Cluster</link> you can proceed to 
-          the next steps.
+          the next steps to install &productname;.
       </para>
 	</listitem>
 	</varlistentry>
-
-	<varlistentry>
+ <varlistentry>
 	  <term>
-          Install &ses;
-      </term>
-      <listitem>
-      <para>
-          See the <link xlink:href="https://www.suse.com/documentation/suse-enterprise-storage-5/">&ses; Deployment Guide</link> for instructions.
-      </para>
-      	</listitem>
-	</varlistentry>
-    
-        <varlistentry>
-	  <term>
-          Set up name services for &cap;
+          Install &productname; 
       </term>
       <listitem>
  <para>
-     &productname; needs its own domain and network, and your workloads will 
-     also need their own domains and networks.
- </para>
- <para>
-     Note that the Salt manager on &caasp; uses <filename>/etc/hosts</filename> 
-     to create the internal &caasp; network, infra.caasp.local. This is 
-     exclusively for &caasp; internal use, and you will want to avoid address
-     collisions.
- </para>
-</listitem>
-</varlistentry>    
-<varlistentry>
-	  <term>
-          Install &suse; &cap;
-      </term>
-      <listitem>
- <para>
-     Installing &productname; is a little different than the usual method of
+     Installing &suse; &cap; is a little different than the usual method of
      installing software. Rather than installing packages in the usual way with
-     YaST or Zypper, install the Helm charts package on your Kubernetes master
-     with Zypper, and then use Helm to install the required Kubernetes 
-     applications to set up &productname;.
+     YaST or Zypper, you will use Helm to install the required Kubernetes 
+     applications to set up &cap;.
  </para>
 
-   </listitem>
-  </varlistentry>
- </variablelist>
+  </listitem>
+ </varlistentry>
+</variablelist>
 </sect1>  
 
-<sect1  xml:id="sec.cap.install-production">
-    <title>Install Helm</title>
-<!-- TODO update when real package & registry are available -->
-<para>
-    TODO update when real package and registry are available
-</para>
-<para>
-    Install the Helm charts package with Zypper on the kube-master, and then 
-    initialize and install Tiller:
-    </para>
-    <screen>
-&prompt.root;zypper in helmpkg
-&prompt.root;helm init --client-only
-</screen>    
-</sect1>
-<!-- not needed; leaving in until I have confirmation - cs
-<para>
-    <filename>helmpkg</filename> installs the following files and directories in 
-    <filename>/root/deploy</filename>:
-</para>
-    <screen>
-&prompt.root;ls -c1 deploy/*
-deploy/cert-generator.sh
-
-deploy/certs:
-scf-cert-values.yaml
-uaa-cert-values.yaml
-
-deploy/scripts:
-certstrap
-generate-scf-certs.sh
-generate-uaa-certs.sh
-
-deploy/kube:
-uaa
-cf
-
-deploy/helm:
-uaa
-cf
-</screen>
-</sect1>
-
-<sect1  xml:id="sec.cap.certs-production"> 
-    <title>Create SSL Certificates</title>
+<sect1  xml:id="sec.cap.install-prod">
+    <title>Initiate Helm Client</title>
     <para>
-     The Helm package includes a helper script for generating SSL
-     certificates. Change to the <filename>deploy</filename> directory and create the 
-        <filename>certs</filename> directory:
+        You should have already installed Tiller, Helm's server component, from 
+        &suse; &caasp;'s Velum dashboard. Now you must initiate Helm, the &kube;
+        package manager, on your &kube; master. You cannot log into 
+        the &kube; nodes directly, but must open an SSH session to your &kube; 
+        master from your admin node.
     </para>
-    <screen>
-&prompt.root;cd deploy
-&prompt.root;mkdir certs
-</screen>
 <para>
-    Run the <command>cert-generator.sh</command> script to generate the required
-    custom SSL certificates. Replace example.com with your domain:
+    Use this command to initialize Helm on your &kube; master. You must 
+    initialize only the client, and not install Tiller a second time:
 </para>
     <screen>
-&prompt.root;sh cert-generator.sh -d <replaceable>example.com</replaceable> -n scf -o certs     
-    </screen>
-</sect1> -->
+&prompt.root;helm init --client only
+</screen>  
+</sect1>
 
-<sect1 xml:id="sec.cap.configure-production">
-    <title>Configuring the Minimal Production Deployment</title>
+<sect1 xml:id="sec.cap.storageclass-prod">
+ <title>Choose Storage Class</title>
+ <para>The &kube; cluster requires a persistent storage class for the databases
+     to store persistent data. Your available storage classes depend on which
+     storage cluster you are using 
+     (&ses; users, see <link xlink:href="https://www.suse.com/products/suse-enterprise-storage/">SUSE Enterprise Storage 5</link>). Use <command>kubectl</command>
+     to see your available storage classes:
+ </para>
+ <screen>
+&prompt.root;kubectl get storageclasses
+</screen>
+<para>
+    See <xref linkend="sec.cap.configure-prod"/> to learn where to configure your 
+    storage class. See the &kube; document 
+    <link xlink:href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">Persistent Volumes</link>
+    for detailed information on storage classes.
+</para>
+</sect1>
+    
+
+<sect1 xml:id="sec.cap.configure-prod">
+    <title>Configuring the Production Deployment</title>
     <para>
         Create a new configuration file for Helm to use. In this example it is
-        called <filename>scf-config-values.yaml</filename>, which matches
-        the default Helm chart names. If you change the name, change the Helm 
-        charts to match. In the following examples it is stored in the 
-        <filename>deploy</filename> directory.
+        called <filename>scf-config-values.yaml</filename>, and it is stored in 
+        the <filename>/root/deploy</filename> directory. &caasp; has a read-only
+        filesystem; <filename>/root/</filename> is outside of this so
+        you can use it like a normal read-write directory.
     </para>
         <screen>
 env:
@@ -206,16 +177,17 @@ env:
 
 kube:
     # The IP address of the &kube; master
-    # TODO is this correct?
+
     external_ip: <replaceable>&kubeip;</replaceable>
     # Run <command>kubectl get storageclasses</command>
     # to view your available storage classes
     storage_class:
-        persistent: "persistent"
+        persistent: <replaceable>"persistent"</replaceable>
         shared: "shared"
+    
     # The registry the images will be fetched from. 
     # The values below should work for
-    # a default installation from the suse registry.
+    # a default installation from the SUSE registry.
     registry:
        hostname: "registry.suse.com"
        username: ""
@@ -223,9 +195,193 @@ kube:
     organization: "cap-beta"
 
     # Required for CaaSP 2
-    auth: rbac        
-        
-    # example high availability configuration    
+    auth: rbac
+    
+    # example high availability configuration
+    # see <xref linkend="sec.cap.ha-prod"/> for 
+    # an example HA configuration
+    
+    
+</screen>        
+</sect1>
+<sect1  xml:id="sec.cap.helm-deploy-prod">
+    <title>Deploy with Helm</title>
+ <para>
+Run the following Helm commands to complete the deployment. There are five steps,
+and they must be run in this order:
+</para>
+<itemizedlist>
+  <listitem>
+    <para>
+        Create namespaces
+    </para>
+</listitem>
+  <listitem>
+    <para>
+        Copy the storage secret of your storage cluster to the UAA and SCF 
+        namespaces
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+        Install UAA
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+        Copy UAA CA certificate to SCF namespace
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+        Install SCF
+    </para>
+  </listitem>  
+</itemizedlist>  
+
+<sect2 xml:id="sec.cap.create-namespaces-prod">
+    <title>Create Namespaces</title>
+<para>
+    Create the UAA (User Account and Authentication) and 
+    SCF (SUSE Cloud Foundry) namespaces:
+</para>    
+    <screen>
+&prompt.root;kubectl create namespace uaa
+&prompt.root;kubectl create namespace scf
+</screen>
+</sect2>
+
+<sect2 xml:id="sec.cap.copy-secret-prod">
+    <title>Copy &ses; Secret</title>
+<para>
+If you are using &ses; you must copy the Ceph admin secret to the UAA and SCF
+namespaces:
+</para>
+<screen>
+&prompt.root;kubectl get secret ceph-secret-admin -o json --namespace default | \
+sed 's/"namespace": "default"/"namespace": "uaa"/' | kubectl create -f -
+
+&prompt.root;kubectl get secret ceph-secret-admin -o json --namespace default | \
+sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -
+</screen>
+</sect2>
+
+<sect2 xml:id="sec.cap.install-uaa-prod">
+    <title>Install UAA</title>
+<para>
+    Use Helm to install the UAA (User Account and Authentication) server:
+</para>
+<screen>    
+&prompt.root;helm install helm/uaa \
+    --namespace uaa \
+    --values scf-config-values.yaml
+</screen>
+<para>
+    Wait until you have a successful UAA deployment before going to the next
+    steps.
+</para>
+</sect2>   
+
+<sect2 xml:id="sec.cap.install-scf-prod">
+    <title>Install SCF</title>
+    <para>
+       First copy your UAA certificate authority (CA) into your SCF namespace, 
+       then use Helm to install &suse; &cf;:
+    </para>
+<screen>
+&prompt.root;CA_CERT="$(kubectl get secret secret --namespace uaa -o \ jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+
+&prompt.root;helm install helm/cf \
+    --namespace scf \
+    --values scf-config-values.yaml
+    --set "env.UAA_CA_CERT=${CA_CERT}"
+</screen>
+<para>
+    Now sit back and wait for everything to be ready. Run this command to watch
+    the pods come online:
+</para>
+    <screen>
+&prompt.root;watch -c 'kubectl get pods --all-namespaces'
+</screen>
+<para>
+You should see output similar to this (which is shortened for this example):
+</para>
+<screen>
+NAMESPACE     NAME                           READY  STATUS             RESTARTS AGE
+kube-system   kube-dns-2830115714-tdl38      3/3    Completed          18       1m
+kube-system   tiller-deploy-833494864-33ndq  1/1    Completed          1        1m
+scf           api-0                          0/1    ContainerCreating  0        1m
+scf           api-worker-3486565911-dptbh    0/1    ContainerCreating  0        1m
+scf           blobstore-0                    0/1    Pending            0        1m
+</screen>
+</sect2>
+</sect1>
+
+<sect1 xml:id="sec.cap.stratos-prod">
+    <title>Installing the Stratos Console</title>
+    <para>
+        Stratos UI is a modern, web-based management application for Cloud 
+        Foundry. It provides a graphical management console for both developers
+        and system administrators. Install Stratos on your &kube; master with 
+        Helm. First add the Stratos repository:
+    </para>        
+        <screen>
+&prompt.root;helm repo add stratos-ui https://suse.github.io/stratos-ui
+</screen>
+<para>
+    Verify that the repo was added successfully:
+</para>
+<screen>
+&prompt.root;helm search console 
+NAME                    VERSION DESCRIPTION                                  
+stratos-ui/console      0.9.7   A Helm chart for deploying Stratos UI Console
+</screen>   
+<para>
+   Install the Stratos console with this command:
+</para>
+<screen>
+&prompt.root;helm install stratos-ui/console \
+    --namespace stratos \
+    --values scf-config-values.yaml
+    --name <replaceable>my-console</replaceable> 
+</screen>
+<para>
+Use Helm to check installation status:
+</para>
+<screen>
+&prompt.root;helm status <replaceable>my-console</replaceable>    
+</screen>
+<para>
+    When it reaches the DEPLOYED state, get its IP address and port number:
+</para>
+<screen>
+&prompt.root;helm status <replaceable>my-console</replaceable> | grep ui-ext
+console-ui-ext 10.0.0.162 192.168.77.1  80:30933/TCP,443:30941/TCP  1m 
+</screen>
+<para>
+    In this example, pointing your web browser to https://192.168.77.1:30941 
+    opens the console. If you see a certificate warning you may safely
+    ignore it. Log in with the &cap; credentials you created in 
+    <filename>scf-config-values.yaml</filename>. 
+    If you see an upgrade message, wait a few minutes and try again.
+</para>
+<figure xml:id="fig.cap.stratos-prod">
+  <title>Stratos UI Cloud Foundry Console</title>
+  <mediaobject>
+   <imageobject>
+    <imagedata fileref="stratos.png" format="PNG" width="75%"/>
+   </imageobject>
+  </mediaobject>
+</figure> 
+</sect1>
+
+<sect1 xml:id="sec.cap.ha-prod">
+  <title>Example &ha; Configuration</title>
+  <para>
+This example HA configuration goes in your cluster configuration file (see
+<xref linkend="sec.cap.configure-prod"/>).
+</para>
+<screen>
 sizing:
   api:
     count: 2
@@ -255,11 +411,11 @@ sizing:
     count: 2
   routing_api:
     count: 2 
-    </screen>
+</screen>
 
 <para>
-    The HA pods with the following roles will enter in passive state, and won't 
-    show a ready state:
+    The HA pods with the following roles will enter in both passive and ready 
+    states; there should always be one pod that is ready.
 </para>
     <itemizedlist>
 	 <listitem>
@@ -282,89 +438,6 @@ sizing:
      mysql
      </para>
      </listitem>
-    </itemizedlist> 
-<para>
-Review the logs inside the container for confirmation; the logs will 
-state <literal>.consul-lock.acquiring-lock.</literal>
-</para>
-
-<!-- TODO how to configure 2 Kube masters -->
-<para>
-TODO how to configure 2 Kube masters, explanation of HA configuration
-</para>
-</sect1>
-
-<sect1  xml:id="sec.cap.setup-production">
-    <title>Deploy with Helm</title>
- <para>
-Run the following Helm commands to complete the deployment.
-</para>
-<screen>
-&prompt.root;kubectl create namespace uaa
-&prompt.root;kubectl get secret ceph-secret-admin -o json --namespace default | \
-sed 's/"namespace": "default"/"namespace": "uaa"/' | kubectl create -f -"
- 
-&prompt.root;helm install helm/uaa \
-    --namespace uaa \
-    --values certs/uaa-cert-values.yaml \
-    --values scf-config-values.yaml
-
-&prompt.root;kubectl create namespace scf
-&prompt.root;kubectl get secret ceph-secret -o json --namespace default | \
- jq ".metadata.namespace = \"scf\"" | kubectl create -f -
-
-&prompt.root;helm install helm/cf \
-    --namespace scf \
-    --values certs/scf-cert-values.yaml \
-    --values scf-config-values.yaml 
-    </screen>
-
-<para>
-    Now sit back and wait for everything to be ready. Run this command to watch
-    the pods come online:
-</para>
-    <screen>
-&prompt.root;watch -c 'kubectl get pods --all-namespaces'
-</screen>
-
-<para>
-You should see output similar to this (which is shortened for this example):
-</para>
-<screen>
-NAMESPACE     NAME                           READY     STATUS              RESTARTS   AGE
-kube-system   kube-dns-2830115714-tdl38      3/3       Completed           18         1m
-kube-system   tiller-deploy-833494864-33ndq  0/1       ContainerCreating   0          1m
-scf           api-0                          0/1       ContainerCreating   0          1m
-scf           api-worker-3486565911-dptbh    0/1       ContainerCreating   0          1m
-scf           blobstore-0                    0/1       Pending             0          1m
-</screen>
-</sect1>
-
-<sect1 xml:id="sec.cap.stratos-2">
-    <title>Installing the Stratos Console</title>
-    <para>
-        Stratos UI is a modern, web-based management application for Cloud 
-        Foundry. It provides a graphical management console for both developers
-        and system administrators. Install Stratos on your &kube; master with 
-        Helm. First add the Stratos repository:
-    </para>        
-        <screen>
-&prompt.root;helm repo add stratos-ui https://suse.github.io/stratos-ui
-</screen>
-    <para>
-        Change to the directory where your <filename>scf-config-values.yaml</filename>
-        is stored, and run these commands:
-    </para>
-        <screen>
-&prompt.root;helm install stratos-ui/console \
-    --namespace stratos \
-    --values scf-config-values.yaml 
-</screen>
-<para>
-    Point a Web browser to your domain at port 8443, for example 
-    https://host:&exampledomain;:8443, and log in with the &cap; 
-    credentials you created in <filename>scf-config-values.yaml</filename>. 
-    If you see an upgrade message, wait a few minutes and try again.
-</para>
-</sect1>
+    </itemizedlist>
+ </sect1>
 </chapter>

@@ -166,21 +166,5 @@ describes how to install a minimal test deployment, and
 <xref linkend="cha.cap.install-production"/> details a minimal production 
 deployment.
 </para> 
-<!-- meh. Even as a conceptual diagram it leaves out too much        
-<para>
-    The conceptual diagram, <xref linkend="fig.cap.architecture-layers"/>, 
-    shows where &cap; fits in your deployment. Install &suse; &caasp; and &ses; 
-    on bare metal or virtual machines, install &cap; on &caasp;, and then &cap;
-    supports your workloads.
-</para>
-
-      <figure xml:id="fig.cap.architecture-layers">
-   <title>Simple &cap; Architecture Layer Diagram</title>
-   <mediaobject>
-    <imageobject>
-     <imagedata fileref="cap-arch-2.png" format="PNG" width="75%"/>
-    </imageobject>
-   </mediaobject>
-  </figure>-->
-  </sect1>
+</sect1>
 </chapter> 

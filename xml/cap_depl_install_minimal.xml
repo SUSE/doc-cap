@@ -24,8 +24,10 @@
  </para>
  <para>
      This minimal four-node deployment will run on a minimum of 32GB system 
-     memory, and more memory is better. If you wish to test with your own name 
-     server or storage, these should be on separate hosts from your &cap; PC.
+     memory, though more memory is better. This is enough to test setting up 
+     and configuring &suse; &caasp; and &cap;, and to run one or two lighweight 
+     workloads. If you wish to test with your own name server or storage, 
+     these should be on separate hosts from your &cap; host.
  </para>
  
 <sect1 xml:id="sec.cap.prereqs">
@@ -98,14 +100,13 @@
 </sect1>
  
 <sect1  xml:id="sec.cap.install">
-    <title>Initiate Helm </title>
+    <title>Initiate Helm Client</title>
     <para>
         You should have already installed Tiller, Helm's server component, from 
-        &suse; &caasp;'s Velum dashboard. Now you must initiate Helm, the &kube;
-        package manager, on your &kube; master. You cannot log into the &kube; 
-        nodes directly, but must first open an SSH session on your &caasp; admin 
-        node, using the root login you created when you installed &caasp;, and 
-        then open an SSH session to your &kube; master from your admin node.
+        &suse; &caasp;'s Velum dashboard. Now you must initiate the Helm client, 
+        the &kube; package manager, on your &kube; master. You cannot log into 
+        the &kube; nodes directly, but must open an SSH session to your &kube; 
+        master from your admin node.
     </para>
     <tip>
         <title>Log in Directly to &kube; Nodes</title>
@@ -120,7 +121,8 @@
     </para>
 </tip>
 <para>
-    Use this command to initialize Helm on your &kube; master:
+    Use this command to initialize Helm on your &kube; master. You must 
+    initialize only the client, and not install Tiller a second time:
 </para>
     <screen>
 &prompt.root;helm init --client only
@@ -251,7 +253,7 @@ and they must be run in this order:
   </listitem>
   <listitem>
     <para>
-        Copy UAA CA Certificate to SCF namespace
+        Copy UAA CA certificate to SCF namespace
     </para>
   </listitem>
   <listitem>
@@ -274,7 +276,7 @@ and they must be run in this order:
 </sect2>
 
 <sect2 xml:id="sec.cap.copy-secret">
-    <title>Copy &ses; Storage Secret</title>
+    <title>Copy &ses; Secret</title>
 <para>
     If you are using the hostpath storage class 
     (see <xref linkend="sec.cap.storageclass"/>
