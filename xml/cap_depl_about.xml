@@ -143,8 +143,8 @@ configuration.
 </important>
 
 <para>
-A supported deployment includes &suse; &cap; installed on &caasp; 2, with &ses; 
-> 4.x as a storage backend. You also need a DNS/DHCP server, and an Internet connection 
+A supported deployment includes &suse; &cap; installed on &caasp; 2. You also 
+need a storage backend, such as &ses;, a DNS server, and an Internet connection 
 to download additional packages during installation and ~10GB of Docker images 
 on each &kube; minion after installation.
 </para>
