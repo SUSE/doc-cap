@@ -72,24 +72,35 @@
      <imagedata fileref="install-tiller.png" format="PNG" width="75%"/>
     </imageobject>
    </mediaobject>
-  </figure>        
-	  <para>
-	    Set up &caasp; with one admin node and at least three Kubernetes masters
+  </figure>
+        <para>
+          The easiest way to create the &kube; nodes, after you create the 
+          admin node, is to use AutoYaST; see 
+<link xlink:href="https://www.suse.com/documentation/suse-caasp-2/singlehtml/book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.node.ay">
+              Installation with AutoYaST</link>. Set up &caasp; with one admin 
+          node and at least three Kubernetes masters
         and three Kubernetes minions (See the 
         <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/">CaaSP 
         documentation</link>). You also need an Internet connection, as the 
         installer downloads additional packages, and the &kube;
         minions will each download ~10GB of Docker images.
+        == TODO howto set up a local image cache ==
         </para>
-      <para>
-          The easiest way to create the &kube; nodes, after you create the 
-          admin node, is to use AutoYaST; see 
-<link xlink:href="https://www.suse.com/documentation/suse-caasp-2/singlehtml/book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.node.ay">
-              Installation with AutoYaST</link>. When you have completed 
+  <figure xml:id="fig.cap.select-master-nodes">
+   <title>Assigning Roles to Nodes</title>
+   <mediaobject>
+    <imageobject>
+     <imagedata fileref="select-master-nodes.png" format="PNG" width="75%"/>
+    </imageobject>
+   </mediaobject>
+  </figure>
+  <para>
+      When you have completed 
 <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/singlehtml/book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.bootstrap">
               Bootstrapping the Cluster</link> you can proceed to 
           the next steps to install &productname;.
-      </para>
+    </para>
+
 	</listitem>
 	</varlistentry>
  <varlistentry>
@@ -256,6 +267,7 @@ and they must be run in this order:
 <para>
 If you are using &ses; you must copy the Ceph admin secret to the UAA and SCF
 namespaces:
+== TODO what about other storage backends? ==
 </para>
 <screen>
 &prompt.root;kubectl get secret ceph-secret-admin -o json --namespace default | \
@@ -323,9 +335,18 @@ scf           blobstore-0                    0/1    Pending            0        
         Stratos UI is a modern, web-based management application for Cloud 
         Foundry. It provides a graphical management console for both developers
         and system administrators. Install Stratos on your &kube; master with 
-        Helm. First add the Stratos repository:
-    </para>        
-        <screen>
+        Helm. Start by preparing the environment:
+    </para>
+    <screen>        
+&prompt.root;kubectl create namespace stratos-cap
+&prompt.root;kubectl get secret ceph-secret-admin -o json --namespace default | \
+sed 's/"namespace": "default"/"namespace": "stratos-cap"/' | \
+kubectl create -f -       
+</screen>        
+<para>       
+Add the Stratos repository:
+</para>        
+<screen>
 &prompt.root;helm repo add stratos-ui https://suse.github.io/stratos-ui
 </screen>
 <para>
@@ -341,7 +362,7 @@ stratos-ui/console      0.9.7   A Helm chart for deploying Stratos UI Console
 </para>
 <screen>
 &prompt.root;helm install stratos-ui/console \
-    --namespace stratos \
+    --namespace stratos-cap \
     --values scf-config-values.yaml
     --name <replaceable>my-console</replaceable> 
 </screen>
@@ -415,7 +436,7 @@ sizing:
 
 <para>
     The HA pods with the following roles will enter in both passive and ready 
-    states; there should always be one pod that is ready.
+    states; there should always be at least one pod in each role that is ready.
 </para>
     <itemizedlist>
 	 <listitem>

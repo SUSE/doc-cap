@@ -352,9 +352,18 @@ scf           blobstore-0                    0/1    Pending            0        
         Stratos UI is a modern, web-based management application for Cloud 
         Foundry. It provides a graphical management console for both developers
         and system administrators. Install Stratos on your &kube; master with 
-        Helm. First add the Stratos repository:
-    </para>        
-        <screen>
+        Helm. Start by preparing the environment:
+    </para>
+    <screen>        
+&prompt.root;kubectl create namespace stratos-cap
+&prompt.root;kubectl get secret ceph-secret-admin -o json --namespace default | \
+sed 's/"namespace": "default"/"namespace": "stratos-cap"/' | \
+kubectl create -f -       
+</screen>
+<para>
+    Add the Stratos repository:
+</para>
+<screen>
 &prompt.root;helm repo add stratos-ui https://suse.github.io/stratos-ui
 </screen>
 <para>
@@ -370,7 +379,7 @@ stratos-ui/console      0.9.7   A Helm chart for deploying Stratos UI Console
 </para>
 <screen>
 &prompt.root;helm install stratos-ui/console \
-    --namespace stratos \
+    --namespace stratos-cap \
     --values scf-config-values.yaml
     --name <replaceable>my-console</replaceable> 
 </screen>
