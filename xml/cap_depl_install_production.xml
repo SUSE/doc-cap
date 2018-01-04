@@ -62,7 +62,7 @@
 	  </term>
 	<listitem>
         <para>
-            After installing &caasp; and logging into the Velum Web interface, 
+            After installing <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/">&caasp;</link> and logging into the Velum Web interface, 
             check the box to install Tiller (Helm's server component). 
         </para>
 <figure xml:id="fig.cap.install-tiller-prod">
@@ -73,18 +73,25 @@
     </imageobject>
    </mediaobject>
   </figure>
+  <para>
+      Take note of the <guimenu>Overlay network settings</guimenu>. These define 
+      the networks that are exclusive to the internal cluster
+      communications. They are not externally accessible, and you must avoid
+      address collisions.
+  </para>
+  <para>
+      There is also a form for proxy settings; if you're not using a proxy then
+      leave it empty.
+  </para>
         <para>
           The easiest way to create the &kube; nodes, after you create the 
           admin node, is to use AutoYaST; see 
 <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/singlehtml/book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.node.ay">
               Installation with AutoYaST</link>. Set up &caasp; with one admin 
           node and at least three Kubernetes masters
-        and three Kubernetes minions (See the 
-        <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/">CaaSP 
-        documentation</link>). You also need an Internet connection, as the 
+        and three Kubernetes minions. You also need an Internet connection, as the 
         installer downloads additional packages, and the &kube;
         minions will each download ~10GB of Docker images.
-        == TODO howto set up a local image cache ==
         </para>
   <figure xml:id="fig.cap.select-master-nodes">
    <title>Assigning Roles to Nodes</title>
@@ -461,4 +468,9 @@ sizing:
      </listitem>
     </itemizedlist>
  </sect1>
+ <sect1 xml:id="sec.cap.update">
+  <title>Updating &suse; &cf;, UAA, and Stratos</title>
+  <para>
+  </para>
+  </sect1>
 </chapter>
