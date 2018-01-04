@@ -25,7 +25,7 @@
  <para>
      This minimal four-node deployment will run on a minimum of 32GB system 
      memory, though more memory is better. This is enough to test setting up 
-     and configuring &suse; &caasp; and &cap;, and to run one or two lighweight 
+     and configuring &suse; &caasp; and &cap;, and to run one or two lightweight 
      workloads. If you wish to test with your own name server or storage, 
      these should be on separate hosts from your &cap; host.
  </para>
@@ -52,7 +52,7 @@
 	  </term>
 	<listitem>
         <para>
-            After installing &caasp; and logging into the Velum Web interface, 
+            After installing <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/">&caasp;</link> and logging into the Velum Web interface, 
             check the box to install Tiller (Helm's server component). 
         </para>
 <figure xml:id="fig.cap.install-tiller">
@@ -62,13 +62,20 @@
      <imagedata fileref="install-tiller.png" format="PNG" width="75%"/>
     </imageobject>
    </mediaobject>
-  </figure>        
+  </figure>
+    <para>
+      Take note of the <guimenu>Overlay network settings</guimenu>. These define 
+      the networks that are exclusive to the internal cluster
+      communications. They are not externally accessible, and you must avoid
+      address collisions.
+  </para>
+  <para>
+      There is also a form for proxy settings; if you're not using a proxy then
+      leave it empty.
+  </para>
 	  <para>
 	    &caasp; requires a minimum of four physical or virtual nodes: one admin, one 
-        Kubernetes master, and two Kubernetes minions. (See the 
-        <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/">CaaSP 
-        documentation</link>). You also need an Internet connection, as the 
-        installer downloads additional packages, and the &kube;
+        Kubernetes master, and two Kubernetes minions. You also need an Internet connection, as the installer downloads additional packages, and the &kube;
         minions will each download ~10GB of Docker images.
         </para>
       <para>
