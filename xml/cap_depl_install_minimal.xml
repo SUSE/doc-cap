@@ -17,10 +17,10 @@
  </info>
  <para>
      A production deployment of &productname; requires a significant number of
-     physical or virtual nodes. For testing and learning, you can set up a minimal &productname; four-node deployment on a single PC by using a hypervisor such as 
-     KVM or VirtualBox. This extremely minimal deployment uses your hypervisor's 
-     name services and networking instead of a separate name server, and &kube;'s 
-     hostpath storage type instead of a storage server such as &ses;.
+     physical or virtual nodes. For testing and learning, you can set up a minimal &productname; four-node deployment on a single workstation in a hypervisor 
+     such as KVM or VirtualBox. This extremely minimal deployment uses your 
+     hypervisor's name services and networking instead of a separate name server, 
+     and &kube;'s hostpath storage type instead of a storage server such as &ses;.
  </para>
  <para>
      This minimal four-node deployment will run on a minimum of 32GB system 
@@ -29,9 +29,22 @@
      workloads. If you wish to test with your own name server or storage, 
      these should be on separate hosts from your &cap; host.
  </para>
- 
+ <para>
+     After you have set up your cluster you will administer it remotely from your
+     host workstation, using tools such as the 
+     <link xlink:href="https://docs.helm.sh/">Helm package manager for
+         Kubernetes</link>, and the Kubernetes command-line tool 
+     <link xlink:href="https://kubernetes.io/docs/tasks/tools/install-kubectl/kubectl">
+         kubectl</link>.
+ </para>
 <sect1 xml:id="sec.cap.prereqs">
  <title>Prerequisites</title>
+ 	  <para>
+	    &caasp; requires a minimum of four physical or virtual nodes: one admin, 
+        one Kubernetes master, and two Kubernetes minions. You also need an Internet connection, as the installer downloads additional packages, and the &kube;
+        minions will each download ~10GB of Docker images. ==TODO howto set up
+        cache to reuse downloads==
+        </para>
   <variablelist>
       <varlistentry>
 	  <term>
@@ -43,20 +56,23 @@
         500GB of storage. 32GB of system memory will run a four-node deployment, 
         though more memory is better. Allocate a minimum of 60GB of storage for 
         each of the &kube; nodes, and 40GB is adequate for the admin node.  
-        </para>
-      </listitem>  
-      </varlistentry>
-	<varlistentry>
-	  <term>
+      </para>
+    </listitem>  
+  </varlistentry>
+<varlistentry>
+ <term>
 	    Install &suse; &caasp; 2
-	  </term>
+  </term>
 	<listitem>
         <para>
-            After installing <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/">&caasp;</link> and logging into the Velum Web interface, 
-            check the box to install Tiller (Helm's server component). 
+            Install &suse; &caasp; 2 
+<link xlink:href="https://www.suse.com/documentation/suse-caasp-2/">&caasp;</link>. 
+            When you reach the step where you log
+            into the Velum Web interface, check the box to install &tiller; (Helm's 
+            server component).  
         </para>
 <figure xml:id="fig.cap.install-tiller">
-   <title>Install Tiller</title>
+   <title>Install &tiller;</title>
    <mediaobject>
     <imageobject>
      <imagedata fileref="install-tiller.png" format="PNG" width="75%"/>
@@ -73,67 +89,130 @@
       There is also a form for proxy settings; if you're not using a proxy then
       leave it empty.
   </para>
-	  <para>
-	    &caasp; requires a minimum of four physical or virtual nodes: one admin, one 
-        Kubernetes master, and two Kubernetes minions. You also need an Internet connection, as the installer downloads additional packages, and the &kube;
-        minions will each download ~10GB of Docker images.
-        </para>
-      <para>
-          The easiest way to create the &kube; nodes, after you create the 
-          admin node, is to use AutoYaST; see 
-<link xlink:href="https://www.suse.com/documentation/suse-caasp-2/singlehtml/book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.node.ay">
-              Installation with AutoYaST</link>. When you have completed 
-<link xlink:href="https://www.suse.com/documentation/suse-caasp-2/singlehtml/book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.bootstrap">
-              Bootstrapping the Cluster</link> you can proceed to 
-          the next steps to install &productname;.
+  <para>
+          The easiest way to create the &kube; nodes is to use AutoYaST; see 
+<link xlink:href="https://www.suse.com/documentation/suse-caasp-2/singlehtml/
+      book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.node.ay">
+              Installation with AutoYaST</link>.
+  </para>
+  <para>
+          When you have completed 
+<link xlink:href="https://www.suse.com/documentation/suse-caasp-2/singlehtml/
+      book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.bootstrap">
+    Bootstrapping the Cluster</link> click the <guimenu>kubectl config</guimenu>
+button to download your new cluster's <filename>kubeconfig</filename> file, and 
+save it as <filename>~/.kube/config</filename> on your host workstation.
       </para>
-	</listitem>
-	</varlistentry>
+      <figure xml:id="fig.cap.kubectl-download">
+   <title>Download kubeconfig</title>
+   <mediaobject>
+    <imageobject>
+     <imagedata fileref="kubectl-download.png" format="PNG" width="75%"/>
+    </imageobject>
+   </mediaobject>
+  </figure>
+ </listitem>
+</varlistentry>  
+<varlistentry>
+  <term>Install kubectl</term>          
+  <listitem>
+ <para>
+     Follow the instructions at
+     <link xlink:href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">
+         Install and Set Up kubectl</link> to install <command>kubectl</command>
+     on your host workstation. After installation, run this command to verify
+     that it is installed, and that is communicating correctly with your cluster:
+ </para>
+ <screen>
+&prompt.user;kubectl version --short
+Client Version: v1.9.1
+Server Version: v1.7.7
+</screen>
+<para>
+    As the client is on your workstation, and the server is on your cluster, 
+    reporting the server version verifies that <command>kubectl</command> is using 
+    <filename>~/.kube/config</filename> and is communicating with your cluster.
+</para>
+<para>
+   The following examples query the cluster configuration and node status:
+</para>
+<screen>    
+&prompt.user;kubectl config view
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: REDACTED
+    server: https://&kubeip;:6443
+  name: local
+contexts:
+[...]
+
+&prompt.user;kubectl get nodes
+NAME                        STATUS                     ROLES     AGE  VERSION
+b70748d.infra.caasp.local   Ready                      &lt;none>    4d   v1.7.7
+cb77881.infra.caasp.local   Ready,SchedulingDisabled   &lt;none>    4d   v1.7.7
+d028551.infra.caasp.local   Ready                      &lt;none>    4d   v1.7.7
+</screen>        
+ </listitem>  
+</varlistentry>
  <varlistentry>
 	  <term>
-          Install &productname; 
+          Install Helm
       </term>
       <listitem>
  <para>
      Installing &suse; &cap; is a little different than the usual method of
      installing software. Rather than installing packages in the usual way with
-     YaST or Zypper, you will use Helm to install the required Kubernetes 
-     applications to set up &cap;.
+     YaST or Zypper, you will use the Helm client on your host workstation 
+     to install the required Kubernetes applications to set up &cap;, and to 
+     administer your cluster remotely.
  </para>
-
-  </listitem>
- </varlistentry>
-</variablelist>
-</sect1>
- 
-<sect1  xml:id="sec.cap.install">
-    <title>Initiate Helm Client</title>
-    <para>
-        You should have already installed Tiller, Helm's server component, from 
-        &suse; &caasp;'s Velum dashboard. Now you must initiate the Helm client, 
-        the &kube; package manager, on your &kube; master. You cannot log into 
-        the &kube; nodes directly, but must open an SSH session to your &kube; 
-        master from your admin node.
+      <warning>
+        <title>Initialize Only the Helm Client</title>
+        <para>When you initialize Helm on your workstation be sure
+            to initialize only the client, as the server, &tiller;, was
+            installed during the CaaSP installation. You do not want two &tiller;
+            instances. Also make sure to install the &helm; version that matches
+            your &tiller; version.
     </para>
-    <tip>
-        <title>Log in Directly to &kube; Nodes</title>
-        <para>
-        You can set up direct logins to your &kube; nodes from your host PC by 
-        copying the SSH keys from your admin node to your &kube; nodes, and then 
-        you will have password-less SSH logins. This is 
-        not a best practice for a production deployment, but will make running a 
-        test deployment a little easier, especially if you want to use mouse 
-        select/middle-click paste to copy commands and output from a virtual 
-        terminal on your host PC.
-    </para>
-</tip>
+</warning>
+ <para>
+     See the 
+     <link xlink:href="https://docs.helm.sh/using_helm/#quickstart">
+         Helm Quickstart Guide</link> for installation instructions and basic 
+     usage examples. You should match the Helm version with the version of &tiller; 
+     that is running on your cluster. To get your &tiller; version, log into your
+     &kube; master and query the logs.
+ </para>
+ <screen>
+&prompt.root;kubectl logs -l name=tiller --namespace=kube-system | grep "Starting &tiller;"
+[main] 2018/01/04 16:48:27 Starting &tiller; v2.6.1 (tls=false)
+</screen>
 <para>
-    Use this command to initialize Helm on your &kube; master. You must 
-    initialize only the client, and not install Tiller a second time:
-</para>
-    <screen>
-&prompt.root;helm init --client only
-</screen>  
+    Download the matching &helm; binary into any directory that is in your PATH
+    on your workstation, such as your <filename>~/bin</filename> directory. Then 
+    initialize the client only:
+ </para>
+ <screen>
+&prompt.user;helm init --client-only
+Creating /home/&exampleuser_plain;/.helm 
+Creating /home/&exampleuser_plain;/.helm/repository 
+Creating /home/&exampleuser_plain;/.helm/repository/cache 
+Creating /home/&exampleuser_plain;/.helm/repository/local 
+Creating /home/&exampleuser_plain;/.helm/plugins 
+Creating /home/&exampleuser_plain;/.helm/starters 
+Creating /home/&exampleuser_plain;/.helm/cache/archive 
+Creating /home/&exampleuser_plain;/.helm/repository/repositories.yaml 
+Adding stable repo with URL: https://kubernetes-charts.storage.googleapis.com 
+Adding local repo with URL: http://127.0.0.1:8879/charts 
+$HELM_HOME has been configured at /home/&exampleuser_plain;/.helm.
+Not installing &tiller; due to 'client-only' flag having been set
+Happy Helming!
+ </screen>
+ </listitem>  
+</varlistentry>
+</variablelist>
+
 </sect1>
 
 <sect1 xml:id="sec.cap.storageclass">
@@ -144,12 +223,26 @@
      storage type. hostpath is NOT suitable for a production deployment, but it 
      is an easy option for a minimal test deployment.
  </para>
+     <tip>
+        <title>Log in Directly to &kube; Nodes</title>
+        <para>
+        By default, &suse; &caasp; allows logging into the &kube; nodes only from
+        the admin node. You can set up direct logins to your &kube; nodes from 
+        your host workstation by copying the SSH keys from your admin node to your 
+        &kube; nodes, and then you will have password-less SSH logins. This is 
+        not a best practice for a production deployment, but will make running a 
+        test deployment a little easier, especially if you want to use mouse 
+        select/middle-click paste to copy commands and output from a virtual 
+        terminal on your host workstation.
+    </para>
+</tip>
  <para>
     Open an SSH session to your &kube; master node and add the argument
     <literal>--enable-hostpath-provisioner</literal> to
     <filename>/etc/kubernetes/controller-manager</filename>:
 </para>
 <screen>
+&prompt.root;vim /etc/kubernetes/controller-manager 
     KUBE_CONTROLLER_MANAGER_ARGS="\
         --enable-hostpath-provisioner \
         "
@@ -158,10 +251,11 @@
 Restart the &kube; controller-manager:
 </para>
 <screen>
-<prompt>root # </prompt>systemctl restart kube-controller-manager
+&prompt.root;systemctl restart kube-controller-manager
 </screen>
 <para>
-    Create a <literal>persistent</literal> storage class: 
+    Create a <literal>persistent</literal> storage class named 
+    <literal>hostpath</literal>: 
 </para>
 <screen>
 &prompt.root;echo '{"kind":"StorageClass","apiVersion":"storage.k8s.io/v1", \
@@ -169,7 +263,8 @@ Restart the &kube; controller-manager:
 kubectl create -f -
 </screen>
 <para>
-    Verify that your new storage class has been created:
+    Verify that your new storage class has been created. This command should
+    also succeed on your workstation:
 </para>
 <screen>
 &prompt.root;kubectl get storageclass
@@ -178,7 +273,7 @@ hostpath   kubernetes.io/host-path
 </screen>
 <para>
     See the &kube; document 
-    <link xlink:href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">Persistent Volumes</link>
+    <link xlink:href="https://kubernetes.io/docs/concepts/storage/storage-classes/">Storage Classes</link>
     for detailed information on storage classes.
 </para>
 </sect1> 
@@ -187,10 +282,7 @@ hostpath   kubernetes.io/host-path
     <title>Configuring the Minimal Test Deployment</title>
     <para>
         Create a new configuration file for Helm to use. In this example it is
-        called <filename>scf-config-values.yaml</filename>, and it is stored in 
-        the <filename>/root/deploy</filename> directory. &caasp; has a read-only
-        filesystem; <filename>/root/deploy</filename> is outside of this so
-        you can use it like a normal read-write directory.
+        called <filename>~/.kube/scf-config-values.yaml</filename>.
     </para>
         <screen>
 env:
@@ -215,15 +307,13 @@ kube:
     # The external IP address of your &kube; master
     external_ip: <replaceable>IP_ADDRESS</replaceable>
     
-    # Run <command>kubectl get storageclasses</command>
-    # to view your available storage classes
+    # Your chosen storage class
     storage_class:
-    persistent: "<replaceable>hostpath</replaceable>"
+        persistent: "<replaceable>hostpath</replaceable>"
         shared: "shared"
         
-    # The registry the images will be fetched from. 
-    # The values below should work for
-    # a default installation from the &suse; registry.
+    # The registry the images will be fetched from
+    # This is the default
     registry:
        hostname: "registry.suse.com"
        username: ""
@@ -238,10 +328,15 @@ kube:
 <sect1  xml:id="sec.cap.helm-deploy">
     <title>Deploy with Helm</title>
  <para>
-Run the following Helm commands to complete the deployment. There are five steps,
+Run the following Helm commands to complete the deployment. There are six steps,
 and they must be run in this order:
 </para>
 <itemizedlist>
+      <listitem>
+    <para>
+        Download the &suse; &kube; charts repository
+    </para>
+</listitem>
   <listitem>
     <para>
         Create namespaces
@@ -270,15 +365,44 @@ and they must be run in this order:
   </listitem>  
 </itemizedlist>  
 
+<sect2 xml:id="sec.cap.addrepo">
+    <title>Install the &kube; charts repository</title>
+    <para>
+        Download the &suse; &kube; charts repository with &helm;:
+    </para>
+<screen>
+&prompt.user;helm repo add <replaceable>suse-cap</replaceable> https://kubernetes-charts.suse.com/
+</screen>
+<para>
+    You may replace the example <replaceable>suse-cap</replaceable> name with any
+    name. Verify with <command>helm</command>:
+</para>
+<screen>
+&prompt.user;helm repo list
+NAME            URL                                             
+stable          https://kubernetes-charts.storage.googleapis.com
+local           http://127.0.0.1:8879/charts                    
+suse-cap        https://kubernetes-charts.suse.com/
+</screen>
+</sect2>
+
 <sect2 xml:id="sec.cap.create-namespaces">
     <title>Create Namespaces</title>
 <para>
-    Create the UAA (User Account and Authentication) and 
-    SCF (SUSE Cloud Foundry) namespaces:
+    Use <command>kubectl</command> on your host workstation to create and verify 
+    the UAA (User Account and Authentication) and SCF (SUSE Cloud Foundry) 
+    namespaces:
 </para>    
     <screen>
-&prompt.root;kubectl create namespace uaa
-&prompt.root;kubectl create namespace scf
+&prompt.user;kubectl create namespace uaa
+&prompt.user;kubectl create namespace scf
+&prompt.user;kubectl get namespaces
+NAME          STATUS    AGE
+default       Active    4d
+kube-public   Active    4d
+kube-system   Active    4d
+scf           Active    1m
+uaa           Active    1m
 </screen>
 </sect2>
 
@@ -294,11 +418,11 @@ If you are using &ses; you must copy the Ceph admin secret to the UAA and SCF
 namespaces:
 </para>
 <screen>
-&prompt.root;kubectl get secret ceph-secret-admin -o json --namespace default | \
+&prompt.user;kubectl get secret ceph-secret-admin -o json --namespace default | \
 sed 's/"namespace": "default"/"namespace": "uaa"/' | kubectl create -f -
 
-&prompt.root;kubectl get secret ceph-secret-admin -o json --namespace default | \
-sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -
+&prompt.user;kubectl get secret ceph-secret-admin -o json --namespace default | \
+sed 's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -
 </screen>
 </sect2>
 
@@ -308,9 +432,8 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -
     Use Helm to install the UAA (User Account and Authentication) server:
 </para>
 <screen>    
-&prompt.root;helm install helm/uaa \
-    --namespace uaa \
-    --values scf-config-values.yaml
+&prompt.user;helm install -f ~/.kube/scf-config-values.yaml --namespace uaa \
+suse-cap/uaa --dry-run
 </screen>
 <para>
     Wait until you have a successful UAA deployment before going to the next
@@ -325,7 +448,8 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -
        then use Helm to install &suse; &cf;:
     </para>
 <screen>
-&prompt.root;CA_CERT="$(kubectl get secret secret --namespace uaa -o \ jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+&prompt.root;CA_CERT="$(kubectl get secret secret --namespace uaa -o \ 
+jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
 &prompt.root;helm install helm/cf \
     --namespace scf \
@@ -418,7 +542,5 @@ console-ui-ext 10.0.0.162 192.168.77.1  80:30933/TCP,443:30941/TCP  1m
    </imageobject>
   </mediaobject>
 </figure> 
-
-
 </sect1>
 </chapter>

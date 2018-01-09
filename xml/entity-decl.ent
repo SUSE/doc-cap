@@ -20,6 +20,7 @@
 <!ENTITY susecf       "&suse; Cloud Foundry">
 <!ENTITY susemicros   "&suse; MicroOS">
 <!ENTITY ses	      "&suse; Enterprise Storage">
+<!ENTITY tiller	      "Tiller">
 
 <!ENTITY suse      "SUSE">
 <!ENTITY novell    "Novell">
