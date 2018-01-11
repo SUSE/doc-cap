@@ -73,7 +73,7 @@
 	<listitem>
         <para>
             After installing <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/">&caasp;</link> and logging into the Velum Web interface, 
-            check the box to install Tiller (Helm's server component). 
+            check the box to install Tiller (&helm;'s server component). 
         </para>
 <figure xml:id="fig.cap.install-tiller-prod">
    <title>Install Tiller</title>
@@ -175,19 +175,19 @@ d028551.example.com   Ready                      &lt;none>    4h   v1.7.7
 </varlistentry>
  <varlistentry>
 	  <term>
-          Install Helm
+          Install &helm;
       </term>
       <listitem>
  <para>
      Installing &suse; &cap; is a little different than the usual method of
      installing software. Rather than installing packages in the usual way with
-     YaST or Zypper, you will use the Helm client on your remote workstation 
+     YaST or Zypper, you will use the &helm; client on your remote workstation 
      to install the required Kubernetes applications to set up &cap;, and to 
      administer your cluster remotely.
  </para>
       <warning>
-        <title>Initialize Only the Helm Client</title>
-        <para>When you initialize Helm on your workstation be sure
+        <title>Initialize Only the &helm; Client</title>
+        <para>When you initialize &helm; on your workstation be sure
             to initialize only the client, as the server, &tiller;, was
             installed during the CaaSP installation. You do not want two &tiller;
             instances. Also make sure to install the &helm; version that matches
@@ -197,8 +197,8 @@ d028551.example.com   Ready                      &lt;none>    4h   v1.7.7
  <para>
      See the 
      <link xlink:href="https://docs.helm.sh/using_helm/#quickstart">
-         Helm Quickstart Guide</link> for installation instructions and basic 
-     usage examples. You should match the Helm version with the version of &tiller; 
+         &helm; Quickstart Guide</link> for installation instructions and basic 
+     usage examples. You should match the &helm; version with the version of &tiller; 
      that is running on your cluster. To get your &tiller; version, log into your
      &kube; master and query the logs.
  </para>
@@ -262,7 +262,7 @@ Happy Helming!
 <sect1 xml:id="sec.cap.configure-prod">
     <title>Configuring the Production Deployment</title>
     <para>
-        Create a new configuration file for Helm to use. In this example it is
+        Create a new configuration file for &helm; to use. In this example it is
         called <filename>~/.kube/scf-config-values.yaml</filename>.
     </para>
         <screen>
@@ -292,7 +292,7 @@ kube:
         persistent: <replaceable>"persistent"</replaceable>
         shared: "shared"
     
-    # The registry the images will be fetched from
+    # The Docker registry the images will be fetched from
     # This is the default
     registry:
        hostname: "registry.suse.com"
@@ -310,9 +310,9 @@ kube:
 </sect1>
 
 <sect1  xml:id="sec.cap.helm-deploy-prod">
-    <title>Deploy with Helm</title>
+    <title>Deploy with &helm;</title>
  <para>
-Run the following Helm commands to complete the deployment. There are six steps,
+Run the following &helm; commands to complete the deployment. There are six steps,
 and they must be run in this order:
 </para>
 <itemizedlist>
@@ -349,6 +349,37 @@ and they must be run in this order:
   </listitem>  
 </itemizedlist>  
 
+<sect2 xml:id="sec.cap.addrepo-prod">
+    <title>Install the &kube; charts repository</title>
+    <para>
+        Download the &suse; &kube; charts repository with &helm;:
+    </para>
+<screen>
+&prompt.user;helm repo add <replaceable>suse-cap</replaceable> https://kubernetes-charts.suse.com/
+</screen>
+<para>
+    You may replace the example <replaceable>suse-cap</replaceable> name with any
+    name. Verify with <command>helm</command>:
+</para>
+<screen>
+&prompt.user;helm repo list
+NAME            URL                                             
+stable          https://kubernetes-charts.storage.googleapis.com
+local           http://127.0.0.1:8879/charts                    
+suse-cap        https://kubernetes-charts.suse.com/
+</screen>
+<para>
+    List your chart names, as you will need these for some operations:
+</para>
+<screen>
+&prompt.user;helm search suse-cap
+NAME             VERSION                     DESCRIPTION                                  
+suse-cap/cf      2.6.1-rc1+cf278.0.g52d7a644 A Helm chart for SUSE Cloud Foundry          
+suse-cap/console 1.0.0                       A Helm chart for deploying Stratos UI Console
+suse-cap/uaa     2.6.1-rc1+cf278.0.g52d7a644 A Helm chart for SUSE UAA   
+</screen>
+</sect2>
+
 <sect2 xml:id="sec.cap.create-namespaces-prod">
     <title>Create Namespaces</title>
 <para>
@@ -356,8 +387,8 @@ and they must be run in this order:
     SCF (SUSE Cloud Foundry) namespaces:
 </para>    
     <screen>
-&prompt.root;kubectl create namespace uaa
-&prompt.root;kubectl create namespace scf
+&prompt.user;kubectl create namespace uaa
+&prompt.user;kubectl create namespace scf
 </screen>
 </sect2>
 
@@ -381,7 +412,7 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -
     <para>==TODO something is not right, as this step always fails==</para>    
     
 <para>
-    Use Helm to install the UAA (User Account and Authentication) server:
+    Use &helm; to install the UAA (User Account and Authentication) server:
 </para>
 <screen>    
 &prompt.user;helm install -f ~/.kube/scf-config-values.yaml --namespace uaa \
@@ -405,14 +436,14 @@ step.
     <title>Install SCF</title>
 <para>
   First copy your UAA certificate authority (CA) into your SCF namespace, then 
-  use Helm to install &suse; &cf;:
+  use &helm; to install &suse; &cf;:
 </para>
 <screen>
-&prompt.user;CA_CERT="$(kubectl get secret secret --namespace uaa -o \ 
-jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+&prompt.user;CA_CERT="$(kubectl get secret secret --namespace uaa -o jsonpath="{.data['internal-ca-cert']}" | \
+base64 --decode -)"
 
 &prompt.user;helm install -f ~/.kube/scf-config-values.yaml --namespace scf \
-suse-cap/scf --set "env.UAA_CA_CERT=${CA_CERT}"
+suse-cap/cf --set "env.UAA_CA_CERT=${CA_CERT}"
 </screen>
 <para>
     Now sit back and wait for the pods come online:
@@ -429,7 +460,8 @@ suse-cap/scf --set "env.UAA_CA_CERT=${CA_CERT}"
         Stratos UI is a modern, web-based management application for Cloud 
         Foundry. It provides a graphical management console for both developers
         and system administrators. Install Stratos on your &kube; master with 
-        Helm. Start by preparing the environment:
+        &helm; after all of the UAA and SCF pods are running. Start by preparing 
+        the environment:
     </para>
     <screen>        
 &prompt.user;kubectl create namespace stratos-cap
@@ -444,7 +476,7 @@ Add the Stratos repository:
 &prompt.user;helm repo add stratos-ui https://suse.github.io/stratos-ui
 </screen>
 <para>
-    Verify that the repo was added successfully:
+    Verify that the repository was added successfully:
 </para>
 <screen>
 &prompt.user;helm search console 
@@ -461,7 +493,7 @@ stratos-ui/console      0.9.7   A Helm chart for deploying Stratos UI Console
     --name <replaceable>my-console</replaceable> 
 </screen>
 <para>
-Use Helm to check installation status:
+Use &helm; to check installation status:
 </para>
 <screen>
 &prompt.user;helm status <replaceable>my-console</replaceable>    
@@ -558,6 +590,53 @@ sizing:
  <sect1 xml:id="sec.cap.update">
   <title>Updating &suse; &cf;, UAA, and Stratos</title>
   <para>
+      Maintenance updates are delivered as container images from the &suse;
+      registry and applied with &helm;. Check for updates:
   </para>
-  </sect1>
+<screen>
+&prompt.user;helm repo update
+Hang tight while we grab the latest from your chart repositories...
+...Skip local chart repository
+...Successfully got an update from the "stable" chart repository
+...Successfully got an update from the "suse-cap" chart repository
+Update Complete. ⎈ Happy Helming!⎈   
+</screen>      
+<para>
+      Get your release and chart names, and then apply the updates:
+</para>
+  <screen>
+&prompt.user;helm list
+NAME             REVISION UPDATED                 STATUS   CHART         NAMESPACE
+bunking-manta    1        Tue Jan 9 08:29:57 2018 DEPLOYED uaa-2.0.2     uaa
+irreverant-sloth 1        Tue Jan 9 09:36:29 2018 DEPLOYED cf-2.0.2      scf        
+olfactory-turtle 1        Tue Jan 9 10:09:56 2018 DEPLOYED console-1.0.0 stratos-cap
+
+&prompt.user;helm repo list
+NAME            URL                                             
+stable          https://kubernetes-charts.storage.googleapis.com
+local           http://127.0.0.1:8879/charts                    
+suse-cap        https://kubernetes-charts.suse.com/             
+stratos-ui      https://suse.github.io/stratos-ui 
+
+&prompt.user;helm search suse-cap
+NAME              VERSION                       DESCRIPTION                                  
+suse-cap/cf       2.6.1-rc1+cf278.0.g52d7a644   A Helm chart for SUSE Cloud Foundry          
+suse-cap/console  1.0.0                         A Helm chart for deploying Stratos UI Console
+suse-cap/uaa      2.6.1-rc1+cf278.0.g52d7a644   A Helm chart for SUSE UAA
+
+&prompt.user;helm search stratos-ui
+NAME                 VERSION DESCRIPTION                                  
+stratos-ui/console   1.0.0   A Helm chart for deploying Stratos UI Console
+
+&prompt.user;helm upgrade bunking-manta suse-cap/uaa
+&prompt.user;helm irreverant-sloth suse-cap/cf
+&prompt.user;helm olfactory-turtle stratos-ui/console
+
+
+</screen>
+<para>
+    ==TODO output examples, and helm rollback==
+</para>
+
+</sect1>
 </chapter>
