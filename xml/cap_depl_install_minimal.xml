@@ -41,9 +41,9 @@
         <title>Remote Administration</title>
         <para>
         You will run most of the commands in this chapter from your host 
-        workstation, rather than directly on any of the &cap; nodes. These are
+        workstation, rather than directly on any of the &caasp; nodes. These are
         indicated by the unprivileged user Tux, while root prompts are on a
-        &cap; node. There are few tasks that need to be performed directly on
+        &caasp; node. There are few tasks that need to be performed directly on
         any of the nodes.
     </para>
 </note>
@@ -443,6 +443,8 @@ sed 's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -
 
 <sect2 xml:id="sec.cap.install-uaa">
     <title>Install UAA</title>
+    <para>==TODO something is not right, as this step always fails==</para>    
+    
 <para>
     Use Helm to install the UAA (User Account and Authentication) server:
 </para>
