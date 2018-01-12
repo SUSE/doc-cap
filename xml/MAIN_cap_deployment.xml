@@ -26,7 +26,7 @@
    <dm:bugtracker>
     <dm:url>https://bugzilla.suse.com/enter_bug.cgi</dm:url>
     <dm:component>Documentation</dm:component>
-    <dm:product>SUSE Cloud Application Platform 1.0 (SUSE CAP 1.0)</dm:product>
+    <dm:product>SUSE Cloud Application Platform 1.0%C2%A0(SUSE CAP 1.0)</dm:product>
     <dm:assignee>christoph.wickert@suse.com</dm:assignee>
    </dm:bugtracker>
   </dm:docmanager>
