@@ -285,14 +285,18 @@ Restart the &kube; controller-manager:
 kubectl create -f -
 </screen>
 <para>
-    Verify that your new storage class has been created. This command should
-    also succeed on your workstation:
+    Verify that your new storage class has been created:
 </para>
 <screen>
 &prompt.root;kubectl get storageclass
 NAME       TYPE
 hostpath   kubernetes.io/host-path
 </screen>
+<para>
+    When you use the hostpath storage type you must create the directory 
+    <filename>/tmp/hostpath_pv</filename> on all of your &kube; nodes, 
+    chmod 777, then restart the controller-manager service again.
+</para>
 <para>
     See the &kube; document 
     <link xlink:href="https://kubernetes.io/docs/concepts/storage/storage-classes/">Storage Classes</link> for detailed information on storage classes.
