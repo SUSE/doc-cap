@@ -63,9 +63,9 @@ the &kube; master and workers.
       <para>
           The easiest way to create the Kubernetes nodes, after you create the 
           admin node, is to use AutoYaST; see 
-<link xlink:href="https://www.suse.com/documentation/suse-caasp-2/singlehtml/book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.node.ay">
+<link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/data/sec_caasp_installquick.html#sec_caasp_installquick_node_ay">
               Installation with AutoYaST</link>. When you have completed 
-<link xlink:href="https://www.suse.com/documentation/suse-caasp-2/singlehtml/book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.bootstrap">
+<link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/data/sec_caasp_installquick.html#sec_caasp_installquick_bootstrap">
               Bootstrapping the Cluster</link> you can proceed to 
           satisfying the remaining prerequisites, and then installing &suse; &cap;.
       </para>
