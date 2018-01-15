@@ -9,7 +9,7 @@
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
  <info>
-  <title>Minimal &productname; Installation for Testing</title>
+  <title>Minimal Installation for Testing</title>
   <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
    <dm:bugtracker></dm:bugtracker>
    <dm:translation>yes</dm:translation>
@@ -17,15 +17,16 @@
  </info>
  <para>
      A production deployment of &productname; requires a significant number of
-     physical or virtual nodes. For testing and learning, you can set up a minimal &productname; four-node deployment on a single workstation in a hypervisor 
+     physical or virtual nodes. For testing and learning, you can set up a 
+     minimal four-node deployment on a single workstation in a hypervisor 
      such as KVM or VirtualBox. This extremely minimal deployment uses your 
-     hypervisor's name services and networking instead of a separate name server, 
+     hypervisor's DNS server and networking instead of a separate name server, 
      and &kube;'s hostpath storage type instead of a storage server such as &ses;.
  </para>
  <para>
      This minimal four-node deployment will run on a minimum of 32GB system 
      memory, though more memory is better. This is enough to test setting up 
-     and configuring &suse; &caasp; and &cap;, and to run one or two lightweight 
+     and configuring &suse; &caasp; and &susecf;, and to run one or two lightweight 
      workloads. If you wish to test with your own name server or storage, 
      these should be on separate hosts from your &cap; host.
  </para>
@@ -37,25 +38,33 @@
      <link xlink:href="https://kubernetes.io/docs/tasks/tools/install-kubectl/kubectl">
          kubectl</link>.
  </para>
- <note>
-        <title>Remote Administration</title>
+   <warning>
+        <title>Limitations of minimal test environment</title>
         <para>
-        You will run most of the commands in this chapter from your host 
-        workstation, rather than directly on any of the &caasp; nodes. These are
-        indicated by the unprivileged user Tux, while root prompts are on a
-        &caasp; node. There are few tasks that need to be performed directly on
-        any of the nodes.
+        This is a limited deployment that is useful for testing basic 
+        deployment and functionality, but it is NOT a production system, and
+        cannot be upgraded to a production system. Its reduced complexity allows basic testing, it is portable (on laptops with enough memory), and is 
+        useful in environments that have resource constraints.
     </para>
-</note>
- 
+</warning>
  
 <sect1 xml:id="sec.cap.prereqs">
  <title>Prerequisites</title>
+  <note>
+        <title>Remote Administration</title>
+        <para>
+        You will run most of the commands in this chapter from your host 
+        workstation, rather than directly on any of your cluster nodes. These are
+        indicated by the unprivileged user Tux, while root prompts are on a
+        node. There are few tasks that need to be performed directly on
+        any of the nodes.
+    </para>
+</note>
+
  	  <para>
 	    &caasp; requires a minimum of four physical or virtual nodes: one admin, 
         one Kubernetes master, and two Kubernetes minions. You also need an Internet connection, as the installer downloads additional packages, and the &kube;
-        minions will each download ~10GB of Docker images. ==TODO howto set up
-        cache to reuse downloads==
+        minions will each download ~10GB of Docker images.
         </para>
   <variablelist>
       <varlistentry>
@@ -286,8 +295,7 @@ hostpath   kubernetes.io/host-path
 </screen>
 <para>
     See the &kube; document 
-    <link xlink:href="https://kubernetes.io/docs/concepts/storage/storage-classes/">Storage Classes</link>
-    for detailed information on storage classes.
+    <link xlink:href="https://kubernetes.io/docs/concepts/storage/storage-classes/">Storage Classes</link> for detailed information on storage classes.
 </para>
 </sect1> 
  
@@ -295,7 +303,7 @@ hostpath   kubernetes.io/host-path
     <title>Configuring the Minimal Test Deployment</title>
     <para>
         Create a new configuration file for &helm; to use. In this example it is
-        called <filename>~/.kube/scf-config-values.yaml</filename>.
+        called <filename>scf-config-values.yaml</filename>.
     </para>
         <screen>
 env:
@@ -402,10 +410,10 @@ suse-cap        https://kubernetes-charts.suse.com/
 </para>
 <screen>
 &prompt.user;helm search suse-cap
-NAME             VERSION                     DESCRIPTION                                  
-suse-cap/cf      2.6.1-rc1+cf278.0.g52d7a644 A Helm chart for SUSE Cloud Foundry          
-suse-cap/console 1.0.0                       A Helm chart for deploying Stratos UI Console
-suse-cap/uaa     2.6.1-rc1+cf278.0.g52d7a644 A Helm chart for SUSE UAA   
+NAME             VERSION   DESCRIPTION                                  
+suse-cap/cf      2.6.1-rc1 A Helm chart for SUSE Cloud Foundry          
+suse-cap/console 1.0.0     A Helm chart for deploying Stratos UI Console
+suse-cap/uaa     2.6.1-rc1 A Helm chart for SUSE UAA   
 </screen>
 </sect2>
 
@@ -451,14 +459,12 @@ sed 's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -
 
 <sect2 xml:id="sec.cap.install-uaa">
     <title>Install UAA</title>
-    <para>==TODO something is not right, as this step always fails==</para>    
-    
 <para>
     Use &helm; to install the UAA (User Account and Authentication) server:
 </para>
 <screen>    
-&prompt.user;helm install -f ~/.kube/scf-config-values.yaml --namespace uaa \
-suse-cap/uaa
+&prompt.user;helm install suse-cap/uaa --name uaa \
+--namespace uaa --values scf-config-values.yaml
 </screen>
 <para>
     Wait until you have a successful UAA deployment before going to the next
@@ -475,16 +481,14 @@ step.
 </sect2>   
 
 <sect2 xml:id="sec.cap.install-scf">
-    <title>Install SCF</title>
-    <para>
-       First copy your UAA certificate authority (CA) into your SCF namespace, 
-       then use &helm; to install &suse; &cf;:
-    </para>
+    <title>Install &susecf;</title>
+<para>
+  First copy your UAA certificate authority (CA) into a shell variable, then 
+  use &helm; to install &suse; &cf;:
+</para>
 <screen>
 &prompt.user;CA_CERT="$(kubectl get secret secret --namespace uaa -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-
-&prompt.user;helm install -f ~/.kube/scf-config-values.yaml --namespace scf \
-suse-cap/cf --set "env.UAA_CA_CERT=${CA_CERT}"
+&prompt.user;helm install -f scf-config-values.yaml --namespace scf suse-cap/cf --set "env.UAA_CA_CERT=${CA_CERT}"
 </screen>
 <para>
     Now sit back and wait for the pods come online:
@@ -507,13 +511,13 @@ suse-cap/cf --set "env.UAA_CA_CERT=${CA_CERT}"
     </para>
   </sect1>
 
+<!-- upgrade does not work with hostpath  
  <sect1 xml:id="sec.cap.update-min">
   <title>Updating &suse; &cf;, UAA, and Stratos</title> 
      <para>
-        Stratos UI is a modern, web-based management application for Cloud 
-        Foundry. It provides a graphical management console for both developers
-        and system administrators. (See <xref linkend="sec.cap.update"/>).
-    </para>
-  </sect1> 
+      Maintenance updates are delivered as container images from the &suse;
+      registry and applied with &helm;. See <xref linkend="sec.cap.update"/>.
+  </para> 
+  </sect1> -->
   
   </chapter>
