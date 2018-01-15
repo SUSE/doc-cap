@@ -357,7 +357,7 @@ and they must be run in this order:
         Download the &suse; &kube; charts repository with &helm;:
     </para>
 <screen>
-&prompt.user;helm repo add <replaceable>suse-cap</replaceable> https://kubernetes-charts.suse.com/
+&prompt.user;helm repo add <replaceable>suse</replaceable> https://kubernetes-charts.suse.com/
 </screen>
 <para>
     You may replace the example <replaceable>suse-cap</replaceable> name with any
@@ -368,17 +368,17 @@ and they must be run in this order:
 NAME            URL                                             
 stable          https://kubernetes-charts.storage.googleapis.com
 local           http://127.0.0.1:8879/charts                    
-suse-cap        https://kubernetes-charts.suse.com/
+suse            https://kubernetes-charts.suse.com/
 </screen>
 <para>
     List your chart names, as you will need these for some operations:
 </para>
 <screen>
-&prompt.user;helm search suse-cap
-NAME             VERSION   DESCRIPTION                                  
-suse-cap/cf      2.6.1-rc1 A Helm chart for SUSE Cloud Foundry          
-suse-cap/console 1.0.0     A Helm chart for deploying Stratos UI Console
-suse-cap/uaa     2.6.1-rc1 A Helm chart for SUSE UAA   
+&prompt.user;helm search suse
+NAME         VERSION   DESCRIPTION                                  
+suse/cf      2.6.1-rc1 A Helm chart for SUSE Cloud Foundry          
+suse/console 1.0.0     A Helm chart for deploying Stratos UI Console
+suse/uaa     2.6.1-rc1 A Helm chart for SUSE UAA   
 </screen>
 </sect2>
 
@@ -415,7 +415,7 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -
     Use &helm; to install the UAA (User Account and Authentication) server:
 </para>
 <screen>    
-&prompt.user;helm install suse-cap/uaa --name uaa --namespace uaa --values scf-config-values.yaml
+&prompt.user;helm install suse/uaa --name uaa --namespace uaa --values scf-config-values.yaml
 </screen>
 <para>
     Wait until you have a successful UAA deployment before going to the next
@@ -439,7 +439,7 @@ step.
 </para>
 <screen>
 &prompt.user;CA_CERT="$(kubectl get secret secret --namespace uaa -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-&prompt.user;helm install -f scf-config-values.yaml --namespace scf suse-cap/cf --set "env.UAA_CA_CERT=${CA_CERT}"
+&prompt.user;helm install -f scf-config-values.yaml --namespace scf suse/cf --set "env.UAA_CA_CERT=${CA_CERT}"
 </screen>
 <para>
     Now sit back and wait for the pods come online:
@@ -455,14 +455,14 @@ step.
     <para>
         Stratos UI is a modern, web-based management application for Cloud 
         Foundry. It provides a graphical management console for both developers
-        and system administrators. Install Stratos on your &kube; master with 
+        and system administrators. Install Stratos with 
         &helm; after all of the UAA and SCF pods are running. Start by preparing 
         the environment:
     </para>
     <screen>        
-&prompt.user;kubectl create namespace stratos-cap
+&prompt.user;kubectl create namespace stratos-scf
 &prompt.user;kubectl get secret ceph-secret-admin -o json --namespace default | \
-sed 's/"namespace": "default"/"namespace": "stratos-cap"/' | \
+sed 's/"namespace": "default"/"namespace": "stratos-scf"/' | \
 kubectl create -f -       
 </screen>        
 <para>       
@@ -484,7 +484,7 @@ stratos-ui/console      0.9.7   A Helm chart for deploying Stratos UI Console
 </para>
 <screen>
 &prompt.user;helm install stratos-ui/console \
-    --namespace stratos-cap \
+    --namespace stratos-scf \
     --values scf-config-values.yaml
     --name <replaceable>my-console</replaceable> 
 </screen>
@@ -518,6 +518,56 @@ console-ui-ext 10.0.0.162 192.168.77.1  80:30933/TCP,443:30941/TCP  1m
 </figure> 
 </sect1>
 
+ <sect1 xml:id="sec.cap.update">
+  <title>Updating &suse; &cf;, UAA, and Stratos</title>
+  <para>
+      Maintenance updates are delivered as container images from the &suse;
+      registry and applied with &helm;. Check for updates:
+  </para>
+<screen>
+&prompt.user;helm repo update
+Hang tight while we grab the latest from your chart repositories...
+...Skip local chart repository
+...Successfully got an update from the "stable" chart repository
+...Successfully got an update from the "suse-cap" chart repository
+Update Complete. ⎈ Happy Helming!⎈   
+</screen>      
+<para>
+      Get your release and chart names, and then apply the updates:
+</para>
+  <screen>
+&prompt.user;helm list
+NAME             REVISION UPDATED                 STATUS   CHART         NAMESPACE
+bunking-manta    1        Tue Jan 9 08:29:57 2018 DEPLOYED uaa-2.0.2     uaa
+irreverant-sloth 1        Tue Jan 9 09:36:29 2018 DEPLOYED cf-2.0.2      scf        
+olfactory-turtle 1        Tue Jan 9 10:09:56 2018 DEPLOYED console-1.0.0 stratos-scf
+
+&prompt.user;helm repo list
+NAME            URL                                             
+stable          https://kubernetes-charts.storage.googleapis.com
+local           http://127.0.0.1:8879/charts                    
+suse            https://kubernetes-charts.suse.com/             
+stratos-ui      https://suse.github.io/stratos-ui 
+
+&prompt.user;helm search suse
+NAME              VERSION     DESCRIPTION                                  
+suse/cf       2.6.1-rc1   A Helm chart for SUSE Cloud Foundry          
+suse/console  1.0.0       A Helm chart for deploying Stratos UI Console
+suse/uaa      2.6.1-rc1   A Helm chart for SUSE UAA
+
+&prompt.user;helm search stratos-ui
+NAME                 VERSION DESCRIPTION                                  
+stratos-ui/console   1.0.0   A Helm chart for deploying Stratos UI Console
+
+&prompt.user;helm upgrade --recreate-pods bunking-manta suse/uaa
+&prompt.user;helm irreverant-sloth --recreate-pods suse/cf
+&prompt.user;helm olfactory-turtle --recreate-pods suse/console
+
+
+</screen>
+<!-- helm rollback does not work, so upgrades are one-way for now
+-->
+</sect1>
 <sect1 xml:id="sec.cap.ha-prod">
   <title>Example &ha; Configuration</title>
   <para>
@@ -583,54 +633,4 @@ sizing:
      </listitem>
     </itemizedlist>
  </sect1>
- <sect1 xml:id="sec.cap.update">
-  <title>Updating &suse; &cf;, UAA, and Stratos</title>
-  <para>
-      Maintenance updates are delivered as container images from the &suse;
-      registry and applied with &helm;. Check for updates:
-  </para>
-<screen>
-&prompt.user;helm repo update
-Hang tight while we grab the latest from your chart repositories...
-...Skip local chart repository
-...Successfully got an update from the "stable" chart repository
-...Successfully got an update from the "suse-cap" chart repository
-Update Complete. ⎈ Happy Helming!⎈   
-</screen>      
-<para>
-      Get your release and chart names, and then apply the updates:
-</para>
-  <screen>
-&prompt.user;helm list
-NAME             REVISION UPDATED                 STATUS   CHART         NAMESPACE
-bunking-manta    1        Tue Jan 9 08:29:57 2018 DEPLOYED uaa-2.0.2     uaa
-irreverant-sloth 1        Tue Jan 9 09:36:29 2018 DEPLOYED cf-2.0.2      scf        
-olfactory-turtle 1        Tue Jan 9 10:09:56 2018 DEPLOYED console-1.0.0 stratos-cap
-
-&prompt.user;helm repo list
-NAME            URL                                             
-stable          https://kubernetes-charts.storage.googleapis.com
-local           http://127.0.0.1:8879/charts                    
-suse-cap        https://kubernetes-charts.suse.com/             
-stratos-ui      https://suse.github.io/stratos-ui 
-
-&prompt.user;helm search suse-cap
-NAME              VERSION     DESCRIPTION                                  
-suse-cap/cf       2.6.1-rc1   A Helm chart for SUSE Cloud Foundry          
-suse-cap/console  1.0.0       A Helm chart for deploying Stratos UI Console
-suse-cap/uaa      2.6.1-rc1   A Helm chart for SUSE UAA
-
-&prompt.user;helm search stratos-ui
-NAME                 VERSION DESCRIPTION                                  
-stratos-ui/console   1.0.0   A Helm chart for deploying Stratos UI Console
-
-&prompt.user;helm upgrade bunking-manta suse-cap/uaa
-&prompt.user;helm irreverant-sloth suse-cap/cf
-&prompt.user;helm olfactory-turtle stratos-ui/console
-
-
-</screen>
-<!-- helm rollback does not work, so upgrades are one-way for now
--->
-</sect1>
 </chapter>
