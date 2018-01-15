@@ -270,6 +270,12 @@ Happy Helming!
         "
 </screen>
 <para>
+    When you use the hostpath storage type you must create the directory 
+    <filename>/tmp/hostpath_pv</filename> on all of your &kube; nodes, 
+    chmod 777. (This is not necessary when using &ses;. or any other
+    external storage backend.)
+</para>
+<para>
 Restart the &kube; controller-manager:
 </para>
 <screen>
@@ -292,11 +298,6 @@ kubectl create -f -
 NAME       TYPE
 hostpath   kubernetes.io/host-path
 </screen>
-<para>
-    When you use the hostpath storage type you must create the directory 
-    <filename>/tmp/hostpath_pv</filename> on all of your &kube; nodes, 
-    chmod 777, then restart the controller-manager service again.
-</para>
 <para>
     See the &kube; document 
     <link xlink:href="https://kubernetes.io/docs/concepts/storage/storage-classes/">Storage Classes</link> for detailed information on storage classes.
