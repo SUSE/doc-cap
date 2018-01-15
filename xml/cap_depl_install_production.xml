@@ -360,7 +360,7 @@ and they must be run in this order:
 &prompt.user;helm repo add <replaceable>suse</replaceable> https://kubernetes-charts.suse.com/
 </screen>
 <para>
-    You may replace the example <replaceable>suse-cap</replaceable> name with any
+    You may replace the example <replaceable>suse</replaceable> name with any
     name. Verify with <command>helm</command>:
 </para>
 <screen>
@@ -529,7 +529,7 @@ console-ui-ext 10.0.0.162 192.168.77.1  80:30933/TCP,443:30941/TCP  1m
 Hang tight while we grab the latest from your chart repositories...
 ...Skip local chart repository
 ...Successfully got an update from the "stable" chart repository
-...Successfully got an update from the "suse-cap" chart repository
+...Successfully got an update from the "suse" chart repository
 Update Complete. ⎈ Happy Helming!⎈   
 </screen>      
 <para>

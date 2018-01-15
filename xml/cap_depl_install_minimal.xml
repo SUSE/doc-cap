@@ -493,7 +493,7 @@ step.
 </para>
 <screen>
 &prompt.user;CA_CERT="$(kubectl get secret secret --namespace uaa -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-&prompt.user;helm install -f scf-config-values.yaml --namespace scf suse-cap/cf --set "env.UAA_CA_CERT=${CA_CERT}"
+&prompt.user;helm install -f scf-config-values.yaml --namespace scf suse/cf --set "env.UAA_CA_CERT=${CA_CERT}"
 </screen>
 <para>
     Now sit back and wait for the pods come online:
