@@ -47,7 +47,7 @@ the &kube; master and workers.
 	  <para>
 	    This requires a minimum of four physical or virtual nodes: one admin, one 
         Kubernetes master, and two Kubernetes minions. (See the 
-        <link xlink:href="https://www.suse.com/documentation/suse-caasp-1/">CaaSP 
+        <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/">CaaSP 
         documentation</link>). You also need an Internet connection, as the 
         installer downloads additional packages, and the &kube;
         minions will download 8-10GB of Docker images each.
@@ -63,9 +63,9 @@ the &kube; master and workers.
       <para>
           The easiest way to create the Kubernetes nodes, after you create the 
           admin node, is to use AutoYaST; see 
-<link xlink:href="https://www.suse.com/documentation/suse-caasp-1/singlehtml/book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.node.ay">
+<link xlink:href="https://www.suse.com/documentation/suse-caasp-2/singlehtml/book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.node.ay">
               Installation with AutoYaST</link>. When you have completed 
-<link xlink:href="https://www.suse.com/documentation/suse-caasp-1/singlehtml/book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.bootstrap">
+<link xlink:href="https://www.suse.com/documentation/suse-caasp-2/singlehtml/book_caasp_deployment/book_caasp_deployment.html#sec.caasp.installquick.bootstrap">
               Bootstrapping the Cluster</link> you can proceed to 
           satisfying the remaining prerequisites, and then installing &suse; &cap;.
       </para>
@@ -135,6 +135,7 @@ the &kube; master and workers.
  <term>
      kube-dns must be installed and running
  </term>
+ <!-- cwickert 2018-01-15: kube-dns is included in CaaSP 2 by default -->
   <listitem>
    <para>
      Install kube-dns on your kube-master and verify with these commands:
@@ -145,6 +146,8 @@ the &kube; master and workers.
   Kubernetes master is running at http://localhost:8080
   KubeDNS is running at http://localhost:8080/api/v1/proxy/namespaces/kube-system/services/kube-dns  
 </screen> 
+<!-- cwickert 2018-01-15: link outdated; section was removed from the CaaSP 2
+ docs as kube-dns is installed by default -->
 (See (<link xlink:href="https://www.suse.com/documentation/suse-caasp-1/singlehtml/book_caasp_deployment/book_caasp_deployment.html#installing.dns">Installing Kubernetes DNS</link>)
   </para>
  </listitem>
