@@ -397,28 +397,28 @@ and they must be run in this order:
         Download the &suse; &kube; charts repository with &helm;:
     </para>
 <screen>
-&prompt.user;helm repo add <replaceable>suse-cap</replaceable> https://kubernetes-charts.suse.com/
+&prompt.user;helm repo add <replaceable>suse</replaceable> https://kubernetes-charts.suse.com/
 </screen>
 <para>
-    You may replace the example <replaceable>suse-cap</replaceable> name with any
+    You may replace the example <replaceable>suse</replaceable> name with any
     name. Verify with <command>helm</command>:
 </para>
 <screen>
 &prompt.user;helm repo list
-NAME            URL                                             
-stable          https://kubernetes-charts.storage.googleapis.com
-local           http://127.0.0.1:8879/charts                    
-suse-cap        https://kubernetes-charts.suse.com/
+NAME        URL                                             
+stable      https://kubernetes-charts.storage.googleapis.com
+local       http://127.0.0.1:8879/charts                    
+suse        https://kubernetes-charts.suse.com/
 </screen>
 <para>
     List your chart names, as you will need these for some operations:
 </para>
 <screen>
-&prompt.user;helm search suse-cap
+&prompt.user;helm search suse
 NAME             VERSION   DESCRIPTION                                  
-suse-cap/cf      2.6.1-rc1 A Helm chart for SUSE Cloud Foundry          
-suse-cap/console 1.0.0     A Helm chart for deploying Stratos UI Console
-suse-cap/uaa     2.6.1-rc1 A Helm chart for SUSE UAA   
+suse/cf      2.6.1-rc1 A Helm chart for SUSE Cloud Foundry          
+suse/console 1.0.0     A Helm chart for deploying Stratos UI Console
+suse/uaa     2.6.1-rc1 A Helm chart for SUSE UAA   
 </screen>
 </sect2>
 
@@ -468,7 +468,7 @@ sed 's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -
     Use &helm; to install the UAA (User Account and Authentication) server:
 </para>
 <screen>    
-&prompt.user;helm install suse-cap/uaa --name uaa \
+&prompt.user;helm install suse/uaa --name uaa \
 --namespace uaa --values scf-config-values.yaml
 </screen>
 <para>
@@ -510,9 +510,6 @@ step.
         Stratos UI is a modern, web-based management application for Cloud 
         Foundry. It provides a graphical management console for both developers
         and system administrators. (See <xref linkend="sec.cap.stratos-prod"/>).
-        If you are using hostpath storage, skip the 
-        <literal>kubectl get secret ceph-secret-admin</literal> step, as that is
-        for getting the &ses; secret.
     </para>
   </sect1>
 
