@@ -9,7 +9,7 @@
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
  <info>
-  <title>&cap; Production Installation with &ha;</title>
+  <title>Production Installation with &ha;</title>
   <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
    <dm:bugtracker></dm:bugtracker>
    <dm:translation>yes</dm:translation>
@@ -20,15 +20,16 @@
  nodes plus a storage cluster: one &suse; &caasp; admin node, three &kube; 
  masters, three &kube; minions, a DNS server, and a storage cluster such as 
  &ses;. This is a bare minimum, and actual requirements are likely to be much 
- larger, depending on your workloads. You also need an external workstation for administering your cluster.
+ larger, depending on your workloads. You also need an external workstation for 
+ administering your cluster.
 </para>
  <note>
         <title>Remote Administration</title>
         <para>
         You will run most of the commands in this chapter from a remote
-        workstation, rather than directly on any of the &caasp; nodes. These are
+        workstation, rather than directly on any of the &susecf; nodes. These are
         indicated by the unprivileged user Tux, while root prompts are on a
-        &caasp; node. There are few tasks that need to be performed directly on
+        cluster node. There are few tasks that need to be performed directly on
         any of the nodes.
     </para>
 </note>
@@ -117,14 +118,14 @@
               Bootstrapping the Cluster</link> click the <guimenu>kubectl config</guimenu>
 button to download your new cluster's <filename>kubeconfig</filename> file. This
 takes you to a login screen; use the login you created to access Velum. Save the
-file as <filename>~/.kube/config</filename> on your host workstation. This 
+file as <filename>~/.kube/config</filename> on your workstation. This 
 file enables the remote administration of your cluster.
       </para>
       <figure xml:id="fig.cap.kubectl-download-prod">
    <title>Download kubeconfig</title>
    <mediaobject>
     <imageobject>
-     <imagedata fileref="kubectl-download.png" format="PNG" width="75%"/>
+     <imagedata fileref="kubectl-download-prod.png" format="PNG" width="75%"/>
     </imageobject>
    </mediaobject>
   </figure>
@@ -137,7 +138,7 @@ file enables the remote administration of your cluster.
      Follow the instructions at
      <link xlink:href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">
          Install and Set Up kubectl</link> to install <command>kubectl</command>
-     on your host workstation. After installation, run this command to verify
+     on your workstation. After installation, run this command to verify
      that it is installed, and that is communicating correctly with your cluster:
  </para>
  <screen>
@@ -179,17 +180,17 @@ d028551.example.com   Ready                      &lt;none>    4h   v1.7.7
       </term>
       <listitem>
  <para>
-     Installing &suse; &cap; is a little different than the usual method of
+     Installing &susecf; is a little different than the usual method of
      installing software. Rather than installing packages in the usual way with
      YaST or Zypper, you will use the &helm; client on your remote workstation 
-     to install the required Kubernetes applications to set up &cap;, and to 
+     to install the required Kubernetes applications to set up &susecf;, and to 
      administer your cluster remotely.
  </para>
       <warning>
         <title>Initialize Only the &helm; Client</title>
         <para>When you initialize &helm; on your workstation be sure
             to initialize only the client, as the server, &tiller;, was
-            installed during the CaaSP installation. You do not want two &tiller;
+            installed during the &caasp; installation. You do not want two &tiller;
             instances. Also make sure to install the &helm; version that matches
             your &tiller; version.
     </para>
@@ -262,8 +263,9 @@ Happy Helming!
 <sect1 xml:id="sec.cap.configure-prod">
     <title>Configuring the Production Deployment</title>
     <para>
-        Create a new configuration file for &helm; to use. In this example it is
-        called <filename>~/.kube/scf-config-values.yaml</filename>.
+        Create a new configuration file on your workstation for &helm; to use. 
+        In this example it is
+        called <filename>scf-config-values.yaml</filename>.
     </para>
         <screen>
 env:
@@ -373,10 +375,10 @@ suse-cap        https://kubernetes-charts.suse.com/
 </para>
 <screen>
 &prompt.user;helm search suse-cap
-NAME             VERSION                     DESCRIPTION                                  
-suse-cap/cf      2.6.1-rc1+cf278.0.g52d7a644 A Helm chart for SUSE Cloud Foundry          
-suse-cap/console 1.0.0                       A Helm chart for deploying Stratos UI Console
-suse-cap/uaa     2.6.1-rc1+cf278.0.g52d7a644 A Helm chart for SUSE UAA   
+NAME             VERSION   DESCRIPTION                                  
+suse-cap/cf      2.6.1-rc1 A Helm chart for SUSE Cloud Foundry          
+suse-cap/console 1.0.0     A Helm chart for deploying Stratos UI Console
+suse-cap/uaa     2.6.1-rc1 A Helm chart for SUSE UAA   
 </screen>
 </sect2>
 
@@ -409,14 +411,11 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -
 
 <sect2 xml:id="sec.cap.install-uaa-prod">
     <title>Install UAA</title>
-    <para>==TODO something is not right, as this step always fails==</para>    
-    
 <para>
     Use &helm; to install the UAA (User Account and Authentication) server:
 </para>
 <screen>    
-&prompt.user;helm install -f ~/.kube/scf-config-values.yaml --namespace uaa \
-suse-cap/uaa
+&prompt.user;helm install suse-cap/uaa --name uaa --namespace uaa --values scf-config-values.yaml
 </screen>
 <para>
     Wait until you have a successful UAA deployment before going to the next
@@ -435,15 +434,12 @@ step.
 <sect2 xml:id="sec.cap.install-scf-prod">
     <title>Install SCF</title>
 <para>
-  First copy your UAA certificate authority (CA) into your SCF namespace, then 
+  First copy your UAA certificate authority (CA) into a shell variable, then 
   use &helm; to install &suse; &cf;:
 </para>
 <screen>
-&prompt.user;CA_CERT="$(kubectl get secret secret --namespace uaa -o jsonpath="{.data['internal-ca-cert']}" | \
-base64 --decode -)"
-
-&prompt.user;helm install -f ~/.kube/scf-config-values.yaml --namespace scf \
-suse-cap/cf --set "env.UAA_CA_CERT=${CA_CERT}"
+&prompt.user;CA_CERT="$(kubectl get secret secret --namespace uaa -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+&prompt.user;helm install -f scf-config-values.yaml --namespace scf suse-cap/cf --set "env.UAA_CA_CERT=${CA_CERT}"
 </screen>
 <para>
     Now sit back and wait for the pods come online:
@@ -489,7 +485,7 @@ stratos-ui/console      0.9.7   A Helm chart for deploying Stratos UI Console
 <screen>
 &prompt.user;helm install stratos-ui/console \
     --namespace stratos-cap \
-    --values ~/.kube/scf-config-values.yaml
+    --values scf-config-values.yaml
     --name <replaceable>my-console</replaceable> 
 </screen>
 <para>
@@ -619,10 +615,10 @@ suse-cap        https://kubernetes-charts.suse.com/
 stratos-ui      https://suse.github.io/stratos-ui 
 
 &prompt.user;helm search suse-cap
-NAME              VERSION                       DESCRIPTION                                  
-suse-cap/cf       2.6.1-rc1+cf278.0.g52d7a644   A Helm chart for SUSE Cloud Foundry          
-suse-cap/console  1.0.0                         A Helm chart for deploying Stratos UI Console
-suse-cap/uaa      2.6.1-rc1+cf278.0.g52d7a644   A Helm chart for SUSE UAA
+NAME              VERSION     DESCRIPTION                                  
+suse-cap/cf       2.6.1-rc1   A Helm chart for SUSE Cloud Foundry          
+suse-cap/console  1.0.0       A Helm chart for deploying Stratos UI Console
+suse-cap/uaa      2.6.1-rc1   A Helm chart for SUSE UAA
 
 &prompt.user;helm search stratos-ui
 NAME                 VERSION DESCRIPTION                                  
@@ -634,9 +630,7 @@ stratos-ui/console   1.0.0   A Helm chart for deploying Stratos UI Console
 
 
 </screen>
-<para>
-    ==TODO output examples, and helm rollback==
-</para>
-
+<!-- helm rollback does not work, so upgrades are one-way for now
+-->
 </sect1>
 </chapter>

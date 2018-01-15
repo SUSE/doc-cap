@@ -23,15 +23,16 @@ distribution for &kube; which runs on &sle; containers.
 </para>
 
 <para>
-The &cf; code base provides the basic functionality. &productname; 
+The &cf; code base provides the basic functionality. &susecf;
 differentiates itself from other &cf; distributions by running in Linux 
 containers managed by &kube;, rather than virtual machines managed with &bosh;,
 for greater fault tolerance and lower memory use.
 </para>
 
 <para>
-&productname; is designed to run on any Kubernetes cluster. This guide describes 
-how to deploy it on <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/data/book_caasp_deployment.html">SUSE Container as a Service (CaaS) Platform 1.0</link>.
+&susecf; is designed to run on any Kubernetes cluster. This guide describes 
+how to deploy it on <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/data/book_caasp_deployment.html">SUSE Container as a 
+    Service (CaaS) Platform 2.0</link>.
 </para>
 
  <xi:include href="common_intro_target_audience_i.xml"/>

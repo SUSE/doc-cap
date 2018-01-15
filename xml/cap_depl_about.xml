@@ -17,7 +17,7 @@
  </info>
  <para>
 &productname; (&cap;) is a software platform for cloud-native application
-deployment based on &cf; and &kube;. It serves different but complementary
+deployment based on &susecf; and &suse; &caasp; 2.0. It serves different but complementary
 purposes for operators and application developers.
  </para>
  <para>
@@ -94,7 +94,7 @@ Makes the software development workflow more efficient
 
 <para>
 The principle interface and API for deploying applications to &productname; is
-&cf;. Most Cloud Foundry distributions run on virtual machines managed by
+&susecf;. Most Cloud Foundry distributions run on virtual machines managed by
 &bosh;. &susecf; runs in SUSE Linux Enterprise containers managed by &kube;.
 Containerizing the components of the platform itself has these advantages:
 </para>
@@ -109,7 +109,7 @@ Containerizing the components of the platform itself has these advantages:
 </listitem>
   <listitem>
    <para>
-    Reduces physical memory overhead. &suse; &cap; components deployed in
+    Reduces physical memory overhead. &susecf; components deployed in
     containers consume substantially less memory, as host-level operations are
     shared between containers by &kube;.
    </para>
@@ -124,7 +124,7 @@ and configurations which are deployed to &kube; clusters using &helm;.
   <title>&productname; Architecture</title>
 
 <para>
-This guide details the steps for deploying &productname; (&suse; &cap;) 
+This guide details the steps for deploying &susecf;
 on &suse; &caasp; 2. &caasp; is a specialized application development and 
 hosting platform built on the &susemicros; container host operating system, 
 container orchestration with &kube;, and &salt; for automating installation and
@@ -134,7 +134,7 @@ configuration.
 <important>
         <title>Review the &suse; &caasp; Deployment Guide</title>
         <para>
-        Setting up &productname; correctly depends on setting up &suse; &caasp;
+        Setting up &susecf; correctly depends on setting up &suse; &caasp;
         correctly. Review the 
         <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/">&suse; &caasp; Deployment Guide</link> 
         to understand how it operates, and basic configuration and administration 
@@ -143,7 +143,7 @@ configuration.
 </important>
 
 <para>
-A supported deployment includes &suse; &cap; installed on &caasp; 2. You also 
+A supported deployment includes &susecf; installed on &caasp; 2. You also 
 need a storage backend, such as &ses;, a DNS server, and an Internet connection 
 to download additional packages during installation and ~10GB of Docker images 
 on each &kube; minion after installation.
@@ -154,17 +154,16 @@ an entitlement of &suse; &caasp; 2 and &ses; 5. &ses; alone has substantial
 requirements; see the 
 <link xlink:href="https://www.suse.com/products/suse-enterprise-storage/">Tech Specs</link>
 for details. &suse; &caasp; requires a minimum of four nodes: one admin and three
-&kube; nodes. &suse; &cap; is then deployed on the &kube; nodes. 
+&kube; nodes. &susecf; is then deployed on the &kube; nodes. 
 </para>
 
 
 <para>
 The minimum 4-node deployment is not sufficient for a production deployment,
 but it is enough for a compact test deployment, which you can run virtualized 
-on a single workstation or laptop. <xref linkend="cha.cap.install-minimal"/> 
-describes how to install a minimal test deployment, and 
-<xref linkend="cha.cap.install-production"/> details a minimal production 
-deployment.
+on a single workstation or laptop. <xref linkend="cha.cap.install-production"/> 
+details a basic production deployment, and <xref linkend="cha.cap.install-minimal"/> 
+describes a minimal test deployment.
 </para> 
 </sect1>
 </chapter> 
