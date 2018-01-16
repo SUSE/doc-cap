@@ -54,18 +54,30 @@
 	  </term>
 	<listitem>
         <para>
-          8GB of memory per &caasp; admin and &kube; master nodes.
+          8GB of memory per &caasp; dashboard and &kube; master nodes.
         </para>
         <para>
-          16GB of memory per &kube; minion.
+          16GB of memory per &kube; worker.
       </para>
       <para>
-          10GB disk space per &caasp; admin and &kube; master nodes.
+          40GB disk space per &caasp; dashboard and &kube; master nodes.
       </para>
       <para>
-         10GB disk space per &kube; minion.
+         60GB disk space per &kube; worker.
      </para>
        </listitem>  
+      </varlistentry>
+      <varlistentry>
+          <term>Domain and Network</term>
+          <listitem>
+          <para>
+         Your cluster needs its own domain and network. Each node should resolve
+         to its hostname, and to its fully-qualified domain name. Typically, a
+         &kube; cluster sits behind a load balancer, which also provides external 
+         access to the cluster. Another option is to use DNS round-robin to the 
+         &kube; workers to provide external access.
+     </para>
+      </listitem>  
       </varlistentry>
 	<varlistentry>
 	  <term>
@@ -275,8 +287,8 @@ env:
     # Enter the domain you created for your &cap; cluster
     DOMAIN: <replaceable>&exampledomain;</replaceable>
     
-    # The fully-qualified domain name of your UAA host,
-    # which is your &kube; master node
+    # The fully-qualified domain name of your UAA host
+    # This is the external access to the cluster
     UAA_HOST: <replaceable>uaa-host.&exampledomain;</replaceable>
     
     # The default is 2793
@@ -286,7 +298,7 @@ env:
     UAA_ADMIN_CLIENT_SECRET: <replaceable>changeme</replaceable>
 
 kube:
-    # The IP address of the &kube; master
+    # The external IP address of the &kube; cluster
     external_ip: <replaceable>&kubeip;</replaceable>
     
     # Your chosen storage class
@@ -461,33 +473,36 @@ step.
     </para>
     <screen>        
 &prompt.user;kubectl create namespace stratos-scf
+</screen>
+<para>
+If you are using &ses; as your storage backend, copy the secret into the Stratos
+namespace. Skip this step if you are using the hostpath storage type.
+</para>
+<screen>
 &prompt.user;kubectl get secret ceph-secret-admin -o json --namespace default | \
 sed 's/"namespace": "default"/"namespace": "stratos-scf"/' | \
 kubectl create -f -       
 </screen>        
 <para>       
-Add the Stratos repository:
+You should already have the Stratos charts when you downloaded the SUSE charts
+repository:
 </para>        
 <screen>
-&prompt.user;helm repo add stratos-ui https://suse.github.io/stratos-ui
+&prompt.user;helm search suse
+NAME             VERSION   DESCRIPTION                                  
+suse/cf      2.6.1-rc1 A Helm chart for SUSE Cloud Foundry          
+suse/console 1.0.0     A Helm chart for deploying Stratos UI Console
+suse/uaa     2.6.1-rc1 A Helm chart for SUSE UAA 
 </screen>
 <para>
-    Verify that the repository was added successfully:
-</para>
-<screen>
-&prompt.user;helm search console 
-NAME                    VERSION DESCRIPTION                                  
-stratos-ui/console      0.9.7   A Helm chart for deploying Stratos UI Console
-</screen>   
-<para>
-   Install the Stratos console with this command:
+Install Stratos:
 </para>
 <screen>
 &prompt.user;helm install stratos-ui/console \
     --namespace stratos-scf \
     --values scf-config-values.yaml
-    --name <replaceable>my-console</replaceable> 
-</screen>
+    --name my-console    
+</screen>   
 <para>
 Use &helm; to check installation status:
 </para>

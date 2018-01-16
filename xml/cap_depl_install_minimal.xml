@@ -19,20 +19,21 @@
      A production deployment of &productname; requires a significant number of
      physical or virtual nodes. For testing and learning, you can set up a 
      minimal four-node deployment on a single workstation in a hypervisor 
-     such as KVM or VirtualBox. This extremely minimal deployment uses your 
-     hypervisor's DNS server and networking instead of a separate name server, 
-     and &kube;'s hostpath storage type instead of a storage server such as &ses;.
+     such as KVM, VirtualBox, or VMWare. This extremely minimal deployment uses
+     &kube;'s hostpath storage type instead of a storage server such as &ses;.
+     You must also provide DNS and a network space for your cluster, which are
+     supported in most hypervisors.
  </para>
  <para>
      This minimal four-node deployment will run on a minimum of 32GB system 
      memory, though more memory is better. This is enough to test setting up 
      and configuring &suse; &caasp; and &susecf;, and to run one or two lightweight 
-     workloads. If you wish to test with your own name server or storage, 
-     these should be on separate hosts from your &cap; host.
+     workloads. You may optionally use an external name server or storage server,
+     such as &ses;.
  </para>
  <para>
-     After you have set up your cluster you will administer it remotely from your
-     host workstation, using tools such as the 
+     After you have completed installing &caasp; you will install and administer 
+     &susecf; remotely from your host workstation, using tools such as the 
      <link xlink:href="https://docs.helm.sh/">&helm; package manager for
          Kubernetes</link>, and the Kubernetes command-line tool 
      <link xlink:href="https://kubernetes.io/docs/tasks/tools/install-kubectl/kubectl">
@@ -43,7 +44,8 @@
         <para>
         This is a limited deployment that is useful for testing basic 
         deployment and functionality, but it is NOT a production system, and
-        cannot be upgraded to a production system. Its reduced complexity allows basic testing, it is portable (on laptops with enough memory), and is 
+        cannot be upgraded to a production system. Its reduced complexity allows 
+        basic testing, it is portable (on laptops with enough memory), and is 
         useful in environments that have resource constraints.
     </para>
 </warning>
@@ -63,8 +65,9 @@
 
  	  <para>
 	    &caasp; requires a minimum of four physical or virtual nodes: one admin, 
-        one Kubernetes master, and two Kubernetes minions. You also need an Internet connection, as the installer downloads additional packages, and the &kube;
-        minions will each download ~10GB of Docker images.
+        one Kubernetes master, and two Kubernetes minions. You also need an 
+        Internet connection, as the installer downloads additional packages, 
+        and the &kube; minions will each download ~10GB of Docker images.
         </para>
   <variablelist>
       <varlistentry>
@@ -73,13 +76,57 @@
 	  </term>
 	<listitem>
         <para>
-        Any quad-core AMD64/Intel EM64T processor, 8GB of memory per node, and 
-        500GB of storage. 32GB of system memory will run a four-node deployment, 
-        though more memory is better. Allocate a minimum of 60GB of storage for 
-        each of the &kube; nodes, and 40GB is adequate for the admin node.  
-      </para>
-    </listitem>  
-  </varlistentry>
+        Any quad-core AMD64/Intel EM64T processor. This table describes the ideal
+        minimum requirements per node, though you can build a running cluster
+        with as little as 2 vCPUs per worker, and 8GB RAM per node.
+        </para>
+<informaltable>
+  <tgroup cols="4">
+    <thead>
+      <row>
+        <entry>Node</entry>
+        <entry>CPU</entry>
+        <entry>RAM</entry>
+        <entry>Disk</entry>
+    </row>
+</thead>
+<tbody>
+    <row>
+    <entry>&caasp; Dashboard</entry>
+    <entry>1</entry>
+    <entry>8GB</entry>
+    <entry>40GB</entry>
+    </row>
+
+    <row>
+    <entry>&caasp; Master</entry>
+    <entry>2</entry>
+    <entry>8GB</entry>
+    <entry>40GB</entry>
+    </row>
+
+    <row>
+    <entry>&caasp; Workers</entry>
+    <entry>4</entry>
+    <entry>16GB</entry>
+    <entry>60GB</entry>
+    </row>
+</tbody>
+</tgroup>
+</informaltable>
+</listitem>  
+</varlistentry>
+  <varlistentry>
+      <term>Create cluster domain</term>
+     <listitem>
+         <para>
+         Your cluster needs its own domain. With this few nodes it is easy to
+         give each node its own static IP address, and each node should resolve
+         to its hostname, and to its fully-qualified domain name. One worker 
+         will act as the external access point for your cluster.
+         </para>
+     </listitem>
+      </varlistentry>
 <varlistentry>
  <term>
 	    Install &suse; &caasp; 2
@@ -270,12 +317,6 @@ Happy Helming!
         "
 </screen>
 <para>
-    When you use the hostpath storage type you must create the directory 
-    <filename>/tmp/hostpath_pv</filename> on all of your &kube; nodes, 
-    chmod 777. (This is not necessary when using &ses;. or any other
-    external storage backend.)
-</para>
-<para>
 Restart the &kube; controller-manager:
 </para>
 <screen>
@@ -286,9 +327,11 @@ Restart the &kube; controller-manager:
     <literal>hostpath</literal>: 
 </para>
 <screen>
-&prompt.root;echo '{"kind":"StorageClass","apiVersion":"storage.k8s.io/v1", \
+&prompt.root;echo '{"kind":"StorageClass","apiVersion":"storage.k8s.io/v1",
 "metadata":{"name":"hostpath"},"provisioner":"kubernetes.io/host-path"}' | \
 kubectl create -f -
+
+storageclass "hostpath" created
 </screen>
 <para>
     Verify that your new storage class has been created:
@@ -315,12 +358,13 @@ env:
     # Create a password for your &cap; cluster
     CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
     
-    # Enter the domain you created for your &cap; cluster
+    # The domain you created for your &cap; cluster
     DOMAIN: <replaceable>&exampledomain;</replaceable>
     
     # The fully-qualified domain name of your 
-    # User Account and Authentication (UAA) server,
-    # which is your &kube; master node
+    # User Account and Authentication (UAA) server
+    # Use the worker you selected for external 
+    # access to your cluster
     UAA_HOST: <replaceable>uaa-host.&exampledomain;</replaceable>
     
     # The default is 2793
@@ -330,8 +374,9 @@ env:
     UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
 
 kube:
-    # The external IP address of your &kube; master
-    external_ip: <replaceable>IP_ADDRESS</replaceable>
+    # The external IP address of the &kube; worker
+    # you selected for external access
+    external_ip: <replaceable>&kubeip;</replaceable>
     
     # Your chosen storage class
     storage_class:
@@ -434,9 +479,9 @@ suse/uaa     2.6.1-rc1 A Helm chart for SUSE UAA
 &prompt.user;kubectl create namespace scf
 &prompt.user;kubectl get namespaces
 NAME          STATUS    AGE
-default       Active    4d
-kube-public   Active    4d
-kube-system   Active    4d
+default       Active    27m
+kube-public   Active    27m
+kube-system   Active    27m
 scf           Active    1m
 uaa           Active    1m
 </screen>
