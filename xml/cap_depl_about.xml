@@ -156,7 +156,13 @@ requirements; see the
 for details. &suse; &caasp; requires a minimum of four nodes: one admin and three
 &kube; nodes. &susecf; is then deployed on the &kube; nodes. 
 </para>
-
+<para>
+Note that after you have deployed your cluster and start building and running
+applications, your applications may depend on buildpacks that are not bundled
+in the container images that ship with &susecf;. These will be downloaded at
+runtime, when you are pushing applications to the platform. Some of these 
+buildpacks may include components with proprietary licenses.
+</para>
 
 <para>
 The minimum 4-node deployment is not sufficient for a production deployment,
@@ -165,5 +171,6 @@ on a single workstation or laptop. <xref linkend="cha.cap.install-production"/>
 details a basic production deployment, and <xref linkend="cha.cap.install-minimal"/> 
 describes a minimal test deployment.
 </para> 
+
 </sect1>
 </chapter> 
