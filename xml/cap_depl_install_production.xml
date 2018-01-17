@@ -18,7 +18,7 @@
  <para>    
  A basic &productname; production deployment with &ha; requires at least eight 
  nodes plus a storage cluster: one &suse; &caasp; admin node, three &kube; 
- masters, three &kube; minions, a DNS server, and a storage cluster such as 
+ masters, three &kube; workers, a DNS server, and a storage cluster such as 
  &ses;. This is a bare minimum, and actual requirements are likely to be much 
  larger, depending on your workloads. You also need an external workstation for 
  administering your cluster.
@@ -75,7 +75,9 @@
          to its hostname, and to its fully-qualified domain name. Typically, a
          &kube; cluster sits behind a load balancer, which also provides external 
          access to the cluster. Another option is to use DNS round-robin to the 
-         &kube; workers to provide external access.
+         &kube; workers to provide external access. This guide does not describe
+         how to set up a load balancer or name services, as these depend on 
+         customer requirements and existing network architectures.
      </para>
       </listitem>  
       </varlistentry>
@@ -112,9 +114,9 @@
 <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/data/sec_caasp_installquick.html#sec_caasp_installquick_node_ay">
               Installation with AutoYaST</link>. Set up &caasp; with one admin 
           node and at least three Kubernetes masters
-        and three Kubernetes minions. You also need an Internet connection, as the 
+        and three Kubernetes workers. You also need an Internet connection, as the 
         installer downloads additional packages, and the &kube;
-        minions will each download ~10GB of Docker images.
+        workers will each download ~10GB of Docker images.
         </para>
   <figure xml:id="fig.cap.select-master-nodes">
    <title>Assigning Roles to Nodes</title>
@@ -257,7 +259,8 @@ Happy Helming!
  <para>The &kube; cluster requires a persistent storage class for the databases
      to store persistent data. Your available storage classes depend on which
      storage cluster you are using 
-     (&ses; users, see <link xlink:href="https://www.suse.com/products/suse-enterprise-storage/">SUSE Enterprise Storage 5</link>). Use <command>kubectl</command>
+     (&ses; users, see <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/data/integration.html">&suse; &caasp; Integration with SES</link>). 
+     After connecting your storage backend use <command>kubectl</command>
      to see your available storage classes:
  </para>
  <screen>
@@ -265,7 +268,7 @@ Happy Helming!
 </screen>
 <para>
     See <xref linkend="sec.cap.configure-prod"/> to learn where to configure your 
-    storage class. See the &kube; document 
+    storage class for &susecf;. See the &kube; document 
     <link xlink:href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">Persistent Volumes</link>
     for detailed information on storage classes.
 </para>
@@ -281,10 +284,10 @@ Happy Helming!
     </para>
         <screen>
 env:
-    # Create a password for your &cap; cluster
+    # Create a password for your &susecf; cluster
     CLUSTER_ADMIN_PASSWORD: <replaceable>changeme</replaceable>
     
-    # Enter the domain you created for your &cap; cluster
+    # Enter the domain you created for your cluster
     DOMAIN: <replaceable>&exampledomain;</replaceable>
     
     # The fully-qualified domain name of your UAA host

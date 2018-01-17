@@ -355,10 +355,10 @@ hostpath   kubernetes.io/host-path
     </para>
         <screen>
 env:
-    # Create a password for your &cap; cluster
+    # Create a password for your &susecf; cluster
     CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
     
-    # The domain you created for your &cap; cluster
+    # The domain you created for your cluster
     DOMAIN: <replaceable>&exampledomain;</replaceable>
     
     # The fully-qualified domain name of your 
