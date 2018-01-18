@@ -501,9 +501,9 @@ suse/uaa     2.6.1-rc1 A Helm chart for SUSE UAA
 Install Stratos:
 </para>
 <screen>
-&prompt.user;helm install stratos-ui/console \
+&prompt.user;helm install suse/console \
     --namespace stratos-scf \
-    --values scf-config-values.yaml
+    --values scf-config-values.yaml \
     --name my-console    
 </screen>   
 <para>
@@ -565,7 +565,6 @@ NAME            URL
 stable          https://kubernetes-charts.storage.googleapis.com
 local           http://127.0.0.1:8879/charts                    
 suse            https://kubernetes-charts.suse.com/             
-stratos-ui      https://suse.github.io/stratos-ui 
 
 &prompt.user;helm search suse
 NAME              VERSION     DESCRIPTION                                  
