@@ -578,8 +578,8 @@ NAME                 VERSION DESCRIPTION
 stratos-ui/console   1.0.0   A Helm chart for deploying Stratos UI Console
 
 &prompt.user;helm upgrade --recreate-pods bunking-manta suse/uaa
-&prompt.user;helm irreverant-sloth --recreate-pods suse/cf
-&prompt.user;helm olfactory-turtle --recreate-pods suse/console
+&prompt.user;helm upgrade --recreate-pods irreverant-sloth  suse/cf
+&prompt.user;helm upgrade --recreate-pods olfactory-turtle  suse/console
 
 
 </screen>
