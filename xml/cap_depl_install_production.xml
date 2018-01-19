@@ -475,7 +475,7 @@ step.
         the environment:
     </para>
     <screen>        
-&prompt.user;kubectl create namespace stratos-scf
+&prompt.user;kubectl create namespace stratos
 </screen>
 <para>
 If you are using &ses; as your storage backend, copy the secret into the Stratos
@@ -483,7 +483,7 @@ namespace. Skip this step if you are using the hostpath storage type.
 </para>
 <screen>
 &prompt.user;kubectl get secret ceph-secret-admin -o json --namespace default | \
-sed 's/"namespace": "default"/"namespace": "stratos-scf"/' | \
+sed 's/"namespace": "default"/"namespace": "stratos"/' | \
 kubectl create -f -       
 </screen>        
 <para>       
@@ -501,22 +501,21 @@ suse/uaa     2.6.1-rc1 A Helm chart for SUSE UAA
 Install Stratos:
 </para>
 <screen>
-&prompt.user;helm install stratos-ui/console \
-    --namespace stratos-scf \
+&prompt.user;helm install suse/console \
+    --namespace stratos \
     --values scf-config-values.yaml
-    --name my-console    
 </screen>   
 <para>
 Use &helm; to check installation status:
 </para>
 <screen>
-&prompt.user;helm status <replaceable>my-console</replaceable>    
+&prompt.user;helm status <replaceable>console</replaceable>    
 </screen>
 <para>
     When it reaches the DEPLOYED state, get its IP address and port number:
 </para>
 <screen>
-&prompt.user;helm status <replaceable>my-console</replaceable> | grep ui-ext
+&prompt.user;helm status <replaceable>console</replaceable> | grep ui-ext
 console-ui-ext 10.0.0.162 192.168.77.1  80:30933/TCP,443:30941/TCP  1m 
 </screen>
 <para>
@@ -558,14 +557,13 @@ Update Complete. ⎈ Happy Helming!⎈
 NAME             REVISION UPDATED                 STATUS   CHART         NAMESPACE
 bunking-manta    1        Tue Jan 9 08:29:57 2018 DEPLOYED uaa-2.0.2     uaa
 irreverant-sloth 1        Tue Jan 9 09:36:29 2018 DEPLOYED cf-2.0.2      scf        
-olfactory-turtle 1        Tue Jan 9 10:09:56 2018 DEPLOYED console-1.0.0 stratos-scf
+olfactory-turtle 1        Tue Jan 9 10:09:56 2018 DEPLOYED console-1.0.0 stratos
 
 &prompt.user;helm repo list
 NAME            URL                                             
 stable          https://kubernetes-charts.storage.googleapis.com
 local           http://127.0.0.1:8879/charts                    
 suse            https://kubernetes-charts.suse.com/             
-stratos-ui      https://suse.github.io/stratos-ui 
 
 &prompt.user;helm search suse
 NAME              VERSION     DESCRIPTION                                  
@@ -573,13 +571,9 @@ suse/cf       2.6.1-rc1   A Helm chart for SUSE Cloud Foundry
 suse/console  1.0.0       A Helm chart for deploying Stratos UI Console
 suse/uaa      2.6.1-rc1   A Helm chart for SUSE UAA
 
-&prompt.user;helm search stratos-ui
-NAME                 VERSION DESCRIPTION                                  
-stratos-ui/console   1.0.0   A Helm chart for deploying Stratos UI Console
-
-&prompt.user;helm upgrade --recreate-pods bunking-manta suse/uaa
-&prompt.user;helm upgrade --recreate-pods irreverant-sloth  suse/cf
-&prompt.user;helm upgrade --recreate-pods olfactory-turtle  suse/console
+&prompt.user;helm upgrade --recreate-pods <replaceable>release-name</replaceable> suse/uaa
+&prompt.user;helm upgrade --recreate-pods <replaceable>release-name</replaceable> suse/cf
+&prompt.user;helm upgrade --recreate-pods <replaceable>release-name</replaceable> suse/console
 
 
 </screen>
