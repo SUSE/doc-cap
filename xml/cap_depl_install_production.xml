@@ -515,6 +515,21 @@ namespace. Skip this step if you are using the hostpath storage type.
 sed 's/"namespace": "default"/"namespace": "stratos"/' | \
 kubectl create -f -       
 </screen>        
+
+<para>
+If your storage class is not set as default, you will also need to add the argument to <command>helm install</command> later on:
+</para>
+<screen>
+--set storageClass=&lt;STORAGE_CLASS_NAME>
+</screen>
+<para>
+You can verify your storage class with:
+</para>
+<screen>
+&prompt.user;kubectl get storageclasses
+NAME                   TYPE
+persistent (default)   kubernetes.io/rbd
+</screen>
 <para>       
 You should already have the Stratos charts when you downloaded the SUSE charts
 repository:
