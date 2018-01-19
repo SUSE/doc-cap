@@ -638,11 +638,6 @@ sizing:
      routing-api
      </para>
      </listitem>
-     <listitem>
-         <para>
-     mysql
-     </para>
-     </listitem>
     </itemizedlist>
  </sect1>
 </chapter>
