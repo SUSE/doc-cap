@@ -462,6 +462,35 @@ step.
     <screen>
 &prompt.user;watch -c 'kubectl get pods --all-namespaces'
 </screen>
+<para>
+For getting information on how to access your SCF deployment you can always query the helm release:
+</para>
+   <screen>
+&prompt.user;helm status $(helm list | awk '/cf-([0-9]).([0-9]).*/{print$1}') | sed -n -e '/NOTES/,$p'
+NOTES:
+    Welcome to your new deployment of SCF.
+
+    The endpoint for use by the `cf` client is
+        https://api.example.com
+
+    To target this endpoint run
+        cf api --skip-ssl-validation https://api.example.com
+
+    Your administrative credentials are:
+        Username: admin
+        Password: changeme
+
+    Please remember, it may take some time for everything to come online.
+
+    You can use
+        kubectl get pods --namespace scf
+
+    to spot-check if everything is up and running, or
+        watch -c 'kubectl get pods --namespace scf'
+
+    to monitor continuously.
+
+</screen>
 </sect2>
 </sect1>
 
