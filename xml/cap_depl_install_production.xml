@@ -315,7 +315,7 @@ kube:
        hostname: "registry.suse.com"
        username: ""
        password: ""
-    organization: "cap-beta"
+    organization: "cap"
 
     # Required for CaaSP 2
     auth: rbac
