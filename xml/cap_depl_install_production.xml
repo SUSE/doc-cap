@@ -315,7 +315,7 @@ kube:
        hostname: "registry.suse.com"
        username: ""
        password: ""
-    organization: "cap-beta"
+    organization: "cap"
 
     # Required for CaaSP 2
     auth: rbac
@@ -462,6 +462,35 @@ step.
     <screen>
 &prompt.user;watch -c 'kubectl get pods --all-namespaces'
 </screen>
+<para>
+For getting information on how to access your SCF deployment you can always query the helm release:
+</para>
+   <screen>
+&prompt.user;helm status $(helm list | awk '/cf-([0-9]).([0-9]).*/{print$1}') | sed -n -e '/NOTES/,$p'
+NOTES:
+    Welcome to your new deployment of SCF.
+
+    The endpoint for use by the `cf` client is
+        https://api.example.com
+
+    To target this endpoint run
+        cf api --skip-ssl-validation https://api.example.com
+
+    Your administrative credentials are:
+        Username: admin
+        Password: changeme
+
+    Please remember, it may take some time for everything to come online.
+
+    You can use
+        kubectl get pods --namespace scf
+
+    to spot-check if everything is up and running, or
+        watch -c 'kubectl get pods --namespace scf'
+
+    to monitor continuously.
+
+</screen>
 </sect2>
 </sect1>
 
@@ -475,7 +504,7 @@ step.
         the environment:
     </para>
     <screen>        
-&prompt.user;kubectl create namespace stratos-scf
+&prompt.user;kubectl create namespace stratos
 </screen>
 <para>
 If you are using &ses; as your storage backend, copy the secret into the Stratos
@@ -483,9 +512,24 @@ namespace. Skip this step if you are using the hostpath storage type.
 </para>
 <screen>
 &prompt.user;kubectl get secret ceph-secret-admin -o json --namespace default | \
-sed 's/"namespace": "default"/"namespace": "stratos-scf"/' | \
+sed 's/"namespace": "default"/"namespace": "stratos"/' | \
 kubectl create -f -       
 </screen>        
+
+<para>
+If your storage class is not set as default, you will also need to add the argument to <command>helm install</command> later on:
+</para>
+<screen>
+--set storageClass=&lt;STORAGE_CLASS_NAME>
+</screen>
+<para>
+You can verify your storage class with:
+</para>
+<screen>
+&prompt.user;kubectl get storageclasses
+NAME                   TYPE
+persistent (default)   kubernetes.io/rbd
+</screen>
 <para>       
 You should already have the Stratos charts when you downloaded the SUSE charts
 repository:
@@ -502,21 +546,20 @@ Install Stratos:
 </para>
 <screen>
 &prompt.user;helm install suse/console \
-    --namespace stratos-scf \
-    --values scf-config-values.yaml \
-    --name my-console    
+    --namespace stratos \
+    --values scf-config-values.yaml
 </screen>   
 <para>
 Use &helm; to check installation status:
 </para>
 <screen>
-&prompt.user;helm status <replaceable>my-console</replaceable>    
+&prompt.user;helm status <replaceable>console</replaceable>    
 </screen>
 <para>
     When it reaches the DEPLOYED state, get its IP address and port number:
 </para>
 <screen>
-&prompt.user;helm status <replaceable>my-console</replaceable> | grep ui-ext
+&prompt.user;helm status <replaceable>console</replaceable> | grep ui-ext
 console-ui-ext 10.0.0.162 192.168.77.1  80:30933/TCP,443:30941/TCP  1m 
 </screen>
 <para>
@@ -558,7 +601,7 @@ Update Complete. ⎈ Happy Helming!⎈
 NAME             REVISION UPDATED                 STATUS   CHART         NAMESPACE
 bunking-manta    1        Tue Jan 9 08:29:57 2018 DEPLOYED uaa-2.0.2     uaa
 irreverant-sloth 1        Tue Jan 9 09:36:29 2018 DEPLOYED cf-2.0.2      scf        
-olfactory-turtle 1        Tue Jan 9 10:09:56 2018 DEPLOYED console-1.0.0 stratos-scf
+olfactory-turtle 1        Tue Jan 9 10:09:56 2018 DEPLOYED console-1.0.0 stratos
 
 &prompt.user;helm repo list
 NAME            URL                                             
@@ -572,13 +615,9 @@ suse/cf       2.6.1-rc1   A Helm chart for SUSE Cloud Foundry
 suse/console  1.0.0       A Helm chart for deploying Stratos UI Console
 suse/uaa      2.6.1-rc1   A Helm chart for SUSE UAA
 
-&prompt.user;helm search stratos-ui
-NAME                 VERSION DESCRIPTION                                  
-stratos-ui/console   1.0.0   A Helm chart for deploying Stratos UI Console
-
-&prompt.user;helm upgrade --recreate-pods bunking-manta suse/uaa
-&prompt.user;helm upgrade --recreate-pods irreverant-sloth  suse/cf
-&prompt.user;helm upgrade --recreate-pods olfactory-turtle  suse/console
+&prompt.user;helm upgrade --recreate-pods <replaceable>release-name</replaceable> suse/uaa
+&prompt.user;helm upgrade --recreate-pods <replaceable>release-name</replaceable> suse/cf
+&prompt.user;helm upgrade --recreate-pods <replaceable>release-name</replaceable> suse/console
 
 
 </screen>
@@ -641,11 +680,6 @@ sizing:
      <listitem>
          <para>
      routing-api
-     </para>
-     </listitem>
-     <listitem>
-         <para>
-     mysql
      </para>
      </listitem>
     </itemizedlist>
