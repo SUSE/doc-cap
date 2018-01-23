@@ -618,9 +618,13 @@ suse/uaa      2.6.1-rc1   A Helm chart for SUSE UAA
 &prompt.user;helm upgrade --recreate-pods <replaceable>release-name</replaceable> suse/uaa
 &prompt.user;helm upgrade --recreate-pods <replaceable>release-name</replaceable> suse/cf
 &prompt.user;helm upgrade --recreate-pods <replaceable>release-name</replaceable> suse/console
-
-
 </screen>
+<para>
+    In the above example, the <replaceable>release-names</replaceable> are found
+    with the <command>helm list</command>, bunking-manta, irreverant-sloth, and
+    olfactory-turtle. Your release names will be different.
+</para>
+
 <!-- helm rollback does not work, so upgrades are one-way for now
 -->
 </sect1>
