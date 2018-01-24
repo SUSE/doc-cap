@@ -231,48 +231,47 @@ d028551.infra.caasp.local   Ready                      &lt;none>    4h   v1.7.7
  <para>
      Installing &suse; &cap; is a little different than the usual method of
      installing software. Rather than installing packages in the usual way with
-     YaST or Zypper, you will use the &helm; client on your host workstation 
+     YaST or Zypper, you will install the &helm; client on your host workstation 
      to install the required Kubernetes applications to set up &cap;, and to 
      administer your cluster remotely.
  </para>
+ <para>
+     You should match the &helm; version with the version of &tiller; 
+     that is running on your cluster. The &tiller; binary cannot report its
+     version, and you need the version that is packaged inside the &tiller; 
+     container. Run the following command from your workstation to query the
+     logs:
+ </para>
+ <screen>
+&prompt.user;kubectl logs -l name=tiller --namespace=kube-system | grep "Starting &tiller;"
+  [main] 2018/01/04 16:48:27 Starting &tiller; v2.6.1 (tls=false)
+</screen>
+<para>
+   If the log gets overwritten and loses this information, the following command 
+   queries the <command>rpm</command> package manager inside the container. Use
+   this only for &caasp;/&cap; installations:
+</para>
+<screen>
+&prompt.user;kubectl exec -it $(kubectl get pods -n kube-system | awk '/tiller/{print$1}') -n kube-system -- rpm -q helm
+  helm-2.6.1-1.6.x86_64
+</screen>
       <warning>
         <title>Initialize Only the &helm; Client</title>
         <para>When you initialize &helm; on your workstation be sure
             to initialize only the client, as the server, &tiller;, was
-            installed during the CaaSP installation. You do not want two &tiller;
+            installed during the &caasp; installation. You do not want two &tiller;
             instances. Also make sure to install the &helm; version that matches
             your &tiller; version.
     </para>
 </warning>
- <para>
-     See the 
-     <link xlink:href="https://docs.helm.sh/using_helm/#quickstart">
-         &helm; Quickstart Guide</link> for installation instructions and basic 
-     usage examples. You should match the &helm; version with the version of &tiller; 
-     that is running on your cluster. To get your &tiller; version, log into your
-     &kube; master and query the logs.
- </para>
- <screen>
-&prompt.root;kubectl logs -l name=tiller --namespace=kube-system | grep "Starting &tiller;"
-[main] 2018/01/04 16:48:27 Starting &tiller; v2.6.1 (tls=false)
-</screen>
-     <tip>
-        <title>Log in Directly to &kube; Nodes</title>
-        <para>
-        By default, &suse; &caasp; allows logging into the &kube; nodes only from
-        the admin node. You can set up direct logins to your &kube; nodes from 
-        your host workstation by copying the SSH keys from your admin node to your 
-        &kube; nodes, and then you will have password-less SSH logins. This is 
-        not a best practice for a production deployment, but will make running a 
-        test deployment a little easier, especially if you want to use mouse 
-        select/middle-click paste to copy commands and output from a virtual 
-        terminal on your host workstation.
-    </para>
-</tip>
 <para>
-    Download the matching &helm; binary into any directory that is in your PATH
-    on your workstation, such as your <filename>~/bin</filename> directory. Then 
-    initialize the client only:
+    If the Linux distribution on your workstation doesn't provide the correct 
+    &helm; version, or you are using some other platform, see the 
+    <link xlink:href="https://docs.helm.sh/using_helm/#quickstart">
+         &helm; Quickstart Guide</link> for installation instructions and basic 
+    usage examples. Download the matching &helm; binary into any directory that 
+    is in your PATH on your workstation, such as your <filename>~/bin</filename> 
+    directory. Then initialize the client only:
  </para>
  <screen>
 &prompt.user;helm init --client-only
@@ -304,7 +303,19 @@ Happy Helming!
      storage type. hostpath is NOT suitable for a production deployment, but it 
      is an easy option for a minimal test deployment.
  </para>
-
+     <tip>
+        <title>Log in Directly to &kube; Nodes</title>
+        <para>
+        By default, &suse; &caasp; allows logging into the &kube; nodes only from
+        the admin node. You can set up direct logins to your &kube; nodes from 
+        your workstation by copying the SSH keys from your admin node to your 
+        &kube; nodes, and then you will have password-less SSH logins. This is 
+        not a best practice for a production deployment, but will make running a 
+        test deployment a little easier, especially if you want to use mouse 
+        select/middle-click paste to copy commands and output from a virtual 
+        terminal on your host workstation.
+    </para>
+</tip>
  <para>
     Open an SSH session to your &kube; master node and add the argument
     <literal>--enable-hostpath-provisioner</literal> to
