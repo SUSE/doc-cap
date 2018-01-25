@@ -312,7 +312,7 @@ Happy Helming!
         one master and two workers. Enabling hostpath provisioning on &caasp; 
         will use local storage on each of these nodes. Therefore persistent 
         data stored will also only be available locally on the respective 
-        &kube; nodes. That directly impacts use cases, where &scf; containers 
+        &kube; nodes. That directly impacts use cases, where &cap; containers 
         could restart on a different &kube; worker than before. Typically that 
         is about restarting containers for high availability or update tests. 
         If a container starts on a different worker than before, it will miss 
