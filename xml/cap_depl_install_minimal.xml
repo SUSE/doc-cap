@@ -306,16 +306,20 @@ Happy Helming!
  </para>
 
    <warning>
-        <title>Warning: Enable hostpath-provisioner on CaaSP</title>
+        <title>Warning: Enable hostpath-provisioner on &caasp;</title>
         <para>
-        CaaSP is configured as a multi-node kubernetes setup with a minimum of one master and two workers. 
-        Enabling hostpath provisioning on CaaSP will use local storage on each of these nodes. 
-        Therefore persistent data stored will also only be available locally on the respective kubernetes nodes. 
-        That directly impacts use cases, where CAP containers could restart on a different kubernetes worker 
-        than before. Typically that is about restarting containers for high availability or update tests. 
-        If a container starts on a different worker than before, it will miss its persistent data, leading to various other side effects. 
-        In addition, hostpath-provisioner uses the local root filesystem of the kubernetes node. If it 
-        runs out of disk space your kubernetes node won't work anymore.
+        &caasp; is configured as a multi-node &kube; setup with a minimum of 
+        one master and two workers. Enabling hostpath provisioning on &caasp; 
+        will use local storage on each of these nodes. Therefore persistent 
+        data stored will also only be available locally on the respective 
+        &kube; nodes. That directly impacts use cases, where &scf; containers 
+        could restart on a different &kube; worker than before. Typically that 
+        is about restarting containers for high availability or update tests. 
+        If a container starts on a different worker than before, it will miss 
+        its persistent data, leading to various other side effects. In 
+        addition, hostpath-provisioner uses the local root filesystem of the 
+        &kube; node. If it runs out of disk space your &kube; node won't work 
+        anymore.
     </para>
 </warning>
 
