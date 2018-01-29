@@ -248,8 +248,8 @@ d028551.infra.caasp.local   Ready                      &lt;none>    4h   v1.7.7
 </screen>
 <para>
    If the log gets overwritten and loses this information, the following command 
-   queries the <command>rpm</command> package manager inside the container. Use
-   this only for &caasp;/&cap; installations:
+   queries the <command>rpm</command> package manager inside the container. This
+   works only on &caasp;/&cap; installations:
 </para>
 <screen>
 &prompt.user;kubectl exec -it $(kubectl get pods -n kube-system | awk '/tiller/{print$1}') -n kube-system -- rpm -q helm
@@ -357,6 +357,14 @@ storageclass "hostpath" created
 NAME       TYPE
 hostpath   kubernetes.io/host-path
 </screen>
+<para>
+    Log into all of your &kube; nodes and change the permissions on 
+    <filename>/tmp/hostpath_pv</filename> to 0777:
+</para>
+<screen>
+&prompt.root;chmod -R 0777 /tmp/hostpath_pv
+</screen>
+
 <para>
     See the &kube; document 
     <link xlink:href="https://kubernetes.io/docs/concepts/storage/storage-classes/">Storage Classes</link> for detailed information on storage classes.
