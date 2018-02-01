@@ -584,11 +584,9 @@ step.
 &prompt.user;watch -c 'kubectl get pods --all-namespaces'
 </screen>
 <para>
-    When all services are running you can use the &cf; CLI to log in to &suse; &cf;. You need to provide the API endpoint of your installation. You get it by taking the <envar>DOMAIN</envar> value you provided in the <filename>scf-config-values.yaml</filename> and adding a <literal>api.</literal> prefix.
-</para>
-<screen>
-&prompt.user;cf login -a https://api.example.com
-</screen>
+    When all services are running you can use the &cf; command-line interface 
+    to log in to &suse; &cf;. (See <xref linkend="sec.cap.install-scf-prod"/>.)
+</para>    
 </sect2>
 </sect1>
 
