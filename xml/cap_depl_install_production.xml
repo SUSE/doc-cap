@@ -468,9 +468,20 @@ step.
 &prompt.user;watch -c 'kubectl get pods --all-namespaces'
 </screen>
 <para>
-For getting information on how to access your SCF deployment you can always query the helm release:
+When all services are running you can use the &cf; command-line interface 
+to log in to &suse; &cf;. You need to provide the API endpoint of your 
+installation. The API endpoint is the <envar>DOMAIN</envar> value you 
+provided in <filename>scf-config-values.yaml</filename>, plus the 
+<literal>api.</literal> prefix, like the following example:
 </para>
-   <screen>
+<screen>
+&prompt.user;cf login -a https://api.example.com
+</screen>
+<para>
+    Another way to get this information is to print the welcome message that
+    appeared when your installation was completed:
+</para>
+<screen>
 &prompt.user;helm status $(helm list | awk '/cf-([0-9]).([0-9]).*/{print$1}') | sed -n -e '/NOTES/,$p'
 NOTES:
     Welcome to your new deployment of SCF.
@@ -483,7 +494,7 @@ NOTES:
 
     Your administrative credentials are:
         Username: admin
-        Password: changeme
+        Password: password
 
     Please remember, it may take some time for everything to come online.
 
@@ -493,8 +504,7 @@ NOTES:
     to spot-check if everything is up and running, or
         watch -c 'kubectl get pods --namespace scf'
 
-    to monitor continuously.
-
+    to monitor continuously.    
 </screen>
 </sect2>
 </sect1>
@@ -626,7 +636,7 @@ suse/uaa      2.6.1-rc1   A Helm chart for SUSE UAA
 </screen>
 <para>
     In the above example, the <replaceable>release-names</replaceable> are found
-    with the <command>helm list</command>, bunking-manta, irreverant-sloth, and
+    with the <command>helm list</command> command, bunking-manta, irreverant-sloth, and
     olfactory-turtle. Your release names will be different.
 </para>
 
