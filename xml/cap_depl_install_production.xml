@@ -75,7 +75,10 @@
          to its hostname, and to its fully-qualified domain name. Typically, a
          &kube; cluster sits behind a load balancer, which also provides external 
          access to the cluster. Another option is to use DNS round-robin to the 
-         &kube; workers to provide external access. This guide does not describe
+         &kube; workers to provide external access. It is also a common practice 
+         to create a wildcard DNS entry pointing to the domain, e.g. 
+         *.&exampledomain;, so that applications can be deployed without 
+         creating DNS entries for each application. This guide does not describe 
          how to set up a load balancer or name services, as these depend on 
          customer requirements and existing network architectures.
      </para>
