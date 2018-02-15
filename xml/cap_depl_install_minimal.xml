@@ -255,10 +255,10 @@ contexts:
 [...]
 
 &prompt.user;kubectl get nodes
-NAME               STATUS                     ROLES     AGE  VERSION
-kube-master.net1   Ready                      &lt;none>    4h   v1.7.7
-worker1.net1       Ready,SchedulingDisabled   &lt;none>    4h   v1.7.7
-worker2.net1       Ready                      &lt;none>    4h   v1.7.7
+NAME                         STATUS                     ROLES     AGE  VERSION
+4a10db2c.infra.caasp.local   Ready                      &lt;none>    4h   v1.7.7
+87c9e8ff.infra.caasp.local   Ready,SchedulingDisabled   &lt;none>    4h   v1.7.7
+34ce7eb0.infra.caasp.local   Ready                      &lt;none>    4h   v1.7.7
 </screen>        
  </listitem>  
 </varlistentry>
