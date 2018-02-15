@@ -16,20 +16,23 @@
   </dm:docmanager>
  </info>
  <para>
-     A production deployment of &productname; requires a significant number of
-     physical or virtual nodes. For testing and learning, you can set up a 
-     minimal four-node deployment on a single workstation in a hypervisor 
-     such as KVM, VirtualBox, or VMWare. This extremely minimal deployment uses
-     &kube;'s hostpath storage type instead of a storage server such as &ses;.
-     You must also provide DNS and a network space for your cluster, which are
-     supported in most hypervisors.
+     A production deployment of &productname; requires a 
+     significant number of physical or virtual nodes. For testing and learning, 
+     you can set up a minimal four-node deployment of &susecf; on &suse; &caasp;, 
+     on a single workstation in a hypervisor such as KVM or VirtualBox. This 
+     extremely minimal deployment uses &kube;' hostpath storage type instead of 
+     a storage server, such as &ses;. You must also provide DNS, DHCP, and a 
+     network space for your cluster. KVM and VirtualBox include name services 
+     and network management.
  </para>
  <para>
-     This minimal four-node deployment will run on a minimum of 32GB system 
+     This minimal four-node deployment will run on a minimum of 32GB host system 
      memory, though more memory is better. This is enough to test setting up 
-     and configuring &suse; &caasp; and &susecf;, and to run one or two lightweight 
-     workloads. You may optionally use an external name server or storage server,
-     such as &ses;.
+     and configuring &suse; &caasp; and &susecf;, and to run a few lightweight 
+     workloads. You may also test connecting external servers with your cluster, 
+     such as a separate name server, a storage server (e.g. &ses;), &scc;, or 
+     &smtool;. You must be familiar with installing and configuring &caasp; (see
+     the <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/index.html">&suse; &caasp; 2 Deployment Guide</link>).
  </para>
  <para>
      After you have completed installing &caasp; you will install and administer 
@@ -52,22 +55,20 @@
  
 <sect1 xml:id="sec.cap.prereqs">
  <title>Prerequisites</title>
-  <note>
-        <title>Remote Administration</title>
-        <para>
-        You will run most of the commands in this chapter from your host 
-        workstation, rather than directly on any of your cluster nodes. These are
-        indicated by the unprivileged user Tux, while root prompts are on a
-        node. There are few tasks that need to be performed directly on
-        any of the nodes.
-    </para>
-</note>
-
+ 
+ <important>
+     <title>You must be familiar with &suse; &caasp;</title>
+     <para>
+        Setting up &suse; &caasp;, and knowledge of basic administration is 
+        essential to a successful &productname; deployment. See
+     the <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/index.html">&suse; &caasp; 2 Deployment Guide</link>
+ </para>
+</important>
  	  <para>
 	    &caasp; requires a minimum of four physical or virtual nodes: one admin, 
-        one Kubernetes master, and two Kubernetes minions. You also need an 
+        one Kubernetes master, and two Kubernetes workers. You also need an 
         Internet connection, as the installer downloads additional packages, 
-        and the &kube; minions will each download ~10GB of Docker images.
+        and the &kube; workers will each download ~10GB of Docker images.
         </para>
   <variablelist>
       <varlistentry>
@@ -76,9 +77,8 @@
 	  </term>
 	<listitem>
         <para>
-        Any quad-core AMD64/Intel EM64T processor. This table describes the ideal
-        minimum requirements per node, though you can build a running cluster
-        with as little as 2 vCPUs per worker, and 8GB RAM per node.
+        Any quad-core AMD64/Intel EM64T processor. This table describes the 
+        minimum requirements per node.
         </para>
 <informaltable>
   <tgroup cols="4">
@@ -117,14 +117,25 @@
 </listitem>  
 </varlistentry>
   <varlistentry>
-      <term>Create cluster domain</term>
+      <term>Network and Name Services</term>
      <listitem>
          <para>
-         Your cluster needs its own domain. With this few nodes it is easy to
-         give each node its own static IP address, and each node should resolve
-         to its hostname, and to its fully-qualified domain name. One worker 
-         will act as the external access point for your cluster.
-         </para>
+         You must provide DNS and DHCP services, either via your hypervisor, or 
+         with a separate name server. Your cluster needs its own domain. Every 
+         node needs a hostname and a fully-qualified domain name, and should all 
+         be on the same network. By default, the &caasp; installer requests a 
+         hostname from the DHCP server. When you install the admin server you 
+         may adjust its network settings manually. When you deploy the &kube; 
+         workers you will create their hostnames as a kernel boot option.         
+     </para>
+     <para>
+         After your &kube; nodes are running select one &kube; worker to act as 
+         the external access  point for your cluster and map your domain name to 
+         it. On production clusters it is a common practice to use wildcard DNS,
+         rather than trying to manage DNS for hundreds or thousands of 
+         applications. Map this to the IP address of the &kube; worker you 
+         selected as the external access point to your cluster.
+  </para>
      </listitem>
       </varlistentry>
 <varlistentry>
@@ -149,19 +160,35 @@
   </figure>
     <para>
       Take note of the <guimenu>Overlay network settings</guimenu>. These define 
-      the networks that are exclusive to the internal cluster
-      communications. They are not externally accessible, and you must avoid
-      address collisions.
+      the cluster and services networks that are exclusive to the internal 
+      cluster communications. They are not accessible outside of the cluster. 
+      You may change the default overlay network assignments to avoid address 
+      collisions with your existing network.
   </para>
   <para>
       There is also a form for proxy settings; if you're not using a proxy then
       leave it empty.
   </para>
   <para>
-          The easiest way to create the &kube; nodes is to use AutoYaST; see 
+          The easiest way to create the &kube; nodes is to use &ay; see 
 <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/data/sec_caasp_installquick.html#sec_caasp_installquick_node_ay">
-              Installation with AutoYaST</link>.
+              Installation with &ay;</link>. Pass in these kernel boot
+          options to each worker: <literal>hostname, netsetup</literal>, and the 
+          autoyast path, which you find in Velum on the "Bootstrap your CaaS 
+          Platform" page.
+
+
   </para>
+  
+ <figure xml:id="fig.cap.autoyast">
+   <title>Kernel boot options</title>
+   <mediaobject>
+    <imageobject>
+     <imagedata fileref="autoyast.png" format="PNG" width="75%"/>
+    </imageobject>
+   </mediaobject>
+  </figure> 
+  
   <para>
           When you have completed 
 <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/data/sec_caasp_installquick.html#sec_caasp_installquick_bootstrap">
@@ -182,14 +209,26 @@ file enables the remote administration of your cluster.
  </listitem>
 </varlistentry>  
 <varlistentry>
-  <term>Install kubectl</term>          
+    
+<term>Install kubectl</term>  
   <listitem>
- <para>
+  <note>
+        <title>Remote Cluster Administration</title>
+        <para>
+        You will administer your cluster from your host workstation, rather than 
+        directly on any of your cluster nodes. The remote environment is 
+        indicated by the unprivileged user Tux, while root prompts are on a node. 
+        There are few tasks that need to be performed directly on
+        any of the nodes.
+    </para>
+</note>
+      <para>
      Follow the instructions at
      <link xlink:href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">
          Install and Set Up kubectl</link> to install <command>kubectl</command>
      on your host workstation. After installation, run this command to verify
-     that it is installed, and that is communicating correctly with your cluster:
+     that it is installed, and that it is communicating correctly with your 
+     cluster:
  </para>
  <screen>
 &prompt.user;kubectl version --short
@@ -216,10 +255,10 @@ contexts:
 [...]
 
 &prompt.user;kubectl get nodes
-NAME                        STATUS                     ROLES     AGE  VERSION
-b70748d.infra.caasp.local   Ready                      &lt;none>    4h   v1.7.7
-cb77881.infra.caasp.local   Ready,SchedulingDisabled   &lt;none>    4h   v1.7.7
-d028551.infra.caasp.local   Ready                      &lt;none>    4h   v1.7.7
+NAME               STATUS                     ROLES     AGE  VERSION
+kube-master.net1   Ready                      &lt;none>    4h   v1.7.7
+worker1.net1       Ready,SchedulingDisabled   &lt;none>    4h   v1.7.7
+worker2.net1       Ready                      &lt;none>    4h   v1.7.7
 </screen>        
  </listitem>  
 </varlistentry>
@@ -599,13 +638,19 @@ step.
     </para>
   </sect1>
 
-<!-- upgrade does not work with hostpath  
  <sect1 xml:id="sec.cap.update-min">
   <title>Updating &suse; &cf;, UAA, and Stratos</title> 
      <para>
       Maintenance updates are delivered as container images from the &suse;
       registry and applied with &helm;. See <xref linkend="sec.cap.update"/>.
   </para> 
-  </sect1> -->
+  <note>
+      <title>No Updates with Hostpath</title>
+      <para>
+          Updates do not work with the hostpath storage type.
+      </para>
+  </note>
+  
+  </sect1>
   
   </chapter>
