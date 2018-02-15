@@ -59,7 +59,7 @@
  <important>
      <title>You must be familiar with &suse; &caasp;</title>
      <para>
-        Setting up &suse; &caasp;, and knowledge of basic administration is 
+        Setting up &suse; &caasp; correctly, and knowledge of basic administration is 
         essential to a successful &productname; deployment. See
      the <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/index.html">&suse; &caasp; 2 Deployment Guide</link>
  </para>
@@ -125,8 +125,10 @@
          node needs a hostname and a fully-qualified domain name, and should all 
          be on the same network. By default, the &caasp; installer requests a 
          hostname from the DHCP server. When you install the admin server you 
-         may adjust its network settings manually. When you deploy the &kube; 
-         workers you will create their hostnames as a kernel boot option.         
+         may adjust its network settings manually. &caasp; supports multiple 
+         methods for installing the &kube; workers. We recommend using AutoYaST, 
+         and then when you deploy the &kube; workers you will create their 
+         hostnames with a kernel boot option.         
      </para>
      <para>
          After your &kube; nodes are running select one &kube; worker to act as 
@@ -173,11 +175,9 @@
           The easiest way to create the &kube; nodes is to use &ay; see 
 <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/data/sec_caasp_installquick.html#sec_caasp_installquick_node_ay">
               Installation with &ay;</link>. Pass in these kernel boot
-          options to each worker: <literal>hostname, netsetup</literal>, and the 
-          autoyast path, which you find in Velum on the "Bootstrap your CaaS 
-          Platform" page.
-
-
+          options to each worker: <literal>hostname</literal>, 
+          <literal>netsetup</literal>, and the AutoYaST path, which you find in 
+          Velum on the "Bootstrap your CaaS Platform" page.
   </para>
   
  <figure xml:id="fig.cap.autoyast">
