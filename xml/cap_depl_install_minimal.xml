@@ -18,7 +18,7 @@
  <para>
      A production deployment of &productname; requires a 
      significant number of physical or virtual nodes. For testing and learning, 
-     you can set up a minimal four-node deployment of &susecf; on &suse; &caasp;, 
+     you can set up a minimal four-node deployment of &susecf; on &suse; &caasp; 
      on a single workstation in a hypervisor such as KVM or VirtualBox. This 
      extremely minimal deployment uses &kube;' hostpath storage type instead of 
      a storage server, such as &ses;. You must also provide DNS, DHCP, and a 
@@ -27,7 +27,7 @@
  </para>
  <para>
      This minimal four-node deployment will run on a minimum of 32GB host system 
-     memory, though more memory is better. This is enough to test setting up 
+     memory, though more memory is better. 32GB is enough to test setting up 
      and configuring &suse; &caasp; and &susecf;, and to run a few lightweight 
      workloads. You may also test connecting external servers with your cluster, 
      such as a separate name server, a storage server (e.g. &ses;), &scc;, or 
@@ -35,7 +35,7 @@
      the <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/index.html">&suse; &caasp; 2 Deployment Guide</link>).
  </para>
  <para>
-     After you have completed installing &caasp; you will install and administer 
+     After you have installed &caasp; you will install and administer 
      &susecf; remotely from your host workstation, using tools such as the 
      <link xlink:href="https://docs.helm.sh/">&helm; package manager for
          Kubernetes</link>, and the Kubernetes command-line tool 
@@ -67,8 +67,9 @@
  	  <para>
 	    &caasp; requires a minimum of four physical or virtual nodes: one admin, 
         one Kubernetes master, and two Kubernetes workers. You also need an 
-        Internet connection, as the installer downloads additional packages, 
-        and the &kube; workers will each download ~10GB of Docker images.
+        Internet connection, as the installer has an option to download updates 
+        during installation, and the &kube; workers will each download ~10GB of 
+        Docker images.
         </para>
   <variablelist>
       <varlistentry>
@@ -77,8 +78,8 @@
 	  </term>
 	<listitem>
         <para>
-        Any quad-core AMD64/Intel EM64T processor. This table describes the 
-        minimum requirements per node.
+        Any AMD64/Intel EM64T processor with at least 8 virtual or physical 
+        cores. This table describes the minimum requirements per node. 
         </para>
 <informaltable>
   <tgroup cols="4">
@@ -107,7 +108,7 @@
 
     <row>
     <entry>&caasp; Workers</entry>
-    <entry>4</entry>
+    <entry>2</entry>
     <entry>16GB</entry>
     <entry>60GB</entry>
     </row>
@@ -124,19 +125,23 @@
          with a separate name server. Your cluster needs its own domain. Every 
          node needs a hostname and a fully-qualified domain name, and should all 
          be on the same network. By default, the &caasp; installer requests a 
-         hostname from the DHCP server. When you install the admin server you 
-         may adjust its network settings manually. &caasp; supports multiple 
-         methods for installing the &kube; workers. We recommend using AutoYaST, 
-         and then when you deploy the &kube; workers you will create their 
-         hostnames with a kernel boot option.         
+         hostname from any available DHCP server. When you install the admin 
+         server you may adjust its network settings manually, and should give it
+         a hostname, a static IP address, and specify which name server to use
+         if there is more than one.
+     </para>
+     <para>         
+         &caasp; supports multiple methods for installing the &kube; workers. We 
+         recommend using AutoYaST, and then when you deploy the &kube; workers 
+         you will create their hostnames with a kernel boot option.         
      </para>
      <para>
          After your &kube; nodes are running select one &kube; worker to act as 
-         the external access  point for your cluster and map your domain name to 
+         the external access point for your cluster and map your domain name to 
          it. On production clusters it is a common practice to use wildcard DNS,
          rather than trying to manage DNS for hundreds or thousands of 
-         applications. Map this to the IP address of the &kube; worker you 
-         selected as the external access point to your cluster.
+         applications. Map your domain wildcard to the IP address of the &kube; 
+         worker you selected as the external access point to your cluster.
   </para>
      </listitem>
       </varlistentry>
@@ -192,11 +197,13 @@
   <para>
           When you have completed 
 <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/data/sec_caasp_installquick.html#sec_caasp_installquick_bootstrap">
-    Bootstrapping the Cluster</link> click the <guimenu>kubectl config</guimenu>
-button to download your new cluster's <filename>kubeconfig</filename> file. This
-takes you to a login screen; use the login you created to access Velum. Save the
-file as <filename>~/.kube/config</filename> on your host workstation. This 
-file enables the remote administration of your cluster.
+    Bootstrapping the Cluster</link> open a Web browser to the Velum Web interface. 
+If you see a "site not available" or "We're sorry, but something went wrong" 
+error wait a few minutes, then try again. Click the 
+<guimenu>kubectl config</guimenu> button to download your new cluster's <filename>kubeconfig</filename> file. This takes you to a login screen; use the 
+login you created to access Velum. Save the file as 
+<filename>~/.kube/config</filename> on your host workstation. This file enables 
+the remote administration of your cluster.
       </para>
       <figure xml:id="fig.cap.kubectl-download">
    <title>Download kubeconfig</title>
@@ -335,7 +342,7 @@ Happy Helming!
 </sect1>
 
 <sect1 xml:id="sec.cap.storageclass">
- <title>Create Storage Class</title>
+ <title>Create hostpath Storage Class</title>
  <para>The &kube; cluster requires a persistent storage class for the databases
      to store persistent data. You can provide this with your own 
      storage (e.g. &ses;), or use the built-in hostpath 
@@ -343,16 +350,15 @@ Happy Helming!
      is an easy option for a minimal test deployment.
  </para>
  <warning>
-        <title>Enable hostpath-provisioner on &caasp;</title>
+        <title>Using the hostpath storage type on &caasp;</title>
         <para>
         &caasp; is configured as a multi-node &kube; setup with a minimum of 
         one master and two workers. Enabling hostpath provisioning on &caasp; 
-        will use local storage on each of these nodes. Therefore persistent 
-        data stored will also only be available locally on the respective 
-        &kube; nodes. That directly impacts use cases, where &susecf; containers 
-        could restart on a different &kube; worker than before. Typically that 
-        is about restarting containers for high availability or update tests. 
-        If a container starts on a different worker than before, it will miss 
+        will use local storage on each of these nodes, therefore persistent 
+        data stored will only be available locally on the &kube; nodes. That 
+        impacts use cases where &susecf; containers restart on a different &kube; 
+        worker, for example in high availability setups or update tests. 
+        If a container starts on a different worker than before it will miss 
         its persistent data, leading to various other side effects. In 
         addition, hostpath-provisioner uses the local root filesystem of the 
         &kube; node. If it runs out of disk space your &kube; node won't work 
@@ -397,13 +403,14 @@ NAME       TYPE
 hostpath   kubernetes.io/host-path
 </screen>
 <para>
-    Log into all of your &kube; nodes and change the permissions on 
-    <filename>/tmp/hostpath_pv</filename> to 0777:
+    Log into all of your &kube; nodes and create the
+    <filename>/tmp/hostpath_pv</filename> directory, then set its permissions to 
+    read/write/execute:
 </para>
 <screen>
+&prompt.root;mkdir /tmp/hostpath_pv  
 &prompt.root;chmod -R 0777 /tmp/hostpath_pv
 </screen>
-
 <para>
     See the &kube; document 
     <link xlink:href="https://kubernetes.io/docs/concepts/storage/storage-classes/">Storage Classes</link> for detailed information on storage classes.
@@ -416,9 +423,7 @@ hostpath   kubernetes.io/host-path
         your workstation by copying the SSH keys from your admin node to your 
         &kube; nodes, and then you will have password-less SSH logins. This is 
         not a best practice for a production deployment, but will make running a 
-        test deployment a little easier, especially if you want to use mouse 
-        select/middle-click paste to copy commands and output from a virtual 
-        terminal on your host workstation.
+        test deployment a little easier.
     </para>
 </tip>
 </sect1> 
@@ -552,7 +557,9 @@ suse/uaa     2.6.11 A Helm chart for SUSE UAA
 </para>    
     <screen>
 &prompt.user;kubectl create namespace uaa
+ namespace "uaa" created
 &prompt.user;kubectl create namespace scf
+ namespace "scf" created
 &prompt.user;kubectl get namespaces
 NAME          STATUS    AGE
 default       Active    27m
@@ -595,7 +602,8 @@ sed 's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -
 <para>
     Wait until you have a successful UAA deployment before going to the next
     steps, which you can monitor with the <command>watch</command>
-    command:
+    command. This will take time, possibly an hour or two, according to your
+    hardware resources:
 </para>
 <screen>
 &prompt.user;watch -c 'kubectl get pods --all-namespaces'
