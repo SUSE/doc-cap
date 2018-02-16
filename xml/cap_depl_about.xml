@@ -16,7 +16,7 @@
   <title>About &productname;</title>
  </info>
  <para>
-&productname; (&cap;) is a software platform for cloud-native application
+&productname; is a software platform for cloud-native application
 deployment based on &susecf; and &suse; &caasp; 2.0. It serves different but complementary
 purposes for operators and application developers.
  </para>
