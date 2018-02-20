@@ -146,7 +146,7 @@ configuration.
 A supported deployment includes &susecf; installed on &caasp; 2. You also 
 need a storage backend, such as &ses;, a DNS server, and an Internet connection 
 to download additional packages during installation and ~10GB of Docker images 
-on each &kube; minion after installation.
+on each &kube; worker after installation.
 </para>
 <para>
 A production deployment requires considerable resources. &productname; includes 

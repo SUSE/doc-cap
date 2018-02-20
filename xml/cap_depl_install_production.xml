@@ -18,7 +18,7 @@
  <para>    
  A basic &productname; production deployment with &ha; requires at least eight 
  nodes plus a storage cluster: one &suse; &caasp; admin node, three &kube; 
- masters, three &kube; workers, a DNS server, and a storage cluster such as 
+ masters, three &kube; workers, a DNS/DHCP server, and a storage cluster such as 
  &ses;. This is a bare minimum, and actual requirements are likely to be much 
  larger, depending on your workloads. You also need an external workstation for 
  administering your cluster.
@@ -45,7 +45,8 @@
   <para>
       Calculating hardware requirements is best done with an analysis of your 
       expected workloads, traffic patterns, storage needs, and &kube; 
-      application requirements. The following examples are minimums.
+      application requirements. The following examples are minimums to deploy a
+      running cluster, and any production deployment will likely require more.
   </para>
   <variablelist>
       <varlistentry>
@@ -68,7 +69,7 @@
        </listitem>  
       </varlistentry>
       <varlistentry>
-          <term>Domain and Network</term>
+          <term>Network Requirements</term>
           <listitem>
           <para>
          Your cluster needs its own domain and network. Each node should resolve
@@ -211,8 +212,9 @@ d028551.example.com   Ready                      &lt;none>    4h   v1.7.7
      logs:
  </para>
  <screen>
-&prompt.user;kubectl logs -l name=tiller --namespace=kube-system | grep "Starting &tiller;"
-  [main] 2018/01/04 16:48:27 Starting &tiller; v2.6.1 (tls=false)
+&prompt.user;kubectl logs -l name=tiller --namespace=kube-system | \
+grep "Starting &tiller;"
+[main] 2018/01/04 16:48:27 Starting &tiller; v2.6.1 (tls=false)
 </screen>
 <para>
    If the log gets overwritten and loses this information, the following command 
@@ -220,8 +222,9 @@ d028551.example.com   Ready                      &lt;none>    4h   v1.7.7
    this only for &caasp;/&cap; installations:
 </para>
 <screen>
-&prompt.user;kubectl exec -it $(kubectl get pods -n kube-system | awk '/tiller/{print$1}') -n kube-system -- rpm -q helm
-  helm-2.6.1-1.6.x86_64
+&prompt.user;kubectl exec -it $(kubectl get pods -n kube-system | \
+awk '/tiller/{print$1}') -n kube-system -- rpm -q helm
+helm-2.6.1-1.6.x86_64
 </screen>
       <warning>
         <title>Initialize Only the &helm; Client</title>
@@ -438,7 +441,8 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -
     Use &helm; to install the UAA (User Account and Authentication) server:
 </para>
 <screen>    
-&prompt.user;helm install suse/uaa --name uaa --namespace uaa --values scf-config-values.yaml
+&prompt.user;helm install suse/uaa --name uaa --namespace uaa \ 
+--values scf-config-values.yaml
 </screen>
 <para>
     Wait until you have a successful UAA deployment before going to the next
@@ -455,7 +459,7 @@ step.
 </sect2>   
 
 <sect2 xml:id="sec.cap.install-scf-prod">
-    <title>Install SCF</title>
+    <title>Install &suse; &cf;</title>
 <para>
   First copy your UAA certificate authority (CA) into a shell variable, then 
   use &helm; to install &suse; &cf;:
@@ -485,7 +489,9 @@ provided in <filename>scf-config-values.yaml</filename>, plus the
     appeared when your installation was completed:
 </para>
 <screen>
-&prompt.user;helm status $(helm list | awk '/cf-([0-9]).([0-9]).*/{print$1}') | sed -n -e '/NOTES/,$p'
+&prompt.user;helm status $(helm list | awk '/cf-([0-9]).([0-9]).*/{print$1}') | \
+sed -n -e '/NOTES/,$p'
+
 NOTES:
     Welcome to your new deployment of SCF.
 
@@ -535,7 +541,8 @@ kubectl create -f -
 </screen>        
 
 <para>
-If your storage class is not set as default, you will also need to add the argument to <command>helm install</command> later on:
+If your storage class is not set as default, you must add this argument to 
+your <command>helm install</command> (see "Install Stratos" below):
 </para>
 <screen>
 --set storageClass=&lt;STORAGE_CLASS_NAME>
@@ -554,10 +561,10 @@ repository:
 </para>        
 <screen>
 &prompt.user;helm search suse
-NAME             VERSION   DESCRIPTION                                  
-suse/cf      2.6.1-rc1 A Helm chart for SUSE Cloud Foundry          
-suse/console 1.0.0     A Helm chart for deploying Stratos UI Console
-suse/uaa     2.6.1-rc1 A Helm chart for SUSE UAA 
+NAME         VERSION    DESCRIPTION                                  
+suse/cf      2.6.1      A Helm chart for SUSE Cloud Foundry          
+suse/console 1.0.0      A Helm chart for deploying Stratos UI Console
+suse/uaa     2.6.1      A Helm chart for SUSE UAA 
 </screen>
 <para>
 Install Stratos:
@@ -628,10 +635,10 @@ local           http://127.0.0.1:8879/charts
 suse            https://kubernetes-charts.suse.com/             
 
 &prompt.user;helm search suse
-NAME              VERSION     DESCRIPTION                                  
-suse/cf       2.6.1-rc1   A Helm chart for SUSE Cloud Foundry          
-suse/console  1.0.0       A Helm chart for deploying Stratos UI Console
-suse/uaa      2.6.1-rc1   A Helm chart for SUSE UAA
+NAME          VERSION  DESCRIPTION                                  
+suse/cf       2.6.1    A Helm chart for SUSE Cloud Foundry          
+suse/console  1.0.0    A Helm chart for deploying Stratos UI Console
+suse/uaa      2.6.1    A Helm chart for SUSE UAA
 
 &prompt.user;helm upgrade --recreate-pods <replaceable>release-name</replaceable> suse/uaa
 &prompt.user;helm upgrade --recreate-pods <replaceable>release-name</replaceable> suse/cf
