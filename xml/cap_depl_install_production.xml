@@ -402,9 +402,9 @@ suse            https://kubernetes-charts.suse.com/
 <screen>
 &prompt.user;helm search suse
 NAME         VERSION   DESCRIPTION                                  
-suse/cf      2.6.1-rc1 A Helm chart for SUSE Cloud Foundry          
+suse/cf      2.6.1     A Helm chart for SUSE Cloud Foundry          
 suse/console 1.0.0     A Helm chart for deploying Stratos UI Console
-suse/uaa     2.6.1-rc1 A Helm chart for SUSE UAA   
+suse/uaa     2.6.1     A Helm chart for SUSE UAA   
 </screen>
 </sect2>
 
