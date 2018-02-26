@@ -596,8 +596,10 @@ sed 's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -
     Use &helm; to install the UAA (User Account and Authentication) server:
 </para>
 <screen>    
-&prompt.user;helm install suse/uaa --name uaa \
---namespace uaa --values scf-config-values.yaml
+&prompt.user;helm install suse/uaa \
+--name uaa \
+--namespace uaa \ 
+--values scf-config-values.yaml
 </screen>
 <para>
     Wait until you have a successful UAA deployment before going to the next
@@ -622,7 +624,12 @@ step.
 </para>
 <screen>
 &prompt.user;CA_CERT="$(kubectl get secret secret --namespace uaa -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-&prompt.user;helm install -f scf-config-values.yaml --namespace scf suse/cf --set "env.UAA_CA_CERT=${CA_CERT}"
+
+&prompt.user;helm install suse/cf \
+--name scf
+--namespace scf \
+--values scf-config-values.yaml \
+--set "env.UAA_CA_CERT=${CA_CERT}"
 </screen>
 <para>
     Now sit back and wait for the pods come online:
