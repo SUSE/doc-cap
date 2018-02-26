@@ -293,6 +293,14 @@ Happy Helming!
         In this example it is
         called <filename>scf-config-values.yaml</filename>.
     </para>
+    <note>
+        <title>&ha; Configuration</title>
+            <para>
+                It is not possible to convert an existing deployment to a &ha;
+                deployment; proceed to <xref linkend="sec.cap.ha-prod"/> to learn 
+                how to configure a &ha; deployment.
+            </para>
+    </note>
         <screen>
 env:
     # Create a password for your &susecf; cluster
@@ -441,7 +449,9 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -
     Use &helm; to install the UAA (User Account and Authentication) server:
 </para>
 <screen>    
-&prompt.user;helm install suse/uaa --name uaa --namespace uaa \ 
+&prompt.user;helm install suse/uaa \
+--name uaa \
+--namespace uaa \ 
 --values scf-config-values.yaml
 </screen>
 <para>
@@ -466,7 +476,11 @@ step.
 </para>
 <screen>
 &prompt.user;CA_CERT="$(kubectl get secret secret --namespace uaa -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-&prompt.user;helm install -f scf-config-values.yaml --namespace scf suse/cf --set "env.UAA_CA_CERT=${CA_CERT}"
+&prompt.user;helm install suse/cf \
+--name scf
+--namespace scf \
+--values scf-config-values.yaml \
+--set "env.UAA_CA_CERT=${CA_CERT}"
 </screen>
 <para>
     Now sit back and wait for the pods come online:
@@ -656,8 +670,44 @@ suse/uaa      2.6.1    A Helm chart for SUSE UAA
 <sect1 xml:id="sec.cap.ha-prod">
   <title>Example &ha; Configuration</title>
   <para>
-This example HA configuration goes in your cluster configuration file (see
-<xref linkend="sec.cap.configure-prod"/>).
+This example &ha; configuration needs two separate configuration files, one for 
+UAA and one for SCF. The first example is for UAA, 
+<filename>uaa-sizing.yaml</filename>.
+</para>
+<screen>
+sizing:
+  api:
+    count: 2
+  cf_usb:
+    count: 2
+  consul:
+    count: 3
+  diego_access:
+    count: 2
+  diego_api:
+    count: 3
+  diego_brain:
+    count: 2
+  diego_cell:
+    count: 3
+  doppler:
+    count: 2
+  etcd:
+    count: 3
+  loggregator:
+    count: 2
+  mysql:
+    count: 1
+  nats:
+    count: 2
+  router:
+    count: 2
+  routing_api:
+    count: 2 
+</screen>
+
+<para>
+    The second example is for SCF, <filename>scf-sizing.yaml</filename>.
 </para>
 <screen>
 sizing:
@@ -689,6 +739,32 @@ sizing:
     count: 2
   routing_api:
     count: 2 
+</screen>
+
+<para>
+    Follow the steps in <xref linkend="sec.cap.configure-prod"/> until you get to
+    <xref linkend="sec.cap.install-uaa-prod"/>. Then deploy UAA with this command:
+</para>
+
+<screen>    
+&prompt.user;helm install suse/uaa --name uaa \
+--namespace uaa \ 
+--values scf-config-values.yaml \
+--values uaa-sizing.yaml
+</screen>
+
+<para>
+    When the status shows RUNNING for all of the UAA nodes, refer to 
+    <xref linkend="sec.cap.install-scf-prod"/>, and then replace the command
+    to deploy SCF with this command:
+</para>
+<screen>
+helm install suse/cf \
+--name scf
+--namespace scf \
+--values scf-config-values.yaml \
+--values scf-sizing.yaml
+--set "env.UAA_CA_CERT=${CA_CERT}"
 </screen>
 
 <para>
