@@ -293,15 +293,7 @@ Happy Helming!
         In this example it is
         called <filename>scf-config-values.yaml</filename>.
     </para>
-    <note>
-        <title>&ha; Configuration</title>
-            <para>
-                It is not possible to convert an existing deployment to a &ha;
-                deployment; proceed to <xref linkend="sec.cap.ha-prod"/> to learn 
-                how to configure a &ha; deployment.
-            </para>
-    </note>
-        <screen>
+    <screen>
 env:
     # Create a password for your &susecf; cluster
     CLUSTER_ADMIN_PASSWORD: <replaceable>changeme</replaceable>
@@ -759,7 +751,7 @@ sizing:
     to deploy SCF with this command:
 </para>
 <screen>
-helm install suse/cf \
+&prompt.user;helm install suse/cf \
 --name scf
 --namespace scf \
 --values scf-config-values.yaml \
@@ -788,5 +780,46 @@ helm install suse/cf \
      </para>
      </listitem>
     </itemizedlist>
+    
+    <para>
+        You can confirm this by looking at the logs inside the container. Look
+        for <literal>.consul-lock.acquiring-lock</literal>.
+    </para>
+    <para>
+        Some roles cannot be scaled. mysql-proxy needs a proper active/passive 
+        configuration. tcp-router has no mechanism for exposing ports correctly.
+        blobstore needs shared volume support and an active/passive 
+        configuration.
+    </para>
+    <para>
+Some roles follow an active/passive scaling model, meaning all pods except 
+the active one will be shown as NOT READY by &kube;. This is appropriate and 
+expected behavior.
+</para>
+
+<sect2 xml:id="sec.cap.ha-prod-upgrade">
+    <title>Upgrading a non-&ha; Deployment to &ha;</title>
+    <para>
+        You may make a non-&ha; deployment highly available by upgrading with
+        &helm;:
+    </para>
+    <screen>
+&prompt.user;helm upgrade suse/uaa --name uaa \
+--namespace uaa \ 
+--values scf-config-values.yaml \
+--values uaa-sizing.yaml 
+
+&prompt.user;helm upgrade suse/cf \
+--name scf
+--namespace scf \
+--values scf-config-values.yaml \
+--values scf-sizing.yaml
+--set "env.UAA_CA_CERT=${CA_CERT}"
+</screen>
+<para>
+    This may take a long time, and your cluster will be unavailable until the
+    upgrade is complete.
+</para>
+</sect2>
  </sect1>
 </chapter>
