@@ -469,7 +469,7 @@ step.
 <screen>
 &prompt.user;CA_CERT="$(kubectl get secret secret --namespace uaa -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 &prompt.user;helm install suse/cf \
---name scf
+--name scf \
 --namespace scf \
 --values scf-config-values.yaml \
 --set "env.UAA_CA_CERT=${CA_CERT}"
@@ -545,22 +545,6 @@ namespace. Skip this step if you are using the hostpath storage type.
 sed 's/"namespace": "default"/"namespace": "stratos"/' | \
 kubectl create -f -       
 </screen>        
-
-<para>
-If your storage class is not set as default, you must add this argument to 
-your <command>helm install</command> (see "Install Stratos" below):
-</para>
-<screen>
---set storageClass=&lt;STORAGE_CLASS_NAME>
-</screen>
-<para>
-You can verify your storage class with:
-</para>
-<screen>
-&prompt.user;kubectl get storageclasses
-NAME                   TYPE
-persistent (default)   kubernetes.io/rbd
-</screen>
 <para>       
 You should already have the Stratos charts when you downloaded the SUSE charts
 repository:
@@ -573,30 +557,71 @@ suse/console 1.0.0      A Helm chart for deploying Stratos UI Console
 suse/uaa     2.6.1      A Helm chart for SUSE UAA 
 </screen>
 <para>
-Install Stratos:
+Install Stratos, and if you have not set a default storage class you must specify
+it:
 </para>
 <screen>
 &prompt.user;helm install suse/console \
     --namespace stratos \
-    --values scf-config-values.yaml
-</screen>   
+    --values scf-config-values.yaml \
+    --set storageClass=<replaceable>persistent</replaceable>
+</screen>
+
 <para>
-Use &helm; to check installation status:
+    Monitor progress:
 </para>
 <screen>
-&prompt.user;helm status <replaceable>console</replaceable>    
-</screen>
+$ watch -c 'kubectl get pods --namespace stratos'
+ Every 2.0s: kubectl get pods --namespace stratos
+ 
+NAME                               READY     STATUS    RESTARTS   AGE
+console-0                          3/3       Running   0          30m
+console-mariadb-3697248891-5drf5   1/1       Running   0          30m
+</screen> 
+
 <para>
-    When it reaches the DEPLOYED state, get its IP address and port number:
+    When all statuses show Ready, press 
+    <keycombo>
+    <keycap function="control"/>
+    <keycap>C</keycap>
+     </keycombo> to exit and to view your release information:
 </para>
 <screen>
-&prompt.user;helm status <replaceable>console</replaceable> | grep ui-ext
-console-ui-ext 10.0.0.162 192.168.77.1  80:30933/TCP,443:30941/TCP  1m 
+NAME:   sanguine-heron
+LAST DEPLOYED: Wed Feb 28 14:32:01 2018
+NAMESPACE: stratos
+STATUS: DEPLOYED
+
+RESOURCES:
+==> v1/Secret
+NAME                           TYPE    DATA  AGE
+sanguine-heron-secret          Opaque  2     2s
+sanguine-heron-mariadb-secret  Opaque  2     2s
+
+==> v1/PersistentVolumeClaim
+NAME                                  STATUS  VOLUME                                    CAPACITY  ACCESSMODES  STORAGECLASS  AGE
+sanguine-heron-upgrade-volume         Bound   pvc-334b6ed7-1cd7-11e8-ba13-90b8d0fcd216  20Mi    
+</screen>        
+<para>
+Query the release name to get its IP address and port number:
+</para>
+<screen>
+&prompt.user;helm status sanguine-heron
+LAST DEPLOYED: Wed Feb 28 14:32:01 2018
+NAMESPACE: stratos
+STATUS: DEPLOYED
+
+RESOURCES:
+==> v1/Service
+NAME                    CLUSTER-IP      EXTERNAL-IP   PORT(S)         AGE
+sanguine-heron-mariadb  172.24.241.109  &lt;none>        3306/TCP        35m
+sanguine-heron-ui-ext   172.24.38.113   10.84.100.82  8443:31177/TCP  35m
+[...]
 </screen>
 <para>
-    In this example, pointing your web browser to https://192.168.77.1:30941 
-    opens the console. If you see a certificate warning you may safely
-    ignore it. Log in with the &cap; credentials you created in 
+    In this example, pointing your web browser to https://10.84.100.82:8443 
+    opens the console. Wade through the nag screens about the self-signed
+    certificates and log in with the &cap; credentials you created in 
     <filename>scf-config-values.yaml</filename>. 
     If you see an upgrade message, wait a few minutes and try again.
 </para>
