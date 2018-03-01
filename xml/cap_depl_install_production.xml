@@ -603,8 +603,8 @@ NAME                                  STATUS  VOLUME                            
 sanguine-heron-upgrade-volume         Bound   pvc-334b6ed7-1cd7-11e8-ba13-90b8d0fcd216  20Mi    
 </screen>        
 <para>
-    Another way to get the release name is with the <command>helm ls</command>.
-    Query the release name to get its IP address and port number:
+    Another way to get the release name is with the <command>helm ls</command>
+    command. Then query the release name to get its IP address and port number:
 </para>
 <screen>
 &prompt.user;helm status sanguine-heron
