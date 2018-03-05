@@ -16,36 +16,35 @@
   </dm:docmanager>
  </info>
  <para>    
- A basic &productname; production deployment with &ha; requires at least eight 
- nodes plus a storage cluster: one &suse; &caasp; admin node, three &kube; 
- masters, three &kube; workers, a DNS/DHCP server, and a storage cluster such as 
+ A basic &productname; production deployment requires at least eight 
+ nodes plus a storage backend: one &suse; &caasp; admin node, three &kube; 
+ masters, three &kube; workers, a DNS/DHCP server, and a storage backend such as 
  &ses;. This is a bare minimum, and actual requirements are likely to be much 
  larger, depending on your workloads. You also need an external workstation for 
- administering your cluster.
+ administering your cluster. You may optionally make your &scf; instance 
+ highly-available.
 </para>
  <note>
         <title>Remote Administration</title>
         <para>
         You will run most of the commands in this chapter from a remote
-        workstation, rather than directly on any of the &susecf; nodes. These are
+        workstation, rather than directly on any of the &scf; nodes. These are
         indicated by the unprivileged user Tux, while root prompts are on a
         cluster node. There are few tasks that need to be performed directly on
         any of the nodes.
     </para>
 </note>
  <para>
- The optional &ha; example in this chapter provides HA only for the &cap; 
- cluster, and not for &caasp; or &ses;. You will modify your configuration file
-  (see <xref linkend="sec.cap.configure-prod"/>) to implement HA; see 
-  <xref linkend="sec.cap.ha-prod"/> for an example HA configuration.
+ The optional &ha; example in this chapter provides HA only for the &scf; 
+ cluster, and not for &caasp; or &ses;. See 
+  <xref linkend="sec.cap.ha-prod"/>.
  </para>
  
 <sect1 xml:id="sec.cap.prereqs-prod">
   <title>Prerequisites</title>
   <para>
       Calculating hardware requirements is best done with an analysis of your 
-      expected workloads, traffic patterns, storage needs, and &kube; 
-      application requirements. The following examples are minimums to deploy a
+      expected workloads, traffic patterns, storage needs, and application requirements. The following examples are minimums to deploy a
       running cluster, and any production deployment will likely require more.
   </para>
   <variablelist>
@@ -72,16 +71,15 @@
           <term>Network Requirements</term>
           <listitem>
           <para>
-         Your cluster needs its own domain and network. Each node should resolve
-         to its hostname, and to its fully-qualified domain name. Typically, a
-         &kube; cluster sits behind a load balancer, which also provides external 
-         access to the cluster. Another option is to use DNS round-robin to the 
-         &kube; workers to provide external access. It is also a common practice 
-         to create a wildcard DNS entry pointing to the domain, e.g. 
-         *.&exampledomain;, so that applications can be deployed without 
-         creating DNS entries for each application. This guide does not describe 
-         how to set up a load balancer or name services, as these depend on 
-         customer requirements and existing network architectures.
+         Your &kube; cluster needs its own domain and network. Each node should 
+         resolve to its hostname, and to its fully-qualified domain name. 
+         Typically, a &kube; cluster sits behind a load balancer, which also 
+         provides external access to the cluster. Another option is to use DNS 
+         round-robin to the &kube; workers to provide external access. It is 
+         also a common practice to create a wildcard DNS entry pointing to the 
+         domain, e.g. *.&exampledomain;, so that applications can be deployed 
+         without creating DNS entries for each application. This guide does not describe how to set up a load balancer or name services, as these 
+         depend on customer requirements and existing network architectures.
      </para>
       </listitem>  
       </varlistentry>
@@ -105,8 +103,8 @@
   <para>
       Take note of the <guimenu>Overlay network settings</guimenu>. These define 
       the networks that are exclusive to the internal cluster
-      communications. They are not externally accessible, and you must avoid
-      address collisions.
+      communications. They are not externally accessible. You may assign 
+      different networks to avoid address collisions.
   </para>
   <para>
       There is also a form for proxy settings; if you're not using a proxy then
@@ -198,10 +196,10 @@ d028551.example.com   Ready                      &lt;none>    4h   v1.7.7
       </term>
       <listitem>
  <para>
-     Installing &susecf; is a little different than the usual method of
+     Deploying &scf; is different than the usual method of
      installing software. Rather than installing packages in the usual way with
-     YaST or Zypper, you will install the &helm; client on your host workstation 
-     to install the required Kubernetes applications to set up &susecf;, and to 
+     YaST or Zypper, you will install the &helm; client on your workstation 
+     to install the required Kubernetes applications to set up &scf;, and to 
      administer your cluster remotely.
  </para>
  <para>
@@ -279,30 +277,32 @@ Happy Helming!
 </screen>
 <para>
     See <xref linkend="sec.cap.configure-prod"/> to learn where to configure your 
-    storage class for &susecf;. See the &kube; document 
+    storage class for &scf;. See the &kube; document 
     <link xlink:href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">Persistent Volumes</link>
     for detailed information on storage classes.
 </para>
 </sect1>
-    
 
 <sect1 xml:id="sec.cap.configure-prod">
-    <title>Configuring the Production Deployment</title>
+    <title>Configuring the &scf; Production Deployment</title>
     <para>
         Create a new configuration file on your workstation for &helm; to use. 
         In this example it is
-        called <filename>scf-config-values.yaml</filename>.
+        called <filename>scf-config-values.yaml</filename>. Note that the 
+        ingress for a &kube; cluster is not the same as the external access to
+        the &scf; instance, which is defined in 
+        <filename>scf-config-values.yaml</filename> with UAA_HOST.        
     </para>
     <screen>
 env:
-    # Create a password for your &susecf; cluster
+    # Create a password for your &scf; instance
     CLUSTER_ADMIN_PASSWORD: <replaceable>changeme</replaceable>
     
-    # Enter the domain you created for your cluster
+    # Enter the domain you created for your &kube; cluster
     DOMAIN: <replaceable>&exampledomain;</replaceable>
     
     # The fully-qualified domain name of your UAA host
-    # This is the external access to the cluster
+    # This is the external access to your &scf; instance
     UAA_HOST: <replaceable>uaa-host.&exampledomain;</replaceable>
     
     # The default is 2793
@@ -312,7 +312,7 @@ env:
     UAA_ADMIN_CLIENT_SECRET: <replaceable>changeme</replaceable>
 
 kube:
-    # The external IP address of the &kube; cluster
+    # The external IP address of your &kube; cluster
     external_ip: <replaceable>&kubeip;</replaceable>
     
     # Your chosen storage class
@@ -330,10 +330,6 @@ kube:
 
     # Required for CaaSP 2
     auth: rbac
-    
-    # example high availability configuration
-    # see <xref linkend="sec.cap.ha-prod"/> for 
-    # an example HA configuration
 </screen>        
 </sect1>
 
@@ -346,12 +342,12 @@ and they must be run in this order:
 <itemizedlist>
       <listitem>
     <para>
-        Download the SUSE Kubernetes charts repository 
+        Download the &suse; &kube; charts repository 
     </para>
 </listitem>
   <listitem>
     <para>
-        Create namespaces
+        Create the UAA and SCF namespaces
     </para>
 </listitem>
   <listitem>
@@ -362,22 +358,23 @@ and they must be run in this order:
   </listitem>
   <listitem>
     <para>
-        Install UAA
+        Deploy UAA
     </para>
   </listitem>
   <listitem>
     <para>
-        Copy UAA CA certificate to SCF namespace
+        Copy the UAA certificate to the SCF namespace
     </para>
   </listitem>
   <listitem>
     <para>
-        Install SCF
+        Deploy &scf;
     </para>
   </listitem>  
 </itemizedlist>  
+</sect1>
 
-<sect2 xml:id="sec.cap.addrepo-prod">
+<sect1 xml:id="sec.cap.addrepo-prod">
     <title>Install the &kube; charts repository</title>
     <para>
         Download the &suse; &kube; charts repository with &helm;:
@@ -406,9 +403,9 @@ suse/cf      2.6.1     A Helm chart for SUSE Cloud Foundry
 suse/console 1.0.0     A Helm chart for deploying Stratos UI Console
 suse/uaa     2.6.1     A Helm chart for SUSE UAA   
 </screen>
-</sect2>
+</sect1>
 
-<sect2 xml:id="sec.cap.create-namespaces-prod">
+<sect1 xml:id="sec.cap.create-namespaces-prod">
     <title>Create Namespaces</title>
 <para>
     Create the UAA (User Account and Authentication) and 
@@ -418,9 +415,9 @@ suse/uaa     2.6.1     A Helm chart for SUSE UAA
 &prompt.user;kubectl create namespace uaa
 &prompt.user;kubectl create namespace scf
 </screen>
-</sect2>
+</sect1>
 
-<sect2 xml:id="sec.cap.copy-secret-prod">
+<sect1 xml:id="sec.cap.copy-secret-prod">
     <title>Copy &ses; Secret</title>
 <para>
 If you are using &ses; you must copy the Ceph admin secret to the UAA and SCF
@@ -433,12 +430,12 @@ sed 's/"namespace": "default"/"namespace": "uaa"/' | kubectl create -f -
 &prompt.user;kubectl get secret ceph-secret-admin -o json --namespace default | \
 sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -
 </screen>
-</sect2>
+</sect1>
 
-<sect2 xml:id="sec.cap.install-uaa-prod">
-    <title>Install UAA</title>
+<sect1 xml:id="sec.cap.install-uaa-prod">
+    <title>Deploy UAA</title>
 <para>
-    Use &helm; to install the UAA (User Account and Authentication) server:
+    Use &helm; to deploy the UAA (User Account and Authentication) server:
 </para>
 <screen>    
 &prompt.user;helm install suse/uaa \
@@ -455,13 +452,17 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -
 &prompt.user;watch -c 'kubectl get pods --all-namespaces'
 </screen>
 <para>
-When the status shows RUNNING for all of the UAA nodes, then proceed to the next
-step.
+Pressing <keycombo>
+    <keycap function="control"/>
+    <keycap>C</keycap>
+     </keycombo>
+     stops it. When the status shows RUNNING for all of the UAA nodes, proceed 
+     to deploying &suse; &cf;.
 </para>
-</sect2>   
+</sect1>   
 
-<sect2 xml:id="sec.cap.install-scf-prod">
-    <title>Install &suse; &cf;</title>
+<sect1 xml:id="sec.cap.install-scf-prod">
+    <title>Deploy &scf;</title>
 <para>
   First copy your UAA certificate authority (CA) into a shell variable, then 
   use &helm; to install &suse; &cf;:
@@ -481,24 +482,27 @@ step.
 &prompt.user;watch -c 'kubectl get pods --all-namespaces'
 </screen>
 <para>
-When all services are running you can use the &cf; command-line interface 
-to log in to &suse; &cf;. You need to provide the API endpoint of your 
-installation. The API endpoint is the <envar>DOMAIN</envar> value you 
-provided in <filename>scf-config-values.yaml</filename>, plus the 
-<literal>api.</literal> prefix, like the following example:
+    When all services are running use the &cf; command-line interface 
+to log in to &suse; &cf; to deploy and manage your applications. (See
+<xref linkend="sec.cap.cf-cli"/>)
 </para>
-<screen>
-&prompt.user;cf login -a https://api.example.com
-</screen>
-<para>
-    Another way to get this information is to print the welcome message that
-    appeared when your installation was completed:
-</para>
-<screen>
-&prompt.user;helm status $(helm list | awk '/cf-([0-9]).([0-9]).*/{print$1}') | \
-sed -n -e '/NOTES/,$p'
+</sect1>
 
-NOTES:
+<sect1 xml:id="sec.cap.cf-cli">
+<title>Using the &cf; Command Line Interface</title>
+    <para>
+    The &cf; command line interface (cf-cli) is for deploying and managing your
+    applications. You may use it for all the orgs and spaces that you are a 
+    member of. Install the client on a workstation for remote administration of 
+    your &suse; &cf; instances. 
+    </para>
+    <para>
+      The first task is to log into your new &suse; &cf; instance. When your
+      installation completes it prints a welcome screen with the information
+      you need to access it.
+    </para>
+    <screen>
+       NOTES:
     Welcome to your new deployment of SCF.
 
     The endpoint for use by the `cf` client is
@@ -521,9 +525,56 @@ NOTES:
 
     to monitor continuously.    
 </screen>
-</sect2>
-</sect1>
+<para>
+    You can display this message anytime with this command:
+</para>
+<screen>
+&prompt.user;helm status $(helm list | awk '/cf-([0-9]).([0-9]).*/{print$1}') | \
+sed -n -e '/NOTES/,$p'
+</screen>
+<para>
+To log in you need to provide the API endpoint of your 
+installation. The API endpoint is the <envar>DOMAIN</envar> value you 
+provided in <filename>scf-config-values.yaml</filename>, plus the 
+<literal>api.</literal> prefix, as it shows in the above welcome screen. Set 
+your endpoint and use the 
+<command>--skip-ssl-validation</command> with self-signed SSL certificates. It 
+asks for an email address, but you must enter <literal>admin</literal> instead 
+(you cannot change this to a different username), and the password is the one you created in <filename>scf-config-values.yaml</filename>:
+</para>
+<screen>
+&prompt.user;cf login --skip-ssl-validation  -a https://api.example.com 
+API endpoint: https://api.example.com
 
+Email> admin
+
+Password> 
+Authenticating...
+OK
+
+Targeted org system
+
+API endpoint:   https://api.example.com (API version: 2.101.0)
+User:           admin
+Org:            system
+Space:          No space targeted, use 'cf target -s SPACE'
+</screen>
+
+<para>
+    <command>cf help</command> displays a list of commands and options.
+    <command>cf help [command]</command> provides information on specific
+    commands.
+</para>
+<para>
+The complete guide is at
+    <link xlink:href="https://docs.cloudfoundry.org/cf-cli/">Using the Cloud 
+        Foundry Command Line Interface</link>, and source code with a 
+    demo video is on GitHub at 
+    <link xlink:href="https://github.com/cloudfoundry/cli/blob/master/README.md"/>.
+</para>
+<!-- TODO expand this over time with SCF-relevant command examples -->
+</sect1>
+        
 <sect1 xml:id="sec.cap.stratos-prod">
     <title>Installing the Stratos Console</title>
     <para>
@@ -551,10 +602,10 @@ repository:
 </para>        
 <screen>
 &prompt.user;helm search suse
-NAME         VERSION    DESCRIPTION                                  
-suse/cf      2.6.1      A Helm chart for SUSE Cloud Foundry          
-suse/console 1.0.0      A Helm chart for deploying Stratos UI Console
-suse/uaa     2.6.1      A Helm chart for SUSE UAA 
+NAME         VERSION DESCRIPTION                                  
+suse/cf      2.6.1   A Helm chart for SUSE Cloud Foundry          
+suse/console 1.0.0   A Helm chart for deploying Stratos UI Console
+suse/uaa     2.6.1   A Helm chart for SUSE UAA 
 </screen>
 <para>
 Install Stratos, and if you have not set a default storage class you must specify
@@ -599,14 +650,20 @@ sanguine-heron-secret          Opaque  2     2s
 sanguine-heron-mariadb-secret  Opaque  2     2s
 
 ==> v1/PersistentVolumeClaim
-NAME                                  STATUS  VOLUME                                    CAPACITY  ACCESSMODES  STORAGECLASS  AGE
-sanguine-heron-upgrade-volume         Bound   pvc-334b6ed7-1cd7-11e8-ba13-90b8d0fcd216  20Mi    
+NAME                          STATUS  VOLUME                                    CAPACITY  ACCESSMODES  STORAGECLASS  AGE
+sanguine-heron-upgrade-volume Bound   pvc-334b6ed7-1cd7-11e8-ba13-90b8d0fcd216  20Mi    
 </screen>        
 <para>
     Another way to get the release name is with the <command>helm ls</command>
-    command. Then query the release name to get its IP address and port number:
+    command, then query the release name to get its IP address and port number:
 </para>
 <screen>
+&prompt.user;helm ls   
+NAME            REVISION UPDATED                  STATUS    CHART          NAMESPACE
+sanguine-heron  1        Wed Feb 28 14:32:01 2018 DEPLOYED  console-1.0.0  stratos  
+scf             1        Wed Feb 28 12:53:54 2018 DEPLOYED  cf-2.7.0       scf      
+uaa             1        Wed Feb 28 12:31:18 2018 DEPLOYED  uaa-2.7.0      uaa
+
 &prompt.user;helm status sanguine-heron
 LAST DEPLOYED: Wed Feb 28 14:32:01 2018
 NAMESPACE: stratos
@@ -616,14 +673,14 @@ RESOURCES:
 ==> v1/Service
 NAME                    CLUSTER-IP      EXTERNAL-IP   PORT(S)         AGE
 sanguine-heron-mariadb  172.24.241.109  &lt;none>        3306/TCP        35m
-sanguine-heron-ui-ext   172.24.38.113   10.84.100.82  8443:31177/TCP  35m
+sanguine-heron-ui-ext   172.24.38.113   10.10.100.82  8443:31177/TCP  35m
 [...]
 </screen>
 <para>
-    In this example, pointing your web browser to https://10.84.100.82:8443 
+    In this example, pointing your web browser to https://10.10.100.82:8443 
     opens the console. Wade through the nag screens about the self-signed
-    certificates and log in with the &cap; credentials you created in 
-    <filename>scf-config-values.yaml</filename>. 
+    certificates and log in as <literal>admin</literal> with the password you 
+    created in <filename>scf-config-values.yaml</filename>. 
     If you see an upgrade message, wait a few minutes and try again.
 </para>
 <figure xml:id="fig.cap.stratos-prod">

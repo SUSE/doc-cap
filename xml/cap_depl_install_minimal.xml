@@ -18,7 +18,7 @@
  <para>
      A production deployment of &productname; requires a 
      significant number of physical or virtual nodes. For testing and learning, 
-     you can set up a minimal four-node deployment of &susecf; on &suse; &caasp; 
+     you can set up a minimal four-node deployment of &scf; on &suse; &caasp; 
      on a single workstation in a hypervisor such as KVM or VirtualBox. This 
      extremely minimal deployment uses &kube;' hostpath storage type instead of 
      a storage server, such as &ses;. You must also provide DNS, DHCP, and a 
@@ -28,7 +28,7 @@
  <para>
      This minimal four-node deployment will run on a minimum of 32GB host system 
      memory, though more memory is better. 32GB is enough to test setting up 
-     and configuring &suse; &caasp; and &susecf;, and to run a few lightweight 
+     and configuring &suse; &caasp; and &scf;, and to run a few lightweight 
      workloads. You may also test connecting external servers with your cluster, 
      such as a separate name server, a storage server (e.g. &ses;), &scc;, or 
      &smtool;. You must be familiar with installing and configuring &caasp; (see
@@ -36,7 +36,7 @@
  </para>
  <para>
      After you have installed &caasp; you will install and administer 
-     &susecf; remotely from your host workstation, using tools such as the 
+     &scf; remotely from your host workstation, using tools such as the 
      <link xlink:href="https://docs.helm.sh/">&helm; package manager for
          Kubernetes</link>, and the Kubernetes command-line tool 
      <link xlink:href="https://kubernetes.io/docs/tasks/tools/install-kubectl/kubectl">
@@ -275,10 +275,10 @@ NAME                         STATUS                     ROLES     AGE  VERSION
       </term>
       <listitem>
  <para>
-     Installing &susecf; is a little different than the usual method of
+     Installing &scf; is a little different than the usual method of
      installing software. Rather than installing packages in the usual way with
      YaST or Zypper, you will install the &helm; client on your host workstation 
-     to install the required Kubernetes applications to set up &susecf;, and to 
+     to install the required Kubernetes applications to set up &scf;, and to 
      administer your cluster remotely.
  </para>
  <para>
@@ -356,7 +356,7 @@ Happy Helming!
         one master and two workers. Enabling hostpath provisioning on &caasp; 
         will use local storage on each of these nodes, therefore persistent 
         data stored will only be available locally on the &kube; nodes. That 
-        impacts use cases where &susecf; containers restart on a different &kube; 
+        impacts use cases where &scf; containers restart on a different &kube; 
         worker, for example in high availability setups or update tests. 
         If a container starts on a different worker than before it will miss 
         its persistent data, leading to various other side effects. In 
@@ -436,7 +436,7 @@ hostpath   kubernetes.io/host-path
     </para>
         <screen>
 env:
-    # Create a password for your &susecf; cluster
+    # Create a password for your &scf; cluster
     CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
     
     # The domain you created for your cluster
@@ -617,10 +617,10 @@ step.
 </sect2>   
 
 <sect2 xml:id="sec.cap.install-scf">
-    <title>Install &susecf;</title>
+    <title>Install &scf;</title>
 <para>
   First copy your UAA certificate authority (CA) into a shell variable, then 
-  use &helm; to install &suse; &cf;:
+  use &helm; to install &scf;:
 </para>
 <screen>
 &prompt.user;CA_CERT="$(kubectl get secret secret --namespace uaa -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
@@ -639,7 +639,7 @@ step.
 </screen>
 <para>
     When all services are running you can use the &cf; command-line interface 
-    to log in to &suse; &cf;. (See <xref linkend="sec.cap.install-scf-prod"/>.)
+    to log in to &scf;. (See <xref linkend="sec.cap.install-scf-prod"/>.)
 </para>    
 </sect2>
 </sect1>
@@ -654,7 +654,7 @@ step.
   </sect1>
 
  <sect1 xml:id="sec.cap.update-min">
-  <title>Updating &suse; &cf;, UAA, and Stratos</title> 
+  <title>Updating &scf;, UAA, and Stratos</title> 
      <para>
       Maintenance updates are delivered as container images from the &suse;
       registry and applied with &helm;. See <xref linkend="sec.cap.update"/>.

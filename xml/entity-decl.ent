@@ -17,7 +17,7 @@
 <!ENTITY caasp        "CaaS Platform">
 <!ENTITY susecaaspreg "&suse;&reg; CaaS Platform">
 <!ENTITY cf           "Cloud Foundry">
-<!ENTITY susecf       "&suse; Cloud Foundry">
+<!ENTITY scf          "&suse; Cloud Foundry">
 <!ENTITY susemicros   "&suse; MicroOS">
 <!ENTITY ses	      "&suse; Enterprise Storage">
 <!ENTITY tiller	      "Tiller">

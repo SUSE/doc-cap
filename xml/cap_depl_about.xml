@@ -17,7 +17,7 @@
  </info>
  <para>
 &productname; is a software platform for cloud-native application
-deployment based on &susecf; and &suse; &caasp; 2.0. It serves different but complementary
+deployment based on &scf; and &suse; &caasp; 2.0. It serves different but complementary
 purposes for operators and application developers.
  </para>
  <para>
@@ -94,8 +94,8 @@ Makes the software development workflow more efficient
 
 <para>
 The principle interface and API for deploying applications to &productname; is
-&susecf;. Most Cloud Foundry distributions run on virtual machines managed by
-&bosh;. &susecf; runs in SUSE Linux Enterprise containers managed by &kube;.
+&scf;. Most Cloud Foundry distributions run on virtual machines managed by
+&bosh;. &scf; runs in SUSE Linux Enterprise containers managed by &kube;.
 Containerizing the components of the platform itself has these advantages:
 </para>
 
@@ -109,7 +109,7 @@ Containerizing the components of the platform itself has these advantages:
 </listitem>
   <listitem>
    <para>
-    Reduces physical memory overhead. &susecf; components deployed in
+    Reduces physical memory overhead. &scf; components deployed in
     containers consume substantially less memory, as host-level operations are
     shared between containers by &kube;.
    </para>
@@ -117,14 +117,14 @@ Containerizing the components of the platform itself has these advantages:
 </itemizedlist>
 
    <para>
-&susecf; packages upstream Cloud Foundry &bosh; releases to produce containers
+&scf; packages upstream Cloud Foundry &bosh; releases to produce containers
 and configurations which are deployed to &kube; clusters using &helm;.
 </para>
 <sect1 xml:id="sec.cap.architecture">
   <title>&productname; Architecture</title>
 
 <para>
-This guide details the steps for deploying &susecf;
+This guide details the steps for deploying &scf;
 on &suse; &caasp; 2. &caasp; is a specialized application development and 
 hosting platform built on the &susemicros; container host operating system, 
 container orchestration with &kube;, and &salt; for automating installation and
@@ -134,7 +134,7 @@ configuration.
 <important>
         <title>Review the &suse; &caasp; Deployment Guide</title>
         <para>
-        Setting up &susecf; correctly depends on setting up &suse; &caasp;
+        Setting up &scf; correctly depends on setting up &suse; &caasp;
         correctly. Review the 
         <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/">&suse; &caasp; Deployment Guide</link> 
         to understand how it operates, and basic configuration and administration 
@@ -143,7 +143,7 @@ configuration.
 </important>
 
 <para>
-A supported deployment includes &susecf; installed on &caasp; 2. You also 
+A supported deployment includes &scf; installed on &caasp; 2. You also 
 need a storage backend, such as &ses;, a DNS server, and an Internet connection 
 to download additional packages during installation and ~10GB of Docker images 
 on each &kube; worker after installation.
@@ -154,12 +154,12 @@ an entitlement of &suse; &caasp; 2 and &ses; 5. &ses; alone has substantial
 requirements; see the 
 <link xlink:href="https://www.suse.com/products/suse-enterprise-storage/">Tech Specs</link>
 for details. &suse; &caasp; requires a minimum of four nodes: one admin and three
-&kube; nodes. &susecf; is then deployed on the &kube; nodes. 
+&kube; nodes. &scf; is then deployed on the &kube; nodes. 
 </para>
 <para>
 Note that after you have deployed your cluster and start building and running
 applications, your applications may depend on buildpacks that are not bundled
-in the container images that ship with &susecf;. These will be downloaded at
+in the container images that ship with &scf;. These will be downloaded at
 runtime, when you are pushing applications to the platform. Some of these 
 buildpacks may include components with proprietary licenses.
 </para>
