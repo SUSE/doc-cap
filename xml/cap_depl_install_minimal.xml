@@ -442,15 +442,6 @@ env:
     # The domain you created for your cluster
     DOMAIN: <replaceable>&exampledomain;</replaceable>
     
-    # The fully-qualified domain name of your 
-    # User Account and Authentication (UAA) server
-    # Use the worker you selected for external 
-    # access to your cluster
-    UAA_HOST: <replaceable>uaa-host.&exampledomain;</replaceable>
-    
-    # The default is 2793
-    UAA_PORT: 2793
-    
     # Create a password for your UAA client secret
     UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
 

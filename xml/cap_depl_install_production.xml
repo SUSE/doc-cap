@@ -288,10 +288,7 @@ Happy Helming!
     <para>
         Create a new configuration file on your workstation for &helm; to use. 
         In this example it is
-        called <filename>scf-config-values.yaml</filename>. Note that the 
-        ingress for a &kube; cluster is not the same as the external access to
-        the &scf; instance, which is defined in 
-        <filename>scf-config-values.yaml</filename> with UAA_HOST.        
+        called <filename>scf-config-values.yaml</filename>.
     </para>
     <screen>
 env:
@@ -300,13 +297,6 @@ env:
     
     # Enter the domain you created for your &kube; cluster
     DOMAIN: <replaceable>&exampledomain;</replaceable>
-    
-    # The fully-qualified domain name of your UAA host
-    # This is the external access to your &scf; instance
-    UAA_HOST: <replaceable>uaa-host.&exampledomain;</replaceable>
-    
-    # The default is 2793
-    UAA_PORT: 2793
     
     # Create a password for your UAA client secret
     UAA_ADMIN_CLIENT_SECRET: <replaceable>changeme</replaceable>
