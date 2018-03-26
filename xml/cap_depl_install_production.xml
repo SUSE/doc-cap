@@ -303,7 +303,8 @@ env:
 
 kube:
     # The external IP address of your &kube; cluster
-    external_ip: <replaceable>&kubeip;</replaceable>
+    external_ips: 
+    - <replaceable>&kubeip;</replaceable>
     
     # Your chosen storage class
     storage_class:

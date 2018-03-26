@@ -448,7 +448,8 @@ env:
 kube:
     # The external IP address of the &kube; worker
     # you selected for external access
-    external_ip: <replaceable>&kubeip;</replaceable>
+    external_ips:
+    - <replaceable>&kubeip;</replaceable>
     
     # Your chosen storage class
     storage_class:
