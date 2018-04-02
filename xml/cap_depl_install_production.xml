@@ -489,7 +489,7 @@ to log in to &suse; &cf; to deploy and manage your applications. (See
 </sect1>
 
 <sect1 xml:id="sec.cap.cf-cli">
-<title>Deploying and Managing Applications with the &cf; Client</title>
+<title>Deploying and Managing Applications with thefstratos &cf; Client</title>
     <para>
     The &cf; command line interface (cf-cli) is for deploying and managing your
     applications. You may use it for all the orgs and spaces that you are a 
@@ -679,9 +679,9 @@ repository:
 <screen>
 &prompt.user;helm search suse
 NAME         VERSION DESCRIPTION                                  
-suse/cf      2.6.1   A Helm chart for SUSE Cloud Foundry          
-suse/console 1.0.0   A Helm chart for deploying Stratos UI Console
-suse/uaa     2.6.1   A Helm chart for SUSE UAA 
+suse/cf         2.7.0   A Helm chart for SUSE Cloud Foundry          
+suse/console    1.0.2   A Helm chart for deploying Stratos UI Console
+suse/uaa        2.7.0   A Helm chart for SUSE UAA
 </screen>
 <para>
 Install Stratos, and if you have not set a default storage class you must specify
@@ -689,6 +689,7 @@ it:
 </para>
 <screen>
 &prompt.user;helm install suse/console \
+    --name console \
     --namespace stratos \
     --values scf-config-values.yaml \
     --set storageClass=<replaceable>persistent</replaceable>
