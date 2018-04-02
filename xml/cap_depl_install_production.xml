@@ -480,7 +480,7 @@ to log in to &suse; &cf; to deploy and manage your applications. (See
 </sect1>
 
 <sect1 xml:id="sec.cap.cf-cli">
-<title>Deploying and Managing Applications with thefstratos &cf; Client</title>
+<title>Deploying and Managing Applications with the &cf; Client</title>
     <para>
     The &cf; command line interface (cf-cli) is for deploying and managing your
     applications. You may use it for all the orgs and spaces that you are a 
