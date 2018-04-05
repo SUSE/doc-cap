@@ -275,13 +275,25 @@ Happy Helming!
  <screen>
 &prompt.user;kubectl get storageclasses
 </screen>
+<para>
+    See <xref linkend="sec.cap.configure-prod"/> to learn where to configure your 
+    storage class for &scf;. See the &kube; document 
+    <link xlink:href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">Persistent Volumes</link>
+    for detailed information on storage classes.
+</para>
+</sect1>
 
+<sect1 xml:id="sec.cap.teststorageclass-prod">
+ <title>Test Storage Class</title>
 <para>
     You may test that your storage class is properly configured before deploying
-    &scf;. Create a persistent volume claim on your storage class, then check 
-    that the status of the claim is <literal>bound</literal> and a volume has 
-    been created. Copy the following configuration, substituting the name of 
-    your <literal>storageClassName</literal>.
+    &scf; by creating a persistent volume claim on your storage class, then 
+    verifying that the status of the claim is <literal>bound</literal>, and a 
+    volume has been created.
+</para>
+<para>
+    First copy the following configuration, substituting the name of 
+    your <literal>storageClassName</literal>:
 </para>
 <screen>
 ---
@@ -337,12 +349,6 @@ persistentvolumeclaim "test-sc-persistent" deleted
 <screen>
 &prompt.user;kubectl delete pvc/test-sc-persistent --grace-period=0 
 </screen>    
-<para>
-    See <xref linkend="sec.cap.configure-prod"/> to learn where to configure your 
-    storage class for &scf;. See the &kube; document 
-    <link xlink:href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">Persistent Volumes</link>
-    for detailed information on storage classes.
-</para>
 </sect1>
 
 <sect1 xml:id="sec.cap.configure-prod">
@@ -452,9 +458,9 @@ suse            https://kubernetes-charts.suse.com/
 <screen>
 &prompt.user;helm search suse
 NAME         VERSION   DESCRIPTION                                  
-suse/cf      2.6.1     A Helm chart for SUSE Cloud Foundry          
-suse/console 1.0.0     A Helm chart for deploying Stratos UI Console
-suse/uaa     2.6.1     A Helm chart for SUSE UAA   
+suse/cf      2.7.0   A Helm chart for SUSE Cloud Foundry          
+suse/console 1.0.2   A Helm chart for deploying Stratos UI Console
+suse/uaa     2.7.0   A Helm chart for SUSE UAA
 </screen>
 </sect1>
 
