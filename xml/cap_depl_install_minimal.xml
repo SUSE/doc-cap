@@ -426,7 +426,16 @@ hostpath   kubernetes.io/host-path
         test deployment a little easier.
     </para>
 </tip>
-</sect1> 
+</sect1>
+
+<sect1 xml:id="sec.cap.teststorageclass">
+ <title>Test Storage Class</title>
+ <para>
+     See <xref linkend="sec.cap.teststorageclass-prod"/> to learn how to test
+         that your storage class is correctly configured before you deploy
+         &scf;.
+ </para>
+</sect1>
  
 <sect1 xml:id="sec.cap.configure">
     <title>Configuring the Minimal Test Deployment</title>
