@@ -293,7 +293,7 @@ Happy Helming!
 </para>
 <para>
     First copy the following configuration, substituting the name of 
-    your <literal>storageClassName</literal>:
+    your <replaceable>storageClassName</replaceable>:
 </para>
 <screen>
 ---
@@ -307,7 +307,7 @@ spec:
   resources:
     requests:
       storage: 1Gi
-      storageClassName: <literal>persistent</literal>
+      storageClassName: <replaceable>persistent</replaceable>
 </screen>
     <para>
         Create your persistent volume claim:
@@ -498,7 +498,7 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -
 </para>
 <screen>    
 &prompt.user;helm install suse/uaa \
---name uaa \
+--name <replaceable>susecf-uaa</replaceable> \
 --namespace uaa \ 
 --values scf-config-values.yaml
 </screen>
@@ -529,7 +529,7 @@ Pressing <keycombo>
 <screen>
 &prompt.user;CA_CERT="$(kubectl get secret secret --namespace uaa -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 &prompt.user;helm install suse/cf \
---name scf \
+--name <replaceable>susecf-scf</replaceable> \
 --namespace scf \
 --values scf-config-values.yaml \
 --set "env.UAA_CA_CERT=${CA_CERT}"
@@ -748,7 +748,7 @@ it:
 </para>
 <screen>
 &prompt.user;helm install suse/console \
-    --name console \
+    --name <replaceable>susecf-console</replaceable> \
     --namespace stratos \
     --values scf-config-values.yaml \
     --set storageClass=<replaceable>persistent</replaceable>
@@ -958,7 +958,8 @@ sizing:
 </para>
 
 <screen>    
-&prompt.user;helm install suse/uaa --name uaa \
+&prompt.user;helm install suse/uaa \
+--name <replaceable>susecf-uaa</replaceable> \
 --namespace uaa \ 
 --values scf-config-values.yaml \
 --values uaa-sizing.yaml
@@ -971,7 +972,7 @@ sizing:
 </para>
 <screen>
 &prompt.user;helm install suse/cf \
---name scf
+--name <replaceable>susecf-scf</replaceable>
 --namespace scf \
 --values scf-config-values.yaml \
 --values scf-sizing.yaml
@@ -1023,13 +1024,14 @@ expected behavior.
         &helm;:
     </para>
     <screen>
-&prompt.user;helm upgrade suse/uaa --name uaa \
+&prompt.user;helm upgrade suse/uaa \
+--name <replaceable>susecf-uaa</replaceable> \
 --namespace uaa \ 
 --values scf-config-values.yaml \
 --values uaa-sizing.yaml 
 
 &prompt.user;helm upgrade suse/cf \
---name scf
+--name <replaceable>susecf-scf</replaceable>
 --namespace scf \
 --values scf-config-values.yaml \
 --values scf-sizing.yaml
