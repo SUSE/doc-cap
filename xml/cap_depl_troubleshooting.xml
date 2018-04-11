@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha.cap.depl.troubleshooting"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <title>Troubleshooting</title>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+ </info>
+ 
+ <para>
+     Cloud stacks are complex, and debugging deployment issues often requires
+     digging through multiple layers to find the information you need. Remember 
+     that the &scf; releases must be deployed in the correct order, and that 
+     each release must deploy successfully, with no failed pods, before deploying
+     the next release.
+ </para>
+
+<sect1  xml:id="sec.cap.tbl.supportconfig">
+ <title>Using Supportconfig</title>
+ <para>
+     If you ever need to request support, or just want to generate detailed 
+     system information and logs, use the <command>supportconfig</command>
+     utility. Run it with no options to collect basic system information, and 
+     also cluster logs including Docker, etcd, flannel, and Velum. <command>supportconfig</command> may give you all the information you need.
+ </para>
+ <para>
+     <command>supportconfig -h</command> prints the options. Read the "Gathering System Information for Support" chapter in any &sle; Administration Guide 
+     to learn more.
+ </para>
+</sect1>
+
+<sect1 xml:id="sec.cap.tbl.toolong">
+    <title>What is Taking So Long?</title>
+    <para>
+        A deployment step seems to take too long, or you see that some 
+        pods are not in a ready state hours after all the others are ready, or a 
+        pod shows a lot of restarts. This example shows not-ready pods many
+        hours after the others have become ready:
+    </para>
+    <screen>
+&prompt.user;kubectl get pods --namespace scf
+NAME                     READY STATUS    RESTARTS  AGE
+router-3137013061-wlhxb  0/1   Running   0         16h
+routing-api-0            0/1   Running   0         16h
+</screen>
+
+<para>
+    The <literal>Running</literal> status means the pod is bound to a node and 
+    all of its containers have been created. However, it is not 
+    <literal>Ready</literal>, which means it is
+    not ready to service requests. Use <command>kubectl</command> to
+    print a detailed description of pod events and status:
+</para>
+
+<screen>
+&prompt.user;kubectl describe pod --namespace scf router-3137013061-wlhxb
+</screen>
+
+<para>
+    This prints a lot of information, including IP addresses, routine events, warnings, and errors. You should find the reason for the failure in this
+    output.
+    </para>
+</sect1>
+
+<sect1 xml:id="sec.cap.tbl.logs">
+    <title>Reading Logfiles</title> 
+    <para>
+which means the original deployment configuration file is 
+    incorrect. The configuration file must be corrected and UAA and SCF must 
+    be deleted and re-deployed. Use <command>helm</command> to list your deployed releases, then delete them and start over:
+</para>
+
+<screen>
+&prompt.user;helm ls
+NAME REVISION UPDATED                  STATUS    CHART      NAMESPACE
+suse-cf  1        Tue Apr 10 15:17:53 2018 DEPLOYED  cf-2.7.0   scf      
+scf-uaa  1        Tue Apr 10 14:59:00 2018 DEPLOYED  uaa-2.7.0  uaa  
+
+&prompt.user;helm delete suse-cf 
+&prompt.user;helm delete scf-uaa
+</screen>
+</sect1>
+    
+</chapter>
