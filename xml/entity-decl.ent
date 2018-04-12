@@ -4,7 +4,7 @@
 
 <!ENTITY productname    "&suse; Cloud Application Platform">
 <!ENTITY productnamereg "&suse;&reg; Cloud Application Platform">
-<!ENTITY productnumber  "1.0">
+<!ENTITY productnumber  "1.1">
 <!ENTITY github.url     "https://github.com/SUSE/doc-cap">
 <!ENTITY cap            "Cloud Application Platform">
 

@@ -599,7 +599,7 @@ sed 's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -
 <screen>    
 &prompt.user;helm install suse/uaa \
 --name <replaceable>susecf-uaa</replaceable> \
---namespace uaa \ 
+--namespace uaa \
 --values scf-config-values.yaml
 </screen>
 <para>
