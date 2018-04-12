@@ -757,6 +757,7 @@ it:
 <para>
     Monitor progress:
 </para>
+
 <screen>
 $ watch -c 'kubectl get pods --namespace stratos'
  Every 2.0s: kubectl get pods --namespace stratos
@@ -773,45 +774,39 @@ console-mariadb-3697248891-5drf5   1/1       Running   0          30m
     <keycap>C</keycap>
      </keycombo> to exit and to view your release information:
 </para>
+
 <screen>
-NAME:   sanguine-heron
-LAST DEPLOYED: Wed Feb 28 14:32:01 2018
+NAME:   susecf-console
+LAST DEPLOYED: Thu Apr 12 10:28:34 2018
 NAMESPACE: stratos
 STATUS: DEPLOYED
 
 RESOURCES:
 ==> v1/Secret
 NAME                           TYPE    DATA  AGE
-sanguine-heron-secret          Opaque  2     2s
-sanguine-heron-mariadb-secret  Opaque  2     2s
+susecf-console-mariadb-secret  Opaque  2     2s
+susecf-console-secret          Opaque  2     2s
 
 ==> v1/PersistentVolumeClaim
-NAME                          STATUS  VOLUME                                    CAPACITY  ACCESSMODES  STORAGECLASS  AGE
-sanguine-heron-upgrade-volume Bound   pvc-334b6ed7-1cd7-11e8-ba13-90b8d0fcd216  20Mi    
-</screen>        
-<para>
-    Another way to get the release name is with the <command>helm ls</command>
-    command, then query the release name to get its IP address and port number:
-</para>
-<screen>
-&prompt.user;helm ls   
-NAME            REVISION UPDATED                  STATUS    CHART          NAMESPACE
-sanguine-heron  1        Wed Feb 28 14:32:01 2018 DEPLOYED  console-1.0.0  stratos  
-scf             1        Wed Feb 28 12:53:54 2018 DEPLOYED  cf-2.7.0       scf      
-uaa             1        Wed Feb 28 12:31:18 2018 DEPLOYED  uaa-2.7.0      uaa
+NAME                                  STATUS  VOLUME                                    CAPACITY  ACCESSMODES  STORAGECLASS    AGE
+console-mariadb                       Bound   pvc-ef3a120d-3e76-11e8-946a-90b8d00d625f  1Gi       RWO          persistent      2s
+susecf-console-upgrade-volume         Bound   pvc-ef409e41-3e76-11e8-946a-90b8d00d625f  20Mi      RWO          persistent      2s
+susecf-console-encryption-key-volume  Bound   pvc-ef49b860-3e76-11e8-946a-90b8d00d625f  20Mi      RWO          persistent      2s
 
-&prompt.user;helm status sanguine-heron
-LAST DEPLOYED: Wed Feb 28 14:32:01 2018
-NAMESPACE: stratos
-STATUS: DEPLOYED
-
-RESOURCES:
 ==> v1/Service
-NAME                    CLUSTER-IP      EXTERNAL-IP   PORT(S)         AGE
-sanguine-heron-mariadb  172.24.241.109  &lt;none>        3306/TCP        35m
-sanguine-heron-ui-ext   172.24.38.113   10.10.100.82  8443:31177/TCP  35m
-[...]
+NAME                    CLUSTER-IP      EXTERNAL-IP    PORT(S)         AGE
+susecf-console-mariadb  172.24.181.255  &lt;none>         3306/TCP        2s
+susecf-console-ui-ext   172.24.84.50    10.10.100.82   8443:32511/TCP  1s
+
+==> v1beta1/Deployment
+NAME             DESIRED  CURRENT  UP-TO-DATE  AVAILABLE  AGE
+console-mariadb  1        1        1           0          1s
+
+==> v1beta1/StatefulSet
+NAME     DESIRED  CURRENT  AGE
+console  1        1        1s
 </screen>
+
 <para>
     In this example, pointing your web browser to https://10.10.100.82:8443 
     opens the console. Wade through the nag screens about the self-signed
@@ -826,7 +821,30 @@ sanguine-heron-ui-ext   172.24.38.113   10.10.100.82  8443:31177/TCP  35m
     <imagedata fileref="stratos.png" format="PNG" width="75%"/>
    </imageobject>
   </mediaobject>
-</figure> 
+</figure>
+
+<para>
+    Another way to get the release name is with the <command>helm ls</command>
+    command, then query the release name to get its IP address and port number:
+</para>
+
+<screen>
+&prompt.user;helm ls
+NAME            REVISION UPDATED                   STATUS    CHART          NAMESPACE
+susecf-console  1        Thu Apr 12 10:28:34 2018  DEPLOYED  console-1.0.2  stratos  
+susecf-scf      1        Wed Apr 11 14:55:23 2018  DEPLOYED  cf-2.7.0       scf      
+susecf-uaa      1        Wed Apr 11 14:48:01 2018  DEPLOYED  uaa-2.7.0      uaa
+
+&prompt.user;helm status susecf-console
+LAST DEPLOYED: Thu Apr 12 10:28:34 2018
+NAMESPACE: stratos
+STATUS: DEPLOYED
+[...]
+==> v1/Service
+NAME                    CLUSTER-IP      EXTERNAL-IP    PORT(S)         AGE
+susecf-console-mariadb  172.24.181.255  &lt;none>         3306/TCP        19m
+susecf-console-ui-ext   172.24.84.50    10.10.100.82   8443:32511/TCP  19m
+</screen> 
 </sect1>
 
  <sect1 xml:id="sec.cap.update">
@@ -848,10 +866,10 @@ Update Complete. ⎈ Happy Helming!⎈
 </para>
   <screen>
 &prompt.user;helm list
-NAME             REVISION UPDATED                 STATUS   CHART         NAMESPACE
-bunking-manta    1        Tue Jan 9 08:29:57 2018 DEPLOYED uaa-2.0.2     uaa
-irreverant-sloth 1        Tue Jan 9 09:36:29 2018 DEPLOYED cf-2.0.2      scf        
-olfactory-turtle 1        Tue Jan 9 10:09:56 2018 DEPLOYED console-1.0.0 stratos
+NAME            REVISION  UPDATED                   STATUS    CHART           NAMESPACE
+susecf-console  1         Thu Apr 12 10:28:34 2018  DEPLOYED  console-1.0.2   stratos  
+susecf-scf      1         Wed Apr 11 14:55:23 2018  DEPLOYED  cf-2.7.0        scf      
+susecf-uaa      1         Wed Apr 11 14:48:01 2018  DEPLOYED  uaa-2.7.0       uaa 
 
 &prompt.user;helm repo list
 NAME            URL                                             
@@ -861,19 +879,14 @@ suse            https://kubernetes-charts.suse.com/
 
 &prompt.user;helm search suse
 NAME          VERSION  DESCRIPTION                                  
-suse/cf       2.6.1    A Helm chart for SUSE Cloud Foundry          
-suse/console  1.0.0    A Helm chart for deploying Stratos UI Console
-suse/uaa      2.6.1    A Helm chart for SUSE UAA
+suse/cf       2.7.0   A Helm chart for SUSE Cloud Foundry          
+suse/console  1.0.2    A Helm chart for deploying Stratos UI Console
+suse/uaa      2.7.0    A Helm chart for SUSE UAA
 
-&prompt.user;helm upgrade --recreate-pods <replaceable>release-name</replaceable> suse/uaa
-&prompt.user;helm upgrade --recreate-pods <replaceable>release-name</replaceable> suse/cf
-&prompt.user;helm upgrade --recreate-pods <replaceable>release-name</replaceable> suse/console
+&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-uaa</replaceable> suse/uaa
+&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-scf</replaceable> suse/cf
+&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-console</replaceable> suse/console
 </screen>
-<para>
-    In the above example, the <replaceable>release-names</replaceable> are found
-    with the <command>helm list</command> command, bunking-manta, irreverant-sloth, and
-    olfactory-turtle. Your release names will be different.
-</para>
 
 <!-- helm rollback does not work, so upgrades are one-way for now
 -->
