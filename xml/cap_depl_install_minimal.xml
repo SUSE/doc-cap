@@ -275,39 +275,21 @@ NAME                         STATUS                     ROLES     AGE  VERSION
       </term>
       <listitem>
  <para>
-     Installing &scf; is a little different than the usual method of
+     Deploying &scf; is different than the usual method of
      installing software. Rather than installing packages in the usual way with
-     YaST or Zypper, you will install the &helm; client on your host workstation 
+     YaST or Zypper, you will install the &helm; client on your workstation 
      to install the required Kubernetes applications to set up &scf;, and to 
      administer your cluster remotely.
  </para>
  <para>
-     You should match the &helm; version with the version of &tiller; 
-     that is running on your cluster. The &tiller; binary cannot report its
-     version, and you need the version that is packaged inside the &tiller; 
-     container. Run the following command from your workstation to query the
-     logs:
+     Helm client version 2.6 or higher is required.
  </para>
- <screen>
-&prompt.user;kubectl logs -l name=tiller --namespace=kube-system | grep "Starting &tiller;"
-  [main] 2018/01/04 16:48:27 Starting &tiller; v2.6.1 (tls=false)
-</screen>
-<para>
-   If the log gets overwritten and loses this information, the following command 
-   queries the <command>rpm</command> package manager inside the container. This
-   works only on &caasp;/&cap; installations:
-</para>
-<screen>
-&prompt.user;kubectl exec -it $(kubectl get pods -n kube-system | awk '/tiller/{print$1}') -n kube-system -- rpm -q helm
-  helm-2.6.1-1.6.x86_64
-</screen>
       <warning>
         <title>Initialize Only the &helm; Client</title>
         <para>When you initialize &helm; on your workstation be sure
             to initialize only the client, as the server, &tiller;, was
             installed during the &caasp; installation. You do not want two &tiller;
-            instances. Also make sure to install the &helm; version that matches
-            your &tiller; version.
+            instances.
     </para>
 </warning>
 <para>
@@ -315,7 +297,7 @@ NAME                         STATUS                     ROLES     AGE  VERSION
     &helm; version, or you are using some other platform, see the 
     <link xlink:href="https://docs.helm.sh/using_helm/#quickstart">
          &helm; Quickstart Guide</link> for installation instructions and basic 
-    usage examples. Download the matching &helm; binary into any directory that 
+    usage examples. Download the &helm; binary into any directory that 
     is in your PATH on your workstation, such as your <filename>~/bin</filename> 
     directory. Then initialize the client only:
  </para>
@@ -440,8 +422,11 @@ hostpath   kubernetes.io/host-path
 <sect1 xml:id="sec.cap.configure">
     <title>Configuring the Minimal Test Deployment</title>
     <para>
-        Create a new configuration file for &helm; to use. In this example it is
-        called <filename>scf-config-values.yaml</filename>.
+        Create a configuration file on your workstation for &helm; to use. 
+        In this example it is
+        called <filename>scf-config-values.yaml</filename>. (See the
+        <link xlink:href="https://www.suse.com/releasenotes/">Release Notes</link>
+        for information on configuration changes.)
     </para>
         <screen>
 env:
@@ -543,9 +528,9 @@ suse        https://kubernetes-charts.suse.com/
 <screen>
 &prompt.user;helm search suse
 NAME          VERSION  DESCRIPTION                                  
-suse/cf       2.7.0    A Helm chart for SUSE Cloud Foundry          
-suse/console  1.0.2    A Helm chart for deploying Stratos UI Console
-suse/uaa      2.7.0    A Helm chart for SUSE UAA
+suse/cf       2.8.0    A Helm chart for SUSE Cloud Foundry          
+suse/console  1.1.0    A Helm chart for deploying Stratos UI Console
+suse/uaa      2.8.0    A Helm chart for SUSE UAA
 </screen>
 </sect2>
 
@@ -661,9 +646,10 @@ step.
       registry and applied with &helm;. See <xref linkend="sec.cap.update"/>.
   </para> 
   <note>
-      <title>No Updates with Hostpath</title>
+      <title>No Upgrades with Hostpath</title>
       <para>
-          Updates do not work with the hostpath storage type.
+          Upgrades do not work with the hostpath storage type, as the
+          required stateful data may be lost.
       </para>
   </note>
   

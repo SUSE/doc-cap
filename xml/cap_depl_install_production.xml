@@ -203,34 +203,14 @@ d028551.example.com   Ready                      &lt;none>    4h   v1.7.7
      administer your cluster remotely.
  </para>
  <para>
-     You should match the &helm; version with the version of &tiller; 
-     that is running on your cluster. The &tiller; binary cannot report its
-     version, and you need the version that is packaged inside the &tiller; 
-     container. Run the following command from your workstation to query the
-     logs:
+     Helm client version 2.6 or higher is required.
  </para>
- <screen>
-&prompt.user;kubectl logs -l name=tiller --namespace=kube-system | \
-grep "Starting &tiller;"
-[main] 2018/01/04 16:48:27 Starting &tiller; v2.6.1 (tls=false)
-</screen>
-<para>
-   If the log gets overwritten and loses this information, the following command 
-   queries the <command>rpm</command> package manager inside the container. Use
-   this only for &caasp;/&cap; installations:
-</para>
-<screen>
-&prompt.user;kubectl exec -it $(kubectl get pods -n kube-system | \
-awk '/tiller/{print$1}') -n kube-system -- rpm -q helm
-helm-2.6.1-1.6.x86_64
-</screen>
       <warning>
         <title>Initialize Only the &helm; Client</title>
         <para>When you initialize &helm; on your workstation be sure
             to initialize only the client, as the server, &tiller;, was
             installed during the &caasp; installation. You do not want two &tiller;
-            instances. Also make sure to install the &helm; version that matches
-            your &tiller; version.
+            instances.
     </para>
 </warning>
 <para>
@@ -238,7 +218,7 @@ helm-2.6.1-1.6.x86_64
     &helm; version, or you are using some other platform, see the 
     <link xlink:href="https://docs.helm.sh/using_helm/#quickstart">
          &helm; Quickstart Guide</link> for installation instructions and basic 
-    usage examples. Download the matching &helm; binary into any directory that 
+    usage examples. Download the &helm; binary into any directory that 
     is in your PATH on your workstation, such as your <filename>~/bin</filename> 
     directory. Then initialize the client only:
  </para>
@@ -354,9 +334,11 @@ persistentvolumeclaim "test-sc-persistent" deleted
 <sect1 xml:id="sec.cap.configure-prod">
     <title>Configuring the &scf; Production Deployment</title>
     <para>
-        Create a new configuration file on your workstation for &helm; to use. 
+        Create a configuration file on your workstation for &helm; to use. 
         In this example it is
-        called <filename>scf-config-values.yaml</filename>.
+        called <filename>scf-config-values.yaml</filename>. (See the
+        <link xlink:href="https://www.suse.com/releasenotes/">Release Notes</link>
+        for information on configuration changes.)
     </para>
     <screen>
 env:
@@ -371,6 +353,7 @@ env:
 
 kube:
     # The external IP address of your &kube; cluster
+    external_ip: <replaceable>&kubeip;</replaceable>
     external_ips: 
     - <replaceable>&kubeip;</replaceable>
     
@@ -458,9 +441,9 @@ suse            https://kubernetes-charts.suse.com/
 <screen>
 &prompt.user;helm search suse
 NAME         VERSION   DESCRIPTION                                  
-suse/cf      2.7.0   A Helm chart for SUSE Cloud Foundry          
-suse/console 1.0.2   A Helm chart for deploying Stratos UI Console
-suse/uaa     2.7.0   A Helm chart for SUSE UAA
+suse/cf      2.8.0   A Helm chart for SUSE Cloud Foundry          
+suse/console 1.1.0   A Helm chart for deploying Stratos UI Console
+suse/uaa     2.8.0   A Helm chart for SUSE UAA
 </screen>
 </sect1>
 
@@ -716,8 +699,8 @@ Space:          No space targeted, use 'cf target -s SPACE'
         Stratos UI is a modern, web-based management application for Cloud 
         Foundry. It provides a graphical management console for both developers
         and system administrators. Install Stratos with 
-        &helm; after all of the UAA and SCF pods are running. Start by preparing 
-        the environment:
+        &helm; after all of the UAA and SCF pods are running. 
+        Start by preparing the environment:
     </para>
     <screen>        
 &prompt.user;kubectl create namespace stratos
@@ -738,9 +721,9 @@ repository:
 <screen>
 &prompt.user;helm search suse
 NAME         VERSION DESCRIPTION                                  
-suse/cf         2.7.0   A Helm chart for SUSE Cloud Foundry          
-suse/console    1.0.2   A Helm chart for deploying Stratos UI Console
-suse/uaa        2.7.0   A Helm chart for SUSE UAA
+suse/cf         2.8.0   A Helm chart for SUSE Cloud Foundry          
+suse/console    1.1.0   A Helm chart for deploying Stratos UI Console
+suse/uaa        2.8.0   A Helm chart for SUSE UAA
 </screen>
 <para>
 Install Stratos, and if you have not set a default storage class you must specify
@@ -831,9 +814,9 @@ console  1        1        1s
 <screen>
 &prompt.user;helm ls
 NAME            REVISION UPDATED                   STATUS    CHART          NAMESPACE
-susecf-console  1        Thu Apr 12 10:28:34 2018  DEPLOYED  console-1.0.2  stratos  
-susecf-scf      1        Wed Apr 11 14:55:23 2018  DEPLOYED  cf-2.7.0       scf      
-susecf-uaa      1        Wed Apr 11 14:48:01 2018  DEPLOYED  uaa-2.7.0      uaa
+susecf-console  1        Thu Apr 12 10:28:34 2018  DEPLOYED  console-1.1.0  stratos  
+susecf-scf      1        Wed Apr 11 14:55:23 2018  DEPLOYED  cf-2.8.0       scf      
+susecf-uaa      1        Wed Apr 11 14:48:01 2018  DEPLOYED  uaa-2.8.0      uaa
 
 &prompt.user;helm status susecf-console
 LAST DEPLOYED: Thu Apr 12 10:28:34 2018
@@ -851,7 +834,10 @@ susecf-console-ui-ext   172.24.84.50    10.10.100.82   8443:32511/TCP  19m
   <title>Updating &suse; &cf;, UAA, and Stratos</title>
   <para>
       Maintenance updates are delivered as container images from the &suse;
-      registry and applied with &helm;. Check for updates:
+      registry and applied with &helm;. (See the 
+      <link xlink:href="https://www.suse.com/releasenotes/">Release Notes</link>
+      for additional upgrade information.)
+      Check for updates:
   </para>
 <screen>
 &prompt.user;helm repo update
@@ -879,9 +865,9 @@ suse            https://kubernetes-charts.suse.com/
 
 &prompt.user;helm search suse
 NAME          VERSION  DESCRIPTION                                  
-suse/cf       2.7.0   A Helm chart for SUSE Cloud Foundry          
-suse/console  1.0.2    A Helm chart for deploying Stratos UI Console
-suse/uaa      2.7.0    A Helm chart for SUSE UAA
+suse/cf       2.8.0   A Helm chart for SUSE Cloud Foundry          
+suse/console  1.1.0    A Helm chart for deploying Stratos UI Console
+suse/uaa      2.8.0    A Helm chart for SUSE UAA
 
 &prompt.user;helm upgrade --recreate-pods <replaceable>susecf-uaa</replaceable> suse/uaa
 &prompt.user;helm upgrade --recreate-pods <replaceable>susecf-scf</replaceable> suse/cf
