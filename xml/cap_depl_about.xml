@@ -190,13 +190,25 @@ describes a minimal test deployment.
     </listitem>
     <listitem>
         <para>
-            The Backup/Restore cf CLI plugin is supported.
+            cf backup CLI plugin for saving, restoring, or migrating CF data 
+            and applications.
         </para>
     </listitem>
+      <listitem>
+    <para>
+        PostgreSQL and MySQL service broker sidecars, configured and 
+        deployed via Helm.
+        </para>
+ </listitem>
+       <listitem>
+    <para>
+        Cloud Foundry component and buildpack updates.
+        </para>
+ </listitem>
   <listitem>
     <para>
 	Stratos UI 1.1 is required for SUSE Cloud Application Platform 1.1, and older 
-    version will not work. Use the same 
+    versions will not work. Use the same 
     <filename>scf-config-values.yaml</filename> file for both.
 </para>
  </listitem>
@@ -220,14 +232,14 @@ describes a minimal test deployment.
      <filename>scf-config-values.yaml</filename>:
  </para>
  <screen>
-kube.external_ip=1.1.1.1
-kube.external_ips=[1.1.1.1]
+external_ip=1.1.1.1
+external_ips=[1.1.1.1]
 </screen>
 <para>
     Going forward, <varname>kube.external_ips</varname> is an array, like this example:
     </para>
     <screen>
-kube.external_ips=["1.1.1.1", "2.2.2.2"]
+external_ips=["1.1.1.1", "2.2.2.2"]
 </screen>
 </listitem>
 <listitem>
