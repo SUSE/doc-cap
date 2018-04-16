@@ -120,6 +120,7 @@ Containerizing the components of the platform itself has these advantages:
 &scf; packages upstream Cloud Foundry &bosh; releases to produce containers
 and configurations which are deployed to &kube; clusters using &helm;.
 </para>
+
 <sect1 xml:id="sec.cap.architecture">
   <title>&productname; Architecture</title>
 
@@ -170,7 +171,96 @@ but it is enough for a compact test deployment, which you can run virtualized
 on a single workstation or laptop. <xref linkend="cha.cap.install-production"/> 
 details a basic production deployment, and <xref linkend="cha.cap.install-minimal"/> 
 describes a minimal test deployment.
-</para> 
+</para>
+</sect1>
 
+<sect1 xml:id="sec.cap.changes.1.1">
+  <title>New in Version 1.1</title>
+  <para>
+      These are some of the changes in the 1.1 release. See the Release Notes
+      for a complete list, and known issues. See <xref linkend="sec.cap.update"/>
+      for upgrade instructions.
+  </para>
+<itemizedlist>
+    <listitem>
+        <para>
+            &productname; 1.1 supports Azure Container Service (AKS).
+        </para>
+    </listitem>
+    <listitem>
+        <para>
+            The Backup/Restore cf CLI plugin is supported.
+        </para>
+    </listitem>
+  <listitem>
+    <para>
+	Stratos UI 1.1 is required for SUSE Cloud Application Platform 1.1, and older 
+    version will not work. Use the same 
+    <filename>scf-config-values.yaml</filename> file for both.
+</para>
+ </listitem>
+ <listitem>
+     <para>
+         The Helm command line client must be version 2.6.0 or higher.
+     </para>
+ </listitem>
+ <listitem>
+     <para>
+     There are some changes in the <filename>scf-config-values.yaml</filename>
+     configuration file. The variable <varname>kube.external_ip</varname> has 
+     been changed to <varname>kube.external_ips</varname>. Upgrades from 
+     older versions will fail unless the latter variable exists in the 
+     <filename>scf-config-values.yaml</filename> file. Both variables can exist 
+     at the same time, and be set to the same value for those in mixed version 
+     environments.
+ </para>
+ <para>
+     For example, when upgrading enter both variables in 
+     <filename>scf-config-values.yaml</filename>:
+ </para>
+ <screen>
+kube.external_ip=1.1.1.1
+kube.external_ips=[1.1.1.1]
+</screen>
+<para>
+    Going forward, <varname>kube.external_ips</varname> is an array, like this example:
+    </para>
+    <screen>
+kube.external_ips=["1.1.1.1", "2.2.2.2"]
+</screen>
+</listitem>
+<listitem>
+    <para>
+        All the secrets have been renamed from env.FOO to secrets.FOO, so all 
+        the appropriate entries in <filename>scf-config-values.yaml</filename> 
+        must be modified to align with that change.
+    </para>
+    <para>
+        You must specify your secrets on each upgrade (e.g. the 
+        <varname>CLUSTER_ADMIN_PASSWORD</varname>) as they won't be carried forward automatically.
+    </para>
+    <para>
+        To rotate secrets, increment the <code>kube.secret_generation_counter</code>. 
+        (Please note: immutable generated secrets will not be reset.)
+    </para>
+    </listitem>
+<listitem>
+    <para>
+        Some roles (like diego-api, diego-brain and routing-api) are configured 
+        as active/passive, so passive pods can appear as Not Ready. Other roles 
+        (tcp-router and blobstore) cannot be scaled.
+    </para>
+</listitem>
+<listitem>
+    <para>
+    A Helm upgrade command from 1.0 to 1.0.1 (scf 2.6.11 to 2.7.0) requires the 
+    <command>--force</command> to drop an unnecessary persistent volume. Note 
+    that <command>helm upgrade</command> only works for multi-node clusters 
+    when running with a proper HA storage class (e.g. hostpath will not work as 
+    required stateful data can be lost).
+</para>
+</listitem>
+</itemizedlist>
 </sect1>
 </chapter> 
+
