@@ -177,9 +177,10 @@ describes a minimal test deployment.
 <sect1 xml:id="sec.cap.changes.1.1">
   <title>New in Version 1.1</title>
   <para>
-      These are some of the changes in the 1.1 release. See the Release Notes
-      for a complete list, and known issues. See <xref linkend="sec.cap.update"/>
-      for upgrade instructions.
+      These are some of the changes in the 1.1 release. See the 
+      <link xlink:href="https://www.suse.com/releasenotes/">Release Notes</link>
+      for a complete list and known issues. See the Release Notes and
+      <xref linkend="sec.cap.update"/> for upgrade instructions.
   </para>
 <itemizedlist>
     <listitem>
@@ -237,11 +238,13 @@ kube.external_ips=["1.1.1.1", "2.2.2.2"]
     </para>
     <para>
         You must specify your secrets on each upgrade (e.g. the 
-        <varname>CLUSTER_ADMIN_PASSWORD</varname>) as they won't be carried forward automatically.
+        <varname>CLUSTER_ADMIN_PASSWORD</varname>) as they won't be carried 
+        forward automatically.
     </para>
     <para>
-        To rotate secrets, increment the <code>kube.secret_generation_counter</code>. 
-        (Please note: immutable generated secrets will not be reset.)
+        To rotate secrets, increment the 
+        <code>kube.secret_generation_counter</code>. (Please note: immutable 
+        generated secrets will not be reset.)
     </para>
     </listitem>
 <listitem>
@@ -250,15 +253,6 @@ kube.external_ips=["1.1.1.1", "2.2.2.2"]
         as active/passive, so passive pods can appear as Not Ready. Other roles 
         (tcp-router and blobstore) cannot be scaled.
     </para>
-</listitem>
-<listitem>
-    <para>
-    A Helm upgrade command from 1.0 to 1.0.1 (scf 2.6.11 to 2.7.0) requires the 
-    <command>--force</command> to drop an unnecessary persistent volume. Note 
-    that <command>helm upgrade</command> only works for multi-node clusters 
-    when running with a proper HA storage class (e.g. hostpath will not work as 
-    required stateful data can be lost).
-</para>
 </listitem>
 </itemizedlist>
 </sect1>
