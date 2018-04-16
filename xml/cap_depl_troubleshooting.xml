@@ -30,10 +30,12 @@
      If you ever need to request support, or just want to generate detailed 
      system information and logs, use the <command>supportconfig</command>
      utility. Run it with no options to collect basic system information, and 
-     also cluster logs including Docker, etcd, flannel, and Velum. <command>supportconfig</command> may give you all the information you need.
+     also cluster logs including Docker, etcd, flannel, and Velum. 
+     <command>supportconfig</command> may give you all the information you need.
  </para>
  <para>
-     <command>supportconfig -h</command> prints the options. Read the "Gathering System Information for Support" chapter in any &sle; Administration Guide 
+     <command>supportconfig -h</command> prints the options. Read the "Gathering 
+     System Information for Support" chapter in any &sle; Administration Guide 
      to learn more.
  </para>
 </sect1>
@@ -66,7 +68,8 @@ routing-api-0            0/1   Running   0         16h
 </screen>
 
 <para>
-    This prints a lot of information, including IP addresses, routine events, warnings, and errors. You should find the reason for the failure in this
+    This prints a lot of information, including IP addresses, routine events, 
+    warnings, and errors. You should find the reason for the failure in this
     output.
     </para>
 </sect1>
