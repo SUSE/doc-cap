@@ -73,24 +73,109 @@ routing-api-0            0/1   Running   0         16h
     output.
     </para>
 </sect1>
-<!--
-<sect1 xml:id="sec.cap.tbl.logs">
-    <title>Reading Logfiles</title> 
+
+<sect1 xml:id="sec.cap.rebuild.depl">
+    <title>Deleting and Rebuilding a Deployment</title> 
     <para>
-which means the original deployment configuration file is 
-    incorrect. The configuration file must be corrected and UAA and SCF must 
-    be deleted and re-deployed. Use <command>helm</command> to list your deployed releases, then delete them and start over:
+There may be times when you want to delete and rebuild a deployment, for example
+when there are errors in your <filename>scf-config-values.yaml</filename> file, 
+you wish to test configuration changes, or a deployment fails and you want to try
+it again. This has four steps: first delete the release or releases you want to
+re-deploy, delete its namespace, then re-create the namespace and re-deploy the 
+release.
+</para>
+
+<para>Use <command>helm</command> to see your releases:
 </para>
 
 <screen>
 &prompt.user;helm ls
-NAME REVISION UPDATED                  STATUS    CHART      NAMESPACE
-suse-cf  1        Tue Apr 10 15:17:53 2018 DEPLOYED  cf-2.7.0   scf      
-scf-uaa  1        Tue Apr 10 14:59:00 2018 DEPLOYED  uaa-2.7.0  uaa  
-
-&prompt.user;helm delete suse-cf 
-&prompt.user;helm delete scf-uaa
+NAME            REVISION  UPDATED               STATUS   CHART          NAMESPACE
+susecf-console  1     Thu Apr 12 10:28:34 2018  DEPLOYED console-1.1.0  stratos  
+susecf-scf      1     Wed Apr 11 14:55:23 2018  DEPLOYED cf-2.8.0       scf      
+susecf-uaa      1     Wed Apr 11 14:48:01 2018  DEPLOYED uaa-2.8.0      uaa
 </screen>
-</sect1>-->
-    
+
+<para>
+    This example deletes the <literal>susecf-console</literal> release and 
+    namespace:
+</para>
+
+<screen>
+&prompt.user;helm delete susecf-console
+release "susecf-console" deleted
+&prompt.user;kubectl delete namespace stratos
+namespace "stratos" deleted
+</screen>
+
+<para>
+  Then you can start over.
+</para>
+</sect1>
+
+<sect1 xml:id="sec.cap.kubectl.queries">
+    <title>Querying with Kubectl</title>
+    <para>
+        You can safely query with <command>kubectl</command> to see what is 
+        happening inside your cluster. 
+        <command>kubectl cluster-info dump</command> outputs a large amount of
+        information about the &kube; master and cluster services. It's probably 
+        more useful to output it to a file.
+    </para>
+<itemizedlist>
+ <listitem>
+   <para>
+     List all of your running pods:
+   </para>
+   <screen>
+&prompt.user;kubectl get pods --all-namespaces
+  </screen>
+ </listitem>
+ <listitem>
+   <para>
+     See all pods, including those with Completed or Failed statuses:
+   </para>
+   <screen>
+&prompt.user;kubectl get pods --show-all --all-namespaces
+   </screen>
+ </listitem>
+ <listitem>
+   <para>
+     List pods in one namespace:
+   </para>
+   <screen>
+&prompt.user;kubectl get pods --namespace scf
+   </screen>
+ </listitem>    
+ <listitem>
+   <para>
+      List all resources:
+   </para>
+   <screen>
+&prompt.user;kubectl get all --all-namespaces
+   </screen>
+ </listitem>
+ <listitem>
+   <para>
+    List all &kube; nodes, then print detailed information about a single node: 
+   </para>
+   <screen>
+&prompt.user;kubectl get nodes
+&prompt.user;kubectl describe node 6a2752b6fab54bb889029f60de6fa4d5.infra.caasp.local
+   </screen>
+ </listitem> 
+ <listitem>
+   <para>
+     Get detailed information about a pod:
+   </para>
+   <screen>
+&prompt.user;kubectl describe 
+   </screen>
+ </listitem> 
+ 
+ 
+</itemizedlist>
+</sect1>
+
+
 </chapter>
