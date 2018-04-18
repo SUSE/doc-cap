@@ -831,7 +831,7 @@ susecf-console-ui-ext   172.24.84.50    10.10.100.82   8443:32511/TCP  19m
 </sect1>
 
  <sect1 xml:id="sec.cap.update">
-  <title>Updating &suse; &cf;, UAA, and Stratos</title>
+  <title>Upgrading &suse; &cf;, UAA, and Stratos</title>
   <para>
       Maintenance updates are delivered as container images from the &suse;
       registry and applied with &helm;. (See the 
@@ -848,14 +848,15 @@ Hang tight while we grab the latest from your chart repositories...
 Update Complete. ⎈ Happy Helming!⎈   
 </screen>      
 <para>
-      Get your release and chart names, and then apply the updates:
+      Get your release and chart names (your releases may have different names), 
+      and then apply the updates:
 </para>
   <screen>
 &prompt.user;helm list
 NAME            REVISION  UPDATED                   STATUS    CHART           NAMESPACE
-susecf-console  1         Thu Apr 12 10:28:34 2018  DEPLOYED  console-1.0.2   stratos  
-susecf-scf      1         Wed Apr 11 14:55:23 2018  DEPLOYED  cf-2.7.0        scf      
-susecf-uaa      1         Wed Apr 11 14:48:01 2018  DEPLOYED  uaa-2.7.0       uaa 
+<replaceable>susecf-console</replaceable>  1         Thu Apr 12 10:28:34 2018  DEPLOYED  console-1.0.2   stratos  
+<replaceable>susecf-scf</replaceable>      1         Wed Apr 11 14:55:23 2018  DEPLOYED  cf-2.7.0        scf      
+<replaceable>susecf-uaa</replaceable>      1         Wed Apr 11 14:48:01 2018  DEPLOYED  uaa-2.7.0       uaa 
 
 &prompt.user;helm repo list
 NAME            URL                                             
@@ -869,9 +870,16 @@ suse/cf       2.8.0   A Helm chart for SUSE Cloud Foundry
 suse/console  1.1.0    A Helm chart for deploying Stratos UI Console
 suse/uaa      2.8.0    A Helm chart for SUSE UAA
 
-&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-uaa</replaceable> suse/uaa
-&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-scf</replaceable> suse/cf
-&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-console</replaceable> suse/console
+&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-uaa</replaceable> suse/uaa \
+ --values scf-config-values.yaml
+&prompt.user;SECRET=$(kubectl get pods --namespace uaa -o \
+ jsonpath='{.items[*].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa -o \
+ jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+&prompt.user;helm upgrade --recreate-pods susecf-scf <replaceable>suse/cf</replaceable> \
+ --values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}"
+&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-console</replaceable> suse/console \
+ --values scf-config-values.yaml
 </screen>
 
 <!-- helm rollback does not work, so upgrades are one-way for now
