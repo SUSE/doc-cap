@@ -116,13 +116,25 @@ namespace "stratos" deleted
 <sect1 xml:id="sec.cap.kubectl.queries">
     <title>Querying with Kubectl</title>
     <para>
-        You can safely query with <command>kubectl</command> to see what is 
-        happening inside your cluster. 
-        <command>kubectl cluster-info dump</command> outputs a large amount of
-        information about the &kube; master and cluster services. It's probably 
-        more useful to output it to a file.
+        You can safely query with <command>kubectl</command> to get information
+        about resources inside your &kube; cluster. 
+        <command>kubectl cluster-info dump | tee clusterinfo.txt</command> outputs 
+        a large amount of information about the &kube; master and cluster 
+        services to a text file.
     </para>
+    <para>
+        The following commands give more targeted information about your cluster.
+    </para>
+    
 <itemizedlist>
+ <listitem>
+   <para>
+      List all cluster resources:
+   </para>
+   <screen>
+&prompt.user;kubectl get all --all-namespaces
+   </screen>
+ </listitem>    
  <listitem>
    <para>
      List all of your running pods:
@@ -146,13 +158,21 @@ namespace "stratos" deleted
    <screen>
 &prompt.user;kubectl get pods --namespace scf
    </screen>
- </listitem>    
- <listitem>
+ </listitem>
+  <listitem>
    <para>
-      List all resources:
+    Get detailed information about one pod:
    </para>
    <screen>
-&prompt.user;kubectl get all --all-namespaces
+&prompt.user;kubectl describe --namespace scf po/diego-cell-0
+   </screen>
+ </listitem>
+  <listitem>
+   <para>
+    Read the log file of a pod:
+   </para>
+   <screen>
+&prompt.user;kubectl logs --namespace scf po/diego-cell-0
    </screen>
  </listitem>
  <listitem>
@@ -163,19 +183,29 @@ namespace "stratos" deleted
 &prompt.user;kubectl get nodes
 &prompt.user;kubectl describe node 6a2752b6fab54bb889029f60de6fa4d5.infra.caasp.local
    </screen>
- </listitem> 
- <listitem>
+ </listitem>
+  <listitem>
    <para>
-     Get detailed information about a pod:
+    List all containers in all namespaces, formatted for readability:
    </para>
    <screen>
-&prompt.user;kubectl describe 
+&prompt.user;kubectl get pods --all-namespaces -o jsonpath="{..image}" |\
+tr -s '[[:space:]]' '\n' |\
+sort |\
+uniq -c
    </screen>
- </listitem> 
- 
- 
+ </listitem>
+  <listitem>
+   <para>
+    These two commands check node capacities, to verify that there are enough
+    resources for the pods:
+   </para>
+   <screen>
+&prompt.user;kubectl get nodes -o yaml | grep '\sname\|cpu\|memory'
+&prompt.user;kubectl get nodes -o json | \
+jq '.items[] | {name: .metadata.name, cap: .status.capacity}'
+   </screen>
+ </listitem>
 </itemizedlist>
 </sect1>
-
-
 </chapter>
