@@ -23,8 +23,26 @@
      extremely minimal deployment uses &kube;' hostpath storage type instead of 
      a storage server, such as &ses;. You must also provide DNS, DHCP, and a 
      network space for your cluster. KVM and VirtualBox include name services 
-     and network management.
+     and network management. <xref linkend="fig.cap.min-arch"/> illustrates
+     the layout of a physical minimal test installation in a flat network, with
+     an external administration workstation.
  </para>
+  
+ <figure xml:id="fig.cap.min-arch">
+  <title>Minimal Network Architecture</title>
+  <mediaobject>
+    <imageobject role="fo">
+      <imagedata fileref="cap-arch-minimal.png" format="PNG" width="75%"/>
+    </imageobject>
+    <imageobject role="html">
+      <imagedata fileref="cap-arch-minimal.png" width="75%" format="PNG"/>
+    </imageobject>
+    <textobject role="description">
+      <phrase>network architecture of minimal test setup</phrase>
+    </textobject>
+  </mediaobject>
+</figure>  
+  
  <para>
      This minimal four-node deployment will run on a minimum of 32GB host system 
      memory, though more memory is better. 32GB is enough to test setting up 
