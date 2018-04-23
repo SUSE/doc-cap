@@ -144,19 +144,50 @@ configuration.
 </important>
 
 <para>
-A supported deployment includes &scf; installed on &caasp; 2. You also 
+A supported deployment includes &scf; installed on &caasp;. You also 
 need a storage backend, such as &ses;, a DNS server, and an Internet connection 
 to download additional packages during installation and ~10GB of Docker images 
 on each &kube; worker after installation.
 </para>
+
 <para>
 A production deployment requires considerable resources. &productname; includes 
 an entitlement of &suse; &caasp; 2 and &ses; 5. &ses; alone has substantial
 requirements; see the 
 <link xlink:href="https://www.suse.com/products/suse-enterprise-storage/">Tech Specs</link>
 for details. &suse; &caasp; requires a minimum of four nodes: one admin and three
-&kube; nodes. &scf; is then deployed on the &kube; nodes. 
+&kube; nodes. &scf; is then deployed on the &kube; nodes. Four &caasp; nodes are
+not sufficient for a production deployment. 
+<xref linkend="fig.cap.min-prod-arch"/> is an example of a 
+minimal production deployment with &scf; deployed on a &kube; cluster containing 
+three &kube; masters and three workers, plus an ingress controller, administration
+workstation, DNS/DHCP server, and a &ses; cluster.
 </para>
+
+ <figure xml:id="fig.cap.min-prod-arch">
+  <title>Minimal Example Production Deployment</title>
+  <mediaobject>
+    <imageobject role="fo">
+      <imagedata fileref="cap-arch-prod.png" format="PNG" width="65%"/>
+    </imageobject>
+    <imageobject role="html">
+      <imagedata fileref="cap-arch-prod.png" width="75%" format="PNG"/>
+    </imageobject>
+    <textobject role="description">
+      <phrase>network architecture of minimal production setup</phrase>
+    </textobject>
+  </mediaobject>
+</figure> 
+
+<para>
+The minimum 4-node deployment is sufficient for a compact test deployment, which 
+you can run virtualized on a single workstation or laptop. 
+<xref linkend="cha.cap.install-production"/> 
+details a basic production deployment, and 
+<xref linkend="cha.cap.install-minimal"/> 
+describes a minimal test deployment.
+</para>
+
 <para>
 Note that after you have deployed your cluster and start building and running
 applications, your applications may depend on buildpacks that are not bundled
@@ -165,19 +196,13 @@ runtime, when you are pushing applications to the platform. Some of these
 buildpacks may include components with proprietary licenses.
 </para>
 
-<para>
-The minimum 4-node deployment is not sufficient for a production deployment,
-but it is enough for a compact test deployment, which you can run virtualized 
-on a single workstation or laptop. <xref linkend="cha.cap.install-production"/> 
-details a basic production deployment, and <xref linkend="cha.cap.install-minimal"/> 
-describes a minimal test deployment.
-</para>
+
 </sect1>
 
 <sect1 xml:id="sec.cap.changes.1.1">
   <title>New in Version 1.1</title>
   <para>
-      These are some of the changes in the 1.1 release. See the 
+      These are some of the changes in the 1.1 release (April 2017). See the 
       <link xlink:href="https://www.suse.com/releasenotes/">Release Notes</link>
       for a complete list and known issues. See the Release Notes and
       <xref linkend="sec.cap.update"/> for upgrade instructions.
