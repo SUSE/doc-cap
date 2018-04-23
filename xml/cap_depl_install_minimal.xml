@@ -24,15 +24,16 @@
      a storage server, such as &ses;. You must also provide DNS, DHCP, and a 
      network space for your cluster. KVM and VirtualBox include name services 
      and network management. <xref linkend="fig.cap.min-arch"/> illustrates
-     the layout of a physical minimal test installation in a flat network, with
-     an external administration workstation.
+     the layout of a physical minimal test installation with an external 
+     administration workstation and DNS/DHCP server. Access to the cluster is
+     provided by the UAA (User Account and Authentication) server on worker 1.
  </para>
   
  <figure xml:id="fig.cap.min-arch">
   <title>Minimal Network Architecture</title>
   <mediaobject>
     <imageobject role="fo">
-      <imagedata fileref="cap-arch-minimal.png" format="PNG" width="75%"/>
+      <imagedata fileref="cap-arch-minimal.png" format="PNG" width="65%"/>
     </imageobject>
     <imageobject role="html">
       <imagedata fileref="cap-arch-minimal.png" width="75%" format="PNG"/>
