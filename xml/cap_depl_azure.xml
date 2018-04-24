@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha.cap.depl-azure"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <title>Preparing Microsoft Azure for &productname;</title>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+ </info>
+ 
+  <para>
+   Starting with version 1.1, &productname; supports running on Microsoft Azure 
+   Container Service (AKS). This chapter describes how to prepare AKS for deploying
+   &productname;.
+ </para>
+ 
+ <sect1 xml:id="sec.cap.install-az">
+     <title>Prequisites</title>
+ <para>
+     The first step is to install <command>az</command>, the Azure command-line
+     client, on your remote administration machine. See 
+     <link xlink:href="https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest">Install Azure 
+         CLI 2.0</link> for instructions.
+ </para>
+ <para>
+     You also need the <command>curl</command>, <command>sed</command>, and 
+     <command>jq</command> commands.
+ </para>
+ <para>
+     Then log in to your Azure Account:
+ </para>
+ <screen>
+&prompt.user;az login
+</screen>
+</sect1>
+
+<sect1 xml:id="sec.cap.setup-kubernetes">
+    <title>Setup &kube;</title>
+<para>
+    You need your Azure subscription ID. Extract it with <command>az</command>:
+</para>
+<screen>
+&prompt.user;az account show --query "{ subscription_id: id }"
+</screen>
+<para>
+    Record the password and application ID, and use them to create a service 
+    principal. Replace <varname>subscription-id</varname> in the following 
+    commands with your subscription_id. If the Microsoft Azure service is located 
+    in a different data center, then replace <varname>westus</varname> with the 
+    correct data center.
+</para>
+<screen>
+&prompt.user;export SUBSCRIPTION_ID=<replaceable>subscription-id</replaceable>
+&prompt.user;az account set --subscription $SUBSCRIPTION_ID
+&prompt.user;az group create --name scf-resource-group --location <replaceable>westus</replaceable>
+&prompt.user;az ad sp create-for-rbac --role Contributor 
+ --scopes "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/scf-resource-group" 
+</screen>
+<para>
+    Create a container service in Azure, using your own password and 
+    application ID, and use your own public SSH key:
+</para>
+<screen>
+&prompt.user;az acs create \
+   --name scf-container-service \
+   --resource-group scf-resource-group \
+   --orchestrator-type Kubernetes \
+   --dns-prefix "myscf" \
+   --master-count 1 \
+   --admin-username scf-admin \
+   --agent-count 3 \
+   --client-secret <replaceable>password</replaceable> \
+   --ssh-key-value "<replaceable>your-public-ssh-key</replaceable>" \
+   --service-principal <replaceable>application-id</replaceable> \
+   --master-vm-size Standard_D2_v2  
+</screen>
+<para>
+    Prepare the &kube; environment. If there is another running &kube;, 
+    backup the old configuration before proceeding:
+</para>
+<screen>
+&prompt.user;az acs kubernetes get-credentials --resource-group="scf-resource-group" \
+ --name="scf-container-service"
+</screen>
+<para>
+    If your SSH key is password-protected, first load it into ssh-agent:
+</para>
+<screen>
+&prompt.user;ssh-add ~/.ssh/<replaceable>private_key_name</replaceable>
+</screen>
+
+<para>
+    Enable cgroup swap accounting by running the following commands. This will 
+    reboot some of the machines, which will take some time.
+</para>
+<screen>
+&prompt.user;sudo zypper in -y jq sed
+&prompt.user;az vm list -g "scf-resource-group" | jq '.[] | select (.tags.poolName | contains("agent")) | .name' | \
+  xargs -i{} az vm run-command invoke \
+  --resource-group "scf-resource-group" \
+  --command-id RunShellScript \
+  --scripts "sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=tty1 console=ttyS0 earlyprintk=ttyS0 rootdelay=300\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=tty1 console=ttyS0 earlyprintk=ttyS0 rootdelay=300 swapaccount=1\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg" --name {}
+
+&prompt.user;az vm list -g "scf-resource-group" | jq '.[] | select (.tags.poolName | contains("agent")) | .name' | \
+  xargs -i{} az vm run-command invoke \
+  --resource-group "scf-resource-group" \
+  --command-id RunShellScript \
+  --scripts "sudo update-grub" --name {}
+
+&prompt.user;az vm list -g "scf-resource-group" | jq '.[] | select (.tags.poolName | contains("agent")) | .name' | \
+  xargs -i{} az vm restart --no-wait \
+  --resource-group "scf-resource-group" \
+  --name {}
+</screen>
+<para>
+    Create a new public IP address, which will be needed for the &cap; deployment.
+</para>
+<screen>
+&prompt.user;az network public-ip create --resource-group scf-resource-group \
+ --name scf-public-ip --allocation-method Static
+</screen>
+<para>
+    Extract the name of one of the &kube;' agent's network interface and write
+    it down:
+</para>
+<screen>
+&prompt.user;az network nic list --resource-group scf-resource-group | grep name | grep agent | grep 0
+</screen>
+<para>
+    Replace <replaceable>nic-name</replaceable> in the following command 
+    with the public IP address created in the previous command.
+    Record the private IP address to use in the &cap; deployment.
+</para>
+<screen>
+&prompt.user;az network nic ip-config update --resource-group scf-resource-group \
+ --nic-name <replaceable>nic-name</replaceable> --name ipconfig1 \
+ --public-ip-address scf-public-ip  
+</screen>
+<para>
+    Extract the security group name of the master network security group and 
+    write it down:
+</para>
+<screen>
+&prompt.user;az network nsg list --resource-group=scf-resource-group | jq -r '.[] | .name' | grep master    
+</screen>
+<para>
+    Create the required security groups, and replace 
+    <replaceable>security-group</replaceable> with the name from the previous 
+    command:
+</para>
+<screen>
+&prompt.user;export NSG_NAME=<replaceable>security-group</replaceable>
+&prompt.user;az network nsg rule create --resource-group scf-resource-group \
+ --priority 200 --nsg-name $NSG_NAME --name scf-80 --direction Inbound \
+ --destination-port-ranges 80 --access Allow
+&prompt.user;az network nsg rule create --resource-group scf-resource-group \
+ --priority 201 --nsg-name $NSG_NAME --name scf-443 --direction Inbound \
+ --destination-port-ranges 443 --access Allow
+&prompt.user;az network nsg rule create --resource-group scf-resource-group \
+ --priority 202 --nsg-name $NSG_NAME --name scf-4443 --direction Inbound 
+ --destination-port-ranges 4443 --access Allow
+&prompt.user;az network nsg rule create --resource-group scf-resource-group \
+ --priority 203 --nsg-name $NSG_NAME --name scf-2222 --direction Inbound \
+ --destination-port-ranges 2222 --access Allow
+&prompt.user;az network nsg rule create --resource-group scf-resource-group 
+ --priority 204 --nsg-name $NSG_NAME --name scf-2793 --direction Inbound \
+ --destination-port-ranges 2793 --access Allow
+</screen>
+</sect1>
+
+<sect1 xml:id="sec.cap.deploy-cap">
+    <title>Deploying &productname;</title>
+    <para>
+        When you deploy &productname; you will need the public and private IP
+        addresses you recorded in the previous steps. Once the &kube; environment 
+        is prepared, proceed with deployment of &productname; as described in 
+        the 
+        <link xlink:href="https://www.suse.com/documentation/cloud-application-platform-1/index.html">SUSE Cloud Application Platform 1 Deployment Guide</link>.
+    </para>
+    <note>
+        <title>Special Configuration for Azure</title>
+        <para>
+           When deploying to Azure, you must set the Garden rootfs driver to 
+           overlay-xfs (the default is Btrfs). Enter the following key in the your
+           <filename>scf-config-values.yaml</filename>:
+       </para>
+       <screen>
+env:
+  GARDEN_ROOTFS_DRIVER: "overlay-xfs"
+</screen>
+</note>
+    
+ </sect1>
+</chapter>
