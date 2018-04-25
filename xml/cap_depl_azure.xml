@@ -84,9 +84,11 @@
 </screen>
 <para>
     Prepare the &kube; environment. If there is another running &kube;, 
-    backup the old configuration before proceeding:
+    copy the old configuration to a different location to start with a new
+    empty configuration:
 </para>
 <screen>
+&prompt.user;mv ~/.kube/config ~/.kube/config.old    
 &prompt.user;az acs kubernetes get-credentials --resource-group="scf-resource-group" \
  --name="scf-container-service"
 </screen>
@@ -95,6 +97,12 @@
 </para>
 <screen>
 &prompt.user;ssh-add ~/.ssh/<replaceable>private_key_name</replaceable>
+</screen>
+<para>
+    Verify that &kube; is running, and that the version is 1.6 or greater:
+</para>
+<screen>
+&prompt.user;kubectl get pods --all-namespaces
 </screen>
 
 <para>
@@ -189,7 +197,7 @@
         <title>Special Configuration for Azure</title>
         <para>
            When deploying to Azure, you must set the Garden rootfs driver to 
-           overlay-xfs (the default is Btrfs). Enter the following key in the your
+           overlay-xfs (the default is btrfs). Enter the following key in the your
            <filename>scf-config-values.yaml</filename>:
        </para>
        <screen>
