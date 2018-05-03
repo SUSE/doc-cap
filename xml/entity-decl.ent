@@ -21,6 +21,7 @@
 <!ENTITY susemicros   "&suse; MicroOS">
 <!ENTITY ses	      "&suse; Enterprise Storage">
 <!ENTITY tiller	      "Tiller">
+<!ENTITY docker	      "Docker">
 
 <!ENTITY suse      "SUSE">
 <!ENTITY novell    "Novell">

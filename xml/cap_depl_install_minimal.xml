@@ -17,8 +17,8 @@
  </info>
  <para>
      A production deployment of &productname; requires a 
-     significant number of physical or virtual nodes. For testing and learning, 
-     you can set up a minimal four-node deployment of &scf; on &suse; &caasp; 
+     significant number of physical or virtual hosts. For testing and learning, 
+     you can set up a minimal four-host deployment of &scf; on &suse; &caasp; 
      on a single workstation in a hypervisor such as KVM or VirtualBox. This 
      extremely minimal deployment uses &kube;' hostpath storage type instead of 
      a storage server, such as &ses;. You must also provide DNS, DHCP, and a 
@@ -33,10 +33,10 @@
   <title>Minimal Network Architecture</title>
   <mediaobject>
     <imageobject role="fo">
-      <imagedata fileref="cap-arch-minimal.png" format="PNG" width="65%"/>
+      <imagedata fileref="cap-arch-minimal.png" width="65%"/>
     </imageobject>
     <imageobject role="html">
-      <imagedata fileref="cap-arch-minimal.png" width="75%" format="PNG"/>
+      <imagedata fileref="cap-arch-minimal.png"/>
     </imageobject>
     <textobject role="description">
       <phrase>network architecture of minimal test setup</phrase>
@@ -84,8 +84,8 @@
  </para>
 </important>
  	  <para>
-	    &caasp; requires a minimum of four physical or virtual nodes: one admin, 
-        one Kubernetes master, and two Kubernetes workers. You also need an 
+	    &caasp; requires a minimum of four physical or virtual hosts: one admin, 
+        one &kube; master, and two &kube; workers. You also need an 
         Internet connection, as the installer has an option to download updates 
         during installation, and the &kube; workers will each download ~10GB of 
         Docker images.
@@ -151,7 +151,7 @@
      </para>
      <para>         
          &caasp; supports multiple methods for installing the &kube; workers. We 
-         recommend using AutoYaST, and then when you deploy the &kube; workers 
+         recommend using &ay;, and then when you deploy the &kube; workers 
          you will create their hostnames with a kernel boot option.         
      </para>
      <para>
@@ -200,7 +200,7 @@
 <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/data/sec_caasp_installquick.html#sec_caasp_installquick_node_ay">
               Installation with &ay;</link>. Pass in these kernel boot
           options to each worker: <literal>hostname</literal>, 
-          <literal>netsetup</literal>, and the AutoYaST path, which you find in 
+          <literal>netsetup</literal>, and the &ay; path, which you find in 
           Velum on the "Bootstrap your CaaS Platform" page.
   </para>
   
@@ -243,9 +243,9 @@ the remote administration of your cluster.
         <para>
         You will administer your cluster from your host workstation, rather than 
         directly on any of your cluster nodes. The remote environment is 
-        indicated by the unprivileged user Tux, while root prompts are on a node. 
-        There are few tasks that need to be performed directly on
-        any of the nodes.
+        indicated by the unprivileged user Tux, while root prompts are on a 
+        cluster host. There are few tasks that need to be performed directly on
+        any of the cluster hosts.
     </para>
 </note>
       <para>
@@ -354,9 +354,9 @@ Happy Helming!
         <title>Using the hostpath storage type on &caasp;</title>
         <para>
         &caasp; is configured as a multi-node &kube; setup with a minimum of 
-        one master and two workers. Enabling hostpath provisioning on &caasp; 
-        will use local storage on each of these nodes, therefore persistent 
-        data stored will only be available locally on the &kube; nodes. That 
+        one master and two workers. Hostpath provisioning on &caasp; 
+        uses local storage on each of these nodes, therefore persistent 
+        data stored will only be available locally on the &kube; nodes. This 
         impacts use cases where &scf; containers restart on a different &kube; 
         worker, for example in high availability setups or update tests. 
         If a container starts on a different worker than before it will miss 
@@ -448,37 +448,42 @@ hostpath   kubernetes.io/host-path
         for information on configuration changes.)
     </para>
         <screen>
-env:
-    # Create a password for your &scf; cluster
-    CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
-    
-    # The domain you created for your cluster
+env:    
+    # Enter the domain you created for your CAP cluster
     DOMAIN: <replaceable>&exampledomain;</replaceable>
     
-    # Create a password for your UAA client secret
-    UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
+    # UAA host and port
+    UAA_HOST: uaa.<replaceable>&exampledomain;</replaceable>
+    UAA_PORT: 2793
 
 kube:
-    # The external IP address of the &kube; worker
-    # you selected for external access
-    external_ips:
-    - <replaceable>&kubeip;</replaceable>
+    # # The IP address assigned to the kube node pointed to by the domain.
+    external_ips: ["<replaceable>&kubeip;</replaceable>"]
     
-    # Your chosen storage class
-    storage_class:
-        persistent: "<replaceable>hostpath</replaceable>"
+    # Run kubectl get storageclasses
+    # to view your available storage classes
+    storage_class: 
+        persistent: "hostpath"
         shared: "shared"
         
-    # The Docker registry the images will be fetched from
-    # This is the default
-    registry:
-       hostname: "registry.suse.com"
-       username: ""
-       password: ""
+    # The registry the images will be fetched from. 
+    # The values below should work for
+    # a default installation from the SUSE registry.
+    registry: 
+        hostname: "registry.suse.com"
+        username: ""
+        password: ""
     organization: "cap"
 
     # Required for CaaSP 2
-    auth: rbac        
+    auth: rbac 
+
+secrets:
+    # Create a password for your CAP cluster
+    CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable> 
+    
+    # Create a password for your UAA client secret
+    UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
     </screen>
 </sect1>
 
@@ -512,7 +517,7 @@ and they must be run in this order:
   </listitem>
   <listitem>
     <para>
-        Copy UAA CA certificate to SCF namespace
+        Copy UAA secret and certificate to SCF namespace
     </para>
   </listitem>
   <listitem>
@@ -563,8 +568,10 @@ suse/uaa      2.8.0    A Helm chart for SUSE UAA
     <screen>
 &prompt.user;kubectl create namespace uaa
  namespace "uaa" created
+ 
 &prompt.user;kubectl create namespace scf
  namespace "scf" created
+ 
 &prompt.user;kubectl get namespaces
 NAME          STATUS    AGE
 default       Active    27m
@@ -579,7 +586,7 @@ uaa           Active    1m
     <title>Copy &ses; Secret</title>
 <para>
     If you are using the hostpath storage class 
-    (see <xref linkend="sec.cap.storageclass"/>
+    (see <xref linkend="sec.cap.storageclass"/>)
     there is no secret so skip this step.
 </para>
 <para>
@@ -624,17 +631,21 @@ step.
 <sect2 xml:id="sec.cap.install-scf">
     <title>Install &scf;</title>
 <para>
-  First copy your UAA certificate authority (CA) into a shell variable, then 
-  use &helm; to install &scf;:
+  First pass your UAA secret and certificate to SCF, then 
+  use &helm; to install &suse; &cf;:
 </para>
 <screen>
-&prompt.user;CA_CERT="$(kubectl get secret secret --namespace uaa -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+-o jsonpath='{.items[*].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+-o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
 &prompt.user;helm install suse/cf \
 --name <replaceable>susecf-scf</replaceable> \
 --namespace scf \
 --values scf-config-values.yaml \
---set "env.UAA_CA_CERT=${CA_CERT}"
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
 <para>
     Now sit back and wait for the pods come online:

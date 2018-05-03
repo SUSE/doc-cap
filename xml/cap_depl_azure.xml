@@ -59,8 +59,11 @@
 </para>
 <screen>
 &prompt.user;export SUBSCRIPTION_ID=<replaceable>subscription-id</replaceable>
+
 &prompt.user;az account set --subscription $SUBSCRIPTION_ID
+
 &prompt.user;az group create --name scf-resource-group --location <replaceable>westus</replaceable>
+
 &prompt.user;az ad sp create-for-rbac --role Contributor 
  --scopes "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/scf-resource-group" 
 </screen>
@@ -89,6 +92,7 @@
 </para>
 <screen>
 &prompt.user;mv ~/.kube/config ~/.kube/config.old    
+
 &prompt.user;az acs kubernetes get-credentials --resource-group="scf-resource-group" \
  --name="scf-container-service"
 </screen>
@@ -111,6 +115,7 @@
 </para>
 <screen>
 &prompt.user;sudo zypper in -y jq sed
+
 &prompt.user;az vm list -g "scf-resource-group" | jq '.[] | select (.tags.poolName | contains("agent")) | .name' | \
   xargs -i{} az vm run-command invoke \
   --resource-group "scf-resource-group" \
@@ -166,18 +171,23 @@
 </para>
 <screen>
 &prompt.user;export NSG_NAME=<replaceable>security-group</replaceable>
+
 &prompt.user;az network nsg rule create --resource-group scf-resource-group \
  --priority 200 --nsg-name $NSG_NAME --name scf-80 --direction Inbound \
  --destination-port-ranges 80 --access Allow
+
 &prompt.user;az network nsg rule create --resource-group scf-resource-group \
  --priority 201 --nsg-name $NSG_NAME --name scf-443 --direction Inbound \
  --destination-port-ranges 443 --access Allow
+
 &prompt.user;az network nsg rule create --resource-group scf-resource-group \
  --priority 202 --nsg-name $NSG_NAME --name scf-4443 --direction Inbound 
  --destination-port-ranges 4443 --access Allow
+
 &prompt.user;az network nsg rule create --resource-group scf-resource-group \
  --priority 203 --nsg-name $NSG_NAME --name scf-2222 --direction Inbound \
  --destination-port-ranges 2222 --access Allow
+
 &prompt.user;az network nsg rule create --resource-group scf-resource-group 
  --priority 204 --nsg-name $NSG_NAME --name scf-2793 --direction Inbound \
  --destination-port-ranges 2793 --access Allow
