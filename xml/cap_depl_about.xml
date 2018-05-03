@@ -138,14 +138,15 @@ configuration.
         Setting up &scf; correctly depends on setting up &suse; &caasp;
         correctly. Review the 
         <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/">&suse; &caasp; Deployment Guide</link> 
-        to understand how it operates, and basic configuration and administration 
-        options.
+        to understand how it operates, and configuration and administration 
+        options. You should understand basic Linux, &docker;, and &kube;
+        administration and use.
     </para>
 </important>
 
 <para>
 A supported deployment includes &scf; installed on &caasp;. You also 
-need a storage backend, such as &ses;, a DNS server, and an Internet connection 
+need a storage backend, such as &ses;, a DNS/DHCP server, and an Internet connection 
 to download additional packages during installation and ~10GB of Docker images 
 on each &kube; worker after installation.
 </para>
@@ -155,11 +156,11 @@ A production deployment requires considerable resources. &productname; includes
 an entitlement of &suse; &caasp; 2 and &ses; 5. &ses; alone has substantial
 requirements; see the 
 <link xlink:href="https://www.suse.com/products/suse-enterprise-storage/">Tech Specs</link>
-for details. &suse; &caasp; requires a minimum of four nodes: one admin and three
+for details. &suse; &caasp; requires a minimum of four hosts: one admin and three
 &kube; nodes. &scf; is then deployed on the &kube; nodes. Four &caasp; nodes are
 not sufficient for a production deployment. 
-<xref linkend="fig.cap.min-prod-arch"/> is an example of a 
-minimal production deployment with &scf; deployed on a &kube; cluster containing 
+<xref linkend="fig.cap.min-prod-arch"/> describes a minimal production deployment 
+with &scf; deployed on a &kube; cluster containing 
 three &kube; masters and three workers, plus an ingress controller, administration
 workstation, DNS/DHCP server, and a &ses; cluster.
 </para>
@@ -168,10 +169,10 @@ workstation, DNS/DHCP server, and a &ses; cluster.
   <title>Minimal Example Production Deployment</title>
   <mediaobject>
     <imageobject role="fo">
-      <imagedata fileref="cap-arch-prod.png" format="PNG" width="65%"/>
+      <imagedata fileref="cap-arch-prod.png" format="PNG" width="90%"/>
     </imageobject>
     <imageobject role="html">
-      <imagedata fileref="cap-arch-prod.png" width="75%" format="PNG"/>
+      <imagedata fileref="cap-arch-prod.png"/>
     </imageobject>
     <textobject role="description">
       <phrase>network architecture of minimal production setup</phrase>
@@ -271,7 +272,13 @@ external_ips=["1.1.1.1", "2.2.2.2"]
     <para>
         All the secrets have been renamed from env.FOO to secrets.FOO, so all 
         the appropriate entries in <filename>scf-config-values.yaml</filename> 
-        must be modified to align with that change.
+        must be modified to align with that change. For example, move 
+        <literal>CLUSTER_ADMIN_PASSWORD:</literal> and 
+                <literal>UAA_ADMIN_CLIENT_SECRET:</literal> from the
+        <literal>env:</literal> section to <literal>secrets:</literal>. Some
+        of the <command>helm</command> commands for passing secrets also change, 
+        e.g. from <command>--set "env.FOO"</command> to 
+        <command>--set "secrets.FOO"</command>.
     </para>
     <para>
         You must specify your secrets on each upgrade (e.g. the 

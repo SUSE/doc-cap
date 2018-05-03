@@ -17,7 +17,7 @@
  </info>
  <para>    
  A basic &productname; production deployment requires at least eight 
- nodes plus a storage backend: one &suse; &caasp; admin node, three &kube; 
+ hosts plus a storage backend: one &suse; &caasp; admin server, three &kube; 
  masters, three &kube; workers, a DNS/DHCP server, and a storage backend such as 
  &ses;. This is a bare minimum, and actual requirements are likely to be much 
  larger, depending on your workloads. You also need an external workstation for 
@@ -31,7 +31,7 @@
         workstation, rather than directly on any of the &scf; nodes. These are
         indicated by the unprivileged user Tux, while root prompts are on a
         cluster node. There are few tasks that need to be performed directly on
-        any of the nodes.
+        any of the cluster hosts.
     </para>
 </note>
  <para>
@@ -44,8 +44,9 @@
   <title>Prerequisites</title>
   <para>
       Calculating hardware requirements is best done with an analysis of your 
-      expected workloads, traffic patterns, storage needs, and application requirements. The following examples are minimums to deploy a
-      running cluster, and any production deployment will likely require more.
+      expected workloads, traffic patterns, storage needs, and application 
+      requirements. The following examples are bare minimums to deploy a
+      running cluster, and any production deployment will require more.
   </para>
   <variablelist>
       <varlistentry>
@@ -78,7 +79,8 @@
          round-robin to the &kube; workers to provide external access. It is 
          also a common practice to create a wildcard DNS entry pointing to the 
          domain, e.g. *.&exampledomain;, so that applications can be deployed 
-         without creating DNS entries for each application. This guide does not describe how to set up a load balancer or name services, as these 
+         without creating DNS entries for each application. This guide does not 
+         describe how to set up a load balancer or name services, as these 
          depend on customer requirements and existing network architectures.
      </para>
       </listitem>  
@@ -102,7 +104,7 @@
   </figure>
   <para>
       Take note of the <guimenu>Overlay network settings</guimenu>. These define 
-      the networks that are exclusive to the internal cluster
+      the networks that are exclusive to the internal &kube; cluster
       communications. They are not externally accessible. You may assign 
       different networks to avoid address collisions.
   </para>
@@ -168,7 +170,8 @@ Server Version: v1.7.7
     <filename>~/.kube/config</filename> and is communicating with your cluster.
 </para>
 <para>
-   The following examples query the cluster configuration and node status:
+    The following <command>kubectl</command> examples query the cluster 
+    configuration and node status:
 </para>
 <screen>    
 &prompt.user;kubectl config view
@@ -272,7 +275,8 @@ Happy Helming!
     volume has been created.
 </para>
 <para>
-    First copy the following configuration, substituting the name of 
+    First copy the following configuration file, which in this example is named
+    <filename>test-storage-class.yaml</filename>, substituting the name of 
     your <replaceable>storageClassName</replaceable>:
 </para>
 <screen>
@@ -341,37 +345,42 @@ persistentvolumeclaim "test-sc-persistent" deleted
         for information on configuration changes.)
     </para>
     <screen>
-env:
-    # Create a password for your &scf; instance
-    CLUSTER_ADMIN_PASSWORD: <replaceable>changeme</replaceable>
-    
-    # Enter the domain you created for your &kube; cluster
+env:    
+    # Enter the domain you created for your CAP cluster
     DOMAIN: <replaceable>&exampledomain;</replaceable>
     
-    # Create a password for your UAA client secret
-    UAA_ADMIN_CLIENT_SECRET: <replaceable>changeme</replaceable>
+    # UAA host and port
+    UAA_HOST: uaa.<replaceable>&exampledomain;</replaceable>
+    UAA_PORT: 2793
 
 kube:
-    # The external IP address of your &kube; cluster
-    external_ip: <replaceable>&kubeip;</replaceable>
-    external_ips: 
-    - <replaceable>&kubeip;</replaceable>
+    # The IP address assigned to the kube node pointed to by the domain.
+    external_ips: ["<replaceable>&kubeip;</replaceable>"]
     
-    # Your chosen storage class
-    storage_class:
+    # Run kubectl get storageclasses
+    # to view your available storage classes
+    storage_class: 
         persistent: <replaceable>"persistent"</replaceable>
         shared: "shared"
-    
-    # The Docker registry the images will be fetched from
-    # This is the default
-    registry:
-       hostname: "registry.suse.com"
-       username: ""
-       password: ""
+        
+    # The registry the images will be fetched from. 
+    # The values below should work for
+    # a default installation from the SUSE registry.
+    registry: 
+        hostname: "registry.suse.com"
+        username: ""
+        password: ""
     organization: "cap"
 
     # Required for CaaSP 2
-    auth: rbac
+    auth: rbac 
+
+secrets:
+    # Create a password for your CAP cluster
+    CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable> 
+    
+    # Create a password for your UAA client secret
+    UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
 </screen>        
 </sect1>
 
@@ -405,7 +414,7 @@ and they must be run in this order:
   </listitem>
   <listitem>
     <para>
-        Copy the UAA certificate to the SCF namespace
+        Copy the UAA secret and certificate to the SCF namespace
     </para>
   </listitem>
   <listitem>
@@ -477,7 +486,8 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -
 <sect1 xml:id="sec.cap.install-uaa-prod">
     <title>Deploy UAA</title>
 <para>
-    Use &helm; to deploy the UAA (User Account and Authentication) server:
+    Use &helm; to deploy the UAA (User Account and Authentication) server. You 
+    may create your own release <literal>--name</literal>:
 </para>
 <screen>    
 &prompt.user;helm install suse/uaa \
@@ -494,28 +504,33 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -
 &prompt.user;watch -c 'kubectl get pods --all-namespaces'
 </screen>
 <para>
-Pressing <keycombo>
+When the status shows RUNNING for all of the UAA nodes, proceed to deploying 
+&suse; &cf;. Pressing <keycombo>
     <keycap function="control"/>
     <keycap>C</keycap>
      </keycombo>
-     stops it. When the status shows RUNNING for all of the UAA nodes, proceed 
-     to deploying &suse; &cf;.
+     stops the <command>watch</command> command.
 </para>
 </sect1>   
 
 <sect1 xml:id="sec.cap.install-scf-prod">
     <title>Deploy &scf;</title>
 <para>
-  First copy your UAA certificate authority (CA) into a shell variable, then 
+  First pass your UAA secret and certificate to SCF, then 
   use &helm; to install &suse; &cf;:
 </para>
 <screen>
-&prompt.user;CA_CERT="$(kubectl get secret secret --namespace uaa -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+-o jsonpath='{.items[*].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+-o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+
 &prompt.user;helm install suse/cf \
 --name <replaceable>susecf-scf</replaceable> \
 --namespace scf \
 --values scf-config-values.yaml \
---set "env.UAA_CA_CERT=${CA_CERT}"
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
 <para>
     Now sit back and wait for the pods come online:
@@ -694,9 +709,9 @@ Space:          No space targeted, use 'cf target -s SPACE'
 </sect1>
         
 <sect1 xml:id="sec.cap.stratos-prod">
-    <title>Installing the Stratos Console</title>
+    <title>Installing the Stratos Web Console</title>
     <para>
-        Stratos UI is a modern, web-based management application for Cloud 
+        Stratos UI is a modern web-based management application for Cloud 
         Foundry. It provides a graphical management console for both developers
         and system administrators. Install Stratos with 
         &helm; after all of the UAA and SCF pods are running. 
@@ -707,7 +722,7 @@ Space:          No space targeted, use 'cf target -s SPACE'
 </screen>
 <para>
 If you are using &ses; as your storage backend, copy the secret into the Stratos
-namespace. Skip this step if you are using the hostpath storage type.
+namespace.
 </para>
 <screen>
 &prompt.user;kubectl get secret ceph-secret-admin -o json --namespace default | \
@@ -837,7 +852,7 @@ susecf-console-ui-ext   172.24.84.50    10.10.100.82   8443:32511/TCP  19m
       registry and applied with &helm;. (See the 
       <link xlink:href="https://www.suse.com/releasenotes/">Release Notes</link>
       for additional upgrade information.)
-      Check for updates:
+      Check for available updates:
   </para>
 <screen>
 &prompt.user;helm repo update
@@ -846,10 +861,17 @@ Hang tight while we grab the latest from your chart repositories...
 ...Successfully got an update from the "stable" chart repository
 ...Successfully got an update from the "suse" chart repository
 Update Complete. ⎈ Happy Helming!⎈   
-</screen>      
+</screen>
+
 <para>
-      Get your release and chart names (your releases may have different names), 
-      and then apply the updates:
+    For the &productname; 1.1 release, update your 
+    <filename>scf-config-values.yaml</filename> file with the changes
+    for secrets handling and external IP addresses. (See 
+    <xref linkend="sec.cap.configure-prod"/> for an example.)
+</para>
+<para>
+      Get your release and chart names (your releases may have different names than
+      the examples), and then apply the updates:
 </para>
   <screen>
 &prompt.user;helm list
@@ -866,21 +888,36 @@ suse            https://kubernetes-charts.suse.com/
 
 &prompt.user;helm search suse
 NAME          VERSION  DESCRIPTION                                  
-suse/cf       2.8.0   A Helm chart for SUSE Cloud Foundry          
+suse/cf       2.8.0    A Helm chart for SUSE Cloud Foundry          
 suse/console  1.1.0    A Helm chart for deploying Stratos UI Console
 suse/uaa      2.8.0    A Helm chart for SUSE UAA
+</screen>
 
+<para>
+    Run the following commands to perform the upgrade. Wait for each command to
+    complete before running the next command. Note the new commands for extracting
+    and using secrets and certificates.
+</para>
+<screen>
 &prompt.user;helm upgrade --recreate-pods <replaceable>susecf-uaa</replaceable> suse/uaa \
  --values scf-config-values.yaml
-&prompt.user;SECRET=$(kubectl get pods --namespace uaa -o \
- jsonpath='{.items[*].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
-&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa -o \
- jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+
+&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+ -o jsonpath='{.items[*].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+ -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+
 &prompt.user;helm upgrade --recreate-pods susecf-scf <replaceable>suse/cf</replaceable> \
  --values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}"
+
 &prompt.user;helm upgrade --recreate-pods <replaceable>susecf-console</replaceable> suse/console \
  --values scf-config-values.yaml
 </screen>
+
+<para>
+</para>
+    
 
 <!-- helm rollback does not work, so upgrades are one-way for now
 -->
@@ -973,17 +1010,22 @@ sizing:
 </screen>
 
 <para>
-    When the status shows RUNNING for all of the UAA nodes, refer to 
-    <xref linkend="sec.cap.install-scf-prod"/>, and then replace the command
-    to deploy SCF with this command:
+    When the status shows RUNNING for all of the UAA nodes, deploy SCF with 
+    these commands:
 </para>
 <screen>
+&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+ -o jsonpath='{.items[*].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+ -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"    
+
 &prompt.user;helm install suse/cf \
 --name <replaceable>susecf-scf</replaceable>
 --namespace scf \
 --values scf-config-values.yaml \
 --values scf-sizing.yaml
---set "env.UAA_CA_CERT=${CA_CERT}"
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
 
 <para>
@@ -1013,10 +1055,10 @@ sizing:
         for <literal>.consul-lock.acquiring-lock</literal>.
     </para>
     <para>
-        Some roles cannot be scaled. mysql-proxy needs a proper active/passive 
-        configuration. tcp-router has no mechanism for exposing ports correctly.
-        blobstore needs shared volume support and an active/passive 
-        configuration.
+        Some roles cannot be scaled. <command>mysql-proxy</command> needs a 
+        proper active/passive configuration. <command>tcp-router</command> has 
+        no mechanism for exposing ports correctly. <command>blobstore</command> 
+        needs shared volume support and an active/passive configuration.
     </para>
     <para>
 Some roles follow an active/passive scaling model, meaning all pods except 
@@ -1037,12 +1079,18 @@ expected behavior.
 --values scf-config-values.yaml \
 --values uaa-sizing.yaml 
 
+&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+ -o jsonpath='{.items[*].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+ -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"    
+
 &prompt.user;helm upgrade suse/cf \
 --name <replaceable>susecf-scf</replaceable>
 --namespace scf \
 --values scf-config-values.yaml \
 --values scf-sizing.yaml
---set "env.UAA_CA_CERT=${CA_CERT}"
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
 <para>
     This may take a long time, and your cluster will be unavailable until the
