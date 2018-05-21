@@ -389,8 +389,7 @@ Restart the &kube; controller-manager:
     <literal>hostpath</literal>: 
 </para>
 <screen>
-&prompt.root;echo '{"kind":"StorageClass","apiVersion":"storage.k8s.io/v1",
-"metadata":{"name":"hostpath"},"provisioner":"kubernetes.io/host-path"}' | \
+&prompt.root;echo '{"kind":"StorageClass","apiVersion":"storage.k8s.io/v1", "metadata":{"name":"hostpath"},"provisioner":"kubernetes.io/host-path"}' | \
 kubectl create -f -
 
 storageclass "hostpath" created
