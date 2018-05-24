@@ -9,7 +9,7 @@
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
  <info>
-  <title>Preparing Microsoft Azure for &productname;</title>
+  <title>Preparing Microsoft Azure for &scf;</title>
   <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
    <dm:bugtracker></dm:bugtracker>
    <dm:translation>yes</dm:translation>
@@ -17,81 +17,213 @@
  </info>
  
   <para>
-   Starting with version 1.1, &productname; supports running on Microsoft Azure 
-   Container Service (ACS). This chapter describes how to prepare ACS for 
-   deploying &productname;.
+   Starting with version 1.1, &scf; supports deployment on Microsoft Azure 
+   Kubernetes Service (AKS). This chapter describes how to prepare AKS for 
+   deploying &scf; on an un-managed &kube; service, using a &kube;
+   minion as the access point to your cluster, with no load balancer, similarly
+   to <xref linkend="cha.cap.install-minimal"/>.
  </para>
- <note>
-     <title>AKS Not Supported</title>
-     <para>&productname; is not currently supported on Azure &kube; Service 
-         (AKS), Microsoft's managed &kube; service. You must set up your &kube;
-         environment manually on your ACS account.
-     </para>
- </note>
  
  <sect1 xml:id="sec.cap.install-az">
      <title>Prequisites</title>
- <para>
+
+<para>
      The first step is to install <command>az</command>, the Azure command-line
      client, on your remote administration machine. See 
      <link xlink:href="https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest">Install Azure CLI 2.0</link> 
      for instructions.
  </para>
  <para>
-     You also need the <command>curl</command>, <command>sed</command>, and 
-     <command>jq</command> commands.
+     See the 
+     <link xlink:href="https://docs.microsoft.com/en-us/cli/azure/reference-index?view=azure-cli-latest">Azure CLI 2.0 Reference</link> 
+     for a complete <command>az</command> command reference.
  </para>
+
  <para>
-     Then log in to your Azure Account:
+     You also need the <command>curl</command>, <command>sed</command>, and 
+     <command>jq</command> commands, and the name of the SSH key attached to
+     your Azure account.
  </para>
+ 
+ <para>
+     Log in to your Azure Account:
+ </para>
+ 
  <screen>
 &prompt.user;az login
 </screen>
+ 
+<para>
+     Your Azure user needs the User Access Administrator role. Check your
+     assigned roles with the <command>az</command> command:
+</para>
+ 
+ <screen>
+&prompt.user;az role assignment list --assignee <replaceable>login-name</replaceable>
+[...]
+"roleDefinitionName": "User Access Administrator",
+ </screen>
 </sect1>
 
 <sect1 xml:id="sec.cap.setup-kubernetes">
-    <title>Setup &kube;</title>
+    <title>Set up &kube;</title>
+
 <para>
     You need your Azure subscription ID. Extract it with <command>az</command>:
 </para>
+
 <screen>
 &prompt.user;az account show --query "{ subscription_id: id }"
+{
+  "subscription_id": "a900cdi2-5983-0376-s7je-d4jdmsif84ca"
+}
 </screen>
+
 <para>
-    Record the password and application ID, and use them to create a service 
-    principal. Replace <varname>subscription-id</varname> in the following 
-    commands with your <varname>subscription-id</varname>. If the Microsoft Azure 
-    service is located in a different data center, then replace 
-    <varname>westus</varname> with the correct data center.
+    Replace <varname>subscription-id</varname> in the next 
+    command with your <varname>subscription-id</varname>. Then export it as
+    an environment variable, echo the variable to verify that it contains 
+    the correct value, then set it as the current subscription: 
 </para>
+
 <screen>
-&prompt.user;export SUBSCRIPTION_ID=<replaceable>subscription-id</replaceable>
+&prompt.user;export SUBSCRIPTION_ID=<replaceable>a900cdi2-5983-0376-s7je-d4jdmsif84ca</replaceable>
+
+&prompt.user; echo $SUBSCRIPTION_ID
+ a900cdi2-5983-0376-s7je-d4jdmsif84ca
 
 &prompt.user;az account set --subscription $SUBSCRIPTION_ID
+</screen>
 
-&prompt.user;az group create --name scf-resource-group --location <replaceable>westus</replaceable>
+<para>
+    The next three commands create a service principal. First create a resource 
+    group. The <replaceable>--name</replaceable> is whatever you want, and 
+    replace <replaceable>--location</replaceable> with your Azure region. 
+    <command>az account list-locations</command> lists the regions
+    supported for your account.
+</para>
 
-&prompt.user;az ad sp create-for-rbac --role Contributor 
- --scopes "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/scf-resource-group" 
+<screen>
+&prompt.user;az group create --name <replaceable>scf-resource-group</replaceable> --location <replaceable>westus</replaceable>
+
+ {
+  "id": "/subscriptions/a900cdi2-5983-0376-s7je-d4jdmsif84ca/resourceGroups/scf-resource-group",
+  "location": "westus",
+  "managedBy": null,
+  "name": "scf-resource-group",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null
+ }
+</screen>
+
+<para>
+    Then create the service principal and configure its access to Azure 
+    resources:
+</para>
+
+<screen>
+&prompt.user;az ad sp create-for-rbac --role Contributor \
+ --scopes "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/<replaceable>scf-resource-group</replaceable>"
+ 
+ {
+  "appId": "bf7l052h-5853-c724-d99a-cd31844434ae",
+  "displayName": "azure-cli-2018-05-23-11-11-22",
+  "name": "http://azure-cli-2018-05-23-11-11-22",
+  "password": "e09330ae-4881-ab22-9487-9b3d138b2af1",
+  "tenant": "abcd7654-c007-1o10-d5h33-7833stc44s44"
+  }
 </screen>
 <para>
-    Create a container service in Azure, using your own password and 
-    application ID, and use your own public SSH key:
+    Record the <varname>appId</varname> and <varname>password</varname>, as you
+    need them to create a container service. The parameters in the following
+    example command to create the container service are explained below.
 </para>
+
 <screen>
 &prompt.user;az acs create \
-   --name scf-container-service \
-   --resource-group scf-resource-group \
-   --orchestrator-type Kubernetes \
-   --dns-prefix "myscf" \
-   --master-count 1 \
-   --admin-username scf-admin \
-   --agent-count 3 \
-   --client-secret <replaceable>password</replaceable> \
-   --ssh-key-value "<replaceable>your-public-ssh-key</replaceable>" \
-   --service-principal <replaceable>application-id</replaceable> \
-   --master-vm-size Standard_D2_v2  
+   --name "<replaceable>scf-container-service</replaceable>" \
+   --resource-group "<replaceable>scf-resource-group</replaceable>" \
+   --orchestrator-type "Kubernetes" \
+   --dns-prefix "<replaceable>scf</replaceable>" \
+   --master-count "<replaceable>1</replaceable>" \
+   --admin-username "<replaceable>scf-admin</replaceable>" \
+   --agent-count "<replaceable>3</replaceable>" \
+   --client-secret "<replaceable>e09330ae-4881-ab22-9487-9b3d138b2af1</replaceable>" \
+   --ssh-key-value "<replaceable>~/.ssh/ida_rsa.pub</replaceable>" \
+   --service-principal "<replaceable>bf7l052h-5853-c724-d99a-cd31844434ae</replaceable>" \
+   --master-vm-size "Standard_D2_v2"
 </screen>
+<para>
+It will take a few minutes until the container service is created.
+</para>
+<itemizedlist>
+  <listitem>
+    <para>
+        Create a new <varname>--name</varname> for your new container service.
+    </para>
+</listitem>
+  <listitem>
+    <para>
+        The name of the <varname>--resource-group</varname> you created above.
+    </para>
+</listitem>
+<listitem>
+    <para>
+        The <varname>--orchestrator-type</varname> must be 
+        <literal>Kubernetes</literal>.
+    </para>
+</listitem>
+<listitem>
+    <para>
+        Create the <varname>--dns-prefix</varname> for your cluster. In the
+        above example, the fully-qualified domain becomes
+        <literal>scfdnsmgmt.westus.cloudapp.azure.com</literal>.
+    </para>
+</listitem>
+<listitem>
+    <para>
+        Set the number of &kube; masters with 
+        <varname>--master-count</varname>.
+    </para>
+</listitem>
+<listitem>
+    <para>
+        Create the <varname>--admin-username</varname> for your cluster.
+    </para>
+    </listitem>
+<listitem>
+    <para>
+        Set the number of &kube; minions with <varname>--agent-count</varname>.
+    </para>
+</listitem>
+<listitem>
+    <para>
+        <varname>--client-secret</varname> is the password you recorded when you
+        created the service principal.
+    </para>
+</listitem>
+<listitem>
+    <para>
+       <varname>--ssh-key-value</varname> is the public SSH key associated with
+       your Azure account.
+   </para>
+</listitem>
+<listitem>
+    <para>       
+        <varname>--service-principal</varname> is the <literal>appId</literal>
+        from your service principal creation.
+    </para>
+ </listitem>
+<listitem>
+    <para>       
+        <varname>--master-vm-size</varname> <literal>Standard_D2_v2</literal> is 
+                the default, and currently only value.
+    </para>
+</listitem>      
+</itemizedlist>
+
 <para>
     Prepare the &kube; environment. If there is another running &kube;, 
     copy the old configuration to a different location to start with a new
@@ -100,8 +232,8 @@
 <screen>
 &prompt.user;mv ~/.kube/config ~/.kube/config.old    
 
-&prompt.user;az acs kubernetes get-credentials --resource-group="scf-resource-group" \
- --name="scf-container-service"
+&prompt.user;az acs kubernetes get-credentials --resource-group="<replaceable>scf-resource-group</replaceable>" \
+ --name="<replaceable>scf-container-service</replaceable>"
 </screen>
 <para>
     If your SSH key is password-protected, first load it into ssh-agent:
@@ -114,89 +246,103 @@
 </para>
 <screen>
 &prompt.user;kubectl get pods --all-namespaces
+
+&prompt.user; kubectl version --short
 </screen>
 
 <para>
     Enable cgroup swap accounting by running the following commands. This will 
-    reboot some of the machines, which will take some time.
+    reboot some of the machines, which will take some time. Each command outputs
+    a lot of information, so look for <literal>"status": "Succeeded"</literal>
+    at the end.
 </para>
-<screen>
-&prompt.user;sudo zypper in -y jq sed
 
-&prompt.user;az vm list -g "scf-resource-group" | jq '.[] | select (.tags.poolName | contains("agent")) | .name' | \
+<screen>
+&prompt.user;az vm list -g "<replaceable>scf-resource-group</replaceable>" | jq '.[] | select (.tags.poolName | contains("agent")) | .name' | \
   xargs -i{} az vm run-command invoke \
-  --resource-group "scf-resource-group" \
+  --resource-group "<replaceable>scf-resource-group</replaceable>" \
   --command-id RunShellScript \
   --scripts "sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=tty1 console=ttyS0 earlyprintk=ttyS0 rootdelay=300\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=tty1 console=ttyS0 earlyprintk=ttyS0 rootdelay=300 swapaccount=1\"/g' \
   /etc/default/grub.d/50-cloudimg-settings.cfg" --name {}
 
-&prompt.user;az vm list -g "scf-resource-group" | jq '.[] | select (.tags.poolName | contains("agent")) | .name' | \
+&prompt.user;az vm list -g "<replaceable>scf-resource-group</replaceable>" | jq '.[] | select (.tags.poolName | contains("agent")) | .name' | \
   xargs -i{} az vm run-command invoke \
-  --resource-group "scf-resource-group" \
+  --resource-group "<replaceable>scf-resource-group</replaceable>" \
   --command-id RunShellScript \
   --scripts "sudo update-grub" --name {}
 
-&prompt.user;az vm list -g "scf-resource-group" | jq '.[] | select (.tags.poolName | contains("agent")) | .name' | \
+&prompt.user;az vm list -g "<replaceable>scf-resource-group</replaceable>" | jq '.[] | select (.tags.poolName | contains("agent")) | .name' | \
   xargs -i{} az vm restart --no-wait \
-  --resource-group "scf-resource-group" \
+  --resource-group "<replaceable>scf-resource-group</replaceable>" \
   --name {}
 </screen>
+
 <para>
-    Create a new public IP address, which is needed for the &cap; deployment.
+    Create a new public IP address, which is needed for the &scf; deployment.
 </para>
+
 <screen>
-&prompt.user;az network public-ip create --resource-group scf-resource-group \
- --name scf-public-ip --allocation-method Static
+&prompt.user;az network public-ip create --resource-group <replaceable>scf-resource-group</replaceable> \
+ --name <replaceable>scf-public-ip</replaceable> --allocation-method Static
 </screen>
+
 <para>
-    Extract the name of one of the &kube;' agent's network interface and write
-    it down:
+    Extract and record the name of one of the &kube;' agent's network interface:
 </para>
+
 <screen>
-&prompt.user;az network nic list --resource-group scf-resource-group | grep name | grep agent | grep 0
+&prompt.user;az network nic list --resource-group <replaceable>scf-resource-group</replaceable> | grep name | grep agent | grep 0
 </screen>
+
 <para>
     Replace <replaceable>nic-name</replaceable> in the following command 
     with the public IP address created in the previous command.
-    Record the private IP address to use in the &cap; deployment.
+    Record the private IP address to use in the &scf; deployment.
 </para>
+
 <screen>
-&prompt.user;az network nic ip-config update --resource-group scf-resource-group \
+&prompt.user;az network nic ip-config update --resource-group <replaceable>scf-resource-group</replaceable> \
  --nic-name <replaceable>nic-name</replaceable> --name ipconfig1 \
- --public-ip-address scf-public-ip  
+ --public-ip-address <replaceable>scf-public-ip</replaceable>  
 </screen>
+
 <para>
-    Extract the security group name of the master network security group and 
-    write it down:
+    Extract and record the security group name of the master network security 
+    group:
 </para>
+
 <screen>
-&prompt.user;az network nsg list --resource-group=scf-resource-group | jq -r '.[] | .name' | grep master    
+&prompt.user;az network nsg list --resource-group=<replaceable>scf-resource-group</replaceable> | jq -r '.[] | .name' | grep master
+
+ "name": "k8s-agent-714469E6-nic-0",
 </screen>
+
 <para>
-    Create the required security groups, and replace 
+    Create the required security groups, replacing 
     <replaceable>security-group</replaceable> with the name from the previous 
     command:
 </para>
+
 <screen>
 &prompt.user;export NSG_NAME=<replaceable>security-group</replaceable>
 
-&prompt.user;az network nsg rule create --resource-group scf-resource-group \
+&prompt.user;az network nsg rule create --resource-group <replaceable>scf-resource-group</replaceable> \
  --priority 200 --nsg-name $NSG_NAME --name scf-80 --direction Inbound \
  --destination-port-ranges 80 --access Allow
 
-&prompt.user;az network nsg rule create --resource-group scf-resource-group \
+&prompt.user;az network nsg rule create --resource-group <replaceable>scf-resource-group</replaceable> \
  --priority 201 --nsg-name $NSG_NAME --name scf-443 --direction Inbound \
  --destination-port-ranges 443 --access Allow
 
-&prompt.user;az network nsg rule create --resource-group scf-resource-group \
+&prompt.user;az network nsg rule create --resource-group <replaceable>scf-resource-group</replaceable> \
  --priority 202 --nsg-name $NSG_NAME --name scf-4443 --direction Inbound 
  --destination-port-ranges 4443 --access Allow
 
-&prompt.user;az network nsg rule create --resource-group scf-resource-group \
+&prompt.user;az network nsg rule create --resource-group <replaceable>scf-resource-group</replaceable> \
  --priority 203 --nsg-name $NSG_NAME --name scf-2222 --direction Inbound \
  --destination-port-ranges 2222 --access Allow
 
-&prompt.user;az network nsg rule create --resource-group scf-resource-group 
+&prompt.user;az network nsg rule create --resource-group <replaceable>scf-resource-group</replaceable> \
  --priority 204 --nsg-name $NSG_NAME --name scf-2793 --direction Inbound \
  --destination-port-ranges 2793 --access Allow
 </screen>
@@ -219,11 +365,23 @@
            following key in the your
            <filename>scf-config-values.yaml</filename>:
        </para>
-       <screen>
+
+<screen>
 env:
   GARDEN_ROOTFS_DRIVER: "overlay-xfs"
 </screen>
-</note>
+
+<para>
+    Enter <varname>auth: none</varname> in the <varname>kube:</varname> section,
+    as Azure does not yet support role-based authentication.
+</para>
+
+<para>
+    <varname>storage_class:</varname> must be either <literal>default</literal> 
+    or <literal>managed-premium</literal>, according to what your Azure account
+    supports. <literal>default</literal> is the default value.
+</para>
     
+</note>
  </sect1>
 </chapter>
