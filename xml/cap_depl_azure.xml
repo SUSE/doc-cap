@@ -19,8 +19,9 @@
   <para>
    Starting with version 1.1, &scf; supports deployment on Microsoft Azure 
    Kubernetes Service (AKS). This chapter describes how to prepare AKS for 
-   deploying &scf; on an un-managed &kube; service. AKS provides &kube;, and
-   then you will deploy &scf; on AKS.
+   deploying &scf; on an un-managed &kube; service, using a &kube;
+   minion as the access point to your cluster, with no load balancer, similarly
+   to <xref linkend="cha.cap.install-minimal"/>.
  </para>
  
  <sect1 xml:id="sec.cap.install-az">
@@ -145,7 +146,7 @@
    --name "<replaceable>scf-container-service</replaceable>" \
    --resource-group "<replaceable>scf-resource-group</replaceable>" \
    --orchestrator-type "Kubernetes" \
-   --dns-prefix "<replaceable>scfdns</replaceable>" \
+   --dns-prefix "<replaceable>scf</replaceable>" \
    --master-count "<replaceable>1</replaceable>" \
    --admin-username "<replaceable>scf-admin</replaceable>" \
    --agent-count "<replaceable>3</replaceable>" \
@@ -154,8 +155,9 @@
    --service-principal "<replaceable>bf7l052h-5853-c724-d99a-cd31844434ae</replaceable>" \
    --master-vm-size "Standard_D2_v2"
 </screen>
- takes time up to 30 minutes
-alracdnsmgmt.eastus.cloudapp.azure.com
+<para>
+It will take a few minutes until the container service is created.
+</para>
 <itemizedlist>
   <listitem>
     <para>
@@ -175,7 +177,9 @@ alracdnsmgmt.eastus.cloudapp.azure.com
 </listitem>
 <listitem>
     <para>
-        Create the <varname>--dns-prefix</varname> for your cluster.
+        Create the <varname>--dns-prefix</varname> for your cluster. In the
+        above example, the fully-qualified domain becomes
+        <literal>scfdnsmgmt.westus.cloudapp.azure.com</literal>.
     </para>
 </listitem>
 <listitem>
@@ -228,8 +232,8 @@ alracdnsmgmt.eastus.cloudapp.azure.com
 <screen>
 &prompt.user;mv ~/.kube/config ~/.kube/config.old    
 
-&prompt.user;az acs kubernetes get-credentials --resource-group="scf-resource-group" \
- --name="scf-container-service"
+&prompt.user;az acs kubernetes get-credentials --resource-group="<replaceable>scf-resource-group</replaceable>" \
+ --name="<replaceable>scf-container-service</replaceable>"
 </screen>
 <para>
     If your SSH key is password-protected, first load it into ssh-agent:
@@ -242,89 +246,103 @@ alracdnsmgmt.eastus.cloudapp.azure.com
 </para>
 <screen>
 &prompt.user;kubectl get pods --all-namespaces
+
+&prompt.user; kubectl version --short
 </screen>
 
 <para>
     Enable cgroup swap accounting by running the following commands. This will 
-    reboot some of the machines, which will take some time.
+    reboot some of the machines, which will take some time. Each command outputs
+    a lot of information, so look for <literal>"status": "Succeeded"</literal>
+    at the end.
 </para>
-<screen>
-&prompt.user;sudo zypper in -y jq sed
 
-&prompt.user;az vm list -g "scf-resource-group" | jq '.[] | select (.tags.poolName | contains("agent")) | .name' | \
+<screen>
+&prompt.user;az vm list -g "<replaceable>scf-resource-group</replaceable>" | jq '.[] | select (.tags.poolName | contains("agent")) | .name' | \
   xargs -i{} az vm run-command invoke \
-  --resource-group "scf-resource-group" \
+  --resource-group "<replaceable>scf-resource-group</replaceable>" \
   --command-id RunShellScript \
   --scripts "sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=tty1 console=ttyS0 earlyprintk=ttyS0 rootdelay=300\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=tty1 console=ttyS0 earlyprintk=ttyS0 rootdelay=300 swapaccount=1\"/g' \
   /etc/default/grub.d/50-cloudimg-settings.cfg" --name {}
 
-&prompt.user;az vm list -g "scf-resource-group" | jq '.[] | select (.tags.poolName | contains("agent")) | .name' | \
+&prompt.user;az vm list -g "<replaceable>scf-resource-group</replaceable>" | jq '.[] | select (.tags.poolName | contains("agent")) | .name' | \
   xargs -i{} az vm run-command invoke \
-  --resource-group "scf-resource-group" \
+  --resource-group "<replaceable>scf-resource-group</replaceable>" \
   --command-id RunShellScript \
   --scripts "sudo update-grub" --name {}
 
-&prompt.user;az vm list -g "scf-resource-group" | jq '.[] | select (.tags.poolName | contains("agent")) | .name' | \
+&prompt.user;az vm list -g "<replaceable>scf-resource-group</replaceable>" | jq '.[] | select (.tags.poolName | contains("agent")) | .name' | \
   xargs -i{} az vm restart --no-wait \
-  --resource-group "scf-resource-group" \
+  --resource-group "<replaceable>scf-resource-group</replaceable>" \
   --name {}
 </screen>
+
 <para>
-    Create a new public IP address, which is needed for the &cap; deployment.
+    Create a new public IP address, which is needed for the &scf; deployment.
 </para>
+
 <screen>
-&prompt.user;az network public-ip create --resource-group scf-resource-group \
- --name scf-public-ip --allocation-method Static
+&prompt.user;az network public-ip create --resource-group <replaceable>scf-resource-group</replaceable> \
+ --name <replaceable>scf-public-ip</replaceable> --allocation-method Static
 </screen>
+
 <para>
-    Extract the name of one of the &kube;' agent's network interface and write
-    it down:
+    Extract and record the name of one of the &kube;' agent's network interface:
 </para>
+
 <screen>
-&prompt.user;az network nic list --resource-group scf-resource-group | grep name | grep agent | grep 0
+&prompt.user;az network nic list --resource-group <replaceable>scf-resource-group</replaceable> | grep name | grep agent | grep 0
 </screen>
+
 <para>
     Replace <replaceable>nic-name</replaceable> in the following command 
     with the public IP address created in the previous command.
-    Record the private IP address to use in the &cap; deployment.
+    Record the private IP address to use in the &scf; deployment.
 </para>
+
 <screen>
-&prompt.user;az network nic ip-config update --resource-group scf-resource-group \
+&prompt.user;az network nic ip-config update --resource-group <replaceable>scf-resource-group</replaceable> \
  --nic-name <replaceable>nic-name</replaceable> --name ipconfig1 \
- --public-ip-address scf-public-ip  
+ --public-ip-address <replaceable>scf-public-ip</replaceable>  
 </screen>
+
 <para>
-    Extract the security group name of the master network security group and 
-    write it down:
+    Extract and record the security group name of the master network security 
+    group:
 </para>
+
 <screen>
-&prompt.user;az network nsg list --resource-group=scf-resource-group | jq -r '.[] | .name' | grep master    
+&prompt.user;az network nsg list --resource-group=<replaceable>scf-resource-group</replaceable> | jq -r '.[] | .name' | grep master
+
+ "name": "k8s-agent-714469E6-nic-0",
 </screen>
+
 <para>
-    Create the required security groups, and replace 
+    Create the required security groups, replacing 
     <replaceable>security-group</replaceable> with the name from the previous 
     command:
 </para>
+
 <screen>
 &prompt.user;export NSG_NAME=<replaceable>security-group</replaceable>
 
-&prompt.user;az network nsg rule create --resource-group scf-resource-group \
+&prompt.user;az network nsg rule create --resource-group <replaceable>scf-resource-group</replaceable> \
  --priority 200 --nsg-name $NSG_NAME --name scf-80 --direction Inbound \
  --destination-port-ranges 80 --access Allow
 
-&prompt.user;az network nsg rule create --resource-group scf-resource-group \
+&prompt.user;az network nsg rule create --resource-group <replaceable>scf-resource-group</replaceable> \
  --priority 201 --nsg-name $NSG_NAME --name scf-443 --direction Inbound \
  --destination-port-ranges 443 --access Allow
 
-&prompt.user;az network nsg rule create --resource-group scf-resource-group \
+&prompt.user;az network nsg rule create --resource-group <replaceable>scf-resource-group</replaceable> \
  --priority 202 --nsg-name $NSG_NAME --name scf-4443 --direction Inbound 
  --destination-port-ranges 4443 --access Allow
 
-&prompt.user;az network nsg rule create --resource-group scf-resource-group \
+&prompt.user;az network nsg rule create --resource-group <replaceable>scf-resource-group</replaceable> \
  --priority 203 --nsg-name $NSG_NAME --name scf-2222 --direction Inbound \
  --destination-port-ranges 2222 --access Allow
 
-&prompt.user;az network nsg rule create --resource-group scf-resource-group 
+&prompt.user;az network nsg rule create --resource-group <replaceable>scf-resource-group</replaceable> \
  --priority 204 --nsg-name $NSG_NAME --name scf-2793 --direction Inbound \
  --destination-port-ranges 2793 --access Allow
 </screen>
@@ -347,11 +365,23 @@ alracdnsmgmt.eastus.cloudapp.azure.com
            following key in the your
            <filename>scf-config-values.yaml</filename>:
        </para>
-       <screen>
+
+<screen>
 env:
   GARDEN_ROOTFS_DRIVER: "overlay-xfs"
 </screen>
-</note>
+
+<para>
+    Enter <varname>auth: none</varname> in the <varname>kube:</varname> section,
+    as Azure does not yet support role-based authentication.
+</para>
+
+<para>
+    <varname>storage_class:</varname> must be either <literal>default</literal> 
+    or <literal>managed-premium</literal>, according to what your Azure account
+    supports. <literal>default</literal> is the default value.
+</para>
     
+</note>
  </sect1>
 </chapter>
