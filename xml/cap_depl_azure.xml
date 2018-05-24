@@ -9,7 +9,7 @@
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
  <info>
-  <title>Preparing Microsoft Azure for &productname;</title>
+  <title>Preparing Microsoft Azure for &scf;</title>
   <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
    <dm:bugtracker></dm:bugtracker>
    <dm:translation>yes</dm:translation>
@@ -17,81 +17,209 @@
  </info>
  
   <para>
-   Starting with version 1.1, &productname; supports running on Microsoft Azure 
-   Container Service (ACS). This chapter describes how to prepare ACS for 
-   deploying &productname;.
+   Starting with version 1.1, &scf; supports deployment on Microsoft Azure 
+   Kubernetes Service (AKS). This chapter describes how to prepare AKS for 
+   deploying &scf; on an un-managed &kube; service. AKS provides &kube;, and
+   then you will deploy &scf; on AKS.
  </para>
- <note>
-     <title>AKS Not Supported</title>
-     <para>&productname; is not currently supported on Azure &kube; Service 
-         (AKS), Microsoft's managed &kube; service. You must set up your &kube;
-         environment manually on your ACS account.
-     </para>
- </note>
  
  <sect1 xml:id="sec.cap.install-az">
      <title>Prequisites</title>
- <para>
+
+<para>
      The first step is to install <command>az</command>, the Azure command-line
      client, on your remote administration machine. See 
      <link xlink:href="https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest">Install Azure CLI 2.0</link> 
      for instructions.
  </para>
  <para>
-     You also need the <command>curl</command>, <command>sed</command>, and 
-     <command>jq</command> commands.
+     See the 
+     <link xlink:href="https://docs.microsoft.com/en-us/cli/azure/reference-index?view=azure-cli-latest">Azure CLI 2.0 Reference</link> 
+     for a complete <command>az</command> command reference.
  </para>
+
  <para>
-     Then log in to your Azure Account:
+     You also need the <command>curl</command>, <command>sed</command>, and 
+     <command>jq</command> commands, and the name of the SSH key attached to
+     your Azure account.
  </para>
+ 
+ <para>
+     Log in to your Azure Account:
+ </para>
+ 
  <screen>
 &prompt.user;az login
 </screen>
+ 
+<para>
+     Your Azure user needs the User Access Administrator role. Check your
+     assigned roles with the <command>az</command> command:
+</para>
+ 
+ <screen>
+&prompt.user;az role assignment list --assignee <replaceable>login-name</replaceable>
+[...]
+"roleDefinitionName": "User Access Administrator",
+ </screen>
 </sect1>
 
 <sect1 xml:id="sec.cap.setup-kubernetes">
-    <title>Setup &kube;</title>
+    <title>Set up &kube;</title>
+
 <para>
     You need your Azure subscription ID. Extract it with <command>az</command>:
 </para>
+
 <screen>
 &prompt.user;az account show --query "{ subscription_id: id }"
+{
+  "subscription_id": "a900cdi2-5983-0376-s7je-d4jdmsif84ca"
+}
 </screen>
+
 <para>
-    Record the password and application ID, and use them to create a service 
-    principal. Replace <varname>subscription-id</varname> in the following 
-    commands with your <varname>subscription-id</varname>. If the Microsoft Azure 
-    service is located in a different data center, then replace 
-    <varname>westus</varname> with the correct data center.
+    Replace <varname>subscription-id</varname> in the next 
+    command with your <varname>subscription-id</varname>. Then export it as
+    an environment variable, echo the variable to verify that it contains 
+    the correct value, then set it as the current subscription: 
 </para>
+
 <screen>
-&prompt.user;export SUBSCRIPTION_ID=<replaceable>subscription-id</replaceable>
+&prompt.user;export SUBSCRIPTION_ID=<replaceable>a900cdi2-5983-0376-s7je-d4jdmsif84ca</replaceable>
+
+&prompt.user; echo $SUBSCRIPTION_ID
+ a900cdi2-5983-0376-s7je-d4jdmsif84ca
 
 &prompt.user;az account set --subscription $SUBSCRIPTION_ID
+</screen>
 
-&prompt.user;az group create --name scf-resource-group --location <replaceable>westus</replaceable>
+<para>
+    The next three commands create a service principal. First create a resource 
+    group. The <replaceable>--name</replaceable> is whatever you want, and 
+    replace <replaceable>--location</replaceable> with your Azure region. 
+    <command>az account list-locations</command> lists the regions
+    supported for your account.
+</para>
 
-&prompt.user;az ad sp create-for-rbac --role Contributor 
- --scopes "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/scf-resource-group" 
+<screen>
+&prompt.user;az group create --name <replaceable>scf-resource-group</replaceable> --location <replaceable>westus</replaceable>
+
+ {
+  "id": "/subscriptions/a900cdi2-5983-0376-s7je-d4jdmsif84ca/resourceGroups/scf-resource-group",
+  "location": "westus",
+  "managedBy": null,
+  "name": "scf-resource-group",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null
+ }
+</screen>
+
+<para>
+    Then create the service principal and configure its access to Azure 
+    resources:
+</para>
+
+<screen>
+&prompt.user;az ad sp create-for-rbac --role Contributor \
+ --scopes "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/<replaceable>scf-resource-group</replaceable>"
+ 
+ {
+  "appId": "bf7l052h-5853-c724-d99a-cd31844434ae",
+  "displayName": "azure-cli-2018-05-23-11-11-22",
+  "name": "http://azure-cli-2018-05-23-11-11-22",
+  "password": "e09330ae-4881-ab22-9487-9b3d138b2af1",
+  "tenant": "abcd7654-c007-1o10-d5h33-7833stc44s44"
+  }
 </screen>
 <para>
-    Create a container service in Azure, using your own password and 
-    application ID, and use your own public SSH key:
+    Record the <varname>appId</varname> and <varname>password</varname>, as you
+    need them to create a container service. The parameters in the following
+    example command to create the container service are explained below.
 </para>
+
 <screen>
 &prompt.user;az acs create \
-   --name scf-container-service \
-   --resource-group scf-resource-group \
-   --orchestrator-type Kubernetes \
-   --dns-prefix "myscf" \
-   --master-count 1 \
-   --admin-username scf-admin \
-   --agent-count 3 \
-   --client-secret <replaceable>password</replaceable> \
-   --ssh-key-value "<replaceable>your-public-ssh-key</replaceable>" \
-   --service-principal <replaceable>application-id</replaceable> \
-   --master-vm-size Standard_D2_v2  
+   --name "<replaceable>scf-container-service</replaceable>" \
+   --resource-group "<replaceable>scf-resource-group</replaceable>" \
+   --orchestrator-type "Kubernetes" \
+   --dns-prefix "<replaceable>scfdns</replaceable>" \
+   --master-count "<replaceable>1</replaceable>" \
+   --admin-username "<replaceable>scf-admin</replaceable>" \
+   --agent-count "<replaceable>3</replaceable>" \
+   --client-secret "<replaceable>e09330ae-4881-ab22-9487-9b3d138b2af1</replaceable>" \
+   --ssh-key-value "<replaceable>~/.ssh/ida_rsa.pub</replaceable>" \
+   --service-principal "<replaceable>bf7l052h-5853-c724-d99a-cd31844434ae</replaceable>" \
+   --master-vm-size "Standard_D2_v2"
 </screen>
+ takes time up to 30 minutes
+alracdnsmgmt.eastus.cloudapp.azure.com
+<itemizedlist>
+  <listitem>
+    <para>
+        Create a new <varname>--name</varname> for your new container service.
+    </para>
+</listitem>
+  <listitem>
+    <para>
+        The name of the <varname>--resource-group</varname> you created above.
+    </para>
+</listitem>
+<listitem>
+    <para>
+        The <varname>--orchestrator-type</varname> must be 
+        <literal>Kubernetes</literal>.
+    </para>
+</listitem>
+<listitem>
+    <para>
+        Create the <varname>--dns-prefix</varname> for your cluster.
+    </para>
+</listitem>
+<listitem>
+    <para>
+        Set the number of &kube; masters with 
+        <varname>--master-count</varname>.
+    </para>
+</listitem>
+<listitem>
+    <para>
+        Create the <varname>--admin-username</varname> for your cluster.
+    </para>
+    </listitem>
+<listitem>
+    <para>
+        Set the number of &kube; minions with <varname>--agent-count</varname>.
+    </para>
+</listitem>
+<listitem>
+    <para>
+        <varname>--client-secret</varname> is the password you recorded when you
+        created the service principal.
+    </para>
+</listitem>
+<listitem>
+    <para>
+       <varname>--ssh-key-value</varname> is the public SSH key associated with
+       your Azure account.
+   </para>
+</listitem>
+<listitem>
+    <para>       
+        <varname>--service-principal</varname> is the <literal>appId</literal>
+        from your service principal creation.
+    </para>
+ </listitem>
+<listitem>
+    <para>       
+        <varname>--master-vm-size</varname> <literal>Standard_D2_v2</literal> is 
+                the default, and currently only value.
+    </para>
+</listitem>      
+</itemizedlist>
+
 <para>
     Prepare the &kube; environment. If there is another running &kube;, 
     copy the old configuration to a different location to start with a new
