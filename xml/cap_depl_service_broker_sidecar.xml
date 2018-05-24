@@ -118,9 +118,10 @@ env:
   SERVICE_MYSQL_USER: <replaceable>mysql-admin-user</replaceable>
   SERVICE_MYSQL_PASS: <replaceable>mysql-admin-password</replaceable>
 
-  # CAP access credentials
+  # CAP access credentials, from your original deployment configuration 
+  # (see <xref linkend="sec.cap.configure-prod"/>)
   CF_ADMIN_USER: <replaceable>admin</replaceable>
-  CF_ADMIN_PASSWORD: <replaceable>changeme</replaceable>
+  CF_ADMIN_PASSWORD: <replaceable>password</replaceable>
   CF_DOMAIN: <replaceable>example.com</replaceable>
   
   # Copy the certificates you extracted above, as shown in these
@@ -233,8 +234,8 @@ To create a new service instance, use the &cf; command line client:
   <title>Deploying the PostgreSQL Chart</title>
   <para> 
       The PostgreSQL configuration is slightly different from the MySQL 
-      configuration. The database-specific keys are named differently, and an 
-      additional key is introduced.
+      configuration. The database-specific keys are named differently, and it 
+      requires the <varname>SERVICE_POSTGRESQL_SSLMODE</varname> key.
   </para>
   
   <screen> 
@@ -248,13 +249,14 @@ env:
   # valid values, please see <link xlink:href="https://godoc.org/github.com/lib/pq"/>
   SERVICE_POSTGRESQL_SSLMODE: disable
   
-  # CAP access credentials
+  # CAP access credentials, from your original deployment configuration 
+  # (see <xref linkend="sec.cap.configure-prod"/>)
   CF_ADMIN_USER: <replaceable>admin</replaceable>
-  CF_ADMIN_PASSWORD: <replaceable>changeme</replaceable>
+  CF_ADMIN_PASSWORD: <replaceable>password</replaceable>
   CF_DOMAIN: <replaceable>example.com</replaceable>
   
   # Copy the certificates you extracted above, as shown in these
-  # abbreviated examples
+  # abbreviated examples, prefaced with the pipe character
   
   # SCF cert
   CF_CA_CERT: |
@@ -332,11 +334,11 @@ To correctly remove sidecar deployments, perform the following steps in order.
 
   <listitem>
       <para>
-    Configure the Cloud Foundry USB CLI plugin:
+    Configure the Cloud Foundry USB CLI plugin, using the domain you created
+    for your &scf; deployment:
 </para>
 <screen>
-    TODO what domain is this?
-&prompt.user;cf usb-target https://usb.${DOMAIN}
+&prompt.user;cf usb-target https://usb.<replaceable>example.com</replaceable>
 </screen>
 </listitem>
 
@@ -351,7 +353,7 @@ To correctly remove sidecar deployments, perform the following steps in order.
 
 <listitem>
     <para>
-    Delete the Helm release from Kubernetes:
+    Find your release name, then delete the release:
 </para>
 <screen>
 &prompt.user;helm list
