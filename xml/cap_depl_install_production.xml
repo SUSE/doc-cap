@@ -688,7 +688,8 @@ Space:          No space targeted, use 'cf target -s SPACE'
 &prompt.user;cf restart-app-instance <replaceable>appname</replaceable> <replaceable>index</replaceable>
 </screen>
 <para>
-    After you have set up a service broker (see TODO), create new services: 
+    After you have set up a service broker 
+    (see <xref linkend="cha.cap.depl-sbs"/>), create new services: 
 </para>
 <screen>
 &prompt.user;cf create-service <replaceable>service-name</replaceable> <replaceable>default</replaceable> <replaceable>mydb</replaceable>
