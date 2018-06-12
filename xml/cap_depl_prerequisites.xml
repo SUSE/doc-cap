@@ -22,7 +22,7 @@ leaving in place until I'm sure it's not needed - cs -->
  <para>
 This chapter lists the minimum prerequisites to set up &productname; on &suse; &caasp;. 
 Some of the commands are particular to either the &kube; master node or a worker 
-node. These prerequisites also provide guidance for installing &cap; on any 
+node. These prerequisites also provide guidance for installing &productname; on any 
 Kubernetes cluster. <xref linkend="kube.services"/> shows which services run on
 the &kube; master and workers.
  </para>
@@ -67,7 +67,7 @@ the &kube; master and workers.
               Installation with AutoYaST</link>. When you have completed 
 <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/data/sec_caasp_installquick.html#sec_caasp_installquick_bootstrap">
               Bootstrapping the Cluster</link> you can proceed to 
-          satisfying the remaining prerequisites, and then installing &suse; &cap;.
+          satisfying the remaining prerequisites, and then installing &productname;.
       </para>
 	</listitem>
 	</varlistentry>
@@ -77,7 +77,7 @@ the &kube; master and workers.
 	  </term>
       <listitem>
       <para>
-    &suse; &cap; (and &suse; &caasp;) requires an external DNS and DHCP server.
+    &productname; (and &suse; &caasp;) requires an external DNS and DHCP server.
        </para>
 	</listitem>
 	</varlistentry>   
