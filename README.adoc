@@ -20,7 +20,10 @@ reserved for releases only. Always commit to `develop`.
 
 == Editing DocBook
 
-To contribute to the documentation, you need to write DocBook.
+If you are interested in learning the official Doc Team way of writing
+the official SUSE product documentation, follow these suggestions. 
+Our source files are written using DocBook XML and built with DAPS
+using custom stylesheets.
 
 * You can learn about DocBook syntax at http://docbook.org/tdg5/en/html .
 * SUSE documents are generally built with DAPS (package `daps`) and the
