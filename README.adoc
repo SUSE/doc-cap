@@ -7,8 +7,8 @@ https://www.suse.com/documentation/ once available.
 
 == Contributing
 
-If you would like to contribute, please fork this repository and send
-pull requests. Always use the `develop` branch for your edits! +
+If you would like to contribute, pull requests are welcome. Always create your working branch from the `develop` branch. You are also welcome to open a GitHub Issue and write your contribution in plain text, and we will take care of the rest.
++
 Contributors with direct access to the repository are encouraged to use the
 git-flow-avh workflow (package `git-flow-avh`). However, this is not a must.
 For help on style and structure, refer to the https://doc.opensuse.org/products/opensuse/Styleguide/opensuse_documentation_styleguide_sd/[Documentation Styleguide] 
