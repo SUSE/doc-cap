@@ -8,6 +8,8 @@
 <!-- subnets Kubernetes clusters -->
 <!ENTITY subnet10 "192.168.10">
 
+<!-- IP addresses for Microsoft Azure -->
+<!ENTITY publicip "40.101.3.25">
 
 <!-- ...................................................................... -->
 <!-- General Entities                                                       -->
