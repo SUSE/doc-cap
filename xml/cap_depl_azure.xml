@@ -102,8 +102,11 @@
 &prompt.user;az account set --subscription $SUBSCRIPTION_ID
 </screen>
 
+<!-- not sure this is necessary. cs 13 june 2018 -->
 <para>
-    Verify that the Microsoft.Network, Microsoft.Storage, Microsoft.Compute, and Microsoft.ContainerService providers are enabled:
+    Verify that the <literal>Microsoft.Network</literal>, 
+    <literal>Microsoft.Storage</literal>, <literal>Microsoft.Compute</literal>, 
+    and <literal>Microsoft.ContainerService</literal> providers are enabled:
 </para>
 
 <screen>
@@ -125,6 +128,15 @@
     required variables as environment variables, which helps to speed up the 
     setup, and to reduce errors.
 </para>
+
+<note>
+    <title>Use different names</title>
+    <para>
+        It is better to use unique resource group and cluster names, and not 
+        copy the examples, especially when your Azure subscription supports 
+        multiple users.
+    </para>
+</note>
 
 <procedure xml:id="pro.envvars-azure">
     <step>
@@ -480,7 +492,7 @@ Public IP:\t\t$(az network public-ip show --resource-group $MCRGNAME --name $AKS
 Private IPs:\t\t\"$(az network nic list --resource-group $MCRGNAME | jq -r '.[].ipConfigurations[].privateIpAddress' | paste -s -d " " | sed -e 's/ /", "/g')\"\n"
 
  Resource Group:        cap-aks
- Public IP:             "40.121.8.65"
+ Public IP:             "&publicip;"
  Private IPs:           "10.240.0.4", "10.240.0.6", "10.240.0.5"
             </screen>
     </step>
@@ -520,10 +532,10 @@ secrets:
 
 env:
     # Use the public IP address
-    DOMAIN: <replaceable>40.121.8.65.xip.io</replaceable>
+    DOMAIN: <replaceable>&publicip;.xip.io</replaceable>
             
     # uaa prefix is required        
-    UAA_HOST: uaa.<replaceable>40.121.8.65.xip.io</replaceable>
+    UAA_HOST: uaa.<replaceable>&publicip;.xip.io</replaceable>
     UAA_PORT: 2793
     
     #Azure deployment requires overlay
@@ -546,8 +558,31 @@ kube:
     auth: none
 </screen>
 <para>
-    Now Azure is ready, and you can deploy &productname; on it.
-</para>        
+    Now Azure is ready, and you can deploy &productname; on it. Note that you
+    will not install &suse; &caasp;, which provides a &kube; cluster,
+    because AKS provides a managed &kube; cluster. Start with the "Helm Init" 
+    sections of the <xref linkend="cha.cap.install-production"/> or 
+    <xref linkend="cha.cap.install-minimal"/> guides.
+</para>
+<para>
+    When your UAA deployment has completed, test that it is operating correctly
+    by running <command>curl</command> on the DNS name that you configured for
+    your UAA_HOST:
+</para>
+
+<screen>
+&prompt.user;curl -k https://uaa.&publicip;.xip.io:2793/.well-known/openid-configuration
+</screen>
+
+<para>
+    This should return a JSON object, as this abbreviated example shows:
+</para>
+<screen>
+{"issuer":"https://uaa.&publicip;.xip.io:2793/oauth/token",
+"authorization_endpoint":"https://uaa.&publicip;.xip.io:2793
+/oauth/authorize","token_endpoint":"https://uaa.&publicip;.
+xip.io:2793/oauth/token",
+</screen>
 </sect1>
  
 </chapter>
