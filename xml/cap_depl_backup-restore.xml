@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha.cap.backup-restore"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+  <title>Backup and Restore</title>
+ </info>
+
+ <para>
+     <literal>cf-plugin-backup</literal> backs up and restores your cloud 
+     controller database (CDDB), using the &cf; command line interface (cf-cli).
+     (See <xref linkend="sec.cap.cf-cli"/>.) Use it after a fresh, clean
+     &productname; deployment has been completed. Use the restore function to
+     return your deployment to its original clean state, or to replicate your deployment.
+ </para>
+ <para>
+     <literal>cf-plugin-backup</literal> creates a JSON file that contains your 
+     &productname; data in the current directory, 
+     <filename>cf-backup.json</filename>, and your application data in a 
+     directory called <filename>app-bits/</filename>.
+ </para>
+ 
+ <sect1 xml:id="sec.cap.install-backup-restore">
+     <title>Installing the cf-plugin-backup</title>
+     <para>
+         Download the plugin from 
+         <link xlink:href="https://github.com/SUSE/cf-plugin-backup/releases">
+             cf-plugin-backup/releases</link>.
+     </para>
+     <para>
+         Then install it with <command>cf</command>, using the name of the 
+         plugin binary that you downloaded:
+     </para>
+     <screen>
+&prompt.user;cf install-plugin <replaceable>cf-plugin-backup-1.0.7.0.g0217eef.linux-amd64</replaceable>
+ Attention: Plugins are binaries written by potentially untrusted authors.
+ Install and use plugins at your own risk.
+ Do you want to install the plugin 
+ backup-plugin/cf-plugin-backup-1.0.7.0.g0217eef.linux-amd64? [yN]: y
+ Installing plugin backup...
+ OK
+ Plugin backup 1.0.7 successfully installed.
+     </screen>
+     
+     <para>
+         Verify installation by examing the 
+         <literal>Commands offered by installed plugins:</literal> section of the online help:
+     </para>
+      <screen>
+&prompt.user;cf help|awk 'BEGIN{RS=ORS="\n\n";FS=OFS="\n"}/plugins:/'
+ Commands offered by installed plugins:
+   backup-info    backup-restore    backup-snapshot
+</screen>
+</sect1>
+
+<sect1 xml:id="sec.cap.using-plugin">
+    <title>Using cf-plugin-backup</title>
+    
+    <para>
+        View the online help for any command, like this example:
+    </para>
+    
+    <screen>
+&prompt.user; cf backup-info --help
+ NAME:
+   backup-info - Show information about the current snapshot
+
+ USAGE:
+   cf backup-info
+</screen>
+
+<para>
+    Create a backup of your &productname; data and applications. The command
+    outputs progress messages until it is completed:
+</para>
+
+<screen>
+&prompt.user;cf backup-snapshot   
+ 2018/06/18 12:48:27 Retrieving resource /v2/quota_definitions
+ 2018/06/18 12:48:30 org quota definitions done
+ 2018/06/18 12:48:30 Retrieving resource /v2/space_quota_definitions
+ 2018/06/18 12:48:32 space quota definitions done
+ 2018/06/18 12:48:32 Retrieving resource /v2/organizations
+ [...]
+</screen>
+
+<para>
+    Your &cap; data is saved in the current directory in 
+    <filename>cf-backup.json</filename>, and application data in the
+    <filename>app-bits/</filename> directory.
+</para>
+
+<para>
+    View the current backup:
+</para>
+
+<screen>
+&prompt.user;cf backup-info
+ - Org  system
+</screen>
+
+<para>
+    Restore from backup:
+</para>
+
+<screen>
+&prompt.user;cf backup-restore
+</screen>
+
+<para>
+    There are two additional restore options: 
+    <command>--include-security-groups</command> and
+    <command>--include-quota-definitions</command>. 
+</para>
+
+<para>
+    The following tables lists the scope of the <literal>cf-plugin-backup</literal>
+    backup. Organization and space users are backed up at the &productname; level. The user account in UAA/LDAP, and the service instances and their application bindings are not backed up.
+</para>
+
+<informaltable>
+  <tgroup cols="2">
+    <thead>
+      <row>
+        <entry>Scope</entry>
+        <entry>Restore</entry>
+      </row>
+    </thead>
+    <tbody>
+      <row>
+        <entry>Orgs</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Org auditors</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Org billing-manager</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Quota definitions</entry>
+        <entry>Optional</entry>
+      </row>
+      <row>
+        <entry>Spaces</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Space developers</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Space auditors</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Space managers</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Apps</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>App binaries</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Routes</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Route mappings</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Domains</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Private domains</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Stacks</entry>
+        <entry>not available</entry>
+      </row>
+      <row>
+        <entry>Feature flags</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Security groups</entry>
+        <entry>Optional</entry>
+      </row>
+      <row>
+        <entry>Custom buildpacks</entry>
+        <entry>No</entry>
+      </row>       
+    </tbody>
+   </tgroup>
+</informaltable>   
+
+</sect1>
+
+</chapter>
