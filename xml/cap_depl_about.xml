@@ -194,7 +194,9 @@ Note that after you have deployed your cluster and start building and running
 applications, your applications may depend on buildpacks that are not bundled
 in the container images that ship with &scf;. These will be downloaded at
 runtime, when you are pushing applications to the platform. Some of these 
-buildpacks may include components with proprietary licenses.
+buildpacks may include components with proprietary licenses. (See
+<link xlink:href="https://docs.cloudfoundry.org/buildpacks/developing-buildpacks.html">Customizing and Developing Buildpacks</link> to learn more
+about buildpacks, and creating and managing your own.)
 </para>
 
 
