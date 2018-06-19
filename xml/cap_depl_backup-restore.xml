@@ -57,14 +57,16 @@
      </para>
       <screen>
 &prompt.user;cf plugins
-Listing installed plugins...
+ Listing installed plugins...
 
-plugin   version   command name      command help
-backup   1.0.7     backup-info       Show information about the current snapshot
-backup   1.0.7     backup-restore    Restore the CloudFoundry state from a backup created with the snapshot command
-backup   1.0.7     backup-snapshot   Create a new CloudFoundry backup snapshot to a local file
+ plugin   version   command name      command help
+ backup   1.0.7     backup-info       Show information about the current snapshot
+ backup   1.0.7     backup-restore    Restore the CloudFoundry state from a 
+  backup created with the snapshot command
+ backup   1.0.7     backup-snapshot   Create a new CloudFoundry backup snapshot 
+  to a local file
 
-Use 'cf repo-plugins' to list plugins in registered repos available to install.
+ Use 'cf repo-plugins' to list plugins in registered repos available to install.
 </screen>
 </sect1>
 
