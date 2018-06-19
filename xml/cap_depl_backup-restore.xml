@@ -53,13 +53,18 @@
      </screen>
      
      <para>
-         Verify installation by examing the 
-         <literal>Commands offered by installed plugins:</literal> section of the online help:
+         Verify installation by listing installed plugins:
      </para>
       <screen>
-&prompt.user;cf help|awk 'BEGIN{RS=ORS="\n\n";FS=OFS="\n"}/plugins:/'
- Commands offered by installed plugins:
-   backup-info    backup-restore    backup-snapshot
+&prompt.user;cf plugins
+Listing installed plugins...
+
+plugin   version   command name      command help
+backup   1.0.7     backup-info       Show information about the current snapshot
+backup   1.0.7     backup-restore    Restore the CloudFoundry state from a backup created with the snapshot command
+backup   1.0.7     backup-snapshot   Create a new CloudFoundry backup snapshot to a local file
+
+Use 'cf repo-plugins' to list plugins in registered repos available to install.
 </screen>
 </sect1>
 
