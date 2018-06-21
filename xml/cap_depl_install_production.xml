@@ -972,7 +972,7 @@ sizing:
   cf_usb:
     count: 2
   consul:
-    count: 3
+    count: 1
   diego_access:
     count: 2
   diego_api:
