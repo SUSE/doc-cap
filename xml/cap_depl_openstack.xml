@@ -104,7 +104,7 @@
   <screen>
 &prompt.user;
 $ openstack image create \
-  --file <filename>SUSE-CaaS-Platform-2.0-KVM-and-Xen.x86_64-1.0.0-GM.qcow2</filename>
+  --file SUSE-CaaS-Platform-2.0-KVM-and-Xen.x86_64-1.0.0-GM.qcow2
 </screen>
 
 <para>
