@@ -39,6 +39,16 @@
   </listitem>
   <listitem>
     <para>
+        The default storage class is <literal>persistent</literal>. You may 
+        specify a different storage class in your deployment's
+        <filename>values.yaml</filename> file (which is called 
+        <filename>scf-config-values.yaml</filename> in the examples in this
+        guide), or as a <command>helm</command> command option, e.g.
+        <command>--set kube.storage_class.persistent=my_storage_class</command>.
+    </para>
+  </listitem>  
+  <listitem>
+    <para>
         <literal>kube-dns</literal> must be be running 
     </para>
   </listitem>
