@@ -846,6 +846,8 @@ susecf-console-ui-ext   172.24.84.50    10.10.100.82   8443:32511/TCP  19m
 </screen> 
 </sect1>
 
+<!-- helm rollback does not work, so upgrades are one-way for now
+-->
  <sect1 xml:id="sec.cap.update">
   <title>Upgrading &suse; &cf;, UAA, and Stratos</title>
   <para>
@@ -915,51 +917,80 @@ suse/uaa      2.8.0    A Helm chart for SUSE UAA
 &prompt.user;helm upgrade --recreate-pods <replaceable>susecf-console</replaceable> suse/console \
  --values scf-config-values.yaml
 </screen>
-
-<para>
-</para>
-    
-
-<!-- helm rollback does not work, so upgrades are one-way for now
--->
 </sect1>
+
 <sect1 xml:id="sec.cap.ha-prod">
   <title>Example &ha; Configuration</title>
   <para>
 This example &ha; configuration needs two separate configuration files, one for 
-UAA and one for SCF. The first example is for UAA, 
-<filename>uaa-sizing.yaml</filename>.
+UAA and one for SCF. It may be helpful to read the comments in the 
+<literal>sizing:</literal> section in the default
+<filename>values.yaml</filename> file for each namespace, which describes which
+roles can be scaled and the scaling options for each role. One way is to use 
+<command>helm inspect</command> to read the <literal>sizing:</literal> section 
+in your installed charts:
 </para>
+
+<screen>
+&prompt.user;helm inspect suse/uaa | less +/sizing:
+&prompt.user;helm inspect suse/scf | less +/sizing:
+</screen>
+
+<para>
+Another way is to download a copy of the &helm; charts, 
+unpack them, and then use Perl to extract the information for each role from the 
+<literal>sizing:</literal> section. The following example is for UAA.
+You may see a few non-relevant lines from the sections preceding and following 
+the <literal>sizing:</literal> section. In the following example these are lines 
+29-53, and lines 226-245.
+</para>
+
+<screen>
+&prompt.user;helm fetch suse/uaa
+&prompt.user;tar xzvf cf-2.8.0.tgz
+&prompt.user;cd uaa
+&prompt.user;perl -ne '/^sizing/..0 and do { print $.,":",$_ if /^  [a-z]/ || /high avail|scale|count/ }' values.yaml
+ 29:  cpu:
+ 37:  memory:
+ 53:  mysql:
+ 60:    # The mysql role can scale between 1 and 3 instances.
+ 61:    # For high availability it needs at least 2 instances.
+ 62:    count: 1
+ 86:  mysql_proxy:
+ 93:    # The mysql-proxy role can scale between 1 and 3 instances.
+ 94:    # For high availability it needs at least 2 instances.
+ 95:    count: 1
+ 110:  secret_generation:
+ 117:    # The secret-generation role cannot be scaled.
+ 118:    count: 1
+ 142:  uaa:
+ 149:    # The uaa role can scale between 1 and 65535 instances.
+ 150:    count: 1
+ 226:  loadbalanced: false
+ 228:  external_ips: []
+ 230:  # Increment this counter to rotate all generated secrets
+ 231:  secrets_generation_counter: 1
+ 233:  storage_class:
+ 238:  hostpath_available: false
+ 240:  registry:
+ 244:  organization: "cap"
+ 245:  auth: "rbac"
+</screen>
+
+<para>
+The first example configuration is for UAA, 
+<filename>uaa-sizing.yaml</filename>. The values for each role depend on your
+particular deployment and requirements.
+</para>
+
 <screen>
 sizing:
-  api:
-    count: 2
-  cf_usb:
-    count: 2
-  consul:
-    count: 3
-  diego_access:
-    count: 2
-  diego_api:
-    count: 3
-  diego_brain:
-    count: 2
-  diego_cell:
-    count: 3
-  doppler:
-    count: 2
-  etcd:
-    count: 3
-  loggregator:
-    count: 2
   mysql:
-    count: 1
-  nats:
+    count: 3
+  mysql_proxy:
     count: 2
-  router:
+  uaa:
     count: 2
-  routing_api:
-    count: 2 
 </screen>
 
 <para>
@@ -968,37 +999,54 @@ sizing:
 <screen>
 sizing:
   api:
-    count: 2
+    count: 6
+  cc_uploader:
+    count: 3
+  cc_worker:
+    count: 6
   cf_usb:
-    count: 2
+    count: 3
   consul:
     count: 1
   diego_access:
-    count: 2
+    count: 3
   diego_api:
     count: 3
   diego_brain:
     count: 2
   diego_cell:
     count: 3
-  doppler:
-    count: 2
-  etcd:
+  diego_locket:
     count: 3
+  doppler:
+    count: 4
   loggregator:
-    count: 2
+    count: 7
   mysql:
+    count: 3
+  mysql_proxy:
     count: 3
   nats:
     count: 2
+  nfs_broker:
+    count: 3
+  postgres:
+    count: 3
   router:
-    count: 2
+    count: 13
   routing_api:
-    count: 2 
+    count: 3
+  syslog_adapter:
+    count: 7
+  syslog_rlp:
+    count: 7
+  tcp_router:
+    count: 3
 </screen>
 
 <para>
-    Follow the steps in <xref linkend="sec.cap.configure-prod"/> until you get to
+    After creating your configuration files, follow the steps in 
+    <xref linkend="sec.cap.configure-prod"/> until you get to
     <xref linkend="sec.cap.install-uaa-prod"/>. Then deploy UAA with this command:
 </para>
 
