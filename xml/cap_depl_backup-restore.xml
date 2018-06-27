@@ -19,9 +19,10 @@
  <para>
      <literal>cf-plugin-backup</literal> backs up and restores your cloud 
      controller database (CDDB), using the &cf; command line interface (cf-cli).
-     (See <xref linkend="sec.cap.cf-cli"/>.) Use it after a fresh, clean
+     (See <xref linkend="sec.cap.cf-cli"/>.) Use it after a fresh clean
      &productname; deployment has been completed. Use the restore function to
-     return your deployment to its original clean state, or to replicate your deployment.
+     return your deployment to its original clean state, or to replicate your 
+     deployment in a different location.
  </para>
  <para>
      <literal>cf-plugin-backup</literal> creates a JSON file that contains your 
@@ -29,6 +30,99 @@
      <filename>cf-backup.json</filename>, and your application data in a 
      directory called <filename>app-bits/</filename>.
  </para>
+ 
+ <para>
+    The following table lists the scope of the 
+    <literal>cf-plugin-backup</literal>
+    backup. Organization and space users are backed up at the &productname; 
+    level. The user account in UAA/LDAP, the service instances and their 
+    application bindings, and custom buildpacks are not backed up.
+</para>
+
+<informaltable>
+  <tgroup cols="2">
+    <thead>
+      <row>
+        <entry>Scope</entry>
+        <entry>Restore</entry>
+      </row>
+    </thead>
+    <tbody>
+      <row>
+        <entry>Orgs</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Org auditors</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Org billing-manager</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Quota definitions</entry>
+        <entry>Optional</entry>
+      </row>
+      <row>
+        <entry>Spaces</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Space developers</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Space auditors</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Space managers</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Apps</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>App binaries</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Routes</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Route mappings</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Domains</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Private domains</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Stacks</entry>
+        <entry>not available</entry>
+      </row>
+      <row>
+        <entry>Feature flags</entry>
+        <entry>Yes</entry>
+      </row>
+      <row>
+        <entry>Security groups</entry>
+        <entry>Optional</entry>
+      </row>
+      <row>
+        <entry>Custom buildpacks</entry>
+        <entry>No</entry>
+      </row>       
+    </tbody>
+   </tgroup>
+</informaltable> 
  
  <sect1 xml:id="sec.cap.install-backup-restore">
      <title>Installing the cf-plugin-backup</title>
@@ -129,96 +223,6 @@
     <command>--include-security-groups</command> and
     <command>--include-quota-definitions</command>. 
 </para>
-
-<para>
-    The following tables lists the scope of the <literal>cf-plugin-backup</literal>
-    backup. Organization and space users are backed up at the &productname; level. The user account in UAA/LDAP, and the service instances and their application bindings are not backed up.
-</para>
-
-<informaltable>
-  <tgroup cols="2">
-    <thead>
-      <row>
-        <entry>Scope</entry>
-        <entry>Restore</entry>
-      </row>
-    </thead>
-    <tbody>
-      <row>
-        <entry>Orgs</entry>
-        <entry>Yes</entry>
-      </row>
-      <row>
-        <entry>Org auditors</entry>
-        <entry>Yes</entry>
-      </row>
-      <row>
-        <entry>Org billing-manager</entry>
-        <entry>Yes</entry>
-      </row>
-      <row>
-        <entry>Quota definitions</entry>
-        <entry>Optional</entry>
-      </row>
-      <row>
-        <entry>Spaces</entry>
-        <entry>Yes</entry>
-      </row>
-      <row>
-        <entry>Space developers</entry>
-        <entry>Yes</entry>
-      </row>
-      <row>
-        <entry>Space auditors</entry>
-        <entry>Yes</entry>
-      </row>
-      <row>
-        <entry>Space managers</entry>
-        <entry>Yes</entry>
-      </row>
-      <row>
-        <entry>Apps</entry>
-        <entry>Yes</entry>
-      </row>
-      <row>
-        <entry>App binaries</entry>
-        <entry>Yes</entry>
-      </row>
-      <row>
-        <entry>Routes</entry>
-        <entry>Yes</entry>
-      </row>
-      <row>
-        <entry>Route mappings</entry>
-        <entry>Yes</entry>
-      </row>
-      <row>
-        <entry>Domains</entry>
-        <entry>Yes</entry>
-      </row>
-      <row>
-        <entry>Private domains</entry>
-        <entry>Yes</entry>
-      </row>
-      <row>
-        <entry>Stacks</entry>
-        <entry>not available</entry>
-      </row>
-      <row>
-        <entry>Feature flags</entry>
-        <entry>Yes</entry>
-      </row>
-      <row>
-        <entry>Security groups</entry>
-        <entry>Optional</entry>
-      </row>
-      <row>
-        <entry>Custom buildpacks</entry>
-        <entry>No</entry>
-      </row>       
-    </tbody>
-   </tgroup>
-</informaltable>   
 
 </sect1>
 
