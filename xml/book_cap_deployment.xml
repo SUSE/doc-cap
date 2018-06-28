@@ -37,6 +37,7 @@
 <xi:include href="cap_depl_kube_requirements.xml"/>
 <xi:include href="cap_depl_install_minimal.xml"/>
 <xi:include href="cap_depl_troubleshooting.xml"/>
+<xi:include href="appendix_values_yaml.xml"/>
 
 <!-- ===================================================================== -->
 <!-- Appendix                                                              -->
