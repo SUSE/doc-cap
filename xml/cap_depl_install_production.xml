@@ -928,7 +928,7 @@ UAA and one for SCF. It may be helpful to read the comments in the
 <filename>values.yaml</filename> file for each namespace, which describes which
 roles can be scaled and the scaling options for each role. One way is to use 
 <command>helm inspect</command> to read the <literal>sizing:</literal> section 
-in your installed charts:
+in the &helm; charts:
 </para>
 
 <screen>
@@ -945,9 +945,17 @@ the <literal>sizing:</literal> section. In the following example these are lines
 29-53, and lines 226-245.
 </para>
 
+<note>
+    <title>mysql_proxy does not scale</title>
+    <para>
+    Currently <literal>mysql_proxy</literal> does not scale. This will change in
+    the &productname; 1.2, and then scaling will be supported.
+</para>
+</note>    
+
 <screen>
 &prompt.user;helm fetch suse/uaa
-&prompt.user;tar xzvf cf-2.8.0.tgz
+&prompt.user;tar xzvf uaa-2.8.0.tgz
 &prompt.user;cd uaa
 &prompt.user;perl -ne '/^sizing/..0 and do { print $.,":",$_ if /^  [a-z]/ || /high avail|scale|count/ }' values.yaml
  29:  cpu:
@@ -987,8 +995,6 @@ particular deployment and requirements.
 sizing:
   mysql:
     count: 3
-  mysql_proxy:
-    count: 2
   uaa:
     count: 2
 </screen>
@@ -1023,8 +1029,6 @@ sizing:
   loggregator:
     count: 7
   mysql:
-    count: 3
-  mysql_proxy:
     count: 3
   nats:
     count: 2
@@ -1103,12 +1107,17 @@ sizing:
         You can confirm this by looking at the logs inside the container. Look
         for <literal>.consul-lock.acquiring-lock</literal>.
     </para>
+    
+<!-- commenting this out until 1.2 release. cs june 28 2018, then revisiting
+    for correct information
     <para>
-        Some roles cannot be scaled. <command>mysql-proxy</command> needs a 
-        proper active/passive configuration. <command>tcp-router</command> has 
+        Some roles cannot be scaled. <command>mysql_proxy</command> needs a 
+        proper active/passive configuration. <command>tcp_router</command> has 
         no mechanism for exposing ports correctly. <command>blobstore</command> 
         needs shared volume support and an active/passive configuration.
-    </para>
+    </para> -->
+    
+    <!-- this will change in 1.2 release  cs june 28 2018 -->   
     <para>
 Some roles follow an active/passive scaling model, meaning all pods except 
 the active one will be shown as NOT READY by &kube;. This is appropriate and 
