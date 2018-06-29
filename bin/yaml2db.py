@@ -117,6 +117,10 @@ def parsecli(cliargs=None):
                               "(can be used multiple times to "
                               "skip more sections)"),
                         )
+    parser.add_argument('-t', '--title',
+                        default="YAML Configuration",
+                        help="The text of the title in the root element (default: %(default)r)",
+                        )
     parser.add_argument('yamlfile',
                         metavar="YAMLFILE",
                         help="the YAML file to convert to DocBook 5",
@@ -171,7 +175,7 @@ def convert2db(args):
     data = yaml.load(open(args.yamlfile, 'r'))
     #data = yaml.load(TEST_STR)
 
-    root = E.appendix(E.title("YAML Configuration"))
+    root = E.appendix(E.title(args.title))
     root.attrib.update({'version': '5.1'})
     if args.rootid:
         root.attrib.update({XMLID: args.rootid})
