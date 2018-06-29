@@ -72,10 +72,6 @@ def variablelist(root):
     :type root: :class:`etree.Element`
     """
     node = E.variablelist()
-    # node.attrib['version'] = '5.1'
-    #if parser is None:
-    #    parser = etree.XMLParser(ns_clean=True)
-    # tree = etree.ElementTree(node, parser=parser)
     yield node
     root.append(node)
 
@@ -137,7 +133,7 @@ def comments(node):
     :return: comment as string
     """
     # We need to advance to the next entry in the list
-    # as the first entry in .ca.comment is usuall(?) None
+    # as the first entry in .ca.comment is usually(?) None
     comnodes = iter(node)
     if next(comnodes) is not None:
         comnodes = node
@@ -186,28 +182,28 @@ def convert2db(args):
             print("** Skipping section %s" % sec)
             continue
         print("** Section: %s" % sec)
-        with variablelist(root) as vl, varlistentry(vl) as node:
+        with variablelist(root) as vl:
             vl.append(E.title(sec))
-
             for key in data[sec].keys():
-                print("  Key:", key)
-                term = E.term()
-                varname = E.varname(key)
-                varname.tail = ' = '
-                literal = E.literal(str(data[sec][key]))
-                term.append(varname)
-                term.append(literal)
+                with varlistentry(vl) as node:
+                    print("  Key:", key)
+                    term = E.term()
+                    varname = E.varname(key)
+                    varname.tail = ' = '
+                    literal = E.literal(str(data[sec][key]))
+                    term.append(varname)
+                    term.append(literal)
 
-                # First try the *direct* comment, if it cannot
-                # be find, try the section comment
-                trycom = data[sec].ca.items.get(key)
-                if trycom is None:
-                    com = comments(data[sec].ca.comment)
-                else:
-                    com = comments(trycom)
-                para = E.listitem(E.para("\n".join(com)))
-                node.append(term)
-                node.append(para)
+                    # First try the *direct* comment, if it cannot
+                    # be find, try the section comment
+                    trycom = data[sec].ca.items.get(key)
+                    if trycom is None:
+                        com = comments(data[sec].ca.comment)
+                    else:
+                        com = comments(trycom)
+                    para = E.listitem(E.para("\n".join(com)))
+                    node.append(term)
+                    node.append(para)
 
     return root
 
