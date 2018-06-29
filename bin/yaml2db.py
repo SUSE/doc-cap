@@ -81,15 +81,15 @@ def variablelist(root):
 
 
 @contextmanager
-def varlistentry(node):
+def varlistentry(parent):
     """Context manager to create  DocBook5 <varlistentry>
 
-    :param node: the root element to append the varlistentry
-    :type node: :class:`etree.Element`
+    :param parent: the root element to append the varlistentry
+    :type parent: :class:`etree.Element`
     """
-    vle = E.varlistentry()
-    yield vle
-    node.append(vle)
+    node = E.varlistentry()
+    yield node
+    parent.append(node)
 
 
 def parsecli(cliargs=None):
