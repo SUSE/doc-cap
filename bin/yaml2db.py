@@ -64,7 +64,13 @@ XMLID='{%s}id' % XML
 E = ElementMaker(namespace=DBNS, nsmap={None: DBNS})
 
 @contextmanager
-def variablelist(root, parser=None):
+def variablelist(root):
+    """Context manager to create DocBook5 <variablelist>
+       element and append it to root afterwards it's filled
+
+    :param root: the root element to append the variablelist
+    :type root: :class:`etree.Element`
+    """
     node = E.variablelist()
     # node.attrib['version'] = '5.1'
     #if parser is None:
@@ -76,7 +82,10 @@ def variablelist(root, parser=None):
 
 @contextmanager
 def varlistentry(node):
-    """
+    """Context manager to create  DocBook5 <varlistentry>
+
+    :param node: the root element to append the varlistentry
+    :type node: :class:`etree.Element`
     """
     vle = E.varlistentry()
     yield vle
@@ -108,9 +117,9 @@ def parsecli(cliargs=None):
                         metavar="SECTION",
                         action='append',
                         default=[],
-                        help=("Skip a single YAML section. "
-                              "To skip more sections, use this option "
-                              "multiple times"),
+                        help=("Skip a single YAML section "
+                              "(can be used multiple times to "
+                              "skip more sections)"),
                         )
     parser.add_argument('yamlfile',
                         metavar="YAMLFILE",
@@ -121,10 +130,14 @@ def parsecli(cliargs=None):
 
 
 def comments(node):
-    """Searches for comments
+    """Searches for comments and returns the comment string
+
+    :param node: the root element to append the varlistentry
+    :type node: :class:`etree.Element`
+    :return: comment as string
     """
-    # We need to advance to the next one as the first
-    # entry in .ca.comment is usuall(?) None
+    # We need to advance to the next entry in the list
+    # as the first entry in .ca.comment is usuall(?) None
     comnodes = iter(node)
     if next(comnodes) is not None:
         comnodes = node
@@ -200,6 +213,11 @@ def convert2db(args):
 
 
 def main():
+    """Main entry point
+
+    :return: success (=0) or not (!=0)
+    :rtype: int
+    """
     parser, args = parsecli()
     print(args)
     # return 1
