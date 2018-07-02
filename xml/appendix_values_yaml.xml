@@ -5,7 +5,9 @@
     %entities;
 ]>
 
-<appendix xmlns="http://docbook.org/ns/docbook" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" xml:id="app.kvm">
+<appendix xmlns="http://docbook.org/ns/docbook" 
+          xmlns:xi="http://www.w3.org/2001/XInclude" 
+          xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" xml:id="app.configuration.files">
  <title>Appendix</title>
  <info>
       <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
@@ -16,16 +18,18 @@
     
     <para>
         This appendix contains copies of the complete 
-        <filename>values.yaml</filename> files for the SCF and UAA deployments.
+        <filename>values.yaml</filename> files that are included in the &helm; 
+        charts for the SCF and UAA namespaces. These are useful references as
+        they provide a complete listing of configuration options for &scf;, 
+        and their default settings.
     </para>
     
  <sect1 xml:id="app.scf.values.yaml">
   <title>Complete &scf; values.yaml file</title> 
 
 <para>
-    This is the &scf; <filename>values.yaml</filename> configuration
-    file that is shipped with the &helm; charts. It provides a complete reference
-    of configuration options for &scf;, and their default settings.
+    This is the <filename>values.yaml</filename> configuration
+    file that is shipped with the &helm; charts for the SCF namespace. 
 </para>
 
 <screen>
@@ -49,7 +53,8 @@ env:
   BLOBSTORE_MAX_UPLOAD_SIZE: "5000"
 
   # The set of CAT test suites to run. If not specified it falls back to a
-  # hardwired set of suites.
+  # hardwired set of suites. This is for SUSE internal testing, and not
+  # for production deployments
   CATS_SUITES: ~
 
   # URI for a CDN to use for buildpack downloads.
