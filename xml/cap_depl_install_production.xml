@@ -1074,10 +1074,10 @@ sizing:
  -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"    
 
 &prompt.user;helm install suse/cf \
---name <replaceable>susecf-scf</replaceable>
+--name <replaceable>susecf-scf</replaceable> \
 --namespace scf \
 --values scf-config-values.yaml \
---values scf-sizing.yaml
+--values scf-sizing.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
 
@@ -1144,10 +1144,10 @@ expected behavior.
  -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"    
 
 &prompt.user;helm upgrade suse/cf \
---name <replaceable>susecf-scf</replaceable>
+--name <replaceable>susecf-scf</replaceable> \
 --namespace scf \
 --values scf-config-values.yaml \
---values scf-sizing.yaml
+--values scf-sizing.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
 <para>
