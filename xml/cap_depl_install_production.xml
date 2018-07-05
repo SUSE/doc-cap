@@ -919,14 +919,23 @@ suse/uaa      2.8.0    A Helm chart for SUSE UAA
 </screen>
 </sect1>
 
+<!-- TODO this should be a separate chapter cs july 5 2018 -->
 <sect1 xml:id="sec.cap.ha-prod">
   <title>Example &ha; Configuration</title>
   <para>
-This example &ha; configuration needs two separate configuration files, one for 
-UAA and one for SCF. It may be helpful to read the comments in the 
-<literal>sizing:</literal> section in the default
-<filename>values.yaml</filename> file for each namespace, which describes which
-roles can be scaled and the scaling options for each role. One way is to use 
+      There are two ways to make your &productname; deployment highly available.
+      The simplest method is to set the <literal>HA</literal> parameter in your
+      deployment configuration file to <literal>true</literal>. The 
+      second method is to create custom configuration files with your own custom
+      values.
+  </para>
+  
+<sect2 xml:id="sec.cap.ha-defaults">
+  <title>Finding Default and Allowable Scaling Values</title>  
+  <para>
+  The <literal>sizing:</literal> section in the &helm; 
+<filename>values.yaml</filename> files for each namespace describes which
+roles can be scaled, and the scaling options for each role. You may use 
 <command>helm inspect</command> to read the <literal>sizing:</literal> section 
 in the &helm; charts:
 </para>
@@ -939,10 +948,9 @@ in the &helm; charts:
 <para>
 Another way is to download a copy of the &helm; charts, 
 unpack them, and then use Perl to extract the information for each role from the 
-<literal>sizing:</literal> section. The following example is for UAA.
-You may see a few non-relevant lines from the sections preceding and following 
-the <literal>sizing:</literal> section. In the following example these are lines 
-29-53, and lines 226-245.
+<literal>sizing:</literal> section. The following example is for the UAA
+namespace. You may see a few non-relevant lines from the sections preceding and following the <literal>sizing:</literal> section. In the following example these 
+are lines 29-53, and lines 226-245.
 </para>
 
 <note>
@@ -951,7 +959,7 @@ the <literal>sizing:</literal> section. In the following example these are lines
     Currently <literal>mysql_proxy</literal> does not scale. This will change in
     the &productname; 1.2, and then scaling will be supported.
 </para>
-</note>    
+</note>
 
 <screen>
 &prompt.user;helm fetch suse/uaa
@@ -986,9 +994,41 @@ the <literal>sizing:</literal> section. In the following example these are lines
 </screen>
 
 <para>
-The first example configuration is for UAA, 
-<filename>uaa-sizing.yaml</filename>. The values for each role depend on your
-particular deployment and requirements.
+    The default <filename>values.yaml</filename> files are also included in this
+    guide at <xref linkend="app.configuration.files"/>.
+</para>
+</sect2>
+
+<sect2 xml:id="sec.cap.ha-simple"> 
+    <title>Simple &ha; Configuration</title>
+    <para>
+        The simplest way to make your &productname; deployment highly available
+        is to set <literal>HA</literal> to <literal>true</literal> in your
+        deployment configuration file, e.g. 
+        <filename>scf-config-values.yaml</filename>:
+    </para>
+    
+  <screen>
+config:
+  # Flag to activate high-availability mode
+  HA: true
+</screen>
+
+<para>
+   This changes all roles with a default size of 1 to the minimum required for
+   a &ha; deployment. It is not possible to customize any of the sizing values.
+</para>
+</sect2>
+    
+<sect2 xml:id="sec.cap.ha-custom"> 
+    <title>Example Custom &ha; Configurations</title>
+  
+    <para>
+The following two example &ha; configuration files are for the UAA and SCF 
+namespaces. The example values are not meant to be copied, as these depend on 
+your particular deployment and requirements. Do not change the 
+<literal>HA</literal> flag in your deployment configuration file to 
+<literal>true</literal> (see <xref linkend="sec.cap.ha-simple"/>.) 
 </para>
 
 <screen>
@@ -1108,7 +1148,7 @@ sizing:
         for <literal>.consul-lock.acquiring-lock</literal>.
     </para>
     
-<!-- commenting this out until 1.2 release. cs june 28 2018, then revisiting
+<!-- TODO commenting this out until 1.2 release. cs june 28 2018, then revisiting
     for correct information
     <para>
         Some roles cannot be scaled. <command>mysql_proxy</command> needs a 
@@ -1123,6 +1163,7 @@ Some roles follow an active/passive scaling model, meaning all pods except
 the active one will be shown as NOT READY by &kube;. This is appropriate and 
 expected behavior.
 </para>
+</sect2>
 
 <sect2 xml:id="sec.cap.ha-prod-upgrade">
     <title>Upgrading a non-&ha; Deployment to &ha;</title>

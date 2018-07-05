@@ -20,12 +20,13 @@
         This appendix contains copies of the complete 
         <filename>values.yaml</filename> files that are included in the &helm; 
         charts for the SCF and UAA namespaces. These are useful references as
-        they provide a complete listing of configuration options for &scf;, 
-        and their default settings.
+        they provide a complete listing of configuration options and their 
+        default settings. (See <xref linkend="sec.cap.ha-defaults"/> to learn
+        how to find and read these files from the &helm; charts.)
     </para>
     
  <sect1 xml:id="app.scf.values.yaml">
-  <title>Complete &scf; values.yaml file</title> 
+  <title>Complete SCF values.yaml file</title> 
 
 <para>
     This is the <filename>values.yaml</filename> configuration
