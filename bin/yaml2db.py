@@ -16,13 +16,14 @@ __doc__ = "Converts YAML file into DocBook5"
 import argparse
 import sys
 from contextlib import contextmanager
+from xml.sax.saxutils import escape
 
 try:
     import ruamel.yaml
 except ImportError:
     print("ERROR: Missing module ruamel.yaml\n"
           "Install it with:\n"
-          " sudo zypper in python3-ruamel.yaml",
+          "$ sudo zypper in python3-ruamel.yaml",
           file=sys.stderr)
     sys.exit(1)
 
@@ -32,7 +33,7 @@ try:
 except ImportError:
     print("ERROR: Missing module lxml\n"
           "Install it with:\n"
-          " sudo zypper in python3-lxml",
+          "$ sudo zypper in python3-lxml",
           file=sys.stderr)
     sys.exit(2)
 
@@ -225,7 +226,7 @@ def main():
     parser = etree.XMLParser(ns_clean=True)
     tree = etree.ElementTree(root, parser=parser)
     if args.output:
-        tree.write(args.output, encoding="unicode", pretty_print=True)
+        tree.write(args.output, encoding="utf-8", pretty_print=True)
         print("Written DocBook 5 file to %r" % args.output)
     else:
         print(etree.tostring(root, encoding="unicode", pretty_print=True))
