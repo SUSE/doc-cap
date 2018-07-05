@@ -931,7 +931,7 @@ suse/uaa      2.8.0    A Helm chart for SUSE UAA
   </para>
   
 <sect2 xml:id="sec.cap.ha-defaults">
-  <title>Finding Default and Allowable Scaling Values</title>  
+  <title>Finding Default and Allowable Sizing Values</title>  
   <para>
   The <literal>sizing:</literal> section in the &helm; 
 <filename>values.yaml</filename> files for each namespace describes which
@@ -1015,6 +1015,19 @@ config:
 </screen>
 
 <para>
+    Or, you may pass it as a command-line option when you are deploying with
+    &helm;, for example:
+</para>
+
+<screen>
+&prompt.user;helm install suse/uaa \
+ --name susecf-uaa \
+ --namespace uaa \ 
+ --values scf-config-values.yaml \
+ --set config.HA=true
+</screen>
+
+<para>
    This changes all roles with a default size of 1 to the minimum required for
    a &ha; deployment. It is not possible to customize any of the sizing values.
 </para>
@@ -1027,8 +1040,8 @@ config:
 The following two example &ha; configuration files are for the UAA and SCF 
 namespaces. The example values are not meant to be copied, as these depend on 
 your particular deployment and requirements. Do not change the 
-<literal>HA</literal> flag in your deployment configuration file to 
-<literal>true</literal> (see <xref linkend="sec.cap.ha-simple"/>.) 
+<literal>config.HA</literal> flag to <literal>true</literal> 
+(see <xref linkend="sec.cap.ha-simple"/>.) 
 </para>
 
 <screen>
