@@ -1044,6 +1044,11 @@ your particular deployment and requirements. Do not change the
 (see <xref linkend="sec.cap.ha-simple"/>.) 
 </para>
 
+<para>
+    The first example is for the UAA namespace, 
+    <filename>uaa-sizing.yaml</filename>:
+</para>
+
 <screen>
 sizing:
   mysql:
