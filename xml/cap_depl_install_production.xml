@@ -1126,7 +1126,7 @@ sizing:
 </para>
 <screen>
 &prompt.user;SECRET=$(kubectl get pods --namespace uaa \
- -o jsonpath='{.items[*].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+ -o jsonpath='{.items[*].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}') | awk {'print $1'})
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
  -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"    
@@ -1197,7 +1197,7 @@ expected behavior.
 --values uaa-sizing.yaml 
 
 &prompt.user;SECRET=$(kubectl get pods --namespace uaa \
- -o jsonpath='{.items[*].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+ -o jsonpath='{.items[*].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')| awk {'print $1'})
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
  -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"    
