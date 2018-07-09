@@ -143,12 +143,12 @@ env:
     to2GI8rPMb9W9fd2WwUXGEHTc+PqTg==
     -----END CERTIFICATE-----
     
- kube:
-  organization: cap
-  registry: 
-    hostname: "registry.suse.com"
-    username: ""
-    password: ""   
+  kube:
+   organization: cap
+   registry: 
+     hostname: "registry.suse.com"
+     username: ""
+     password: ""   
 </screen>
 </sect1>
 
@@ -247,40 +247,41 @@ env:
    SERVICE_POSTGRESQL_PASS: <replaceable>pgsql-admin-password</replaceable>
   # The SSL connection mode when connecting to the database.  For a list of
   # valid values, please see <link xlink:href="https://godoc.org/github.com/lib/pq"/>
-  SERVICE_POSTGRESQL_SSLMODE: disable
+   SERVICE_POSTGRESQL_SSLMODE: disable
   
   # CAP access credentials, from your original deployment configuration 
   # (see <xref linkend="sec.cap.configure-prod"/>)
-  CF_ADMIN_USER: <replaceable>admin</replaceable>
-  CF_ADMIN_PASSWORD: <replaceable>password</replaceable>
-  CF_DOMAIN: <replaceable>example.com</replaceable>
+   CF_ADMIN_USER: <replaceable>admin</replaceable>
+   CF_ADMIN_PASSWORD: <replaceable>password</replaceable>
+   CF_DOMAIN: <replaceable>example.com</replaceable>
   
   # Copy the certificates you extracted above, as shown in these
   # abbreviated examples, prefaced with the pipe character
   
-  # SCF cert
-  CF_CA_CERT: |
-   -----BEGIN CERTIFICATE-----
-   MIIE8jCCAtqgAwIBAgIUT/Yu/Sv4UHl5zHZYZKCy5RKJqmYwDQYJKoZIhvcNAQEN
-   [...]
-   xC8x/+zT0QkvcRJBio5gg670+25KJQ==
-   -----END CERTIFICATE-----
-   
-   # UAA cert
-   UAA_CA_CERT: |
+  # SCF certificate
+   CF_CA_CERT: |
     -----BEGIN CERTIFICATE-----
+    MIIE8jCCAtqgAwIBAgIUT/Yu/Sv4UHl5zHZYZKCy5RKJqmYwDQYJKoZIhvcNAQEN
+    [...]
+    xC8x/+zT0QkvcRJBio5gg670+25KJQ==
+    -----END CERTIFICATE-----
+   
+   # UAA certificate
+   UAA_CA_CERT: |
+    ----BEGIN CERTIFICATE-----
     MIIE8jCCAtqgAwIBAgIUSI02lj0a0InLb/zMrjNgW5d8EygwDQYJKoZIhvcNAQEN
     [...]
     to2GI8rPMb9W9fd2WwUXGEHTc+PqTg==
     -----END CERTIFICATE-----
+   
    SERVICE_TYPE: postgres   
     
- kube:
-  organization: cap
-  registry: 
-    hostname: "registry.suse.com"
-    username: ""
-    password: ""   
+   kube:
+     organization: cap
+     registry: 
+       hostname: "registry.suse.com"
+       username: ""
+       password: ""   
 </screen>
 
 <para>
