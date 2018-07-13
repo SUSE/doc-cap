@@ -137,6 +137,9 @@ def comments(node):
     :type node: :class:`etree.Element`
     :return: comment as string
     """
+    if node is None:
+        return ""
+
     # We need to advance to the next entry in the list
     # as the first entry in .ca.comment is usually(?) None
     comnodes = iter(node)
@@ -200,7 +203,7 @@ def convert2db(args):
                     term.append(literal)
 
                     # First try the *direct* comment, if it cannot
-                    # be find, try the section comment
+                    # be found, try the section comment
                     trycom = data[sec].ca.items.get(key)
                     if trycom is None:
                         com = comments(data[sec].ca.comment)
