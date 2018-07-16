@@ -91,6 +91,10 @@
 	  </term>
 	<listitem>
         <para>
+            See <xref linkend="sec.cap.caasp-3"/> for special notes on 
+            installing &productname; on &suse; &caasp; 3.
+        </para>
+        <para>
             After installing <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/">&caasp;</link> and logging into the Velum Web interface, 
             check the box to install Tiller (&helm;'s server component). 
         </para>
@@ -244,7 +248,169 @@ Happy Helming!
  </listitem>  
 </varlistentry>
 </variablelist>
-</sect1>  
+
+<sect2 xml:id="sec.cap.caasp-3">
+    <title>Installation on &suse; &caasp; 3</title>
+    <para>
+        &caasp; 3 introduces PodSecurityPolicy (PSP) support. This change adds 
+        two new PSPs to &caasp; 3:
+    </para>
+      <itemizedlist>
+        <listitem>
+          <para>
+              <literal>unprivileged</literal>, which is the default assigned to 
+              all users. The unprivileged PodSecurityPolicy is intended as a
+              reasonable compromise between the reality of &kube; workloads, and
+              the <literal>suse:caasp:psp:privileged</literal> role. By default, 
+              this PSP is granted to all users and service accounts.
+         </para>
+     </listitem>
+     <listitem>    
+         <para>
+              <literal>privileged</literal>, which is intended to be assigned
+              only to trusted workloads. It applies few restrictions, and should 
+              only be assigned to highly trusted users.
+         </para>
+     </listitem>
+ </itemizedlist>
+ 
+    <para>
+       Currently, all the pods are created using the default 
+       <literal>serviceAccount</literal> in their namespaces in order to
+       apply the <literal>unprivileged</literal> PSP. Consequently, pods
+       (such as <literal>nfs-broker</literal>) cannot create pods because 
+       privileged mode and privilege escalation are disabled by default.  
+       (error: cannot set allowPrivilegeEscalation to <literal>false</literal> 
+       and <literal>privileged</literal> to true).
+   </para>
+   
+   <para>
+       To get around this, create a configuration file called
+       <filename>cap-psp-rbac.yaml</filename>. This enables both privileged mode 
+       and privilege escalation. You need a running &caasp; cluster, and 
+       <command>kubectl</command> configured and working. You will apply this
+       file to create the two PSPs before you deploy UAA and SCF.
+   </para>
+   <para>
+       Copy the following example into <filename>cap-psp-rbac.yaml</filename>:
+    </para>
+    
+    <screen>
+---
+apiVersion: extensions/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: suse.cap.psp
+  annotations:
+    seccomp.security.alpha.kubernetes.io/allowedProfileNames: '*'
+spec:
+  # Privileged
+  #default in suse.caasp.psp.unprivileged
+  #privileged: false
+  privileged: true
+  # Volumes and File Systems
+  volumes:
+    # Kubernetes Pseudo Volume Types
+    - configMap
+    - secret
+    - emptyDir
+    - downwardAPI
+    - projected
+    - persistentVolumeClaim
+    # Networked Storage
+    - nfs
+    - rbd
+    - cephFS
+    - glusterfs
+    - fc
+    - iscsi
+    # Cloud Volumes
+    - cinder
+    - gcePersistentDisk
+    - awsElasticBlockStore
+    - azureDisk
+    - azureFile
+    - vsphereVolume
+  allowedFlexVolumes: []
+  # hostPath volumes are not allowed; pathPrefix must still be specified
+  allowedHostPaths:      
+    - pathPrefix: /opt/kubernetes-hostpath-volumes
+  readOnlyRootFilesystem: false
+  # Users and groups
+  runAsUser:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  fsGroup:
+    rule: RunAsAny
+  # Privilege Escalation
+  #default in suse.caasp.psp.unprivileged
+  #allowPrivilegeEscalation: false
+  allowPrivilegeEscalation: true
+  #default in suse.caasp.psp.unprivileged
+  #defaultAllowPrivilegeEscalation: false
+  # Capabilities
+  allowedCapabilities: []
+  defaultAddCapabilities: []
+  requiredDropCapabilities: []
+  # Host namespaces
+  hostPID: false
+  hostIPC: false
+  hostNetwork: false
+  hostPorts:
+  - min: 0
+    max: 65535
+  # SELinux
+  seLinux:
+    # SELinux is unsed in CaaSP
+    rule: 'RunAsAny'
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: suse:cap:psp
+rules:
+  - apiGroups: ['extensions']
+    resources: ['podsecuritypolicies']
+    verbs: ['use']
+    resourceNames: ['suse.cap.psp']
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: cap:clusterrole
+roleRef:
+  kind: ClusterRole
+  name: suse:cap:psp
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: uaa
+- kind: ServiceAccount
+  name: default
+  namespace: scf
+- kind: ServiceAccount
+  name: default
+  namespace: stratos
+</screen>
+
+<para>
+    Apply it to your cluster with <command>kubectl</command>:
+</para>
+
+<screen>
+&prompt.user;kubectl create -f cap-psp-rbac.yaml
+</screen>
+
+<para>
+    Then continue by deploying UAA and SCF. (See
+    <link xlink:href="https://kubernetes.io/docs/concepts/policy/pod-security-policy/">
+        Pod Security Policies</link> for more information.)
+</para>
+            
+</sect2>
+</sect1>
 
 <sect1 xml:id="sec.cap.storageclass-prod">
  <title>Choose Storage Class</title>
@@ -514,7 +680,7 @@ When the status shows RUNNING for all of the UAA nodes, proceed to deploying
 </sect1>   
 
 <sect1 xml:id="sec.cap.install-scf-prod">
-    <title>Deploy &productname;</title>
+    <title>Deploy &suse; &cf;</title>
 <para>
   First pass your UAA secret and certificate to SCF, then 
   use &helm; to install &suse; &cf;:
