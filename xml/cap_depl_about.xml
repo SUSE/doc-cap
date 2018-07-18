@@ -199,108 +199,22 @@ buildpacks may include components with proprietary licenses. (See
 about buildpacks, and creating and managing your own.)
 </para>
 
-
 </sect1>
 
 <sect1 xml:id="sec.cap.changes.1.1">
   <title>New in Version 1.1</title>
   <para>
-      These are some of the changes in the 1.1 release (April 2017). See the 
-      <link xlink:href="https://www.suse.com/releasenotes/">Release Notes</link>
-      for a complete list and known issues. See the Release Notes and
-      <xref linkend="sec.cap.update"/> for upgrade instructions.
+      See the 
+      <link xlink:href="https://www.suse.com/documentation/cloud-application-platform-1/index.html">Release Notes</link>
+      for a list of changes, upgrade instructions, and known issues.
   </para>
-<itemizedlist>
-    <listitem>
-        <para>
-            &productname; 1.1 supports Azure Container Service (AKS).
-        </para>
-    </listitem>
-    <listitem>
-        <para>
-            cf backup CLI plugin for saving, restoring, or migrating CF data 
-            and applications.
-        </para>
-    </listitem>
-      <listitem>
-    <para>
-        PostgreSQL and MySQL service broker sidecars, configured and 
-        deployed via Helm.
-        </para>
- </listitem>
-       <listitem>
-    <para>
-        Cloud Foundry component and buildpack updates.
-        </para>
- </listitem>
-  <listitem>
-    <para>
-	Stratos UI 1.1 is required for SUSE Cloud Application Platform 1.1, and older 
-    versions will not work. Use the same 
-    <filename>scf-config-values.yaml</filename> file for both.
-</para>
- </listitem>
- <listitem>
-     <para>
-         The Helm command line client must be version 2.6.0 or higher.
-     </para>
- </listitem>
- <listitem>
-     <para>
-     There are some changes in the <filename>scf-config-values.yaml</filename>
-     configuration file. The variable <varname>kube.external_ip</varname> has 
-     been changed to <varname>kube.external_ips</varname>. Upgrades from 
-     older versions will fail unless the latter variable exists in the 
-     <filename>scf-config-values.yaml</filename> file. Both variables can exist 
-     at the same time, and be set to the same value for those in mixed version 
-     environments.
- </para>
- <para>
-     For example, when upgrading enter both variables in 
-     <filename>scf-config-values.yaml</filename>:
- </para>
- <screen>
-external_ip=1.1.1.1
-external_ips=[1.1.1.1]
-</screen>
-<para>
-    Going forward, <varname>kube.external_ips</varname> is an array, like this example:
-    </para>
-    <screen>
-external_ips=["1.1.1.1", "2.2.2.2"]
-</screen>
-</listitem>
-<listitem>
-    <para>
-        All the secrets have been renamed from env.FOO to secrets.FOO, so all 
-        the appropriate entries in <filename>scf-config-values.yaml</filename> 
-        must be modified to align with that change. For example, move 
-        <literal>CLUSTER_ADMIN_PASSWORD:</literal> and 
-                <literal>UAA_ADMIN_CLIENT_SECRET:</literal> from the
-        <literal>env:</literal> section to <literal>secrets:</literal>. Some
-        of the <command>helm</command> commands for passing secrets also change, 
-        e.g. from <command>--set "env.FOO"</command> to 
-        <command>--set "secrets.FOO"</command>.
-    </para>
-    <para>
-        You must specify your secrets on each upgrade (e.g. the 
-        <varname>CLUSTER_ADMIN_PASSWORD</varname>) as they won't be carried 
-        forward automatically.
-    </para>
-    <para>
-        To rotate secrets, increment the 
-        <code>kube.secrets_generation_counter</code>. (Please note: immutable
-        generated secrets will not be reset.)
-    </para>
-    </listitem>
-<listitem>
-    <para>
-        Some roles (like diego-api, diego-brain and routing-api) are configured 
-        as active/passive, so passive pods can appear as Not Ready. Other roles 
-        (tcp-router and blobstore) cannot be scaled.
-    </para>
-</listitem>
-</itemizedlist>
+
+  <note>
+      <para>
+          Reviewing the Release Notes should be a priority, and will prevent 
+          a lot of frustration.
+      </para>
+  </note>
+  
 </sect1>
 </chapter> 
-
