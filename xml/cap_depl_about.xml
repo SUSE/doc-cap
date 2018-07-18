@@ -289,7 +289,7 @@ external_ips=["1.1.1.1", "2.2.2.2"]
     </para>
     <para>
         To rotate secrets, increment the 
-        <code>kube.secret_generation_counter</code>. (Please note: immutable 
+        <code>kube.secrets_generation_counter</code>. (Please note: immutable
         generated secrets will not be reset.)
     </para>
     </listitem>
