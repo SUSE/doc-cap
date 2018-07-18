@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha.cap.upgrade"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <title>Upgrading &productname;</title>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+ </info>
+<!-- helm rollback does not work, so upgrades are one-way for now
+-->
+ <sect1 xml:id="sec.cap.update">
+  <title>Upgrading SCF, UAA, and Stratos</title>
+  <para>
+      Maintenance updates are delivered as container images from the &suse;
+      registry and applied with &helm;. (See the 
+      <link xlink:href="https://www.suse.com/releasenotes/">Release Notes</link>
+      for additional upgrade information.)
+      Check for available updates:
+  </para>
+<screen>
+&prompt.user;helm repo update
+Hang tight while we grab the latest from your chart repositories...
+...Skip local chart repository
+...Successfully got an update from the "stable" chart repository
+...Successfully got an update from the "suse" chart repository
+Update Complete. ⎈ Happy Helming!⎈   
+</screen>
+
+<para>
+    For the &productname; 1.1 release, update your 
+    <filename>scf-config-values.yaml</filename> file with the changes
+    for secrets handling and external IP addresses. (See 
+    <xref linkend="sec.cap.configure-prod"/> for an example.)
+</para>
+<para>
+      Get your release and chart names (your releases may have different names than
+      the examples), and then apply the updates:
+</para>
+  <screen>
+&prompt.user;helm list
+NAME            REVISION  UPDATED                   STATUS    CHART           NAMESPACE
+<replaceable>susecf-console</replaceable>  1         Thu Apr 12 10:28:34 2018  DEPLOYED  console-1.0.2   stratos  
+<replaceable>susecf-scf</replaceable>      1         Wed Apr 11 14:55:23 2018  DEPLOYED  cf-2.7.0        scf      
+<replaceable>susecf-uaa</replaceable>      1         Wed Apr 11 14:48:01 2018  DEPLOYED  uaa-2.7.0       uaa 
+
+&prompt.user;helm repo list
+NAME            URL                                             
+stable          https://kubernetes-charts.storage.googleapis.com
+local           http://127.0.0.1:8879/charts                    
+suse            https://kubernetes-charts.suse.com/             
+
+&prompt.user;helm search suse
+NAME          VERSION  DESCRIPTION                                  
+suse/cf       2.8.0    A Helm chart for SUSE Cloud Foundry          
+suse/console  1.1.0    A Helm chart for deploying Stratos UI Console
+suse/uaa      2.8.0    A Helm chart for SUSE UAA
+</screen>
+
+<para>
+    Run the following commands to perform the upgrade. Wait for each command to
+    complete before running the next command. Note the new commands for extracting
+    and using secrets and certificates.
+</para>
+<screen>
+&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-uaa</replaceable> suse/uaa \
+ --values scf-config-values.yaml
+
+&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+ -o jsonpath='{.items[*].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+ -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+
+&prompt.user;helm upgrade --recreate-pods susecf-scf <replaceable>suse/cf</replaceable> \
+ --values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}"
+
+&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-console</replaceable> suse/console \
+ --values scf-config-values.yaml
+</screen>
+</sect1>
+</chapter>

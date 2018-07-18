@@ -15,6 +15,25 @@
   </dm:docmanager>
   <title>About &productname;</title>
  </info>
+ 
+<sect1 xml:id="sec.cap.changes.1.1">
+  <title>New in Version 1.1</title>
+  <para>
+      See the 
+      <link xlink:href="https://www.suse.com/documentation/cloud-application-platform-1/index.html">Release Notes</link>
+      for a list of changes, upgrade instructions, and known issues.
+  </para>
+
+  <note>
+      <para>
+          Reviewing the Release Notes should be a priority, and will prevent 
+          a lot of frustration.
+      </para>
+  </note>
+</sect1> 
+
+<sect1 xml:id="sec.cap.overview">
+  <title>&productname; Overview</title> 
  <para>
 &productname; is a software platform for cloud-native application
 deployment based on &scf; and &suse; &caasp; 2.0. It serves different but complementary
@@ -120,6 +139,7 @@ Containerizing the components of the platform itself has these advantages:
 &scf; packages upstream Cloud Foundry &bosh; releases to produce containers
 and configurations which are deployed to &kube; clusters using &helm;.
 </para>
+</sect1>
 
 <sect1 xml:id="sec.cap.architecture">
   <title>&productname; Architecture</title>
@@ -199,22 +219,5 @@ buildpacks may include components with proprietary licenses. (See
 about buildpacks, and creating and managing your own.)
 </para>
 
-</sect1>
-
-<sect1 xml:id="sec.cap.changes.1.1">
-  <title>New in Version 1.1</title>
-  <para>
-      See the 
-      <link xlink:href="https://www.suse.com/documentation/cloud-application-platform-1/index.html">Release Notes</link>
-      for a list of changes, upgrade instructions, and known issues.
-  </para>
-
-  <note>
-      <para>
-          Reviewing the Release Notes should be a priority, and will prevent 
-          a lot of frustration.
-      </para>
-  </note>
-  
 </sect1>
 </chapter> 
