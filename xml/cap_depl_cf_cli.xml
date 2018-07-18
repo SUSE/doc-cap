@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha.cap.cf-cli"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <title>Deploying and Managing Applications with the &cf; Client</title>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+ </info>
+
+<sect1 xml:id="sec.cap.cf-cli">
+<title>Using the cf-cli with &productname;</title>
+    <para>
+    The &cf; command line interface (cf-cli) is for deploying and managing your
+    applications. You may use it for all the orgs and spaces that you are a 
+    member of. Install the client on a workstation for remote administration of 
+    your &suse; &cf; instances. 
+    </para>
+    <para>
+The complete guide is at
+    <link xlink:href="https://docs.cloudfoundry.org/cf-cli/">Using the Cloud 
+        Foundry Command Line Interface</link>, and source code with a 
+    demo video is on GitHub at 
+    <link xlink:href="https://github.com/cloudfoundry/cli/blob/master/README.md">Cloud Foundry CLI</link>.
+</para>
+    <para>
+      The following examples demonstrate some of the commonly-used commands.
+      The first task is to log into your new &suse; &cf; instance. When your
+      installation completes it prints a welcome screen with the information
+      you need to access it.
+    </para>
+    <screen>
+       NOTES:
+    Welcome to your new deployment of SCF.
+
+    The endpoint for use by the `cf` client is
+        https://api.example.com
+
+    To target this endpoint run
+        cf api --skip-ssl-validation https://api.example.com
+
+    Your administrative credentials are:
+        Username: admin
+        Password: password
+
+    Please remember, it may take some time for everything to come online.
+
+    You can use
+        kubectl get pods --namespace scf
+
+    to spot-check if everything is up and running, or
+        watch -c 'kubectl get pods --namespace scf'
+
+    to monitor continuously.    
+</screen>
+<para>
+    You can display this message anytime with this command:
+</para>
+<screen>
+&prompt.user;helm status $(helm list | awk '/cf-([0-9]).([0-9]).*/{print$1}') | \
+sed -n -e '/NOTES/,$p'
+</screen>
+<para>
+You need to provide the API endpoint of your &productname; instance to log in. The API 
+endpoint is the <envar>DOMAIN</envar> value you provided in 
+<filename>scf-config-values.yaml</filename>, plus the 
+<literal>api.</literal> prefix, as it shows in the above welcome screen. Set 
+your endpoint, and use <command>--skip-ssl-validation</command> when you have 
+self-signed SSL certificates. It asks for an email address, but you must enter 
+<literal>admin</literal> instead (you cannot change this to a different username, 
+though you may create additional users), and the password is the one you created 
+in <filename>scf-config-values.yaml</filename>:
+</para>
+<screen>
+&prompt.user;cf login --skip-ssl-validation  -a https://api.example.com 
+API endpoint: https://api.example.com
+
+Email> admin
+
+Password> 
+Authenticating...
+OK
+
+Targeted org system
+
+API endpoint:   https://api.example.com (API version: 2.101.0)
+User:           admin
+Org:            system
+Space:          No space targeted, use 'cf target -s SPACE'
+</screen>
+
+<para>
+    <command>cf help</command> displays a list of commands and options.
+    <command>cf help [command]</command> provides information on specific
+    commands.
+</para>
+<para>
+    You may pass in your credentials and set the API endpoint in a single command:
+</para>
+<screen>
+&prompt.user;cf login -u admin -p password --skip-ssl-validation -a https://api.example.com    
+</screen>        
+<para>
+    Log out with <command>cf logout</command>.
+</para>
+<para>
+    View your current API endpoint, user, org, and space:
+</para>
+<screen>
+&prompt.user;cf target  
+</screen>
+<para>
+    Switch to a different org or space:
+</para>
+<screen>
+&prompt.user;cf target -o <replaceable>org</replaceable>
+&prompt.user;cf target -s <replaceable>space</replaceable>   
+</screen>
+<para>
+  List all apps in the current space:  
+</para>
+<screen>
+&prompt.user;cf apps   
+</screen>
+<para>
+    Query the health and status of a particular app:
+</para>
+<screen>
+&prompt.user;cf app <replaceable>appname</replaceable> 
+</screen>
+<para>
+    View app logs. The first example tails the log of a running app. 
+    The <command>--recent</command> option dumps recent logs instead of tailing,
+    which is useful for stopped and crashed apps:
+</para>
+<screen>
+&prompt.user;cf logs <replaceable>appname</replaceable>
+&prompt.user;cf logs --recent <replaceable>appname</replaceable>
+</screen>
+<para>
+    Restart all instances of an app:
+</para>
+<screen>
+&prompt.user;cf restart <replaceable>appname</replaceable>
+</screen>
+<para>
+    Restart a single instance of an app, identified by its index number, and
+    restart it with the same index number:
+</para>
+<screen>
+&prompt.user;cf restart-app-instance <replaceable>appname</replaceable> <replaceable>index</replaceable>
+</screen>
+<para>
+    After you have set up a service broker 
+    (see <xref linkend="cha.cap.depl-sbs"/>), create new services: 
+</para>
+<screen>
+&prompt.user;cf create-service <replaceable>service-name</replaceable> <replaceable>default</replaceable> <replaceable>mydb</replaceable>
+</screen>
+<para>
+ Then you may bind a service instance to an app:
+</para>
+<screen>
+&prompt.user;cf bind-service <replaceable>appname</replaceable> <replaceable>service-instance</replaceable>
+</screen>
+<para>
+    The most-used command is <command>cf push</command>, for pushing new apps and
+    changes to existing apps.
+</para>
+<screen>
+ &prompt.user;cf push <replaceable>new-app</replaceable> -b <replaceable>buildpack</replaceable>
+</screen>
+</sect1>
+</chapter>
