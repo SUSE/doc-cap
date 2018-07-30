@@ -619,10 +619,12 @@ suse            https://kubernetes-charts.suse.com/
 </para>
 <screen>
 &prompt.user;helm search suse
-NAME         VERSION   DESCRIPTION                                  
-suse/cf      2.8.0   A Helm chart for SUSE Cloud Foundry          
-suse/console 1.1.0   A Helm chart for deploying Stratos UI Console
-suse/uaa     2.8.0   A Helm chart for SUSE UAA
+NAME                         VERSION DESCRIPTION
+suse/cf                      2.10.1  A Helm chart for SUSE Cloud Foundry               
+suse/cf-usb-sidecar-mysql    1.0.1   A Helm chart for SUSE Universal Service Broker ...
+suse/cf-usb-sidecar-postgres 1.0.1   A Helm chart for SUSE Universal Service Broker ...
+suse/console                 1.1.0   A Helm chart for deploying Stratos UI Console     
+suse/uaa                     2.10.1  A Helm chart for SUSE UAA
 </screen>
 </sect1>
 
@@ -662,7 +664,7 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -
 <screen>    
 &prompt.user;helm install suse/uaa \
 --name <replaceable>susecf-uaa</replaceable> \
---namespace uaa \ 
+--namespace uaa \
 --values scf-config-values.yaml
 </screen>
 <para>
