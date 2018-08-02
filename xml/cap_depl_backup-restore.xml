@@ -19,24 +19,172 @@
  <para>
      <literal>cf-plugin-backup</literal> backs up and restores your cloud 
      controller database (CDDB), using the &cf; command line interface (cf-cli).
-     (See <xref linkend="sec.cap.cf-cli"/>.) Use it after a fresh clean
-     &productname; deployment has been completed. Use the restore function to
-     return your deployment to its original clean state, or to replicate your 
-     deployment in a different location.
- </para>
- <para>
-     <literal>cf-plugin-backup</literal> creates a JSON file that contains your 
-     &productname; data in the current directory, 
-     <filename>cf-backup.json</filename>, and your application data in a 
-     directory called <filename>app-bits/</filename>.
+     (See <xref linkend="sec.cap.cf-cli"/>.)
  </para>
  
  <para>
+     <literal>cf-plugin-backup</literal> is not a general-purpose backup and
+     restore plugin. It is designed to save the state of a &scf; instance before
+     making changes to it. If the changes cause problems, use 
+     <literal>cf-plugin-backup</literal> to restore the instance from scratch.
+     Do not use it to restore to a non-pristine &scf; instance. Some of the
+     limitations for applying the backup to a non-pristine &scf; instance are:
+ </para>
+ 
+ <itemizedlist>
+  <listitem>
+    <para>Application configuration is not restored to running applications,
+        as the plugin does not have the ability to determine which applications
+        should be restarted to load the restored configurations.</para>
+  </listitem>
+  <listitem>
+    <para>User information is managed by the User Account and Authentication 
+        (UAA) server, not the cloud controller (CC). As the plugin talks only to 
+        the CC it cannot save full user information, nor restore users. Saving 
+        and restoring users must be performed separately, and user
+        restoration must be performed before the backup plugin is invoked.</para>
+  </listitem>
+    <listitem>
+    <para>The set of available stacks is part of the &scf; instance setup, and is
+    not part of the CC configuration. Trying to restore applications using
+    stacks not available on the target &scf; instance will fail. Setting the 
+    necessary stacks has to be performed separately before
+    the backup plugin is invoked.</para>
+  </listitem>
+      <listitem>
+    <para>Buildpacks are not saved. Attempts to restore applications using 
+        buildpacks not available on the target &scf; instance will fail. 
+        Saving and restoring buildpacks has to be performed separately, and
+    restoration completed before the backup plugin is invoked.</para>
+  </listitem>
+</itemizedlist>
+     
+ <sect1 xml:id="sec.cap.install-backup-restore">
+     <title>Installing the cf-plugin-backup</title>
+     <para>
+         Download the plugin from 
+         <link xlink:href="https://github.com/SUSE/cf-plugin-backup/releases">
+             cf-plugin-backup/releases</link>.
+     </para>
+     <para>
+         Then install it with <command>cf</command>, using the name of the 
+         plugin binary that you downloaded:
+     </para>
+     <screen>
+&prompt.user;cf install-plugin <replaceable>cf-plugin-backup-1.0.7.0.g0217eef.linux-amd64</replaceable>
+ Attention: Plugins are binaries written by potentially untrusted authors.
+ Install and use plugins at your own risk.
+ Do you want to install the plugin 
+ backup-plugin/cf-plugin-backup-1.0.7.0.g0217eef.linux-amd64? [yN]: y
+ Installing plugin backup...
+ OK
+ Plugin backup 1.0.7 successfully installed.
+     </screen>
+     
+     <para>
+         Verify installation by listing installed plugins:
+     </para>
+      <screen>
+&prompt.user;cf plugins
+ Listing installed plugins...
+
+ plugin   version   command name      command help
+ backup   1.0.7     backup-info       Show information about the current snapshot
+ backup   1.0.7     backup-restore    Restore the CloudFoundry state from a 
+  backup created with the snapshot command
+ backup   1.0.7     backup-snapshot   Create a new CloudFoundry backup snapshot 
+  to a local file
+
+ Use 'cf repo-plugins' to list plugins in registered repos available to install.
+</screen>
+</sect1>
+
+<sect1 xml:id="sec.cap.using-plugin">
+    <title>Using cf-plugin-backup</title>
+ <para>   
+    The plugin has three 
+     commands:
+ </para>
+ 
+ <itemizedlist>
+  <listitem>
+    <para>backup-info</para>
+  </listitem>
+  <listitem>
+    <para>backup-snapshot</para>
+  </listitem>
+    <listitem>
+    <para>backup-restore</para>
+  </listitem>
+</itemizedlist> 
+    
+    <para>
+        View the online help for any command, like this example:
+    </para>
+    
+    <screen>
+&prompt.user; cf backup-info --help
+ NAME:
+   backup-info - Show information about the current snapshot
+
+ USAGE:
+   cf backup-info
+</screen>
+
+<para>
+    Create a backup of your &productname; data and applications. The command
+    outputs progress messages until it is completed:
+</para>
+
+<screen>
+&prompt.user;cf backup-snapshot   
+ 2018/06/18 12:48:27 Retrieving resource /v2/quota_definitions
+ 2018/06/18 12:48:30 org quota definitions done
+ 2018/06/18 12:48:30 Retrieving resource /v2/space_quota_definitions
+ 2018/06/18 12:48:32 space quota definitions done
+ 2018/06/18 12:48:32 Retrieving resource /v2/organizations
+ [...]
+</screen>
+
+<para>
+    Your &cap; data is saved in the current directory in 
+    <filename>cf-backup.json</filename>, and application data in the
+    <filename>app-bits/</filename> directory.
+</para>
+
+<para>
+    View the current backup:
+</para>
+
+<screen>
+&prompt.user;cf backup-info
+ - Org  system
+</screen>
+
+<para>
+    Restore from backup:
+</para>
+
+<screen>
+&prompt.user;cf backup-restore
+</screen>
+
+<para>
+    There are two additional restore options: 
+    <command>--include-security-groups</command> and
+    <command>--include-quota-definitions</command>. 
+</para>
+</sect1>
+
+<sect1 xml:id="sec.cap.plugin-scope">
+    <title>Scope of Backup</title>
+<para>
     The following table lists the scope of the 
     <literal>cf-plugin-backup</literal>
     backup. Organization and space users are backed up at the &productname; 
     level. The user account in UAA/LDAP, the service instances and their 
-    application bindings, and custom buildpacks are not backed up.
+    application bindings, and buildpacks are not backed up. The sections
+    following the table goes into more detail.
 </para>
 
 <informaltable>
@@ -122,107 +270,233 @@
       </row>       
     </tbody>
    </tgroup>
-</informaltable> 
+</informaltable>
+
+<para>
+    <command>cf backup-info</command> reads the 
+    <filename>cf-backup.json</filename> snapshot file found in the current working
+directory, and reports summary statistics on the content.
+</para>
+
+<para>
+    <command>cf backup-snapshot</command> extracts and saves the following 
+    information from the CC into a <filename>cf-backup.json</filename> snapshot 
+    file. Note that it does not save user information, but only the references needed for the roles. The full user information is handled by the UAA server, and the plugin talks only to the CC. The following list provides a summary
+    of what each plugin command does.
+</para>
+
+<itemizedlist>  
+<listitem>
+   <para>Org Quota Definitions</para>
+</listitem>
+<listitem>
+    <para>Space Quota Definitions</para>
+</listitem>
+<listitem>
+    <para>Shared Domains</para>
+</listitem>
+<listitem>
+    <para>Security Groups</para>
+</listitem>
+<listitem>
+    <para>Feature Flags</para>
+</listitem>
+<listitem>
+    <para>Application droplets (zip files holding the staged app)</para>
+</listitem>
+
+<listitem>
+    <para>Orgs</para>
+    
+     <itemizedlist>
+      <listitem>
+       <para>Spaces</para>
+       
+       <itemizedlist>
+           <listitem>
+               <para>Applications</para>
+               </listitem>
+               <listitem>
+                   <para>Users' references (role in the space)</para>
+               </listitem>
+           </itemizedlist>
+</listitem>
+</itemizedlist>
+</listitem>
+</itemizedlist>
+
+<para>
+    <command>cf backup-restore</command> reads the 
+    <filename>cf-backup.json</filename> snapshot file found in the current 
+    working directory, and then talks to the targeted &scf; instance to upload the following information, in the specified order:
+</para>
+
+<itemizedlist>  
+<listitem>
+   <para>Shared domains</para>
+</listitem>
+<listitem>
+    <para>Feature flags</para>
+</listitem>
+<listitem>
+    <para>Quota Definitions (iff --include-quota-definitions)</para>
+</listitem>
+
+<listitem>
+    <para>Orgs</para>
+    
+    <itemizedlist>  
+     <listitem>
+         <para>Space Quotas (iff --include-quota-definitions)</para>
+     </listitem>
+     <listitem>
+         <para>UserRoles</para>
+     </listitem>
+      <listitem>
+         <para>(private) Domains</para>
+     </listitem>
+       <listitem>
+         <para>Spaces</para>
+
+        <itemizedlist>
+            <listitem>
+                <para>UserRoles</para>
+            </listitem>
+            <listitem>
+                <para>Applications (+ droplet)</para>
+                
+                <itemizedlist>
+                  <listitem>
+                      <para>Bound Routes</para>
+                  </listitem>
+              </itemizedlist>
+            </listitem>      
+         <listitem>
+         <para>Security Groups (iff --include-security-groups)</para>
+     </listitem>
+     </itemizedlist>
+    </listitem>
+  </itemizedlist>
+ </listitem>
+</itemizedlist>
+
+<para>The following list provides more details
+    of each action.</para>
+
+  <variablelist>
+      <varlistentry>
+	  <term>
+          Shared Domains
+      </term>
+	<listitem>
+     <para>Attempts to create domains from the
+     backup. Existing domains are retained, and not overwritten.</para>
+    </listitem>
+ </varlistentry>
  
- <sect1 xml:id="sec.cap.install-backup-restore">
-     <title>Installing the cf-plugin-backup</title>
-     <para>
-         Download the plugin from 
-         <link xlink:href="https://github.com/SUSE/cf-plugin-backup/releases">
-             cf-plugin-backup/releases</link>.
-     </para>
-     <para>
-         Then install it with <command>cf</command>, using the name of the 
-         plugin binary that you downloaded:
-     </para>
-     <screen>
-&prompt.user;cf install-plugin <replaceable>cf-plugin-backup-1.0.7.0.g0217eef.linux-amd64</replaceable>
- Attention: Plugins are binaries written by potentially untrusted authors.
- Install and use plugins at your own risk.
- Do you want to install the plugin 
- backup-plugin/cf-plugin-backup-1.0.7.0.g0217eef.linux-amd64? [yN]: y
- Installing plugin backup...
- OK
- Plugin backup 1.0.7 successfully installed.
-     </screen>
-     
-     <para>
-         Verify installation by listing installed plugins:
-     </para>
-      <screen>
-&prompt.user;cf plugins
- Listing installed plugins...
-
- plugin   version   command name      command help
- backup   1.0.7     backup-info       Show information about the current snapshot
- backup   1.0.7     backup-restore    Restore the CloudFoundry state from a 
-  backup created with the snapshot command
- backup   1.0.7     backup-snapshot   Create a new CloudFoundry backup snapshot 
-  to a local file
-
- Use 'cf repo-plugins' to list plugins in registered repos available to install.
-</screen>
-</sect1>
-
-<sect1 xml:id="sec.cap.using-plugin">
-    <title>Using cf-plugin-backup</title>
-    
-    <para>
-        View the online help for any command, like this example:
-    </para>
-    
-    <screen>
-&prompt.user; cf backup-info --help
- NAME:
-   backup-info - Show information about the current snapshot
-
- USAGE:
-   cf backup-info
-</screen>
-
-<para>
-    Create a backup of your &productname; data and applications. The command
-    outputs progress messages until it is completed:
+  <varlistentry>
+  <term>
+     Feature Flags     
+  </term>
+	<listitem>
+      <para>Attempts to update flags from the backup.</para>
+    </listitem>
+ </varlistentry>
+ 
+ <varlistentry>
+  <term>
+      Quota Definitions    
+  </term>
+	<listitem>
+      <para>Existing quotas are overwritten from the
+     backup (deleted, re-created).</para>
+    </listitem>
+ </varlistentry> 
+ 
+  <varlistentry>
+  <term>
+     Orgs     
+  </term>
+	<listitem>
+      <para>Attempts to create orgs from the backup. Attempts to
+     update existing orgs from the backup.</para>
+    </listitem>
+ </varlistentry>
+ 
+  <varlistentry>
+  <term>
+     Space Quota Definitions     
+  </term>
+	<listitem>
+      <para>Existing quotas are overwritten from
+       the backup (deleted, re-created).</para>
+    </listitem>
+ </varlistentry>
+ 
+  <varlistentry>
+  <term>
+     User roles     
+  </term>
+	<listitem>
+      <para>Expect the referenced user to exist. Will fail when
+       the user is already associated with the space, in the given
+       role.</para>
+    </listitem>
+ </varlistentry>
+ 
+  <varlistentry>
+  <term>
+     (private) Domains     
+  </term>
+	<listitem>
+      <para>Attempts to create domains from the
+       backup. Existing domains are retained, and not overwritten.
 </para>
-
-<screen>
-&prompt.user;cf backup-snapshot   
- 2018/06/18 12:48:27 Retrieving resource /v2/quota_definitions
- 2018/06/18 12:48:30 org quota definitions done
- 2018/06/18 12:48:30 Retrieving resource /v2/space_quota_definitions
- 2018/06/18 12:48:32 space quota definitions done
- 2018/06/18 12:48:32 Retrieving resource /v2/organizations
- [...]
-</screen>
-
-<para>
-    Your &cap; data is saved in the current directory in 
-    <filename>cf-backup.json</filename>, and application data in the
-    <filename>app-bits/</filename> directory.
+    </listitem>
+ </varlistentry>
+ 
+  <varlistentry>
+  <term>
+       Spaces   
+  </term>
+	<listitem>
+      <para>Attempts to create spaces from the backup. Attempts to
+       update existing spaces from the backup.
 </para>
-
-<para>
-    View the current backup:
-</para>
-
-<screen>
-&prompt.user;cf backup-info
- - Org  system
-</screen>
-
-<para>
-    Restore from backup:
-</para>
-
-<screen>
-&prompt.user;cf backup-restore
-</screen>
-
-<para>
-    There are two additional restore options: 
-    <command>--include-security-groups</command> and
-    <command>--include-quota-definitions</command>. 
-</para>
+    </listitem>
+ </varlistentry>
+ 
+  <varlistentry>
+  <term>
+      User roles    
+  </term>
+	<listitem>
+      <para>Expect the referenced user to exist. Will fail
+         when the user is already associated with the space, in the
+         given role.</para>
+    </listitem>
+ </varlistentry>
+  <varlistentry>
+  <term>
+       Apps   
+  </term>
+	<listitem>
+      <para>Attempts to create apps from the backup. Attempts to
+       	 update existing apps from the backup (memory, instances,
+       	 buildpack, state, ...)</para>
+    </listitem>
+ </varlistentry>
+ 
+  <varlistentry>
+  <term>
+     Security groups     
+  </term>
+	<listitem>
+      <para>Existing groups are overwritten from the backup</para>
+    </listitem>
+ </varlistentry>
+ 
+ </variablelist>
 
 </sect1>
 
