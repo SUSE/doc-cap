@@ -70,6 +70,40 @@ provisioned on demand.
     restarted to use the new security group.
 </para>
 </sect1>
+    
+<sect1>    
+  <title>Deploying on &caasp; 3</title>
+<para>
+    If you are deploying &productname; on &caasp; 3, see 
+    <xref linkend="sec.cap.caasp-3"/> for important information on applying
+    PodSecurityPolicy (PSP) to your new sidecars.
+</para>
+
+<para>
+    Take the example configuration file, <filename>cap-psp-rbac.yaml</filename>,
+    in <xref linkend="sec.cap.caasp-3"/>, and append these lines to the end,
+    using your own namespace name:
+</para>
+<screen>
+- kind: ServiceAccount
+  name: default
+  namespace: <replaceable>mysql-sidecar</replaceable>
+</screen>
+
+<para>
+    Then apply this new PSP configuration before you deploy your new service 
+    broker sidecar with this command:
+</para>
+
+<screen>
+&prompt.user;kubectl create -f cap-psp-rbac.yaml
+</screen>
+
+<para>
+    Then proceed to creating and deploying your sidecar.
+</para>
+        
+</sect1>
  
 <sect1 xml:id="sec.cap.configure-service-broker">
   <title>Configuring the MySQL Deployment</title>
