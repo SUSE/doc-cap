@@ -47,8 +47,8 @@
     <listitem>
     <para>The set of available stacks is part of the &scf; instance setup, and is
     not part of the CC configuration. Trying to restore applications using
-    stacks not available on the target &scf; instance will fail. Setting the 
-    necessary stacks has to be performed separately before
+    stacks not available on the target &scf; instance will fail. Setting up the 
+    necessary stacks must be performed separately before
     the backup plugin is invoked.</para>
   </listitem>
       <listitem>
