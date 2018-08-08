@@ -75,14 +75,15 @@ provisioned on demand.
   <title>Deploying on &caasp; 3</title>
 <para>
     If you are deploying &productname; on &caasp; 3, see 
-    <xref linkend="sec.cap.caasp-3"/> for important information on applying
-    PodSecurityPolicy (PSP) to your new sidecars.
+    <xref linkend="sec.cap.caasp-3"/> for important information on applying the
+    required PodSecurityPolicy (PSP) to your deployment. You must also apply
+    the PSP to your new service brokers.
 </para>
 
 <para>
     Take the example configuration file, <filename>cap-psp-rbac.yaml</filename>,
     in <xref linkend="sec.cap.caasp-3"/>, and append these lines to the end,
-    using your own namespace name:
+    using your own namespace name for your new service broker:
 </para>
 <screen>
 - kind: ServiceAccount
@@ -91,16 +92,17 @@ provisioned on demand.
 </screen>
 
 <para>
-    Then apply this new PSP configuration before you deploy your new service 
-    broker sidecar with this command:
+    Then apply the updated PSP configuration, before you deploy your new service 
+    broker, with this command:
 </para>
 
 <screen>
-&prompt.user;kubectl create -f cap-psp-rbac.yaml
+&prompt.user;kubectl apply -f cap-psp-rbac.yaml
 </screen>
 
 <para>
-    Then proceed to creating and deploying your sidecar.
+    <command>kubectl apply</command> updates an existing deployment. After 
+    applying the PSP, proceed to configuring and deploying your service broker.
 </para>
         
 </sect1>
