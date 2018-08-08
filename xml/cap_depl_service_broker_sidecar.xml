@@ -191,7 +191,9 @@ env:
 <sect1 xml:id="sec.cap.configure-mysql">
   <title>Deploying the MySQL Chart</title>
   <para>
-      The 1.1 release of &productname; includes charts for MySQL and PostgreSQL:
+      The 1.1 release of &productname; includes charts for MySQL and PostgreSQL
+      (see <xref linkend="sec.cap.addrepo-prod"/> for information on 
+      managing your &helm; repository):
   </para>
   <screen>
 &prompt.user;helm search suse
