@@ -38,6 +38,7 @@ kubectl create -f -
 </screen>        
 <para>       
 You should already have the Stratos charts when you downloaded the SUSE charts
+repository (see <xref linkend="sec.cap.addrepo-prod"/>). Search your &helm;
 repository:
 </para>        
 <screen>
