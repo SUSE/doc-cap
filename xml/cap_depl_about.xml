@@ -16,8 +16,8 @@
   <title>About &productname;</title>
  </info>
  
-<sect1 xml:id="sec.cap.changes.1.1">
-  <title>New in Version 1.1</title>
+<sect1 xml:id="sec.cap.changes">
+  <title>New in Version &productnumber;</title>
   <para>
       See the 
       <link xlink:href="https://www.suse.com/documentation/cloud-application-platform-1/index.html">Release Notes</link>
@@ -36,7 +36,7 @@
   <title>&productname; Overview</title> 
  <para>
 &productname; is a software platform for cloud-native application
-deployment based on &scf; and &suse; &caasp; 2.0. It serves different but complementary
+deployment based on &scf; and &suse; &caasp;. It serves different but complementary
 purposes for operators and application developers.
  </para>
  <para>
@@ -146,7 +146,7 @@ and configurations which are deployed to &kube; clusters using &helm;.
 
 <para>
 This guide details the steps for deploying &scf;
-on &suse; &caasp; 2. &caasp; is a specialized application development and 
+on &suse; &caasp;, and on supported environments such as Microsoft Azure Kubernetes Service (AKS). &caasp; is a specialized application development and 
 hosting platform built on the &susemicros; container host operating system, 
 container orchestration with &kube;, and &salt; for automating installation and
 configuration. 
@@ -173,7 +173,7 @@ on each &kube; worker after installation.
 
 <para>
 A production deployment requires considerable resources. &productname; includes 
-an entitlement of &suse; &caasp; 2 and &ses; 5. &ses; alone has substantial
+an entitlement of &suse; &caasp; and &ses;. &ses; alone has substantial
 requirements; see the 
 <link xlink:href="https://www.suse.com/products/suse-enterprise-storage/">Tech Specs</link>
 for details. &suse; &caasp; requires a minimum of four hosts: one admin and three

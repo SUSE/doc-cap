@@ -44,11 +44,11 @@ repository:
 <screen>
 &prompt.user;helm search suse                                  
 NAME                         VERSION DESCRIPTION
-suse/cf                      2.10.1  A Helm chart for SUSE Cloud Foundry               
+suse/cf                      2.11.1  A Helm chart for SUSE Cloud Foundry               
 suse/cf-usb-sidecar-mysql    1.0.1   A Helm chart for SUSE Universal Service Broker ...
 suse/cf-usb-sidecar-postgres 1.0.1   A Helm chart for SUSE Universal Service Broker ...
-suse/console                 1.1.0   A Helm chart for deploying Stratos UI Console     
-suse/uaa                     2.10.1  A Helm chart for SUSE UAA
+suse/console                 2.0.0   A Helm chart for deploying Stratos UI Console     
+suse/uaa                     2.11.1  A Helm chart for SUSE UAA
 </screen>
 <para>
 Install Stratos, and if you have not set a default storage class you must specify
@@ -85,7 +85,7 @@ console-mariadb-3697248891-5drf5   1/1       Running   0          30m
 
 <screen>
 NAME:   susecf-console
-LAST DEPLOYED: Thu Apr 12 10:28:34 2018
+LAST DEPLOYED: Tue Aug 14 11:53:28 2018
 NAMESPACE: stratos
 STATUS: DEPLOYED
 
@@ -138,13 +138,13 @@ console  1        1        1s
 
 <screen>
 &prompt.user;helm ls
-NAME            REVISION UPDATED                   STATUS    CHART          NAMESPACE
-susecf-console  1        Thu Apr 12 10:28:34 2018  DEPLOYED  console-1.1.0  stratos  
-susecf-scf      1        Wed Apr 11 14:55:23 2018  DEPLOYED  cf-2.8.0       scf      
-susecf-uaa      1        Wed Apr 11 14:48:01 2018  DEPLOYED  uaa-2.8.0      uaa
+NAME            REVISION  UPDATED                  STATUS   CHART           NAMESPACE
+susecf-console  1         Tue Aug 14 11:53:28 2018 DEPLOYED console-2.0.0   stratos  
+susecf-scf      1         Tue Aug 14 10:58:16 2018 DEPLOYED cf-2.11.0       scf      
+susecf-uaa      1         Tue Aug 14 10:49:30 2018 DEPLOYED uaa-2.11.0      uaa 
 
 &prompt.user;helm status susecf-console
-LAST DEPLOYED: Thu Apr 12 10:28:34 2018
+LAST DEPLOYED: Tue Aug 14 11:53:28 2018
 NAMESPACE: stratos
 STATUS: DEPLOYED
 [...]
