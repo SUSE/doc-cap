@@ -167,7 +167,7 @@ file enables the remote administration of your cluster.
  <screen>
 &prompt.user;kubectl version --short
 Client Version: v1.9.1
-Server Version: v1.7.7
+Server Version: v1.9.8
 </screen>
 <para>
     As the client is on your workstation, and the server is on your cluster, 
@@ -190,10 +190,11 @@ contexts:
 [...]
 
 &prompt.user;kubectl get nodes
-NAME                  STATUS                     ROLES     AGE  VERSION
-b70748d.example.com   Ready                      &lt;none>    4h   v1.7.7
-cb77881.example.com   Ready,SchedulingDisabled   &lt;none>    4h   v1.7.7
-d028551.example.com   Ready                      &lt;none>    4h   v1.7.7
+NAME                  STATUS   ROLES     AGE  VERSION
+ef254d3.example.com   Ready    Master    4h   v1.9.8
+b70748d.example.com   Ready    &lt;none>    4h   v1.9.8
+cb77881.example.com   Ready    &lt;none>    4h   v1.9.8
+d028551.example.com   Ready    &lt;none>    4h   v1.9.8
 [...]
 </screen>        
  </listitem>  
@@ -620,11 +621,11 @@ suse            https://kubernetes-charts.suse.com/
 <screen>
 &prompt.user;helm search suse
 NAME                         VERSION DESCRIPTION
-suse/cf                      2.10.1  A Helm chart for SUSE Cloud Foundry               
+suse/cf                      2.11.1  A Helm chart for SUSE Cloud Foundry               
 suse/cf-usb-sidecar-mysql    1.0.1   A Helm chart for SUSE Universal Service Broker ...
 suse/cf-usb-sidecar-postgres 1.0.1   A Helm chart for SUSE Universal Service Broker ...
-suse/console                 1.1.0   A Helm chart for deploying Stratos UI Console     
-suse/uaa                     2.10.1  A Helm chart for SUSE UAA
+suse/console                 2.0.0   A Helm chart for deploying Stratos UI Console     
+suse/uaa                     2.11.1  A Helm chart for SUSE UAA
 </screen>
 </sect1>
 
