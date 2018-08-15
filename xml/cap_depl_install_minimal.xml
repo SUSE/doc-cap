@@ -166,12 +166,12 @@
       </varlistentry>
 <varlistentry>
  <term>
-	    Install &suse; &caasp; 2
+	    Install &suse; &caasp; 3
   </term>
 	<listitem>
         <para>
-            Install &suse; &caasp; 2 
-<link xlink:href="https://www.suse.com/documentation/suse-caasp-2/">&caasp;</link>. 
+            Install &suse; &caasp; 3
+<link xlink:href="https://www.suse.com/documentation/suse-caasp-3/">&caasp;</link>. 
             When you reach the step where you log
             into the Velum Web interface, check the box to install &tiller; (&helm;'s 
             server component).  
@@ -259,7 +259,7 @@ the remote administration of your cluster.
  <screen>
 &prompt.user;kubectl version --short
 Client Version: v1.9.1
-Server Version: v1.7.7
+Server Version: v1.9.8
 </screen>
 <para>
     As the client is on your workstation, and the server is on your cluster, 
@@ -281,10 +281,10 @@ contexts:
 [...]
 
 &prompt.user;kubectl get nodes
-NAME                         STATUS                     ROLES     AGE  VERSION
-4a10db2c.infra.caasp.local   Ready                      &lt;none>    4h   v1.7.7
-87c9e8ff.infra.caasp.local   Ready,SchedulingDisabled   &lt;none>    4h   v1.7.7
-34ce7eb0.infra.caasp.local   Ready                      &lt;none>    4h   v1.7.7
+NAME                         STATUS  ROLES     AGE  VERSION
+4a10db2c.infra.caasp.local   Ready   Master    4h   v1.9.8
+87c9e8ff.infra.caasp.local   Ready   &lt;none>    4h   v1.9.8
+34ce7eb0.infra.caasp.local   Ready   &lt;none>    4h   v1.9.8
 </screen>        
  </listitem>  
 </varlistentry>
@@ -551,11 +551,11 @@ suse        https://kubernetes-charts.suse.com/
 <screen>
 &prompt.user;helm search suse
 NAME                         VERSION DESCRIPTION
-suse/cf                      2.10.1  A Helm chart for SUSE Cloud Foundry               
+suse/cf                      2.11.0  A Helm chart for SUSE Cloud Foundry               
 suse/cf-usb-sidecar-mysql    1.0.1   A Helm chart for SUSE Universal Service Broker ...
 suse/cf-usb-sidecar-postgres 1.0.1   A Helm chart for SUSE Universal Service Broker ...
-suse/console                 1.1.0   A Helm chart for deploying Stratos UI Console     
-suse/uaa                     2.10.1  A Helm chart for SUSE UAA
+suse/console                 2.0.0   A Helm chart for deploying Stratos UI Console     
+suse/uaa                     2.11.0  A Helm chart for SUSE UAA
 </screen>
 </sect2>
 
@@ -680,7 +680,7 @@ step.
       <title>No Upgrades with Hostpath</title>
       <para>
           Upgrades do not work with the hostpath storage type, as the
-          required stateful data may be lost.
+          required stateful data may not be preserved.
       </para>
   </note>
   

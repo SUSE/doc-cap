@@ -89,11 +89,11 @@ release.
 </para>
 
 <screen>
-&prompt.user;helm ls
-NAME            REVISION  UPDATED               STATUS   CHART          NAMESPACE
-susecf-console  1     Thu Apr 12 10:28:34 2018  DEPLOYED console-1.1.0  stratos  
-susecf-scf      1     Wed Apr 11 14:55:23 2018  DEPLOYED cf-2.8.0       scf      
-susecf-uaa      1     Wed Apr 11 14:48:01 2018  DEPLOYED uaa-2.8.0      uaa
+&prompt.user;helm list
+NAME            REVISION  UPDATED                  STATUS    CHART           NAMESPACE
+<replaceable>susecf-console</replaceable>  1         Tue Aug 14 11:53:28 2018 DEPLOYED  console-2.0.0   stratos  
+<replaceable>susecf-scf</replaceable>      1         Tue Aug 14 10:58:16 2018 DEPLOYED  cf-2.11.0       scf      
+<replaceable>susecf-uaa</replaceable>      1         Tue Aug 14 10:49:30 2018 DEPLOYED  uaa-2.11.0      uaa
 </screen>
 
 <para>
