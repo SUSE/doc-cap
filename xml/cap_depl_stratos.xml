@@ -132,12 +132,12 @@ console  1        1        1s
 </figure>
 
 <para>
-    Another way to get the release name is with the <command>helm ls</command>
+    Another way to get the release name is with the <command>helm list</command>
     command, then query the release name to get its IP address and port number:
 </para>
 
 <screen>
-&prompt.user;helm ls
+&prompt.user;helm list
 NAME            REVISION  UPDATED                  STATUS   CHART           NAMESPACE
 susecf-console  1         Tue Aug 14 11:53:28 2018 DEPLOYED console-2.0.0   stratos  
 susecf-scf      1         Tue Aug 14 10:58:16 2018 DEPLOYED cf-2.11.0       scf      
