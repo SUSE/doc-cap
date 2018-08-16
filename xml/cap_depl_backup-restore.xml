@@ -52,10 +52,10 @@
     the backup plugin is invoked.</para>
   </listitem>
       <listitem>
-    <para>Buildpacks are not saved. Attempts to restore applications using 
-        buildpacks not available on the target &scf; instance will fail. 
-        Saving and restoring buildpacks has to be performed separately, and
-    restoration completed before the backup plugin is invoked.</para>
+    <para>Buildpacks are not saved. Applications using custom buildpacks not
+available on the target SUSE Cloud Foundry instance will not be restored.
+Custom buildpacks must be managed separately, and relevant buildpacks
+must be in place before the affected applications are restored.</para>
   </listitem>
 </itemizedlist>
      
@@ -71,14 +71,14 @@
          plugin binary that you downloaded:
      </para>
      <screen>
-&prompt.user;cf install-plugin <replaceable>cf-plugin-backup-1.0.7.0.g0217eef.linux-amd64</replaceable>
+&prompt.user;cf install-plugin <replaceable>cf-plugin-backup-1.0.8.0.g9e8438e.linux-amd64</replaceable>
  Attention: Plugins are binaries written by potentially untrusted authors.
  Install and use plugins at your own risk.
  Do you want to install the plugin 
- backup-plugin/cf-plugin-backup-1.0.7.0.g0217eef.linux-amd64? [yN]: y
+ backup-plugin/cf-plugin-backup-1.0.8.0.g9e8438e.linux-amd64? [yN]: y
  Installing plugin backup...
  OK
- Plugin backup 1.0.7 successfully installed.
+ Plugin backup 1.0.8 successfully installed.
      </screen>
      
      <para>
@@ -89,10 +89,10 @@
  Listing installed plugins...
 
  plugin   version   command name      command help
- backup   1.0.7     backup-info       Show information about the current snapshot
- backup   1.0.7     backup-restore    Restore the CloudFoundry state from a 
+ backup   1.0.8     backup-info       Show information about the current snapshot
+ backup   1.0.8     backup-restore    Restore the CloudFoundry state from a 
   backup created with the snapshot command
- backup   1.0.7     backup-snapshot   Create a new CloudFoundry backup snapshot 
+ backup   1.0.8     backup-snapshot   Create a new CloudFoundry backup snapshot 
   to a local file
 
  Use 'cf repo-plugins' to list plugins in registered repos available to install.
@@ -138,11 +138,11 @@
 
 <screen>
 &prompt.user;cf backup-snapshot   
- 2018/06/18 12:48:27 Retrieving resource /v2/quota_definitions
- 2018/06/18 12:48:30 org quota definitions done
- 2018/06/18 12:48:30 Retrieving resource /v2/space_quota_definitions
- 2018/06/18 12:48:32 space quota definitions done
- 2018/06/18 12:48:32 Retrieving resource /v2/organizations
+ 2018/08/18 12:48:27 Retrieving resource /v2/quota_definitions
+ 2018/08/18 12:48:30 org quota definitions done
+ 2018/08/18 12:48:30 Retrieving resource /v2/space_quota_definitions
+ 2018/08/18 12:48:32 space quota definitions done
+ 2018/08/18 12:48:32 Retrieving resource /v2/organizations
  [...]
 </screen>
 
