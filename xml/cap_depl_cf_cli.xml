@@ -112,6 +112,18 @@ Space:          No space targeted, use 'cf target -s SPACE'
     Log out with <command>cf logout</command>.
 </para>
 <para>
+    Change the admin password:
+</para>
+<screen>
+&prompt.user;cf passwd
+Current Password>
+New Password> 
+Verify Password> 
+Changing password...
+OK
+Please log in again
+</screen>
+<para>
     View your current API endpoint, user, org, and space:
 </para>
 <screen>
