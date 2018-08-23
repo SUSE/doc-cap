@@ -36,8 +36,9 @@
 <xi:include href="cap_depl_service_broker_sidecar.xml"/>
 <xi:include href="cap_depl_backup-restore.xml"/>
 <xi:include href="cap_depl_azure.xml"/>
-<!-- replace with links to relevant SOC sections - cs june 26 2018
-<xi:include href="cap_depl_openstack.xml"/> -->
+<xi:include href="cap_depl_eks.xml"/>
+<!-- replace with links to relevant SOC sections - cs june 26 2018 -->
+<xi:include href="cap_depl_openstack.xml"/>
 <xi:include href="cap_depl_kube_requirements.xml"/>
 <xi:include href="cap_depl_install_minimal.xml"/>
 <xi:include href="cap_depl_troubleshooting.xml"/>

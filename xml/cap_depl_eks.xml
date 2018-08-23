@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha.cap.eks"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <title>Deploying &productname; on Amazon EKS</title>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+ </info>
+ 
+ <para>
+    Starting with the 1.2 release, &productname; supports deployment on
+    <link xlink:href="https://aws.amazon.com/eks/">Amazon EKS</link>, 
+    Amazon's managed &kube; service.
+ </para>
+ 
+<sect1 xml:id="sec.cap.eks-prereqs">
+<title>Prerequisites</title> 
+ <para>
+     You need an <link xlink:href="https://aws.amazon.com/">Amazon EKS account</link>. 
+     See <link xlink:href="https://docs.aws.amazon.com/eks/latest/userguide/getting-started.html">Getting Started with Amazon EKS</link> for instructions on
+     creating a &kube; cluster for your &productname; deployment.
+ </para>
+ 
+ <para>
+ When you create your cluster, use node sizes that are at least a 
+ <literal>t2.large</literal>.
+ </para>
+ 
+ <para>
+    See <xref linkend="sec.cap.eks-iam"/> for guidance on configuring Identity and Access 
+    Management (IAM) for your users. 
+</para>     
+</sect1>
+
+<sect1 xml:id="sec.cap.eks-iam">
+<title>IAM Requirements for EKS</title> 
+
+<para>
+    These IAM policies provide sufficient access to use EKS.
+</para>
+
+<sect2 xml:id="sec.cap.eks-unscoped">
+    <title>Unscoped Operations</title>
+    <para>
+        Some of these permissions are very broad. They are difficult to scope 
+        effectively, in part because many resources are created and named 
+        dynamically when deploying an EKS cluster using the 
+        <link xlink:href="https://console.aws.amazon.com/cloudformation">
+            CloudFormation</link> console. It may be helpful to enforce certain 
+        naming conventions, such as prefixing cluster names with 
+        <varname>${aws:username}</varname> for pattern-matching in 
+        <guimenu>Conditions</guimenu>. However, this requires special 
+        consideration beyond the EKS deployment guide, and should be evaluated 
+        in the broader context of organizational IAM policies.
+</para>
+
+<screen>
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "UnscopedOperations",
+            "Effect": "Allow",
+            "Action": [
+                "cloudformation:CreateUploadBucket",
+                "cloudformation:EstimateTemplateCost",
+                "cloudformation:ListExports",
+                "cloudformation:ListStacks",
+                "cloudformation:ListImports",
+                "cloudformation:DescribeAccountLimits",
+                "eks:ListClusters",
+                "cloudformation:ValidateTemplate",
+                "cloudformation:GetTemplateSummary",
+                "eks:CreateCluster"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "EffectivelyUnscopedOperations",
+            "Effect": "Allow",
+            "Action": [
+                "iam:CreateInstanceProfile",
+                "iam:DeleteInstanceProfile",
+                "iam:GetRole",
+                "iam:DetachRolePolicy",
+                "iam:RemoveRoleFromInstanceProfile",
+                "cloudformation:*",
+                "iam:CreateRole",
+                "iam:DeleteRole",
+                "eks:*"
+            ],
+            "Resource": [
+                "arn:aws:eks:*:*:cluster/*",
+                "arn:aws:cloudformation:*:*:stack/*/*",
+                "arn:aws:cloudformation:*:*:stackset/*:*",
+                "arn:aws:iam::*:instance-profile/*",
+                "arn:aws:iam::*:role/*"
+            ]
+        }
+    ]
+}
+</screen>
+</sect2>
+
+<sect2 xml:id="sec.cap.eks-scoped">
+    <title>Scoped Operations</title>
+    <para>
+        These policies deal with sensitive access controls, such as passing 
+        roles and attaching/detaching policies from roles.
+    </para>
+    <para>
+        This policy, as written, allows unrestricted use of only 
+        customer-managed policies, and not Amazon-managed policies. This prevents 
+        potential security holes such as attaching the 
+        <literal>IAMFullAccess</literal> policy to a role. If you are using roles 
+        in a way that would be undermined by this, you should strongly consider 
+        integrating a 
+        <link xlink:href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html">Permissions Boundary</link> before 
+        using this policy.
+    </para>
+    <screen>
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "UseCustomPoliciesWithCustomRoles",
+            "Effect": "Allow",
+            "Action": [
+                "iam:DetachRolePolicy",
+                "iam:AttachRolePolicy"
+            ],
+            "Resource": [
+                "arn:aws:iam::&lt;YOUR_ACCOUNT_ID>:role/*",
+                "arn:aws:iam::&lt;YOUR_ACCOUNT_ID>:policy/*"
+            ],
+            "Condition": {
+                "ForAllValues:ArnNotLike": {
+                    "iam:PolicyARN": "arn:aws:iam::aws:policy/*"
+                }
+            }
+        },
+        {
+            "Sid": "AllowPassingRoles",
+            "Effect": "Allow",
+            "Action": "iam:PassRole",
+            "Resource": "arn:aws:iam::&lt;YOUR_ACCOUNT_ID>:role/*"
+        },
+        {
+            "Sid": "AddCustomRolesToInstanceProfiles",
+            "Effect": "Allow",
+            "Action": "iam:AddRoleToInstanceProfile",
+            "Resource": "arn:aws:iam::&lt;YOUR_ACCOUNT_ID>:instance-profile/*"
+        },
+        {
+            "Sid": "AssumeServiceRoleForEKS",
+            "Effect": "Allow",
+            "Action": "sts:AssumeRole",
+            "Resource": "arn:aws:iam::&lt;YOUR_ACCOUNT_ID>:role/&lt;EKS_SERVICE_ROLE_NAME>"
+        },
+        {
+            "Sid": "DenyUsingAmazonManagedPoliciesUnlessNeededForEKS",
+            "Effect": "Deny",
+            "Action": "iam:*",
+            "Resource": "arn:aws:iam::aws:policy/*",
+            "Condition": {
+                "ArnNotEquals": {
+                    "iam:PolicyARN": [
+                        "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
+                        "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
+                        "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+                    ]
+                }
+            }
+        },
+        {
+            "Sid": "AllowAttachingSpecificAmazonManagedPoliciesForEKS",
+            "Effect": "Allow",
+            "Action": [
+                "iam:DetachRolePolicy",
+                "iam:AttachRolePolicy"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "ArnEquals": {
+                    "iam:PolicyARN": [
+                        "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
+                        "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
+                        "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+                    ]
+                }
+            }
+        }
+    ]
+}
+</screen>    
+</sect2>
+</sect1>
+
+<sect1 xml:id="sec.cap.eks-diskspace">
+    <title>Disk Space</title>
+    <para>
+        Usually EC2 nodes come with 20GB of disk space. This is insufficient for 
+        a &productname; deployment. Make sure to increase the disk space for each 
+        node after creating the &kube; cluster. First enable SSH to the nodes:
+    </para>
+    <procedure xml:id="pro.ssh">
+    <step>
+        <para>
+        Go to Services -> EC2
+        </para>
+    </step>
+    <step>
+        <para>
+        Select Security Groups
+        </para>
+    </step>
+    <step>
+        <para>
+        Click on the Node Security Group for your nodes
+        </para>
+    </step>
+    <step>
+        <para>
+        Click Actions -> Edit inbound rules
+        </para>
+    </step>
+    <step>
+        <para>
+        Click Add Rule
+        </para>
+    </step>
+    <step>
+        <para>
+        Choose "SSH" in the Type column and "Anywhere" in the Source column
+        </para>
+    </step>
+    <step>
+        <para>
+        Click "Save"
+        </para>
+    </step>    
+</procedure>
+
+<para>
+    Next, grow the volumes in AWS:
+</para>
+
+    <procedure xml:id="pro.grow-volumes">
+    <step>
+        <para>
+        Go to Services -> EC2
+        </para>
+    </step>
+    <step>
+        <para>
+        Select Volumes
+        </para>
+    </step>
+    <step>
+        <para>
+        Increase the size for all volumes attached to your nodes from 20GB to at 
+        least 60GB.
+        </para>
+    </step>
+ </procedure>
+
+ <para>
+     Make the growth available to the filesystems:
+ </para>
+    <procedure xml:id="pro.attach-filesystems">
+    <step>
+        <para>
+            Login to each node and run <command>sudo growpart /dev/nvme0n1 1 &amp;&amp; sudo xfs_growfs -d /</command>
+        </para>
+        <para>
+            These commands might change, depending on the actual disk device and 
+            the filesystem in use. Details on resizing are documented at 
+            <link xlink:href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/recognize-expanded-volume-linux.html">
+                Extending a Linux File System after Resizing the Volume </link>
+        </para>
+    </step> 
+</procedure>
+</sect1>
+
+<sect1 xml:id="sec.cap.eks-helm">
+    <title>The &helm; CLI and &tiller;</title>
+    <para>
+        Use this version of &helm;, or newer: 
+        <link xlink:href="https://storage.googleapis.com/kubernetes-helm/helm-v2.9.0-rc4-linux-amd64.tar.gz"/>
+    </para>
+    <para>
+        In <filename>rbac-config.yaml</filename>:
+    </para>
+    <screen>
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tiller
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: tiller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: tiller
+    namespace: kube-system
+</screen>
+
+<para>
+    Apply it to your cluster with these commands:
+</para>
+
+<screen>
+&prompt.user;kubectl create -f rbac-config.yaml
+&prompt.user;helm init --service-account tiller
+</screen>
+</sect1>
+
+<sect1 xml:id="sec.cap.eks-storage-class">
+    <title>Default Storage Class</title>
+    <para>
+        This example creates a simple storage class for your cluster in
+        <filename>storage-class.yaml</filename>:
+    </para>
+    <screen>
+  apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: gp2
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+  labels:
+    kubernetes.io/cluster-service: "true"
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp2
+</screen>
+
+<para>
+    Then apply the new storage class configuration with this command:
+</para>
+<screen>
+&prompt.user;kubectl create -f storage-class.yaml
+</screen>
+</sect1>
+
+<sect1 xml:id="sec.cap.eks-secgroup-rules">
+    <title>Security Group rules</title>
+    <para>In your EC2 virtual machine list, add the following rules to the 
+        security group to any one of your nodes:
+        </para>
+        <screen>
+  Type 	Protocol 	Port Range 	Source 	Description
+HTTP 	TCP 	80 	0.0.0.0/0 	CAP HTTP
+Custom TCP Rule 	TCP 	2793 	0.0.0.0/0 	CAP UAA
+Custom TCP Rule 	TCP 	2222 	0.0.0.0/0 	CAP SSH
+Custom TCP Rule 	TCP 	4443 	0.0.0.0/0 	CAP WSS
+Custom TCP Rule 	TCP 	443 	0.0.0.0/0 	CAP HTTPS
+Custom TCP Rule 	TCP 	20000-20009 	0.0.0.0/0 	CAP Brains
+</screen>
+</sect1>
+
+<sect1 xml:id="sec.cap.eks-external-ips">
+    <title>Find your <literal>kube.external_ips</literal></title>
+        <para>
+            In your EC2 VM List, look up the private IP addresses of one of the 
+            nodes, and note the address that is used in its private DNS, which 
+            looks like 
+            <literal>ip-<replaceable>address</replaceable>.us-west-2.compute.internal</literal>. Also note the public IP address, which you will need for 
+            the DOMAIN of the cluster in your &productname; configuration file.
+        </para>
+</sect1>
+            
+<sect1 xml:id="sec.cap.eks-deployment">
+    <title>Configuring and Deploying &productname;</title>
+        <para>
+            Follow the instructions in <xref linkend="sec.cap.storageclass-prod"/>
+            to deploy &productname;. When you create your <filename>scf-config-values.yaml</filename> 
+            file, make the following changes:
+        </para>
+<itemizedlist>
+  <listitem>
+    <para>
+        Use <literal>overlay-xfs</literal> for <literal>env.GARDEN_ROOTFS_DRIVER</literal>
+    </para>
+</listitem>
+  <listitem>
+    <para>
+        use <literal>""</literal> for <literal>env.GARDEN_APPARMOR_PROFILE</literal>
+    </para>
+</listitem>
+  <listitem>
+    <para>
+        Set <literal>kube.storage_class.persistent</literal> and <literal>kube.storage_class.shared</literal> to <literal>gp2</literal>
+    </para>
+</listitem>
+</itemizedlist>
+
+<para>
+    The following roles must have all capabilities:
+</para>
+<itemizedlist>
+  <listitem>
+    <para>
+        cc_uploader
+    </para>
+</listitem>
+  <listitem>
+    <para>
+       diego_locket 
+    </para>
+</listitem>
+  <listitem>
+    <para>
+      diego_access  
+    </para>
+</listitem>
+  <listitem>
+    <para>
+       diego_brain 
+    </para>
+</listitem>
+  <listitem>
+    <para>
+        diego_api
+    </para>
+</listitem>
+  <listitem>
+    <para>
+       nats 
+    </para>
+</listitem>
+  <listitem>
+    <para>
+        routing_api
+    </para>
+</listitem>
+</itemizedlist>
+
+<para>
+    Use this example <filename>scf-config-values.yaml</filename> as a template
+    for your configuration.
+</para>
+<screen>
+    env:
+    # Domain for SCF. DNS for *.DOMAIN must point to a kube node's (not master)
+    # external IP address.
+    DOMAIN: <replaceable>public_ip_of_node-VM.example.com</replaceable>
+    #### The UAA hostname is hardcoded to uaa.$DOMAIN, so shouldn't be
+    #### specified when deploying
+    # UAA host/port that SCF will talk to. If you have a custom UAA
+    # provide its host and port here.
+    UAA_HOST: uaa.<replaceable>public_ip_of_node-VM.example.com</replaceable>
+    UAA_PORT: 2793
+    GARDEN_ROOTFS_DRIVER: overlay-xfs
+    GARDEN_APPARMOR_PROFILE: ""
+sizing:
+  cc_uploader:
+    capabilities: ["ALL"]
+  nats:
+    capabilities: ["ALL"]
+  routing_api:
+    capabilities: ["ALL"]
+  router:
+    capabilities: ["ALL"]
+  diego_locket:
+    capabilities: ["ALL"]
+  diego_access:
+    capabilities: ["ALL"]
+  diego_brain:
+    capabilities: ["ALL"]
+  diego_api:
+    capabilities: ["ALL"]
+kube:
+    # The IP address assigned to the kube node pointed to by the domain.
+    #### the external_ip setting changed to accept a list of IPs, and was
+    #### renamed to external_ips
+    external_ips:
+    - <replaceable>private_ip_of_node-VM</replaceable>
+    storage_class:
+        # Make sure to change the value in here to whatever storage class you use
+        persistent: "gp2"
+        shared: "gp2"
+    # The registry the images will be fetched from. The values below should work for
+    # a default installation from the suse registry.
+    registry:
+      hostname: "registry.suse.com"
+      username: ""
+      password: ""
+    organization: "cap"
+    organization: "splatform"
+    auth: rbac
+secrets:
+    # Password for user 'admin' in the cluster
+    CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
+    # Password for SCF to authenticate with UAA
+    UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
+</screen>
+</sect1>    
+            
+</chapter>
+ 
