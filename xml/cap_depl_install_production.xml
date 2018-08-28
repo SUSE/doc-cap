@@ -83,6 +83,11 @@
          describe how to set up a load balancer or name services, as these 
          depend on customer requirements and existing network architectures.
      </para>
+     <para>
+        <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_deployment/data/sec_deploy_requirements_system.html#sec_deploy_requirements_network">
+             &suse; &caasp; Deployment Guide: Network Requirements</link>
+         provides guidance on network and name services configurations.
+     </para>
       </listitem>  
       </varlistentry>
 	<varlistentry>
