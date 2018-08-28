@@ -145,19 +145,25 @@ and configurations which are deployed to &kube; clusters using &helm;.
   <title>&productname; Architecture</title>
 
 <para>
-This guide details the steps for deploying &scf;
-on &suse; &caasp;, and on supported environments such as Microsoft Azure Kubernetes Service (AKS). &caasp; is a specialized application development and 
-hosting platform built on the &susemicros; container host operating system, 
-container orchestration with &kube;, and &salt; for automating installation and
+This guide details the steps for deploying &scf; on &suse; &caasp;, and on 
+supported &kube; environments such as Microsoft Azure 
+Kubernetes Service (AKS), and Amazon Elastic Container Service for Kubernetes
+(EKS).
+</para>
+
+<para>
+&caasp; is a specialized application development and hosting platform 
+built on the &susemicros; container host operating system, container 
+orchestration with &kube;, and &salt; for automating installation and 
 configuration. 
 </para>
 
 <important>
         <title>Review the &suse; &caasp; Deployment Guide</title>
         <para>
-        Setting up &scf; correctly depends on setting up &suse; &caasp;
-        correctly. Review the 
-        <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/">&suse; &caasp; Deployment Guide</link> 
+        Setting up &productname; on &suse; &caasp; correctly depends on setting 
+        up &suse; &caasp; correctly. Review the 
+        <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/">&suse; &caasp; Deployment Guide</link> 
         to understand how it operates, and configuration and administration 
         options. You should understand basic Linux, &docker;, and &kube;
         administration and use.
@@ -165,10 +171,9 @@ configuration.
 </important>
 
 <para>
-A supported deployment includes &scf; installed on &caasp;. You also 
-need a storage backend, such as &ses;, a DNS/DHCP server, and an Internet connection 
-to download additional packages during installation and ~10GB of Docker images 
-on each &kube; worker after installation.
+A supported deployment includes &scf; installed on &caasp;, Amazon EKS, or Azure 
+AKS. You also need a storage backend, such as &ses;, a DNS/DHCP server, and an 
+Internet connection to download additional packages during installation and ~10GB of Docker images on each &kube; worker after installation.
 </para>
 
 <para>
