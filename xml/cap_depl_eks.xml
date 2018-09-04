@@ -371,7 +371,7 @@ Custom TCP Rule 	TCP 	2793 	0.0.0.0/0 	CAP UAA
 Custom TCP Rule 	TCP 	2222 	0.0.0.0/0 	CAP SSH
 Custom TCP Rule 	TCP 	4443 	0.0.0.0/0 	CAP WSS
 Custom TCP Rule 	TCP 	443 	0.0.0.0/0 	CAP HTTPS
-Custom TCP Rule 	TCP 	20000-20009 	0.0.0.0/0 	CAP Brains
+Custom TCP Rule 	TCP 	20000-20009 	0.0.0.0/0 	TCP Routing
 </screen>
 </sect1>
 
