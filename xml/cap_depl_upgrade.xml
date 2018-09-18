@@ -19,34 +19,34 @@
 -->
  <sect1 xml:id="sec.cap.update">
   <title>Upgrading SCF, UAA, and Stratos</title>
+
   <para>
-      Maintenance updates are delivered as container images from the &suse;
-      registry and applied with &helm;. (See the 
-      <link xlink:href="https://www.suse.com/releasenotes/">Release Notes</link>
-      for additional upgrade information.)
-      Check for available updates:
+   Maintenance updates are delivered as container images from the &suse;
+   registry and applied with &helm;. (See the
+   <link xlink:href="https://www.suse.com/releasenotes/">Release Notes</link>
+   for additional upgrade information.) Check for available updates:
   </para>
-<screen>
-&prompt.user;helm repo update
+
+<screen>&prompt.user;helm repo update
 Hang tight while we grab the latest from your chart repositories...
 ...Skip local chart repository
 ...Successfully got an update from the "stable" chart repository
 ...Successfully got an update from the "suse" chart repository
-Update Complete. ⎈ Happy Helming!⎈   
-</screen>
+Update Complete. ⎈ Happy Helming!⎈</screen>
 
-<para>
-    For the &productname; 1.1 release, update your 
-    <filename>scf-config-values.yaml</filename> file with the changes
-    for secrets handling and external IP addresses. (See 
-    <xref linkend="sec.cap.configure-prod"/> for an example.)
-</para>
-<para>
-      Get your release and chart names (your releases may have different names than
-      the examples), and then apply the updates:
-</para>
-  <screen>
-&prompt.user;helm list
+  <para>
+   For the &productname; 1.1 release, update your
+   <filename>scf-config-values.yaml</filename> file with the changes for
+   secrets handling and external IP addresses. (See
+   <xref linkend="sec.cap.configure-prod"/> for an example.)
+  </para>
+
+  <para>
+   Get your release and chart names (your releases may have different names
+   than the examples), and then apply the updates:
+  </para>
+
+<screen>&prompt.user;helm list
 NAME            REVISION  UPDATED                  STATUS    CHART           NAMESPACE
 <replaceable>susecf-console</replaceable>  1         Tue Aug 14 11:53:28 2018 DEPLOYED  console-2.0.0   stratos  
 <replaceable>susecf-scf</replaceable>      1         Tue Aug 14 10:58:16 2018 DEPLOYED  cf-2.11.0       scf      
@@ -64,27 +64,24 @@ suse/cf                      2.11.0  A Helm chart for SUSE Cloud Foundry
 suse/cf-usb-sidecar-mysql    1.0.1   A Helm chart for SUSE Universal Service Broker ...
 suse/cf-usb-sidecar-postgres 1.0.1   A Helm chart for SUSE Universal Service Broker ...
 suse/console                 2.0.0   A Helm chart for deploying Stratos UI Console     
-suse/uaa                     2.11.0  A Helm chart for SUSE UAA
-</screen>
+suse/uaa                     2.11.0  A Helm chart for SUSE UAA</screen>
 
-<para>
-    Run the following commands to perform the upgrade. Wait for each command to
-    complete before running the next command.
-</para>
-<note>
-    <title>Important Changes</title>
-    <para>
-        Take note of the new commands for extracting and using secrets and 
-        certificates.
-        
-        The <command>--recreate-pods</command> option is required when upgrading
-        UAA and SCF from version 2.10.x to 2.11. Future upgrades should not 
-        require this option, as all pods should be in a ready state.
-    </para>
-</note>
+  <para>
+   Run the following commands to perform the upgrade. Wait for each command to
+   complete before running the next command.
+  </para>
 
-<screen>
-&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-uaa</replaceable> suse/uaa \
+  <note>
+   <title>Important Changes</title>
+   <para>
+    Take note of the new commands for extracting and using secrets and
+    certificates. The <command>--recreate-pods</command> option is required
+    when upgrading UAA and SCF from version 2.10.x to 2.11. Future upgrades
+    should not require this option, as all pods should be in a ready state.
+   </para>
+  </note>
+
+<screen>&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-uaa</replaceable> suse/uaa \
  --values scf-config-values.yaml
 
 &prompt.user;SECRET=$(kubectl get pods --namespace uaa \
@@ -97,7 +94,6 @@ suse/uaa                     2.11.0  A Helm chart for SUSE UAA
  --values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}"
 
 &prompt.user;helm upgrade --recreate-pods <replaceable>susecf-console</replaceable> suse/console \
- --values scf-config-values.yaml
-</screen>
-</sect1>
+ --values scf-config-values.yaml</screen>
+ </sect1>
 </chapter>

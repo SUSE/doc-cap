@@ -144,8 +144,7 @@ the &kube; master and workers.
  
 &prompt.root;kubectl cluster-info 
   Kubernetes master is running at http://localhost:8080
-  KubeDNS is running at http://localhost:8080/api/v1/proxy/namespaces/kube-system/services/kube-dns  
-</screen> 
+  KubeDNS is running at http://localhost:8080/api/v1/proxy/namespaces/kube-system/services/kube-dns</screen> 
 <!-- cwickert 2018-01-15: link outdated; section was removed from the CaaSP 2
  docs as kube-dns is installed by default -->
 (See (<link xlink:href="https://www.suse.com/documentation/suse-caasp-1/singlehtml/book_caasp_deployment/book_caasp_deployment.html#installing.dns">Installing Kubernetes DNS</link>)
@@ -169,27 +168,21 @@ the &kube; master and workers.
       storage class. This is not for production deployments. Run these commands 
       on the kube-master to create the <literal>hostpath</literal> storage 
       class, and to confirm that it was created. For Kubernetes 1.5.x:
-      <screen>
-&prompt.root;echo '{"kind":"StorageClass","apiVersion":"storage.k8s.io/v1beta1", \
+      <screen>&prompt.root;echo '{"kind":"StorageClass","apiVersion":"storage.k8s.io/v1beta1", \
  "metadata":{"name":"hostpath"},"provisioner":"kubernetes.io/host-path"}' | \
- kubectl create -f -
-</screen>
+ kubectl create -f -</screen>
 </para>
 <para>
     For Kubernetes 1.6.x:
-    <screen>
-&prompt.root;echo '{"kind":"StorageClass","apiVersion":"storage.k8s.io/v1", \
+    <screen>&prompt.root;echo '{"kind":"StorageClass","apiVersion":"storage.k8s.io/v1", \
  "metadata":{"name":"hostpath"},"provisioner":"kubernetes.io/host-path"}' | \
- kubectl create -f -
-</screen>
+ kubectl create -f -</screen>
 </para>
 <para>
 Then verify:
-<screen>
-&prompt.root;kubectl get storageclass
+<screen>&prompt.root;kubectl get storageclass
   NAME       TYPE
-  hostpath   kubernetes.io/host-path
-</screen>
+  hostpath   kubernetes.io/host-path</screen>
 </para>
 </listitem>
 </varlistentry>    
@@ -223,10 +216,8 @@ Then verify:
    <para>
        This is configured in <filename>/etc/kubernetes/kubelet</filename> on a
        kube-minion.
-<screen>
-KUBELET_ARGS="\
-    --allow-privileged \
-</screen>
+<screen>KUBELET_ARGS="\
+    --allow-privileged \</screen>
    </para>
  </listitem>
 </varlistentry> 
@@ -238,10 +229,8 @@ must be set to infinity. How?-->
   <listitem>
    <para>
 <!--     TODO how? Are these relevant:
-     <screen>
-/etc/systemd/logind.conf:#UserTasksMax=12288
-/etc/systemd/system.conf:#DefaultTasksMax=512 
-</screen>-->
+     <screen>/etc/systemd/logind.conf:#UserTasksMax=12288
+/etc/systemd/system.conf:#DefaultTasksMax=512</screen>-->
   </para>
  </listitem>
 </varlistentry>
@@ -268,8 +257,7 @@ must be set to infinity. How?-->
        own directory to avoid key name collisions, then specify the key in your 
        SCP command. Replace the hostnames, filenames, and key name in the 
        example with your own: 
-<screen>
-&prompt.root;external_host:~ mkdir caasp-ssh
+<screen>&prompt.root;external_host:~ mkdir caasp-ssh
 &prompt.root;external_host:~ cd caasp-ssh
 &prompt.root;external_host:~ scp -r root@caasp-admin:.ssh .
  Password: 
@@ -278,8 +266,7 @@ must be set to infinity. How?-->
  authorized_keys   100%    0     0.0KB/s   00:00    
  known_hosts       100% 1032     1.0KB/s   00:00 
 &prompt.root;external_host:~ scp -i .ssh/id_rsa /pathto/linux-amd64/helm \
- root@kube-master:/root/bin/
-</screen>
+ root@kube-master:/root/bin/</screen>
   </para>
 </tip>
 <!-- TODO: explanation of readonly/overlay fs -->               

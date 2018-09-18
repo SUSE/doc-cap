@@ -15,109 +15,103 @@
    <dm:translation>yes</dm:translation>
   </dm:docmanager>
  </info>
- 
-<para>
-The Open Service Broker API provides your &scf; applications with access to 
-external dependencies and platform-level capabilities, such as databases, 
-filesystems, external repositories, and messaging systems. These resources are 
-called services. Services are created, used, and deleted as needed, and 
-provisioned on demand.
-</para>
-
-<sect1 xml:id="sec.cap.prereqs-service-broker">
+ <para>
+  The Open Service Broker API provides your &scf; applications with access to
+  external dependencies and platform-level capabilities, such as databases,
+  filesystems, external repositories, and messaging systems. These resources
+  are called services. Services are created, used, and deleted as needed, and
+  provisioned on demand.
+ </para>
+ <sect1 xml:id="sec.cap.prereqs-service-broker">
   <title>Prerequisites</title>
-<para>
-    The following examples demonstrate how to deploy service brokers for MySQL 
-    and PostgreSQL with &helm;, using charts from the &suse; repository. You 
-    must have the following prerequisites:
-</para>
 
-<itemizedlist>
-  <listitem>
-    <para>
-        A working &productname; deployment with &helm; and the Cloud Foundry 
-        command line interface (cf-cli).
-</para>
-</listitem>
-  <listitem>
-    <para>
-        An Application Security Group (ASG) for applications to reach external 
-        databases. (See
-    <link xlink:href="https://docs.cloudfoundry.org/concepts/asg.html">
-        Understanding Application Security Groups</link>.)
-</para>
-</listitem>
-  <listitem>
-    <para>
-         An external MySQL or PostgreSQL installation with account credentials 
-         that allow creating and deleting databases and users.
-     </para>
- </listitem>
-</itemizedlist>
+  <para>
+   The following examples demonstrate how to deploy service brokers for MySQL
+   and PostgreSQL with &helm;, using charts from the &suse; repository. You
+   must have the following prerequisites:
+  </para>
 
-<para>
-    For testing purposes you may create an insecure security group:
-</para>
-<screen>
-&prompt.user;echo > "internal-services.json" '[{ "destination": "0.0.0.0/0", "protocol": "all" }]'
+  <itemizedlist>
+   <listitem>
+    <para>
+     A working &productname; deployment with &helm; and the Cloud Foundry
+     command line interface (cf-cli).
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     An Application Security Group (ASG) for applications to reach external
+     databases. (See
+     <link xlink:href="https://docs.cloudfoundry.org/concepts/asg.html">
+     Understanding Application Security Groups</link>.)
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     An external MySQL or PostgreSQL installation with account credentials that
+     allow creating and deleting databases and users.
+    </para>
+   </listitem>
+  </itemizedlist>
+
+  <para>
+   For testing purposes you may create an insecure security group:
+  </para>
+
+<screen>&prompt.user;echo > "internal-services.json" '[{ "destination": "0.0.0.0/0", "protocol": "all" }]'
 &prompt.user;cf create-security-group internal-services-test internal-services.json
 &prompt.user;cf bind-running-security-group internal-services-test
-&prompt.user;cf bind-staging-security-group internal-services-test
-</screen>
+&prompt.user;cf bind-staging-security-group internal-services-test</screen>
 
-<para>
-    You may apply an ASG later, after testing. All running applications must be
-    restarted to use the new security group.
-</para>
-</sect1>
-    
-<sect1>    
-  <title>Deploying on &caasp; 3</title>
-<para>
-    If you are deploying &productname; on &caasp; 3, see 
-    <xref linkend="sec.cap.caasp-3"/> for important information on applying the
-    required PodSecurityPolicy (PSP) to your deployment. You must also apply
-    the PSP to your new service brokers.
-</para>
-
-<para>
-    Take the example configuration file, <filename>cap-psp-rbac.yaml</filename>,
-    in <xref linkend="sec.cap.caasp-3"/>, and append these lines to the end,
-    using your own namespace name for your new service broker:
-</para>
-<screen>
-- kind: ServiceAccount
-  name: default
-  namespace: <replaceable>mysql-sidecar</replaceable>
-</screen>
-
-<para>
-    Then apply the updated PSP configuration, before you deploy your new service 
-    broker, with this command:
-</para>
-
-<screen>
-&prompt.user;kubectl apply -f cap-psp-rbac.yaml
-</screen>
-
-<para>
-    <command>kubectl apply</command> updates an existing deployment. After 
-    applying the PSP, proceed to configuring and deploying your service broker.
-</para>
-        
-</sect1>
- 
-<sect1 xml:id="sec.cap.configure-service-broker">
-  <title>Configuring the MySQL Deployment</title>
   <para>
-      Start by extracting the <literal>uaa</literal> namespace secrets name, and 
-      the <literal>uaa</literal> and <literal>scf</literal> 
-      namespaces internal certificates with these commands. These will output the
-      complete certificates. Substitute your secrets name if it is different 
-      than the example:
+   You may apply an ASG later, after testing. All running applications must be
+   restarted to use the new security group.
   </para>
-  <screen>
-&prompt.user;kubectl get pods --namespace uaa \
+ </sect1>
+ <sect1>
+  <title>Deploying on &caasp; 3</title>
+
+  <para>
+   If you are deploying &productname; on &caasp; 3, see
+   <xref linkend="sec.cap.caasp-3"/> for important information on applying the
+   required PodSecurityPolicy (PSP) to your deployment. You must also apply the
+   PSP to your new service brokers.
+  </para>
+
+  <para>
+   Take the example configuration file, <filename>cap-psp-rbac.yaml</filename>,
+   in <xref linkend="sec.cap.caasp-3"/>, and append these lines to the end,
+   using your own namespace name for your new service broker:
+  </para>
+
+<screen>- kind: ServiceAccount
+  name: default
+  namespace: <replaceable>mysql-sidecar</replaceable></screen>
+
+  <para>
+   Then apply the updated PSP configuration, before you deploy your new service
+   broker, with this command:
+  </para>
+
+<screen>&prompt.user;kubectl apply -f cap-psp-rbac.yaml</screen>
+
+  <para>
+   <command>kubectl apply</command> updates an existing deployment. After
+   applying the PSP, proceed to configuring and deploying your service broker.
+  </para>
+ </sect1>
+ <sect1 xml:id="sec.cap.configure-service-broker">
+  <title>Configuring the MySQL Deployment</title>
+
+  <para>
+   Start by extracting the <literal>uaa</literal> namespace secrets name, and
+   the <literal>uaa</literal> and <literal>scf</literal> namespaces internal
+   certificates with these commands. These will output the complete
+   certificates. Substitute your secrets name if it is different than the
+   example:
+  </para>
+
+<screen>&prompt.user;kubectl get pods --namespace uaa \
  -o jsonpath='{.items[*].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}'
  <replaceable>secrets-2.8.0-1</replaceable>
 
@@ -133,21 +127,20 @@ provisioned on demand.
  MIIE8jCCAtqgAwIBAgIUSI02lj0a0InLb/zMrjNgW5d8EygwDQYJKoZIhvcNAQEN
  [...]
  to2GI8rPMb9W9fd2WwUXGEHTc+PqTg==
- -----END CERTIFICATE-----
-</screen>
+ -----END CERTIFICATE-----</screen>
 
-<para>
-    You will copy these certificates into your configuration file as shown 
-    below.
-</para>
-<para>
-    Create a <filename>values.yaml</filename> file. The following example is called 
-    <filename>usb-config-values.yaml</filename>. Modify the values to suit your 
-    &productname; installation.
-</para>
+  <para>
+   You will copy these certificates into your configuration file as shown
+   below.
+  </para>
 
-<screen>
-env:
+  <para>
+   Create a <filename>values.yaml</filename> file. The following example is
+   called <filename>usb-config-values.yaml</filename>. Modify the values to
+   suit your &productname; installation.
+  </para>
+
+<screen>env:
   # Database access credentials
   SERVICE_MYSQL_HOST: <replaceable>mysql.example.com</replaceable>
   SERVICE_MYSQL_PORT: 3306
@@ -184,100 +177,86 @@ env:
    registry: 
      hostname: "registry.suse.com"
      username: ""
-     password: ""   
-</screen>
-</sect1>
-
-<sect1 xml:id="sec.cap.configure-mysql">
+     password: ""</screen>
+ </sect1>
+ <sect1 xml:id="sec.cap.configure-mysql">
   <title>Deploying the MySQL Chart</title>
+
   <para>
-      The 1.1 release of &productname; includes charts for MySQL and PostgreSQL
-      (see <xref linkend="sec.cap.addrepo-prod"/> for information on 
-      managing your &helm; repository):
+   The 1.1 release of &productname; includes charts for MySQL and PostgreSQL
+   (see <xref linkend="sec.cap.addrepo-prod"/> for information on managing your
+   &helm; repository):
   </para>
-  <screen>
-&prompt.user;helm search suse
+
+<screen>&prompt.user;helm search suse
 NAME                         VERSION DESCRIPTION
 suse/cf                      2.11.0  A Helm chart for SUSE Cloud Foundry               
 suse/cf-usb-sidecar-mysql    1.0.1   A Helm chart for SUSE Universal Service Broker ...
 suse/cf-usb-sidecar-postgres 1.0.1   A Helm chart for SUSE Universal Service Broker ...
 suse/console                 2.0.0   A Helm chart for deploying Stratos UI Console     
-suse/uaa                     2.11.0  A Helm chart for SUSE UAA
-</screen>
+suse/uaa                     2.11.0  A Helm chart for SUSE UAA</screen>
 
-<para>
-    Create a namespace for your MySQL sidecar:
-</para>
+  <para>
+   Create a namespace for your MySQL sidecar:
+  </para>
 
-<screen>
-&prompt.user;kubectl create namespace <replaceable>mysql-sidecar</replaceable>
-</screen>
+<screen>&prompt.user;kubectl create namespace <replaceable>mysql-sidecar</replaceable></screen>
 
-<para>
-    Install the MySQL Helm chart:
-</para>
+  <para>
+   Install the MySQL Helm chart:
+  </para>
 
-<screen>
-&prompt.user;helm install suse/cf-usb-sidecar-mysql \
+<screen>&prompt.user;helm install suse/cf-usb-sidecar-mysql \
   --devel \
   --name <replaceable>mysql-service</replaceable> \
   --namespace <replaceable>mysql-sidecar</replaceable> \
   --set "env.SERVICE_LOCATION=http://cf-usb-sidecar-mysql.mysql-sidecar:8081" \
   --values usb-config-values.yaml \
-  --wait
-</screen>
+  --wait</screen>
 
-<para>
-    Wait for the new pods to become ready:
-</para>
-
-<screen>
-&prompt.user;watch kubectl get pods --namespace=mysql-sidecar
-</screen>
-
-<para>
-Confirm that the new service has been added to your SUSE Cloud Applications Platform installation:
-</para>
-
-<screen>
-&prompt.user;cf marketplace
-</screen>
-</sect1>
-
-<sect1 xml:id="sec.cap.deploy-mysql">
-  <title>Create and Bind a MySQL Service</title>
   <para>
-To create a new service instance, use the &cf; command line client:
-</para>
-
-<screen>
-&prompt.user;cf create-service mysql default <replaceable>service_instance_name</replaceable>
-</screen>
-
-<para>
-    You may replace <replaceable>service_instance_name</replaceable> with any
-    name you prefer.
-</para>
-
-<para>
-    Bind the service instance to an application:
-</para>
-
-<screen>
-&prompt.user;cf bind-service <replaceable>my_application service_instance_name</replaceable>
-</screen>
-</sect1>
-    
-<sect1 xml:id="sec.cap.configure-postgresql">
-  <title>Deploying the PostgreSQL Chart</title>
-  <para> 
-      The PostgreSQL configuration is slightly different from the MySQL 
-      configuration. The database-specific keys are named differently, and it 
-      requires the <varname>SERVICE_POSTGRESQL_SSLMODE</varname> key.
+   Wait for the new pods to become ready:
   </para>
-  
-  <screen> 
-env:
+
+<screen>&prompt.user;watch kubectl get pods --namespace=mysql-sidecar</screen>
+
+  <para>
+   Confirm that the new service has been added to your SUSE Cloud Applications
+   Platform installation:
+  </para>
+
+<screen>&prompt.user;cf marketplace</screen>
+ </sect1>
+ <sect1 xml:id="sec.cap.deploy-mysql">
+  <title>Create and Bind a MySQL Service</title>
+
+  <para>
+   To create a new service instance, use the &cf; command line client:
+  </para>
+
+<screen>&prompt.user;cf create-service mysql default <replaceable>service_instance_name</replaceable></screen>
+
+  <para>
+   You may replace <replaceable>service_instance_name</replaceable> with any
+   name you prefer.
+  </para>
+
+  <para>
+   Bind the service instance to an application:
+  </para>
+
+<screen>&prompt.user;cf bind-service <replaceable>my_application service_instance_name</replaceable></screen>
+ </sect1>
+ <sect1 xml:id="sec.cap.configure-postgresql">
+  <title>Deploying the PostgreSQL Chart</title>
+
+  <para>
+   The PostgreSQL configuration is slightly different from the MySQL
+   configuration. The database-specific keys are named differently, and it
+   requires the <varname>SERVICE_POSTGRESQL_SSLMODE</varname> key.
+  </para>
+
+<screen>env:
   # Database access credentials
    SERVICE_POSTGRESQL_HOST: <replaceable>postgres.example.com</replaceable>
    SERVICE_POSTGRESQL_PORT: 5432
@@ -319,15 +298,13 @@ env:
      registry: 
        hostname: "registry.suse.com"
        username: ""
-       password: ""   
-</screen>
+       password: ""</screen>
 
-<para>
-    Create a namespace and install the chart:
-</para>
+  <para>
+   Create a namespace and install the chart:
+  </para>
 
-<screen>
-&prompt.user;kubectl create namespace <replaceable>postgres-sidecar</replaceable>
+<screen>&prompt.user;kubectl create namespace <replaceable>postgres-sidecar</replaceable>
 
 &prompt.user;helm install suse/cf-usb-sidecar-postgres \
   --devel \
@@ -335,79 +312,64 @@ env:
   --namespace <replaceable>postgres-sidecar</replaceable> \
   --set "env.SERVICE_LOCATION=http://cf-usb-sidecar-postgres.<replaceable>postgres-sidecar</replaceable>:8081" \
   --values usb-config-values.yaml \
-  --wait
-</screen>
+  --wait</screen>
 
-<para>
-    Then follow the same steps as for the MySQL chart.
-</para>
-  </sect1>      
-
-<sect1 xml:id="sec.cap.remove-sidecars">
+  <para>
+   Then follow the same steps as for the MySQL chart.
+  </para>
+ </sect1>
+ <sect1 xml:id="sec.cap.remove-sidecars">
   <title>Removing Service Broker Sidecar Deployments</title>
-<para>
-To correctly remove sidecar deployments, perform the following steps in order.
-</para>
 
-<itemizedlist>
-  <listitem>
+  <para>
+   To correctly remove sidecar deployments, perform the following steps in
+   order.
+  </para>
+
+  <itemizedlist>
+   <listitem>
     <para>
-    Unbind any applications using instances of the service, and then 
-    delete those instances:
-</para>
-<screen>
-&prompt.user;cf unbind-service <replaceable>my_app my_service_instance</replaceable>
-&prompt.user;cf delete-service <replaceable>my_service_instance</replaceable>
-</screen>
-  </listitem>
-
-  <listitem>
-    <para> 
-    Install the CF-USB CLI plugin for the Cloud Foundry CLI from 
-    <link xlink:href="https://github.com/SUSE/cf-usb-plugin/releases/"/>, for 
-    example:
-</para>
-<screen>
-&prompt.user;cf install-plugin \
- https://github.com/SUSE/cf-usb-plugin/releases/download/1.0.0/cf-usb-plugin-1.0.0.0.g47b49cd-linux-amd64
-</screen>
-  </listitem>
-
-  <listitem>
-      <para>
-    Configure the Cloud Foundry USB CLI plugin, using the domain you created
-    for your &scf; deployment:
-</para>
-<screen>
-&prompt.user;cf usb-target https://usb.<replaceable>example.com</replaceable>
-</screen>
-</listitem>
-
-<listitem>
+     Unbind any applications using instances of the service, and then delete
+     those instances:
+    </para>
+<screen>&prompt.user;cf unbind-service <replaceable>my_app my_service_instance</replaceable>
+&prompt.user;cf delete-service <replaceable>my_service_instance</replaceable></screen>
+   </listitem>
+   <listitem>
     <para>
-        Remove the services: 
-</para>
-<screen>
-&prompt.user;cf usb delete-driver-endpoint "http://cf-usb-sidecar-mysql.mysql-sidecar:8081"
-</screen>
-</listitem>
-
-<listitem>
+     Install the CF-USB CLI plugin for the Cloud Foundry CLI from
+     <link xlink:href="https://github.com/SUSE/cf-usb-plugin/releases/"/>, for
+     example:
+    </para>
+<screen>&prompt.user;cf install-plugin \
+ https://github.com/SUSE/cf-usb-plugin/releases/download/1.0.0/cf-usb-plugin-1.0.0.0.g47b49cd-linux-amd64</screen>
+   </listitem>
+   <listitem>
     <para>
-    Find your release name, then delete the release:
-</para>
-<screen>
-&prompt.user;helm list
+     Configure the Cloud Foundry USB CLI plugin, using the domain you created
+     for your &scf; deployment:
+    </para>
+<screen>&prompt.user;cf usb-target https://usb.<replaceable>example.com</replaceable></screen>
+   </listitem>
+   <listitem>
+    <para>
+     Remove the services:
+    </para>
+<screen>&prompt.user;cf usb delete-driver-endpoint "http://cf-usb-sidecar-mysql.mysql-sidecar:8081"</screen>
+   </listitem>
+   <listitem>
+    <para>
+     Find your release name, then delete the release:
+    </para>
+<screen>&prompt.user;helm list
 NAME           REVISION UPDATED                   STATUS    CHART                      NAMESPACE
 susecf-console 1        Wed Aug 14 08:35:58 2018  DEPLOYED  console-2.0.0              stratos  
 susecf-scf     1        Tue Aug 14 12:24:36 2018  DEPLOYED  cf-2.11.0                  scf      
 susecf-uaa     1        Tue Aug 14 12:01:17 2018  DEPLOYED  uaa-2.11.0                 uaa
 mysql-service  1        Mon May 21 11:40:11 2018  DEPLOYED  cf-usb-sidecar-mysql-1.0.1 mysql-sidecar
 
-&prompt.user;helm delete --purge mysql-service
-</screen>
-</listitem>
-</itemizedlist>
-</sect1>
-  
+&prompt.user;helm delete --purge mysql-service</screen>
+   </listitem>
+  </itemizedlist>
+ </sect1>
 </chapter>

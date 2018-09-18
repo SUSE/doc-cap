@@ -15,76 +15,69 @@
    <dm:translation>yes</dm:translation>
   </dm:docmanager>
  </info>
-<sect1 xml:id="sec.cap.stratos-prod">
-    <title>Install Stratos with &helm;</title>
-    <para>
-        Stratos UI is a modern web-based management application for Cloud 
-        Foundry. It provides a graphical management console for both developers
-        and system administrators. Install Stratos with 
-        &helm; after all of the UAA and SCF pods are running. 
-        Start by preparing the environment:
-    </para>
-    <screen>        
-&prompt.user;kubectl create namespace stratos
-</screen>
-<para>
-If you are using &ses; as your storage backend, copy the secret into the Stratos
-namespace.
-</para>
-<screen>
-&prompt.user;kubectl get secret ceph-secret-admin -o json --namespace default | \
+ <sect1 xml:id="sec.cap.stratos-prod">
+  <title>Install Stratos with &helm;</title>
+
+  <para>
+   Stratos UI is a modern web-based management application for Cloud Foundry.
+   It provides a graphical management console for both developers and system
+   administrators. Install Stratos with &helm; after all of the UAA and SCF
+   pods are running. Start by preparing the environment:
+  </para>
+
+<screen>&prompt.user;kubectl create namespace stratos</screen>
+
+  <para>
+   If you are using &ses; as your storage backend, copy the secret into the
+   Stratos namespace.
+  </para>
+
+<screen>&prompt.user;kubectl get secret ceph-secret-admin -o json --namespace default | \
 sed 's/"namespace": "default"/"namespace": "stratos"/' | \
-kubectl create -f -       
-</screen>        
-<para>       
-You should already have the Stratos charts when you downloaded the SUSE charts
-repository (see <xref linkend="sec.cap.addrepo-prod"/>). Search your &helm;
-repository:
-</para>        
-<screen>
-&prompt.user;helm search suse                                  
+kubectl create -f -</screen>
+
+  <para>
+   You should already have the Stratos charts when you downloaded the SUSE
+   charts repository (see <xref linkend="sec.cap.addrepo-prod"/>). Search your
+   &helm; repository:
+  </para>
+
+<screen>&prompt.user;helm search suse                                  
 NAME                         VERSION DESCRIPTION
 suse/cf                      2.11.1  A Helm chart for SUSE Cloud Foundry               
 suse/cf-usb-sidecar-mysql    1.0.1   A Helm chart for SUSE Universal Service Broker ...
 suse/cf-usb-sidecar-postgres 1.0.1   A Helm chart for SUSE Universal Service Broker ...
 suse/console                 2.0.0   A Helm chart for deploying Stratos UI Console     
-suse/uaa                     2.11.1  A Helm chart for SUSE UAA
-</screen>
-<para>
-Install Stratos, and if you have not set a default storage class you must specify
-it:
-</para>
-<screen>
-&prompt.user;helm install suse/console \
+suse/uaa                     2.11.1  A Helm chart for SUSE UAA</screen>
+
+  <para>
+   Install Stratos, and if you have not set a default storage class you must
+   specify it:
+  </para>
+
+<screen>&prompt.user;helm install suse/console \
     --name <replaceable>susecf-console</replaceable> \
     --namespace stratos \
     --values scf-config-values.yaml \
-    --set storageClass=<replaceable>persistent</replaceable>
-</screen>
+    --set storageClass=<replaceable>persistent</replaceable></screen>
 
-<para>
-    Monitor progress:
-</para>
+  <para>
+   Monitor progress:
+  </para>
 
-<screen>
-$ watch -c 'kubectl get pods --namespace stratos'
+<screen>$ watch -c 'kubectl get pods --namespace stratos'
  Every 2.0s: kubectl get pods --namespace stratos
  
 NAME                               READY     STATUS    RESTARTS   AGE
 console-0                          3/3       Running   0          30m
-console-mariadb-3697248891-5drf5   1/1       Running   0          30m
-</screen> 
+console-mariadb-3697248891-5drf5   1/1       Running   0          30m</screen>
 
-<para>
-    When all statuses show Ready, press 
-    <keycombo>
-    <keycap function="control"/>
-    <keycap>C</keycap>
-     </keycombo> to exit and to view your release information:
-</para>
+  <para>
+   When all statuses show Ready, press <keycombo> <keycap function="control"/>
+   <keycap>C</keycap> </keycombo> to exit and to view your release information:
+  </para>
 
-<screen>
-NAME:   susecf-console
+<screen>NAME:   susecf-console
 LAST DEPLOYED: Tue Aug 14 11:53:28 2018
 NAMESPACE: stratos
 STATUS: DEPLOYED
@@ -112,32 +105,31 @@ console-mariadb  1        1        1           0          1s
 
 ==> v1beta1/StatefulSet
 NAME     DESIRED  CURRENT  AGE
-console  1        1        1s
-</screen>
+console  1        1        1s</screen>
 
-<para>
-    In this example, pointing your web browser to https://10.10.100.82:8443 
-    opens the console. Wade through the nag screens about the self-signed
-    certificates and log in as <literal>admin</literal> with the password you 
-    created in <filename>scf-config-values.yaml</filename>. 
-    If you see an upgrade message, wait a few minutes and try again.
-</para>
-<figure xml:id="fig.cap.stratos-prod">
-  <title>Stratos UI Cloud Foundry Console</title>
-  <mediaobject>
-   <imageobject>
-    <imagedata fileref="stratos.png" format="PNG" width="75%"/>
-   </imageobject>
-  </mediaobject>
-</figure>
+  <para>
+   In this example, pointing your web browser to https://10.10.100.82:8443
+   opens the console. Wade through the nag screens about the self-signed
+   certificates and log in as <literal>admin</literal> with the password you
+   created in <filename>scf-config-values.yaml</filename>. If you see an
+   upgrade message, wait a few minutes and try again.
+  </para>
 
-<para>
-    Another way to get the release name is with the <command>helm list</command>
-    command, then query the release name to get its IP address and port number:
-</para>
+  <figure xml:id="fig.cap.stratos-prod">
+   <title>Stratos UI Cloud Foundry Console</title>
+   <mediaobject>
+    <imageobject>
+     <imagedata fileref="stratos.png" format="PNG" width="75%"/>
+    </imageobject>
+   </mediaobject>
+  </figure>
 
-<screen>
-&prompt.user;helm list
+  <para>
+   Another way to get the release name is with the <command>helm list</command>
+   command, then query the release name to get its IP address and port number:
+  </para>
+
+<screen>&prompt.user;helm list
 NAME            REVISION  UPDATED                  STATUS   CHART           NAMESPACE
 susecf-console  1         Tue Aug 14 11:53:28 2018 DEPLOYED console-2.0.0   stratos  
 susecf-scf      1         Tue Aug 14 10:58:16 2018 DEPLOYED cf-2.11.0       scf      
@@ -151,7 +143,6 @@ STATUS: DEPLOYED
 ==> v1/Service
 NAME                    CLUSTER-IP      EXTERNAL-IP    PORT(S)         AGE
 susecf-console-mariadb  172.24.181.255  &lt;none>         3306/TCP        19m
-susecf-console-ui-ext   172.24.84.50    10.10.100.82   8443:32511/TCP  19m
-</screen> 
-</sect1>
+susecf-console-ui-ext   172.24.84.50    10.10.100.82   8443:32511/TCP  19m</screen>
+ </sect1>
 </chapter>
