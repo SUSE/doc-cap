@@ -43,13 +43,14 @@
  </figure>
  <para>
   This minimal four-node deployment will run on a minimum of 32GB host system
-  memory, though more memory is better. 32GB is enough to test setting up and
-  configuring &suse; &caasp; and &scf;, and to run a few lightweight workloads.
-  You may also test connecting external servers with your cluster, such as a
-  separate name server, a storage server (e.g. &ses;), &scc;, or &smtool;. You
-  must be familiar with installing and configuring &caasp; (see the
-  <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/index.html">&suse;
-  &caasp; 2 Deployment Guide</link>).
+  memory, though more memory is better. 32GB is enough to test setting up
+  and configuring &suse; &caasp; and &scf;, and to run a few lightweight
+  workloads. You may also test connecting external servers with your cluster,
+  such as a separate name server, a storage server (e.g. &ses;), &scc;, or
+  &smtool;. You must be familiar with installing and configuring &caasp; (see
+  the <link xlink:href=
+  "https://www.suse.com/documentation/suse-caasp-3/book_caasp_deployment/data/book_caasp_deployment.html"
+  >&suse; &caasp; 3 Deployment Guide</link>).
  </para>
  <para>
   After you have installed &caasp; you will install and administer &scf;
@@ -75,10 +76,10 @@
   <important>
    <title>You must be familiar with &suse; &caasp;</title>
    <para>
-    Setting up &suse; &caasp; correctly, and knowledge of basic administration
-    is essential to a successful &productname; deployment. See the
-    <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/index.html">&suse;
-    &caasp; 2 Deployment Guide</link>
+    Setting up &suse; &caasp; correctly, and knowledge of basic administration is
+    essential to a successful &productname; deployment. See the <link xlink:href=
+    "https://www.suse.com/documentation/suse-caasp-3/book_caasp_deployment/data/book_caasp_deployment.html"
+    >&suse; &caasp; 3 Deployment Guide</link>.
    </para>
   </important>
 
@@ -193,7 +194,7 @@
      </para>
      <para>
       The easiest way to create the &kube; nodes is to use &ay; see
-      <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/data/sec_caasp_installquick.html#sec_caasp_installquick_node_ay">
+      <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_deployment/data/sec_deploy_nodes_worker_install.html#sec_deploy_nodes_worker_install_manual_autoyast">
       Installation with &ay;</link>. Pass in these kernel boot options to each
       worker: <literal>hostname</literal>, <literal>netsetup</literal>, and the
       &ay; path, which you find in Velum on the "Bootstrap your CaaS Platform"
@@ -209,7 +210,7 @@
      </figure>
      <para>
       When you have completed
-      <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/data/sec_caasp_installquick.html#sec_caasp_installquick_bootstrap">
+      <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_deployment/data/sec_deploy_install_bootstrap.html">
       Bootstrapping the Cluster</link> open a Web browser to the Velum Web
       interface. If you see a "site not available" or "We're sorry, but
       something went wrong" error wait a few minutes, then try again. Click the

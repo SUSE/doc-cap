@@ -93,8 +93,8 @@
    </varlistentry>
    <varlistentry>
     <term>
-	    Install &suse; &caasp;
-	  </term>
+     Install &suse; &caasp;
+   </term>
     <listitem>
      <para>
       &productname; is supported on &suse; &caasp; 2 and 3. Installation is
@@ -102,10 +102,12 @@
       on setting up &suse; &caasp; 3.
      </para>
      <para>
-      After installing
-      <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/">&caasp;</link>
-      and logging into the Velum Web interface, check the box to install Tiller
-      (&helm;'s server component).
+      After installing <link xlink:href=
+      "https://www.suse.com/documentation/suse-caasp-2/">&caasp;
+      2</link> or <link xlink:href=
+      "https://www.suse.com/documentation/suse-caasp-3/">&caasp;
+      3</link> and logging into the Velum Web interface, check the box
+      to install Tiller (&helm;'s server component).
      </para>
      <figure xml:id="fig.cap.install-tiller-prod">
       <title>Install Tiller</title>
@@ -128,7 +130,7 @@
      <para>
       The easiest way to create the &kube; nodes, after you create the admin
       node, is to use AutoYaST; see
-      <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/data/sec_caasp_installquick.html#sec_caasp_installquick_node_ay">
+      <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_deployment/data/sec_deploy_nodes_worker_install.html#sec_deploy_nodes_worker_install_manual_autoyast">
       Installation with AutoYaST</link>. Set up &caasp; with one admin node and
       at least three Kubernetes masters and three Kubernetes workers. You also
       need an Internet connection, as the installer downloads additional
@@ -145,7 +147,7 @@
      </figure>
      <para>
       When you have completed
-      <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/data/sec_caasp_installquick.html#sec_caasp_installquick_bootstrap">
+      <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_deployment/data/sec_deploy_install_bootstrap.html">
       Bootstrapping the Cluster</link> click the <guimenu>kubectl
       config</guimenu> button to download your new cluster's
       <filename>kubeconfig</filename> file. This takes you to a login screen;
@@ -415,7 +417,7 @@ subjects:
    The &kube; cluster requires a persistent storage class for the databases to
    store persistent data. Your available storage classes depend on which
    storage cluster you are using (&ses; users, see
-   <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/data/integration.html">&suse;
+   <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_admin/data/cha_admin_integration.html">&suse;
    &caasp; Integration with SES</link>). After connecting your storage backend
    use <command>kubectl</command> to see your available storage classes:
   </para>
