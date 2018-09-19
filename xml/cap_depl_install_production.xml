@@ -542,47 +542,43 @@ secrets:
     # Create a password for your UAA client secret
     UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable></screen>
  </sect1>
- <sect1  xml:id="sec.cap.helm-deploy-prod">
+ <sect1 xml:id="sec.cap.helm-deploy-prod">
   <title>Deploy with &helm;</title>
-
   <para>
-   Run the following &helm; commands to complete the deployment. There are six
-   steps, and they must be run in this order:
+   The following list provides an overview of &helm; commands to complete
+   the deployment. Included are links to detailed descriptions.
   </para>
-
-  <itemizedlist>
-   <listitem>
+  <procedure>
+   <step>
     <para>
-     Download the &suse; &kube; charts repository
+     Download the &suse; &kube; charts repository (<xref
+     linkend="sec.cap.addrepo-prod" />)
     </para>
-   </listitem>
-   <listitem>
+   </step>
+   <step>
     <para>
-     Create the UAA and SCF namespaces
+     Create the UAA and SCF namespaces (<xref
+     linkend="sec.cap.create-namespaces-prod" />)
     </para>
-   </listitem>
-   <listitem>
+   </step>
+   <step>
     <para>
      Copy the storage secret of your storage cluster to the UAA and SCF
-     namespaces
+     namespaces (<xref linkend="sec.cap.copy-secret-prod" />)
     </para>
-   </listitem>
-   <listitem>
+   </step>
+   <step>
     <para>
-     Deploy UAA
+     Deploy UAA (<xref linkend="sec.cap.install-uaa-prod" />)
     </para>
-   </listitem>
-   <listitem>
+   </step>
+   <step>
     <para>
-     Copy the UAA secret and certificate to the SCF namespace
+     Copy the UAA secret and certificate to the SCF namespace, deploy
+     SCF (<xref linkend="sec.cap.install-scf-prod" />)
     </para>
-   </listitem>
-   <listitem>
-    <para>
-     Deploy SCF
-    </para>
-   </listitem>
-  </itemizedlist>
+   </step>
+  </procedure>
  </sect1>
  <sect1 xml:id="sec.cap.addrepo-prod">
   <title>Install the &kube; charts repository</title>
