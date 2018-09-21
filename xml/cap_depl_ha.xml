@@ -38,7 +38,7 @@ in the &helm; charts:
 
 <screen>
 &prompt.user;helm inspect suse/uaa | less +/sizing:
-&prompt.user;helm inspect suse/scf | less +/sizing:
+&prompt.user;helm inspect suse/cf | less +/sizing:
 </screen>
 
 <para>
@@ -144,6 +144,8 @@ sizing:
 sizing:
   api:
     count: 6
+  cc_clock:
+    count: 3
   cc_uploader:
     count: 3
   cc_worker:
@@ -182,6 +184,8 @@ sizing:
     count: 7
   syslog_rlp:
     count: 7
+  syslog_scheduler:
+    count: 3
   tcp_router:
     count: 3
 </screen>
