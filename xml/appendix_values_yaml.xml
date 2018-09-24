@@ -4,37 +4,32 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-
 <appendix xmlns="http://docbook.org/ns/docbook" 
           xmlns:xi="http://www.w3.org/2001/XInclude" 
           xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" xml:id="app.configuration.files">
  <title>Appendix</title>
  <info>
-      <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
-        <dm:bugtracker>
-          </dm:bugtracker>
-      </dm:docmanager>
-    </info>
-    
-    <para>
-        This appendix contains copies of the complete 
-        <filename>values.yaml</filename> files that are included in the &helm; 
-        charts for the SCF and UAA namespaces. These are useful references as
-        they provide a complete listing of configuration options and their 
-        default settings. (See <xref linkend="sec.cap.ha-defaults"/> to learn
-        how to find and read these files from the &helm; charts.)
-    </para>
-    
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+  </dm:docmanager>
+ </info>
+ <para>
+  This appendix contains copies of the complete
+  <filename>values.yaml</filename> files that are included in the &helm; charts
+  for the SCF and UAA namespaces. These are useful references as they provide a
+  complete listing of configuration options and their default settings. (See
+  <xref linkend="sec.cap.ha-defaults"/> to learn how to find and read these
+  files from the &helm; charts.)
+ </para>
  <sect1 xml:id="app.scf.values.yaml">
-  <title>Complete SCF values.yaml file</title> 
+  <title>Complete SCF values.yaml file</title>
 
-<para>
-    This is the <filename>values.yaml</filename> configuration
-    file that is shipped with the &helm; charts for the SCF namespace. 
-</para>
+  <para>
+   This is the <filename>values.yaml</filename> configuration file that is
+   shipped with the &helm; charts for the SCF namespace.
+  </para>
 
-<screen>
----
+<screen>---
 env:
   # List of domains (including scheme) from which Cross-Origin requests will be
   # accepted, a * can be used as a wildcard for any part of a domain.
@@ -1533,21 +1528,18 @@ kube:
     username: ""
     password: ""
   organization: "cap"
-  auth: "rbac"
-</screen>
-</sect1>
-
+  auth: "rbac"</screen>
+ </sect1>
  <sect1 xml:id="app.uaa.values.yaml">
   <title>Complete UAA values.yaml file</title>
 
-<para>
-    This is the UAA <filename>values.yaml</filename> configuration
-    file that is shipped with the &helm; charts. It provides a complete reference
-    of configuration options for UAA, and their default settings.
-</para>
+  <para>
+   This is the UAA <filename>values.yaml</filename> configuration file that is
+   shipped with the &helm; charts. It provides a complete reference of
+   configuration options for UAA, and their default settings.
+  </para>
 
-<screen>
----
+<screen>---
 env:
   # Base domain name of the UAA endpoint; `uaa.${DOMAIN}` must be correctly
   # configured to point to this UAA instance
@@ -1791,7 +1783,6 @@ kube:
     username: ""
     password: ""
   organization: "cap"
-  auth: "rbac"
-</screen>
-</sect1>
+  auth: "rbac"</screen>
+ </sect1>
 </appendix>
