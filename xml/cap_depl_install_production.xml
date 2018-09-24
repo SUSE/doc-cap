@@ -169,11 +169,14 @@
     <term>Install kubectl</term>
     <listitem>
      <para>
-      Follow the instructions at
-      <link xlink:href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">
-      Install and Set Up kubectl</link> to install <command>kubectl</command>
-      on your workstation. After installation, run this command to verify that
-      it is installed, and that is communicating correctly with your cluster:
+      To install <command>kubectl</command> on a &slea; 12 SP3 or 15
+      workstation, install the package
+      <package>kubernetes-client</package> from the <emphasis>Public
+      Cloud</emphasis> module. For other operating systems, follow the
+      instructions at <link xlink:href=
+      "https://kubernetes.io/docs/tasks/tools/install-kubectl/" />. After
+      installation, run this command to verify that it is installed,
+      and that is communicating correctly with your cluster:
      </para>
 <screen>&prompt.user;kubectl version --short
 Client Version: v1.9.1
