@@ -16,175 +16,182 @@
   </dm:docmanager>
  </info>
  <para>
- A basic &productname; production deployment requires at least eight 
- hosts plus a storage backend: one &suse; &caasp; admin server, three &kube; 
- masters, three &kube; workers, a DNS/DHCP server, and a storage backend such as 
- &ses;. This is a bare minimum, and actual requirements are likely to be much 
- larger, depending on your workloads. You also need an external workstation for 
- administering your cluster. You may optionally make your &productname; instance 
- highly-available.
-</para>
+  A basic &productname; production deployment requires at least eight hosts
+  plus a storage backend: one &suse; &caasp; admin server, three &kube;
+  masters, three &kube; workers, a DNS/DHCP server, and a storage backend such
+  as &ses;. This is a bare minimum, and actual requirements are likely to be
+  much larger, depending on your workloads. You also need an external
+  workstation for administering your cluster. You may optionally make your
+  &productname; instance highly-available.
+ </para>
  <note>
-        <title>Remote Administration</title>
-        <para>
-        You will run most of the commands in this chapter from a remote
-        workstation, rather than directly on any of the &productname; nodes. These are
-        indicated by the unprivileged user Tux, while root prompts are on a
-        cluster node. There are few tasks that need to be performed directly on
-        any of the cluster hosts.
-    </para>
-</note>
+  <title>Remote Administration</title>
+  <para>
+   You will run most of the commands in this chapter from a remote workstation,
+   rather than directly on any of the &productname; nodes. These are indicated
+   by the unprivileged user Tux, while root prompts are on a cluster node.
+   There are few tasks that need to be performed directly on any of the cluster
+   hosts.
+  </para>
+ </note>
  <para>
- The optional &ha; example in this chapter provides HA only for the &productname; 
- cluster, and not for &caasp; or &ses;. See 
+  The optional &ha; example in this chapter provides HA only for the
+  &productname; cluster, and not for &caasp; or &ses;. See
   <xref linkend="sec.cap.ha-prod"/>.
  </para>
- 
-<sect1 xml:id="sec.cap.prereqs-prod">
+ <sect1 xml:id="sec.cap.prereqs-prod">
   <title>Prerequisites</title>
+
   <para>
-      Calculating hardware requirements is best done with an analysis of your 
-      expected workloads, traffic patterns, storage needs, and application 
-      requirements. The following examples are bare minimums to deploy a
-      running cluster, and any production deployment will require more.
+   Calculating hardware requirements is best done with an analysis of your
+   expected workloads, traffic patterns, storage needs, and application
+   requirements. The following examples are bare minimums to deploy a running
+   cluster, and any production deployment will require more.
   </para>
+
   <variablelist>
-      <varlistentry>
-	  <term>
+   <varlistentry>
+    <term>
 	    Minimum Hardware Requirements
 	  </term>
-	<listitem>
-        <para>
-          8GB of memory per &caasp; dashboard and &kube; master nodes.
-        </para>
-        <para>
-          16GB of memory per &kube; worker.
-      </para>
-      <para>
-          40GB disk space per &caasp; dashboard and &kube; master nodes.
-      </para>
-      <para>
-         60GB disk space per &kube; worker.
-     </para>
-       </listitem>  
-      </varlistentry>
-      <varlistentry>
-          <term>Network Requirements</term>
-          <listitem>
-          <para>
-         Your &kube; cluster needs its own domain and network. Each node should 
-         resolve to its hostname, and to its fully-qualified domain name. 
-         Typically, a &kube; cluster sits behind a load balancer, which also 
-         provides external access to the cluster. Another option is to use DNS 
-         round-robin to the &kube; workers to provide external access. It is 
-         also a common practice to create a wildcard DNS entry pointing to the 
-         domain, e.g. *.&exampledomain;, so that applications can be deployed 
-         without creating DNS entries for each application. This guide does not 
-         describe how to set up a load balancer or name services, as these 
-         depend on customer requirements and existing network architectures.
+    <listitem>
+     <para>
+      8GB of memory per &caasp; dashboard and &kube; master nodes.
      </para>
      <para>
-        <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_deployment/data/sec_deploy_requirements_system.html#sec_deploy_requirements_network">
-             &suse; &caasp; Deployment Guide: Network Requirements</link>
-         provides guidance on network and name services configurations.
+      16GB of memory per &kube; worker.
      </para>
-      </listitem>  
-      </varlistentry>
-	<varlistentry>
-	  <term>
-	    Install &suse; &caasp;
-	  </term>
-	<listitem>
-        <para>
-            &productname; is supported on &suse; &caasp; 2 and 3. Installation is
-            similar for both; see <xref linkend="sec.cap.caasp-3"/> for special 
-            notes on setting up &suse; &caasp; 3.
-        </para>
-        <para>
-            After installing <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/">&caasp;</link> and logging into the Velum Web interface, 
-            check the box to install Tiller (&helm;'s server component). 
-        </para>
-<figure xml:id="fig.cap.install-tiller-prod">
-   <title>Install Tiller</title>
-   <mediaobject>
-    <imageobject>
-     <imagedata fileref="install-tiller.png" format="PNG" width="75%"/>
-    </imageobject>
-   </mediaobject>
-  </figure>
-  <para>
-      Take note of the <guimenu>Overlay network settings</guimenu>. These define 
-      the networks that are exclusive to the internal &kube; cluster
-      communications. They are not externally accessible. You may assign 
+     <para>
+      40GB disk space per &caasp; dashboard and &kube; master nodes.
+     </para>
+     <para>
+      60GB disk space per &kube; worker.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>Network Requirements</term>
+    <listitem>
+     <para>
+      Your &kube; cluster needs its own domain and network. Each node should
+      resolve to its hostname, and to its fully-qualified domain name.
+      Typically, a &kube; cluster sits behind a load balancer, which also
+      provides external access to the cluster. Another option is to use DNS
+      round-robin to the &kube; workers to provide external access. It is also
+      a common practice to create a wildcard DNS entry pointing to the domain,
+      e.g. *.&exampledomain;, so that applications can be deployed without
+      creating DNS entries for each application. This guide does not describe
+      how to set up a load balancer or name services, as these depend on
+      customer requirements and existing network architectures.
+     </para>
+     <para>
+      <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_deployment/data/sec_deploy_requirements_system.html#sec_deploy_requirements_network">
+      &suse; &caasp; Deployment Guide: Network Requirements</link> provides
+      guidance on network and name services configurations.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
+     Install &suse; &caasp;
+   </term>
+    <listitem>
+     <para>
+      &productname; is supported on &suse; &caasp; 2 and 3. Installation is
+      similar for both; see <xref linkend="sec.cap.caasp-3"/> for special notes
+      on setting up &suse; &caasp; 3.
+     </para>
+     <para>
+      After installing <link xlink:href=
+      "https://www.suse.com/documentation/suse-caasp-2/">&caasp;
+      2</link> or <link xlink:href=
+      "https://www.suse.com/documentation/suse-caasp-3/">&caasp;
+      3</link> and logging into the Velum Web interface, check the box
+      to install Tiller (&helm;'s server component).
+     </para>
+     <figure xml:id="fig.cap.install-tiller-prod">
+      <title>Install Tiller</title>
+      <mediaobject>
+       <imageobject>
+        <imagedata fileref="install-tiller.png" format="PNG" width="75%"/>
+       </imageobject>
+      </mediaobject>
+     </figure>
+     <para>
+      Take note of the <guimenu>Overlay network settings</guimenu>. These
+      define the networks that are exclusive to the internal &kube; cluster
+      communications. They are not externally accessible. You may assign
       different networks to avoid address collisions.
-  </para>
-  <para>
+     </para>
+     <para>
       There is also a form for proxy settings; if you're not using a proxy then
       leave it empty.
-  </para>
-        <para>
-          The easiest way to create the &kube; nodes, after you create the 
-          admin node, is to use AutoYaST; see 
-<link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/data/sec_caasp_installquick.html#sec_caasp_installquick_node_ay">
-              Installation with AutoYaST</link>. Set up &caasp; with one admin 
-          node and at least three Kubernetes masters
-        and three Kubernetes workers. You also need an Internet connection, as the 
-        installer downloads additional packages, and the &kube;
-        workers will each download ~10GB of Docker images.
-        </para>
-  <figure xml:id="fig.cap.select-master-nodes">
-   <title>Assigning Roles to Nodes</title>
-   <mediaobject>
-    <imageobject>
-     <imagedata fileref="select-master-nodes.png" format="PNG" width="75%"/>
-    </imageobject>
-   </mediaobject>
-  </figure>
-  <para>
-      When you have completed 
-<link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/data/sec_caasp_installquick.html#sec_caasp_installquick_bootstrap">
-              Bootstrapping the Cluster</link> click the <guimenu>kubectl config</guimenu>
-button to download your new cluster's <filename>kubeconfig</filename> file. This
-takes you to a login screen; use the login you created to access Velum. Save the
-file as <filename>~/.kube/config</filename> on your workstation. This 
-file enables the remote administration of your cluster.
-      </para>
-      <figure xml:id="fig.cap.kubectl-download-prod">
-   <title>Download kubeconfig</title>
-   <mediaobject>
-    <imageobject>
-     <imagedata fileref="kubectl-download-prod.png" format="PNG" width="75%"/>
-    </imageobject>
-   </mediaobject>
-  </figure>
- </listitem>
-</varlistentry>  
-<varlistentry>
-  <term>Install kubectl</term>          
-  <listitem>
- <para>
-     Follow the instructions at
-     <link xlink:href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">
-         Install and Set Up kubectl</link> to install <command>kubectl</command>
-     on your workstation. After installation, run this command to verify
-     that it is installed, and that is communicating correctly with your cluster:
- </para>
- <screen>
-&prompt.user;kubectl version --short
+     </para>
+     <para>
+      The easiest way to create the &kube; nodes, after you create the admin
+      node, is to use AutoYaST; see
+      <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_deployment/data/sec_deploy_nodes_worker_install.html#sec_deploy_nodes_worker_install_manual_autoyast">
+      Installation with AutoYaST</link>. Set up &caasp; with one admin node and
+      at least three Kubernetes masters and three Kubernetes workers. You also
+      need an Internet connection, as the installer downloads additional
+      packages, and the &kube; workers will each download ~10GB of Docker
+      images.
+     </para>
+     <figure xml:id="fig.cap.select-master-nodes">
+      <title>Assigning Roles to Nodes</title>
+      <mediaobject>
+       <imageobject>
+        <imagedata fileref="select-master-nodes.png" format="PNG" width="75%"/>
+       </imageobject>
+      </mediaobject>
+     </figure>
+     <para>
+      When you have completed
+      <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_deployment/data/sec_deploy_install_bootstrap.html">
+      Bootstrapping the Cluster</link> click the <guimenu>kubectl
+      config</guimenu> button to download your new cluster's
+      <filename>kubeconfig</filename> file. This takes you to a login screen;
+      use the login you created to access Velum. Save the file as
+      <filename>~/.kube/config</filename> on your workstation. This file
+      enables the remote administration of your cluster.
+     </para>
+     <figure xml:id="fig.cap.kubectl-download-prod">
+      <title>Download kubeconfig</title>
+      <mediaobject>
+       <imageobject>
+        <imagedata fileref="kubectl-download-prod.png" format="PNG" width="75%"/>
+       </imageobject>
+      </mediaobject>
+     </figure>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>Install kubectl</term>
+    <listitem>
+     <para>
+      To install <command>kubectl</command> on a &slea; 12 SP3 or 15
+      workstation, install the package
+      <package>kubernetes-client</package> from the <emphasis>Public
+      Cloud</emphasis> module. For other operating systems, follow the
+      instructions at <link xlink:href=
+      "https://kubernetes.io/docs/tasks/tools/install-kubectl/" />. After
+      installation, run this command to verify that it is installed,
+      and that is communicating correctly with your cluster:
+     </para>
+<screen>&prompt.user;kubectl version --short
 Client Version: v1.9.1
-Server Version: v1.9.8
-</screen>
-<para>
-    As the client is on your workstation, and the server is on your cluster, 
-    reporting the server version verifies that <command>kubectl</command> is using 
-    <filename>~/.kube/config</filename> and is communicating with your cluster.
-</para>
-<para>
-    The following <command>kubectl</command> examples query the cluster 
-    configuration and node status:
-</para>
-<screen>    
-&prompt.user;kubectl config view
+Server Version: v1.9.8</screen>
+     <para>
+      As the client is on your workstation, and the server is on your cluster,
+      reporting the server version verifies that <command>kubectl</command> is
+      using <filename>~/.kube/config</filename> and is communicating with your
+      cluster.
+     </para>
+     <para>
+      The following <command>kubectl</command> examples query the cluster
+      configuration and node status:
+     </para>
+<screen>&prompt.user;kubectl config view
 apiVersion: v1
 clusters:
 - cluster:
@@ -200,44 +207,42 @@ ef254d3.example.com   Ready    Master    4h   v1.9.8
 b70748d.example.com   Ready    &lt;none>    4h   v1.9.8
 cb77881.example.com   Ready    &lt;none>    4h   v1.9.8
 d028551.example.com   Ready    &lt;none>    4h   v1.9.8
-[...]
-</screen>        
- </listitem>  
-</varlistentry>
- <varlistentry>
-	  <term>
+[...]</screen>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>
           Install &helm;
       </term>
-      <listitem>
- <para>
-     Deploying &productname; is different than the usual method of
-     installing software. Rather than installing packages in the usual way with
-     YaST or Zypper, you will install the &helm; client on your workstation 
-     to install the required Kubernetes applications to set up &productname;, and to 
-     administer your cluster remotely.
- </para>
- <para>
-     Helm client version 2.6 or higher is required.
- </para>
-      <warning>
-        <title>Initialize Only the &helm; Client</title>
-        <para>When you initialize &helm; on your workstation be sure
-            to initialize only the client, as the server, &tiller;, was
-            installed during the &caasp; installation. You do not want two &tiller;
-            instances.
-    </para>
-</warning>
-<para>
-    If the Linux distribution on your workstation doesn't provide the correct 
-    &helm; version, or you are using some other platform, see the 
-    <link xlink:href="https://docs.helm.sh/using_helm/#quickstart">
-         &helm; Quickstart Guide</link> for installation instructions and basic 
-    usage examples. Download the &helm; binary into any directory that 
-    is in your PATH on your workstation, such as your <filename>~/bin</filename> 
-    directory. Then initialize the client only:
- </para>
- <screen>
-&prompt.user;helm init --client-only
+    <listitem>
+     <para>
+      Deploying &productname; is different than the usual method of installing
+      software. Rather than installing packages in the usual way with YaST or
+      Zypper, you will install the &helm; client on your workstation to install
+      the required Kubernetes applications to set up &productname;, and to
+      administer your cluster remotely.
+     </para>
+     <para>
+      Helm client version 2.6 or higher is required.
+     </para>
+     <warning>
+      <title>Initialize Only the &helm; Client</title>
+      <para>
+       When you initialize &helm; on your workstation be sure to initialize
+       only the client, as the server, &tiller;, was installed during the
+       &caasp; installation. You do not want two &tiller; instances.
+      </para>
+     </warning>
+     <para>
+      If the Linux distribution on your workstation doesn't provide the correct
+      &helm; version, or you are using some other platform, see the
+      <link xlink:href="https://docs.helm.sh/using_helm/#quickstart"> &helm;
+      Quickstart Guide</link> for installation instructions and basic usage
+      examples. Download the &helm; binary into any directory that is in your
+      PATH on your workstation, such as your <filename>~/bin</filename>
+      directory. Then initialize the client only:
+     </para>
+<screen>&prompt.user;helm init --client-only
 Creating /home/&exampleuser_plain;/.helm 
 Creating /home/&exampleuser_plain;/.helm/repository 
 Creating /home/&exampleuser_plain;/.helm/repository/cache 
@@ -250,65 +255,59 @@ Adding stable repo with URL: https://kubernetes-charts.storage.googleapis.com
 Adding local repo with URL: http://127.0.0.1:8879/charts 
 $HELM_HOME has been configured at /home/&exampleuser_plain;/.helm.
 Not installing &tiller; due to 'client-only' flag having been set
-Happy Helming!
- </screen>
- </listitem>  
-</varlistentry>
-</variablelist>
+Happy Helming!</screen>
+    </listitem>
+   </varlistentry>
+  </variablelist>
 
-<sect2 xml:id="sec.cap.caasp-3">
-    <title>Installation on &suse; &caasp; 3</title>
-    <para>
-        &suse; &caasp; 3 introduces PodSecurityPolicy (PSP) support. This change 
-        adds two new PSPs to &caasp; 3:
-    </para>
-      <itemizedlist>
-        <listitem>
-          <para>
-              <literal>unprivileged</literal>, which is the default assigned to 
-              all users. The unprivileged PodSecurityPolicy is intended as a
-              reasonable compromise between the reality of &kube; workloads, and
-              the <literal>suse:caasp:psp:privileged</literal> role. By default, 
-              this PSP is granted to all users and service accounts.
-         </para>
-     </listitem>
-     <listitem>    
-         <para>
-              <literal>privileged</literal>, which is intended to be assigned
-              only to trusted workloads. It applies few restrictions, and should 
-              only be assigned to highly trusted users.
-         </para>
-     </listitem>
- </itemizedlist>
- 
- <para>
-     See
+  <sect2 xml:id="sec.cap.caasp-3">
+   <title>Installation on &suse; &caasp; 3</title>
+   <para>
+    &suse; &caasp; 3 introduces PodSecurityPolicy (PSP) support. This change
+    adds two new PSPs to &caasp; 3:
+   </para>
+   <itemizedlist>
+    <listitem>
+     <para>
+      <literal>unprivileged</literal>, which is the default assigned to all
+      users. The unprivileged PodSecurityPolicy is intended as a reasonable
+      compromise between the reality of &kube; workloads, and the
+      <literal>suse:caasp:psp:privileged</literal> role. By default, this PSP
+      is granted to all users and service accounts.
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      <literal>privileged</literal>, which is intended to be assigned only to
+      trusted workloads. It applies few restrictions, and should only be
+      assigned to highly trusted users.
+     </para>
+    </listitem>
+   </itemizedlist>
+   <para>
+    See
     <link xlink:href="https://kubernetes.io/docs/concepts/policy/pod-security-policy/">
-        Pod Security Policies</link> for more information.
-</para>
- 
-    <para>
-       Currently, all the pods are created using the default 
-       <literal>serviceAccount</literal> in their namespaces in order to
-       apply the <literal>unprivileged</literal> PSP. Consequently, some pods
-       cannot be created because privileged mode and privilege escalation are 
-       disabled by default. (error: cannot set allowPrivilegeEscalation to 
-       <literal>false</literal> and <literal>privileged</literal> to true).
-   </para>
-   
-   <para>
-       To get around this, create a configuration file called
-       <filename>cap-psp-rbac.yaml</filename>. This enables both privileged mode 
-       and privilege escalation. You need a running &caasp; cluster, and 
-       <command>kubectl</command> configured and working. You will apply this
-       file before you deploy UAA and SCF.
+    Pod Security Policies</link> for more information.
    </para>
    <para>
-       Copy the following example into <filename>cap-psp-rbac.yaml</filename>:
-    </para>
-    
-    <screen>
----
+    Currently, all the pods are created using the default
+    <literal>serviceAccount</literal> in their namespaces in order to apply the
+    <literal>unprivileged</literal> PSP. Consequently, some pods cannot be
+    created because privileged mode and privilege escalation are disabled by
+    default. (error: cannot set allowPrivilegeEscalation to
+    <literal>false</literal> and <literal>privileged</literal> to true).
+   </para>
+   <para>
+    To get around this, create a configuration file called
+    <filename>cap-psp-rbac.yaml</filename>. This enables both privileged mode
+    and privilege escalation. You need a running &caasp; cluster, and
+    <command>kubectl</command> configured and working. You will apply this file
+    before you deploy UAA and SCF.
+   </para>
+   <para>
+    Copy the following example into <filename>cap-psp-rbac.yaml</filename>:
+   </para>
+<screen>---
 apiVersion: extensions/v1beta1
 kind: PodSecurityPolicy
 metadata:
@@ -404,59 +403,54 @@ subjects:
   namespace: scf
 - kind: ServiceAccount
   name: default
-  namespace: stratos
-</screen>
-
-<para>
+  namespace: stratos</screen>
+   <para>
     Apply it to your cluster with <command>kubectl</command>:
-</para>
-
-<screen>
-&prompt.user;kubectl create -f cap-psp-rbac.yaml
-</screen>
-
-<para>
+   </para>
+<screen>&prompt.user;kubectl create -f cap-psp-rbac.yaml</screen>
+   <para>
     Then continue by deploying UAA and SCF.
-</para>
-            
-</sect2>
-</sect1>
+   </para>
+  </sect2>
+ </sect1>
+ <sect1 xml:id="sec.cap.storageclass-prod">
+  <title>Choose Storage Class</title>
 
-<sect1 xml:id="sec.cap.storageclass-prod">
- <title>Choose Storage Class</title>
- <para>The &kube; cluster requires a persistent storage class for the databases
-     to store persistent data. Your available storage classes depend on which
-     storage cluster you are using 
-     (&ses; users, see <link xlink:href="https://www.suse.com/documentation/suse-caasp-2/book_caasp_deployment/data/integration.html">&suse; &caasp; Integration with SES</link>). 
-     After connecting your storage backend use <command>kubectl</command>
-     to see your available storage classes:
- </para>
- <screen>
-&prompt.user;kubectl get storageclasses
-</screen>
-<para>
-    See <xref linkend="sec.cap.configure-prod"/> to learn where to configure your 
-    storage class for &productname;. See the &kube; document 
-    <link xlink:href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">Persistent Volumes</link>
-    for detailed information on storage classes.
-</para>
-</sect1>
+  <para>
+   The &kube; cluster requires a persistent storage class for the databases to
+   store persistent data. Your available storage classes depend on which
+   storage cluster you are using (&ses; users, see
+   <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_admin/data/cha_admin_integration.html">&suse;
+   &caasp; Integration with SES</link>). After connecting your storage backend
+   use <command>kubectl</command> to see your available storage classes:
+  </para>
 
-<sect1 xml:id="sec.cap.teststorageclass-prod">
- <title>Test Storage Class</title>
-<para>
-    You may test that your storage class is properly configured before deploying
-    &productname; by creating a persistent volume claim on your storage class, then 
-    verifying that the status of the claim is <literal>bound</literal>, and a 
-    volume has been created.
-</para>
-<para>
-    First copy the following configuration file, which in this example is named
-    <filename>test-storage-class.yaml</filename>, substituting the name of 
-    your <replaceable>storageClassName</replaceable>:
-</para>
-<screen>
----
+<screen>&prompt.user;kubectl get storageclasses</screen>
+
+  <para>
+   See <xref linkend="sec.cap.configure-prod"/> to learn where to configure
+   your storage class for &productname;. See the &kube; document
+   <link xlink:href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">Persistent
+   Volumes</link> for detailed information on storage classes.
+  </para>
+ </sect1>
+ <sect1 xml:id="sec.cap.teststorageclass-prod">
+  <title>Test Storage Class</title>
+
+  <para>
+   You may test that your storage class is properly configured before deploying
+   &productname; by creating a persistent volume claim on your storage class,
+   then verifying that the status of the claim is <literal>bound</literal>, and
+   a volume has been created.
+  </para>
+
+  <para>
+   First copy the following configuration file, which in this example is named
+   <filename>test-storage-class.yaml</filename>, substituting the name of your
+   <replaceable>storageClassName</replaceable>:
+  </para>
+
+<screen>---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -467,61 +461,56 @@ spec:
   resources:
     requests:
       storage: 1Gi
-  storageClassName: <replaceable>persistent</replaceable>
-</screen>
-    <para>
-        Create your persistent volume claim:
-    </para>
-<screen>
-&prompt.user;kubectl create -f test-storage-class.yaml
-persistentvolumeclaim "test-sc-persistent" created
-</screen>
+  storageClassName: <replaceable>persistent</replaceable></screen>
 
-<para>
-    Check that the claim has been created, and that the status is
-    <literal>bound</literal>:
-</para>
-<screen>
-&prompt.user;kubectl get pv,pvc
+  <para>
+   Create your persistent volume claim:
+  </para>
+
+<screen>&prompt.user;kubectl create -f test-storage-class.yaml
+persistentvolumeclaim "test-sc-persistent" created</screen>
+
+  <para>
+   Check that the claim has been created, and that the status is
+   <literal>bound</literal>:
+  </para>
+
+<screen>&prompt.user;kubectl get pv,pvc
 NAME                                          CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS    CLAIM                        STORAGECLASS   REASON    AGE
 pv/pvc-c464ed6a-3852-11e8-bd10-90b8d0c59f1c   1Gi        RWO            Delete           Bound     default/test-sc-persistent   persistent               2m
 
 NAME                     STATUS    VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-pvc/test-sc-persistent   Bound     pvc-c464ed6a-3852-11e8-bd10-90b8d0c59f1c   1Gi        RWO            persistent     2m
-</screen>
+pvc/test-sc-persistent   Bound     pvc-c464ed6a-3852-11e8-bd10-90b8d0c59f1c   1Gi        RWO            persistent     2m</screen>
 
-<para>
-    This verifies that your storage class is correctly configured. Delete your
-    volume claims when you're finished:
-</para>
-<screen>
-&prompt.user;kubectl delete pv/pvc-c464ed6a-3852-11e8-bd10-90b8d0c59f1c
+  <para>
+   This verifies that your storage class is correctly configured. Delete your
+   volume claims when you're finished:
+  </para>
+
+<screen>&prompt.user;kubectl delete pv/pvc-c464ed6a-3852-11e8-bd10-90b8d0c59f1c
 persistentvolume "pvc-c464ed6a-3852-11e8-bd10-90b8d0c59f1c" deleted
 &prompt.user;kubectl delete pvc/test-sc-persistent
-persistentvolumeclaim "test-sc-persistent" deleted
-</screen>
+persistentvolumeclaim "test-sc-persistent" deleted</screen>
 
-<para>
-    If something goes wrong and your volume claims get stuck in
-    <literal>pending</literal> status, you can force deletion with the
-    <command>--grace-period=0</command> option:
-</para>
-<screen>
-&prompt.user;kubectl delete pvc/test-sc-persistent --grace-period=0 
-</screen>    
-</sect1>
+  <para>
+   If something goes wrong and your volume claims get stuck in
+   <literal>pending</literal> status, you can force deletion with the
+   <command>--grace-period=0</command> option:
+  </para>
 
-<sect1 xml:id="sec.cap.configure-prod">
-    <title>Configure the &productname; Production Deployment</title>
-    <para>
-        Create a configuration file on your workstation for &helm; to use. 
-        In this example it is
-        called <filename>scf-config-values.yaml</filename>. (See the
-        <link xlink:href="https://www.suse.com/releasenotes/">Release Notes</link>
-        for information on configuration changes.)
-    </para>
-    <screen>
-env:    
+<screen>&prompt.user;kubectl delete pvc/test-sc-persistent --grace-period=0</screen>
+ </sect1>
+ <sect1 xml:id="sec.cap.configure-prod">
+  <title>Configure the &productname; Production Deployment</title>
+
+  <para>
+   Create a configuration file on your workstation for &helm; to use. In this
+   example it is called <filename>scf-config-values.yaml</filename>. (See the
+   <link xlink:href="https://www.suse.com/releasenotes/">Release Notes</link>
+   for information on configuration changes.)
+  </para>
+
+<screen>env:    
     # Enter the domain you created for your CAP cluster
     DOMAIN: <replaceable>&exampledomain;</replaceable>
     
@@ -556,149 +545,138 @@ secrets:
     CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable> 
     
     # Create a password for your UAA client secret
-    UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
-</screen>        
-</sect1>
+    UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable></screen>
+ </sect1>
+ <sect1 xml:id="sec.cap.helm-deploy-prod">
+  <title>Deploy with &helm;</title>
+  <para>
+   The following list provides an overview of &helm; commands to complete
+   the deployment. Included are links to detailed descriptions.
+  </para>
+  <procedure>
+   <step>
+    <para>
+     Download the &suse; &kube; charts repository (<xref
+     linkend="sec.cap.addrepo-prod" />)
+    </para>
+   </step>
+   <step>
+    <para>
+     Create the UAA and SCF namespaces (<xref
+     linkend="sec.cap.create-namespaces-prod" />)
+    </para>
+   </step>
+   <step>
+    <para>
+     Copy the storage secret of your storage cluster to the UAA and SCF
+     namespaces (<xref linkend="sec.cap.copy-secret-prod" />)
+    </para>
+   </step>
+   <step>
+    <para>
+     Deploy UAA (<xref linkend="sec.cap.install-uaa-prod" />)
+    </para>
+   </step>
+   <step>
+    <para>
+     Copy the UAA secret and certificate to the SCF namespace, deploy
+     SCF (<xref linkend="sec.cap.install-scf-prod" />)
+    </para>
+   </step>
+  </procedure>
+ </sect1>
+ <sect1 xml:id="sec.cap.addrepo-prod">
+  <title>Install the &kube; charts repository</title>
 
-<sect1  xml:id="sec.cap.helm-deploy-prod">
-    <title>Deploy with &helm;</title>
- <para>
-Run the following &helm; commands to complete the deployment. There are six steps,
-and they must be run in this order:
-</para>
-<itemizedlist>
-      <listitem>
-    <para>
-        Download the &suse; &kube; charts repository 
-    </para>
-</listitem>
-  <listitem>
-    <para>
-        Create the UAA and SCF namespaces
-    </para>
-</listitem>
-  <listitem>
-    <para>
-        Copy the storage secret of your storage cluster to the UAA and SCF 
-        namespaces
-    </para>
-  </listitem>
-  <listitem>
-    <para>
-        Deploy UAA
-    </para>
-  </listitem>
-  <listitem>
-    <para>
-        Copy the UAA secret and certificate to the SCF namespace
-    </para>
-  </listitem>
-  <listitem>
-    <para>
-        Deploy SCF
-    </para>
-  </listitem>  
-</itemizedlist>  
-</sect1>
+  <para>
+   Download the &suse; &kube; charts repository with &helm;:
+  </para>
 
-<sect1 xml:id="sec.cap.addrepo-prod">
-    <title>Install the &kube; charts repository</title>
-    <para>
-        Download the &suse; &kube; charts repository with &helm;:
-    </para>
-<screen>
-&prompt.user;helm repo add <replaceable>suse</replaceable> https://kubernetes-charts.suse.com/
-</screen>
-<para>
-    You may replace the example <replaceable>suse</replaceable> name with any
-    name. Verify with <command>helm</command>:
-</para>
-<screen>
-&prompt.user;helm repo list
+<screen>&prompt.user;helm repo add <replaceable>suse</replaceable> https://kubernetes-charts.suse.com/</screen>
+
+  <para>
+   You may replace the example <replaceable>suse</replaceable> name with any
+   name. Verify with <command>helm</command>:
+  </para>
+
+<screen>&prompt.user;helm repo list
 NAME            URL                                             
 stable          https://kubernetes-charts.storage.googleapis.com
 local           http://127.0.0.1:8879/charts                    
-suse            https://kubernetes-charts.suse.com/
-</screen>
-<para>
-    List your chart names, as you will need these for some operations:
-</para>
-<screen>
-&prompt.user;helm search suse
+suse            https://kubernetes-charts.suse.com/</screen>
+
+  <para>
+   List your chart names, as you will need these for some operations:
+  </para>
+
+<screen>&prompt.user;helm search suse
 NAME                         VERSION DESCRIPTION
 suse/cf                      2.11.1  A Helm chart for SUSE Cloud Foundry               
 suse/cf-usb-sidecar-mysql    1.0.1   A Helm chart for SUSE Universal Service Broker ...
 suse/cf-usb-sidecar-postgres 1.0.1   A Helm chart for SUSE Universal Service Broker ...
 suse/console                 2.0.0   A Helm chart for deploying Stratos UI Console     
-suse/uaa                     2.11.1  A Helm chart for SUSE UAA
-</screen>
-</sect1>
+suse/uaa                     2.11.1  A Helm chart for SUSE UAA</screen>
+ </sect1>
+ <sect1 xml:id="sec.cap.create-namespaces-prod">
+  <title>Create Namespaces</title>
 
-<sect1 xml:id="sec.cap.create-namespaces-prod">
-    <title>Create Namespaces</title>
-<para>
-    Create the UAA (User Account and Authentication) and 
-    SCF (SUSE Cloud Foundry) namespaces:
-</para>    
-    <screen>
-&prompt.user;kubectl create namespace uaa
-&prompt.user;kubectl create namespace scf
-</screen>
-</sect1>
+  <para>
+   Create the UAA (User Account and Authentication) and SCF (SUSE Cloud
+   Foundry) namespaces:
+  </para>
 
-<sect1 xml:id="sec.cap.copy-secret-prod">
-    <title>Copy &ses; Secret</title>
-<para>
-If you are using &ses; you must copy the Ceph admin secret to the UAA and SCF
-namespaces:
-</para>
-<screen>
-&prompt.user;kubectl get secret ceph-secret-admin -o json --namespace default | \
+<screen>&prompt.user;kubectl create namespace uaa
+&prompt.user;kubectl create namespace scf</screen>
+ </sect1>
+ <sect1 xml:id="sec.cap.copy-secret-prod">
+  <title>Copy &ses; Secret</title>
+
+  <para>
+   If you are using &ses; you must copy the Ceph admin secret to the UAA and
+   SCF namespaces:
+  </para>
+
+<screen>&prompt.user;kubectl get secret ceph-secret-admin -o json --namespace default | \
 sed 's/"namespace": "default"/"namespace": "uaa"/' | kubectl create -f -
 
 &prompt.user;kubectl get secret ceph-secret-admin -o json --namespace default | \
-sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -
-</screen>
-</sect1>
+sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -</screen>
+ </sect1>
+ <sect1 xml:id="sec.cap.install-uaa-prod">
+  <title>Deploy UAA</title>
 
-<sect1 xml:id="sec.cap.install-uaa-prod">
-    <title>Deploy UAA</title>
-<para>
-    Use &helm; to deploy the UAA (User Account and Authentication) server. You 
-    may create your own release <literal>--name</literal>:
-</para>
-<screen>    
-&prompt.user;helm install suse/uaa \
+  <para>
+   Use &helm; to deploy the UAA (User Account and Authentication) server. You
+   may create your own release <literal>--name</literal>:
+  </para>
+
+<screen>&prompt.user;helm install suse/uaa \
 --name <replaceable>susecf-uaa</replaceable> \
 --namespace uaa \
---values scf-config-values.yaml
-</screen>
-<para>
-    Wait until you have a successful UAA deployment before going to the next
-    steps, which you can monitor with the <command>watch</command>
-    command:
-</para>
-<screen>
-&prompt.user;watch -c 'kubectl get pods --all-namespaces'
-</screen>
-<para>
-When the status shows RUNNING for all of the UAA nodes, proceed to deploying 
-&suse; &cf;. Pressing <keycombo>
-    <keycap function="control"/>
-    <keycap>C</keycap>
-     </keycombo>
-     stops the <command>watch</command> command.
-</para>
-</sect1>   
+--values scf-config-values.yaml</screen>
 
-<sect1 xml:id="sec.cap.install-scf-prod">
-    <title>Deploy SCF</title>
-<para>
-  First pass your UAA secret and certificate to SCF, then 
-  use &helm; to install &suse; &cf;:
-</para>
-<screen>
-&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+  <para>
+   Wait until you have a successful UAA deployment before going to the next
+   steps, which you can monitor with the <command>watch</command> command:
+  </para>
+
+<screen>&prompt.user;watch -c 'kubectl get pods --all-namespaces'</screen>
+
+  <para>
+   When the status shows RUNNING for all of the UAA nodes, proceed to deploying
+   &suse; &cf;. Pressing <keycombo> <keycap function="control"/>
+   <keycap>C</keycap> </keycombo> stops the <command>watch</command> command.
+  </para>
+ </sect1>
+ <sect1 xml:id="sec.cap.install-scf-prod">
+  <title>Deploy SCF</title>
+
+  <para>
+   First pass your UAA secret and certificate to SCF, then use &helm; to
+   install &suse; &cf;:
+  </para>
+
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
 -o jsonpath='{.items[*].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
@@ -708,18 +686,18 @@ When the status shows RUNNING for all of the UAA nodes, proceed to deploying
 --name <replaceable>susecf-scf</replaceable> \
 --namespace scf \
 --values scf-config-values.yaml \
---set "secrets.UAA_CA_CERT=${CA_CERT}"
-</screen>
-<para>
-    Now sit back and wait for the pods come online:
-</para>
-    <screen>
-&prompt.user;watch -c 'kubectl get pods --all-namespaces'
-</screen>
-<para>
-    When all services are running use the &cf; command-line interface 
-to log in to &suse; &cf; to deploy and manage your applications. (See
-<xref linkend="sec.cap.cf-cli"/>)
-</para>
-</sect1>
+--set "secrets.UAA_CA_CERT=${CA_CERT}"</screen>
+
+  <para>
+   Now sit back and wait for the pods come online:
+  </para>
+
+<screen>&prompt.user;watch -c 'kubectl get pods --all-namespaces'</screen>
+
+  <para>
+   When all services are running use the &cf; command-line interface to log in
+   to &suse; &cf; to deploy and manage your applications. (See
+   <xref linkend="sec.cap.cf-cli"/>)
+  </para>
+ </sect1>
 </chapter>

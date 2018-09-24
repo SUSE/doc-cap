@@ -7,11 +7,8 @@
 <authorgroup xmlns="http://docbook.org/ns/docbook" 
 xmlns:xi="http://www.w3.org/2001/XInclude" 
 xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0">
- 
-<author><personname><firstname>Carla</firstname><surname>Schroder</surname></personname>
+ <author><personname><firstname>Carla</firstname><surname>Schroder</surname></personname>
  </author>
- 
 <!--<author><personname><firstname>Christoph</firstname><surname>Wickert</surname></personname>
  </author>-->
 </authorgroup>
-
