@@ -71,15 +71,13 @@ suse/uaa                     2.11.0  A Helm chart for SUSE UAA</screen>
    complete before running the next command.
   </para>
 
-  <note>
-   <title>Important Changes</title>
-   <para>
-    Take note of the new commands for extracting and using secrets and
-    certificates. The <command>--recreate-pods</command> option is required
-    when upgrading UAA and SCF from version 2.10.x to 2.11. Future upgrades
-    should not require this option, as all pods should be in a ready state.
-   </para>
-  </note>
+<note>
+    <title>Important Changes</title>
+    <para>
+        Take note of the new commands for extracting and using secrets and 
+        certificates.
+    </para>
+</note>
 
 <screen>&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-uaa</replaceable> suse/uaa \
  --values scf-config-values.yaml
@@ -90,7 +88,7 @@ suse/uaa                     2.11.0  A Helm chart for SUSE UAA</screen>
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
  -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
-&prompt.user;helm upgrade susecf-scf <replaceable>suse/cf</replaceable> \
+&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-scf</replaceable> suse/cf \
  --values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}"
 
 &prompt.user;helm upgrade --recreate-pods <replaceable>susecf-console</replaceable> suse/console \
