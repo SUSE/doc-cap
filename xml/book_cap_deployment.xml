@@ -26,25 +26,24 @@
    <dm:translation>no</dm:translation>
   </dm:docmanager>
  </info>
- <xi:include href="cap_depl_intro.xml"/>
- <xi:include href="cap_depl_about.xml"/>
- <xi:include href="cap_depl_install_production.xml"/>
- <xi:include href="cap_depl_stratos.xml"/>
- <xi:include href="cap_depl_upgrade.xml"/>
- <xi:include href="cap_depl_ha.xml"/>
- <xi:include href="cap_depl_cf_cli.xml"/>
- <xi:include href="cap_depl_service_broker_sidecar.xml"/>
- <xi:include href="cap_depl_backup-restore.xml"/>
- <xi:include href="cap_depl_logging.xml"/>
- <xi:include href="cap_depl_certificates.xml"/>
- <xi:include href="cap_depl_azure.xml"/>
- <xi:include href="cap_depl_eks.xml"/>
-<!-- replace with links to relevant SOC sections - cs june 26 2018 -->
- <xi:include href="cap_depl_openstack.xml"/>
- <xi:include href="cap_depl_kube_requirements.xml"/>
- <xi:include href="cap_depl_install_minimal.xml"/>
- <xi:include href="cap_depl_troubleshooting.xml"/>
- <xi:include href="appendix_values_yaml.xml"/>
+<xi:include href="cap_depl_intro.xml"/>
+<xi:include href="cap_depl_about.xml"/>
+<xi:include href="cap_depl_install_production.xml"/>
+<xi:include href="cap_depl_stratos.xml"/>
+<xi:include href="cap_depl_upgrade.xml"/>
+<xi:include href="cap_depl_ha.xml"/>
+<xi:include href="cap_depl_cf_cli.xml"/>
+<xi:include href="cap_depl_passwords.xml"/>
+<xi:include href="cap_depl_service_broker_sidecar.xml"/>
+<xi:include href="cap_depl_backup-restore.xml"/>
+<xi:include href="cap_depl_logging.xml"/>
+<xi:include href="cap_depl_azure.xml"/>
+<xi:include href="cap_depl_eks.xml"/>
+<xi:include href="cap_depl_openstack.xml"/>
+<xi:include href="cap_depl_kube_requirements.xml"/>
+<xi:include href="cap_depl_install_minimal.xml"/>
+<xi:include href="cap_depl_troubleshooting.xml"/>
+<xi:include href="appendix_values_yaml.xml"/>
 <!-- ===================================================================== -->
 <!-- Appendix                                                              -->
 <!-- ===================================================================== -->
