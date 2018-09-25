@@ -36,6 +36,7 @@
  <xi:include href="cap_depl_service_broker_sidecar.xml"/>
  <xi:include href="cap_depl_backup-restore.xml"/>
  <xi:include href="cap_depl_logging.xml"/>
+ <xi:include href="cap_depl_certificates.xml"/>
  <xi:include href="cap_depl_azure.xml"/>
  <xi:include href="cap_depl_eks.xml"/>
 <!-- replace with links to relevant SOC sections - cs june 26 2018 -->
