@@ -239,6 +239,24 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
    next steps.
   </para>
  </sect1>
+ 
+ <sect1 xml:id="sec.cap.psp">
+     <title>Apply Pod Security Policies</title>
+     <para>
+         Role-based access control (RBAC) is enabled by default on AKS. Follow 
+         the instructions in <xref linkend="sec.cap.caasp-3"/> to apply pod
+         security policies (PSPs) to your new AKS cluster. Also note that when
+         you create your &cap; configuration file (e.g. 
+         <filename>scf-config-values.yaml</filename>), you must set 
+         <literal>auth: rbac</literal>.
+     </para>
+     <para>
+         You may disable RBAC during cluster creation with the 
+         <command>--disable-rbac</command> option, and then you will not need
+         to apply PSPs. This is less secure, but may be useful for testing.
+     </para>
+ </sect1>
+ 
  <sect1 xml:id="sec.cap.swap-accounting">
   <title>Enable Swap Accounting</title>
 
@@ -479,8 +497,8 @@ kube:
        username: ""
        password: ""
     organization: "cap"
-
-    auth: none</screen>
+    
+    auth: rbac</screen>
 
   <para>
    Now Azure is ready, and you can deploy &productname; on it. Note that you
