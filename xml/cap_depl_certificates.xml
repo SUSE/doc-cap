@@ -16,50 +16,84 @@
   </dm:docmanager>
  </info>
  <para>
-     The traffic of your &productname; deployment can be made more secure through the use of TLS certificates.
+  The traffic of your &productname; deployment can be made more secure through
+  the use of TLS certificates.
  </para>
+ <sect1 xml:id="sec.cap.cert-properties">
+  <title>Certificate Characteristics</title>
 
-    <sect1 xml:id="sec.cap.cert-properties">
-	<title>Certificate Characteristics</title>
-        <para>
-            When obtaining or generating your certificates, ensure that they are encoded in the PEM format. The appropirate Subject Alternative Names (SAN) should also be included as part of the certificate.
-	    <itemizedlist>
-                <listitem>
-                    Certificates for the SCF router should include: 
-		    <itemizedlist>
-	                <listitem>
-                            *.DOMAIN
-			</listitem>
-		    </itemizedlist>
-		</listitem>
-                <listitem>
-		    Certificates for the  UAA server should include:
-		    <itemizedlist>
-                        <listitem>
-                            uaa.DOMAIN
-			</listitem>
-			<listitem>
-                            *.uaa.DOMAIN
-			</listitem>
-			<listitem>
-                            uaa
-			</listitem>
-                    </itemizedlist>
-            <itemizedlist>
-	</para>
+  <para>
+   When obtaining or generating your certificates, ensure that they are encoded
+   in the PEM format. The appropriate Subject Alternative Names (SAN) should
+   also be included as part of the certificate.
+  </para>
 
-    </sect1>
+  <itemizedlist>
+   <listitem>
+    <para>
+     Certificates for the SCF router should include:
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       *.DOMAIN A wildcard certificate is suggested as deployed applications on
+       the &cap; cluster will have URLs in the form of
+       <literal>APP_NAME.DOMAIN</literal>
+      </para>
+     </listitem>
+    </itemizedlist>
+   </listitem>
+   <listitem>
+    <para>
+     Certificates for the UAA server should include:
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       uaa.DOMAIN
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       *.uaa.DOMAIN
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       uaa
+      </para>
+     </listitem>
+    </itemizedlist>
+   </listitem>
+  </itemizedlist>
+ </sect1>
+ <sect1 xml:id="sec.cap.cert-deployment">
+  <title>Deploying Custom Certificates</title>
 
-    <sect1 xml:id="sec.cap.cert-deployment">
-        <title>Deploying Custom Certificates</title>
-	<para>
-            Certificates used in &cap; are configurable through the <filename>values.yaml</filename> files for the deployment of SCF and UAA respectively. To specify a certificate, set the value for the certificate and its corresponding private key under the <literal>secrets:</literal> section using the following properties. 
-        </para>
-	<itemizedlist>
-	    <listitem>
-	        In the <literal>values.yaml</literal> for SCF specify the <literal>ROUTER_SSL_CERT</literal> property and the corresponding <literal>ROUTER_SSL_KEY</literal>.
-	        <screen>
-secrets:
+  <para>
+   Certificates used in &cap; are configurable through the
+   <filename>values.yaml</filename> files for the deployment of SCF and UAA
+   respectively. To specify a certificate, set the value for the certificate
+   and its corresponding private key under the <literal>secrets:</literal>
+   section using the following properties.
+  </para>
+
+  <itemizedlist>
+   <listitem>
+    <para>
+     In the <literal>values.yaml</literal> for SCF specify the
+     <literal>ROUTER_SSL_CERT</literal> property and the corresponding
+     <literal>ROUTER_SSL_KEY</literal>.
+    </para>
+    <note>
+     <para>
+      Note the use of the "|" character which indicates the use of a literal
+      scalar. See the
+      <link xlink:href="http://yaml.org/spec/1.2/spec.html#id2795688">YAML
+      spec</link> for more information.
+     </para>
+    </note>
+<screen>secrets:
   ROUTER_SSL_CERT: |
     -----BEGIN CERTIFICATE-----
     MIIEEjCCAfoCCQCWC4NErLzy3jANBgkqhkiG9w0BAQsFADBGMQswCQYDVQQGEwJD
@@ -80,20 +114,20 @@ secrets:
     GORpbQKBgQDB1/nLPjKxBqJmZ/JymBl6iBnhIgVkuUMuvmqES2nqqMI+r60EAKpX
     M5CD+pq71TuBtbo9hbjy5Buh0+QSIbJaNIOdJxU7idEf200+4anzdaipyCWXdZU+
     MPdJf40awgSWpGdiSv6hoj0AOm+lf4AsH6yAqw/eIHXNzhWLRvnqgA==
-    -----END RSA PRIVATE KEY---- 
-                </screen>
-	    </listitem>
-	    <note>
-		<para>
-                    Note the use of the "|" character which indicates the use of a literal scalar. See the <link xlink:href="http://yaml.org/spec/1.2/spec.html#id2795688">YAML spec</link> for more information.
-		</para>
-	    </note>
-	    <listitem>
-		As certificates will be utilized, the <literal>--skip-ssl-validation</literal> option will not be used when setting a target API endpoint or logging in with the cf CLI. As a result, a certificate will need to be specified for the UAA component as well.
-
-	        In the <literal>values.yaml</literal> for UAA, specify the <literal>UAA_SERVER_CERT</literal> property and the corresponding <literal>UAA_SERVER_KEY</literal>. If a self-signed certificate is used, then  the <literal>INTERNAL_CA_CERT</literal> property and its associated <literal>INTERNAL_CA_KEY</literal> will need to be set as well.
-		<screen>
-secrets:
+    -----END RSA PRIVATE KEY---- </screen>
+   </listitem>
+   <listitem>
+    <para>
+     The <literal>--skip-ssl-validation</literal> option will not be used when
+     setting a target API endpoint or logging in with the cf CLI. As a result,
+     a certificate will need to be specified for the UAA component as well. In
+     the <literal>values.yaml</literal> for UAA, specify the
+     <literal>UAA_SERVER_CERT</literal> property and the corresponding
+     <literal>UAA_SERVER_KEY</literal>. If a self-signed certificate is used,
+     then the <literal>INTERNAL_CA_CERT</literal> property and its associated
+     <literal>INTERNAL_CA_KEY</literal> will need to be set as well.
+    </para>
+<screen>secrets:
   UAA_SERVER_CERT: |
     -----BEGIN CERTIFICATE-----
     MIIFnzCCA4egAwIBAgICEAMwDQYJKoZIhvcNAQENBQAwXDELMAkGA1UEBhMCQ0Ex
@@ -136,25 +170,30 @@ secrets:
     0qmnlGxjAdwan+PrarR6ztyp/bYcAvQhgEwc9oF2hj9wBhkdWVNVQ4LaxGtUfV4S
     yhbc7dZNw17fXhgVMZPDTRBfwwrcJ6KcF7g1PCsaGcuOPZWxroemvn28ytYBt1IG
     tfIdEIQIUTDVM4K2wiE6bwslIYwv5pEBLAdWG0gw8KCZl+ffTNOv+8PkdaiD
-    -----END RSA PRIVATE KEY-----
-		</screen>
-	    </listitem>
-        </itemizedlist>
-	<para>
-	    Once all pods are up and running, verify by running the <literal>cf api</literal> command followed by the <literal>cf login</literal> command and entering in your credentials. Both commands should be executed without using the <literal>--skip-ssl-validation</literal> option.
-        </para>
-	<screen>
-cf api https://api.example.com
-cf login
-        </screen>
+    -----END RSA PRIVATE KEY-----</screen>
+   </listitem>
+  </itemizedlist>
 
-	<sect2 xml:id="sec.cap.cert-multiple">
-	    <title>Configuring Multiple Certificates</title>
-	    <para>
-	        &cap; supports configurations that use multiple certificates. To specify multiple certificates with their associated keys, replace the <literal>ROUTER_SSL_CERT</literal> and <literal>ROUTER_SSL_KEY</literal> properties with the <literal>ROUTER_TLS_PEM</literal> property in your <filename>values.yaml</filename> file.  
-	    </para>
-            <screen>
-secrets:
+  <para>
+   Once all pods are up and running, verify by running the <command>cf
+   api</command> command followed by the <command>cf login</command> command
+   and entering in your credentials. Both commands should be executed without
+   using the <literal>--skip-ssl-validation</literal> option.
+  </para>
+
+<screen>cf api https://api.example.com
+cf login</screen>
+
+  <sect2 xml:id="sec.cap.cert-multiple">
+   <title>Configuring Multiple Certificates</title>
+   <para>
+    &cap; supports configurations that use multiple certificates. To specify
+    multiple certificates with their associated keys, replace the
+    <literal>ROUTER_SSL_CERT</literal> and <literal>ROUTER_SSL_KEY</literal>
+    properties with the <literal>ROUTER_TLS_PEM</literal> property in your
+    <filename>values.yaml</filename> file.
+   </para>
+<screen>secrets:
   ROUTER_TLS_PEM: |
     - cert_chain: |
         -----BEGIN CERTIFICATE-----
@@ -195,19 +234,25 @@ secrets:
         rMMhAoGBAMmge/JWThffCaponeakJu63DHKz87e2qxcqu25fbo9il1ZpllOD61Zi
         xd0GATICOuPeOUoVUjSuiMtS7B5zjWnmk5+siGeXF1SNJCZ9spgp9rWA/dXqXJRi
         55w7eGyYZSmOg6I7eWvpYpkRll4iFVApMt6KPM72XlyhQOigbGdJ
-        -----END RSA PRIVATE KEY-----
-	    </screen>
-        </sect2>
-    </sect1>
-    <sect1 xml:id="sec.cap.secrets-rotation">
-        <title>Rotating Automatically Generated Secrets</title>
-        <para>
-            &cap; utilizes a number of automatically generated secrets for use internally. These secrets have a default expiration of 10950 days and is set through the <literal>CERT_EXPIRATION</literal> property in the <literal>env:</literal> section of the <filename>values.yaml</filename> file. If rotation of the secrets is required, increment the value of <literal>secrets_generation_counter</literal> in the <literal>kube:</literal> section of the <filename>values.yaml</filename> file.
-        </para>
-	<screen>
-kube:
+        -----END RSA PRIVATE KEY-----</screen>
+  </sect2>
+ </sect1>
+ <sect1 xml:id="sec.cap.secrets-rotation">
+  <title>Rotating Automatically Generated Secrets</title>
+
+  <para>
+   &cap; uses a number of automatically generated secrets for use internally.
+   These secrets have a default expiration of 10950 days and are set through
+   the <literal>CERT_EXPIRATION</literal> property in the
+   <literal>env:</literal> section of the <filename>values.yaml</filename>
+   file. If rotation of the secrets is required, increment the value of
+   <literal>secrets_generation_counter</literal> in the
+   <literal>kube:</literal> section of the <filename>values.yaml</filename>
+   file.
+  </para>
+
+<screen>kube:
     # Increment this counter to rotate all generated secrets
-    secrets_generation_counter: 2
-        </screen>
-    </sect1> 
+    secrets_generation_counter: 2</screen>
+ </sect1>
 </chapter>
