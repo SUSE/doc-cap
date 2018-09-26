@@ -72,16 +72,18 @@
 
   <para>
    Certificates used in &cap; are configurable through the
-   <filename>values.yaml</filename> files for the deployment of SCF and UAA
-   respectively. To specify a certificate, set the value for the certificate
-   and its corresponding private key under the <literal>secrets:</literal>
-   section using the following properties.
+   <filename>values.yaml</filename> file for the deployment of SCF and UAA
+   respectively. (The example <filename>values.yaml</filename> file in this
+   guide is called <filename>scf-config-values.yaml</filename>, and of course
+   you may name yours whatever you want.) To specify a certificate, set the
+   value for the certificate and its corresponding private key under the
+   <literal>secrets:</literal> section using the following properties.
   </para>
 
   <itemizedlist>
    <listitem>
     <para>
-     In the <literal>values.yaml</literal> for SCF specify the
+     In <filename>scf-config-values.yaml</filename>, for SCF specify the
      <literal>ROUTER_SSL_CERT</literal> property and the corresponding
      <literal>ROUTER_SSL_KEY</literal>.
     </para>
@@ -120,12 +122,12 @@
     <para>
      The <literal>--skip-ssl-validation</literal> option will not be used when
      setting a target API endpoint or logging in with the cf CLI. As a result,
-     a certificate will need to be specified for the UAA component as well. In
-     the <literal>values.yaml</literal> for UAA, specify the
-     <literal>UAA_SERVER_CERT</literal> property and the corresponding
-     <literal>UAA_SERVER_KEY</literal>. If a self-signed certificate is used,
-     then the <literal>INTERNAL_CA_CERT</literal> property and its associated
-     <literal>INTERNAL_CA_KEY</literal> will need to be set as well.
+     a certificate will need to be specified for the UAA component as well. For
+     UAA, specify the <literal>UAA_SERVER_CERT</literal> property and the
+     corresponding <literal>UAA_SERVER_KEY</literal>. If a self-signed
+     certificate is used, then the <literal>INTERNAL_CA_CERT</literal> property
+     and its associated <literal>INTERNAL_CA_KEY</literal> will need to be set
+     as well.
     </para>
 <screen>secrets:
   UAA_SERVER_CERT: |
@@ -191,7 +193,7 @@ cf login</screen>
     multiple certificates with their associated keys, replace the
     <literal>ROUTER_SSL_CERT</literal> and <literal>ROUTER_SSL_KEY</literal>
     properties with the <literal>ROUTER_TLS_PEM</literal> property in your
-    <filename>values.yaml</filename> file.
+    <filename>scf-config-values.yaml</filename> file.
    </para>
 <screen>secrets:
   ROUTER_TLS_PEM: |
@@ -244,8 +246,9 @@ cf login</screen>
    &cap; uses a number of automatically generated secrets for use internally.
    These secrets have a default expiration of 10950 days and are set through
    the <literal>CERT_EXPIRATION</literal> property in the
-   <literal>env:</literal> section of the <filename>values.yaml</filename>
-   file. If rotation of the secrets is required, increment the value of
+   <literal>env:</literal> section of the
+   <filename>scf-config-values.yaml</filename> file. If rotation of the secrets
+   is required, increment the value of
    <literal>secrets_generation_counter</literal> in the
    <literal>kube:</literal> section of the <filename>values.yaml</filename>
    file.
