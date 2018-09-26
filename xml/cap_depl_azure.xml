@@ -252,8 +252,9 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
 
   <para>
    You may disable RBAC during cluster creation with the
-   <command>--disable-rbac</command> option, and then you will not need to
-   apply PSPs. This is less secure, but may be useful for testing.
+   <command>--disable-rbac</command> option, and then set 
+   <literal>auth: none</literal>. Do not apply the PSPS.
+   This is less secure, but may be useful for testing.
   </para>
  </sect1>
  <sect1 xml:id="sec.cap.swap-accounting">
