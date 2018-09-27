@@ -15,6 +15,82 @@
    <dm:translation>yes</dm:translation>
   </dm:docmanager>
  </info>
+ <para>
+  There are two types of logs in a deployment of &cap;, applications logs and
+  component logs.
+ </para>
+ <itemizedlist>
+  <listitem>
+   <para>
+    Application logs provide information specific to a given application that
+    has been deployed to your &cap; cluster and can be accessed through:
+   </para>
+   <itemizedlist>
+    <listitem>
+     <para>
+      The <literal>cf CLI</literal> using the <command>cf logs</command>
+      command
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      The application's log stream within the Stratos console
+     </para>
+    </listitem>
+   </itemizedlist>
+  </listitem>
+  <listitem>
+   <para>
+    Access to logs for a given component of your &cap; deployment can be
+    obtained by:
+   </para>
+   <itemizedlist>
+    <listitem>
+     <para>
+      The <command>kubectl logs</command> command
+     </para>
+     <para>
+      The following example retrieve the logs of the
+      <literal>router-0</literal> pod in the <literal>scf</literal> namespace
+     </para>
+<screen>&prompt.user;kubectl logs --namespace scf api-0</screen>
+    </listitem>
+    <listitem>
+     <para>
+      Direct access to the log files using the following:
+     </para>
+     <orderedlist>
+      <listitem>
+       <para>
+        Open a shell to the container of the component using the
+        <command>kubectl exec</command> command
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        Navigate to the logs directory at
+        <filename>/var/vcap/sys/logs</filename>, at which point there will be
+        subdirectories containing the log files for access.
+       </para>
+<screen>&prompt.user;kubectl exec -it --namespace scf router-0 /bin/bash
+
+router/0:/# cd /var/vcap/sys/log
+
+router/0:/var/vcap/sys/log# ls -R
+.:
+gorouter  metron_agent
+
+./gorouter:
+access.log  gorouter.err.log  gorouter.log  post-start.err.log	post-start.log
+
+./metron_agent:
+metron.log</screen>
+      </listitem>
+     </orderedlist>
+    </listitem>
+   </itemizedlist>
+  </listitem>
+ </itemizedlist>
  <sect1 xml:id="sec.cap.log-external">
   <title>Logging to an External Syslog Server</title>
 
