@@ -195,7 +195,8 @@
 
 <screen>&prompt.user;az aks create --resource-group $RGNAME --name $AKSNAME \
  --node-count $NODECOUNT --admin-username $ADMINUSERNAME \
- --ssh-key-value $SSHKEYVALUE --node-vm-size $NODEVMSIZE</screen>
+ --ssh-key-value $SSHKEYVALUE --node-vm-size $NODEVMSIZE \
+ --node-osdisk-size=60</screen>
 
   <para>
    This takes a few minutes. When it is completed, fetch your
