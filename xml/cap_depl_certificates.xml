@@ -119,7 +119,7 @@
    <listitem>
     <para>
      The <literal>--skip-ssl-validation</literal> option will not be used when
-     setting a target API endpoint or logging in with the cf CLI. As a result,
+     setting a target API endpoint or logging in with the &cfcli;. As a result,
      a certificate will need to be specified for the UAA component as well. In
      the <literal>values.yaml</literal> for UAA, specify the
      <literal>UAA_SERVER_CERT</literal> property and the corresponding

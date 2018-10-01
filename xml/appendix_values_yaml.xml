@@ -316,7 +316,7 @@ sizing:
   #   SCF patches for upstream bugs
   #
   # - cloud_controller_ng: The Cloud Controller provides primary Cloud Foundry
-  #   API that is by the CF CLI. The Cloud Controller uses a database to keep
+  #   API that is by the &cfcli;. The Cloud Controller uses a database to keep
   #   tables for organizations, spaces, apps, services, service instances, user
   #   roles, and more. Typically multiple instances of Cloud Controller are load
   #   balanced.
@@ -889,7 +889,7 @@ sizing:
   #
   # - uaa-create-user: Create the initial user in UAA
   #
-  # - configure-scf: Uses the cf CLI to configure SCF once it's online (things
+  # - configure-scf: Uses the &cfcli; to configure SCF once it's online (things
   #   like proxy settings, service brokers, etc.)
   post_deployment_setup:
     # Node affinity rules can be specified here

@@ -35,7 +35,7 @@
    <listitem>
     <para>
      A working &productname; deployment with &helm; and the Cloud Foundry
-     command line interface (cf-cli).
+     command line interface (&cfcli;).
     </para>
    </listitem>
    <listitem>
