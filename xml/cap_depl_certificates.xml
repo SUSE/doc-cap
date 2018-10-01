@@ -248,11 +248,34 @@ cf login</screen>
    file. If rotation of the secrets is required, increment the value of
    <literal>secrets_generation_counter</literal> in the
    <literal>kube:</literal> section of the <filename>values.yaml</filename>
-   file.
+   configuration file (e.g. the example
+   <filename>scf-config-values.yaml</filename> used in this guide) then run
+   <command>helm upgrade</command>.
+  </para>
+
+  <para>
+   This example demonstrates rotating the secrets of the scf deployment.
+  </para>
+
+  <para>
+   First, update the <filename>scf-config-values.yaml</filename> file.
   </para>
 
 <screen>kube:
     # Increment this counter to rotate all generated secrets
     secrets_generation_counter: 2</screen>
+
+  <para>
+   Next, perform a <command>helm upgrade</command> to apply the change.
+  </para>
+
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+ -o jsonpath='{.items[*].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+ -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+
+&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-scf</replaceable> suse/cf \
+ --values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}"</screen>
  </sect1>
 </chapter>
