@@ -28,8 +28,7 @@
    <itemizedlist>
     <listitem>
      <para>
-      The <literal>cf CLI</literal> using the <command>cf logs</command>
-      command
+      The cf CLI using the <command>cf logs</command> command
      </para>
     </listitem>
     <listitem>
@@ -50,7 +49,7 @@
       The <command>kubectl logs</command> command
      </para>
      <para>
-      The following example retrieve the logs of the
+      The following example retrieves the logs of the
       <literal>router-0</literal> pod in the <literal>scf</literal> namespace
      </para>
 <screen>&prompt.user;kubectl logs --namespace scf api-0</screen>
