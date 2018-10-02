@@ -17,7 +17,7 @@
  </info>
  <para>
   <literal>cf-plugin-backup</literal> backs up and restores your cloud
-  controller database (CDDB), using the &cf; command line interface (cf-cli).
+  controller database (CDDB), using the &cf; command line interface (&cfcli;).
   (See <xref linkend="sec.cap.cf-cli"/>.)
  </para>
  <para>

@@ -28,7 +28,7 @@
    <itemizedlist>
     <listitem>
      <para>
-      The cf CLI using the <command>cf logs</command> command
+      The &cfcli; using the <command>cf logs</command> command
      </para>
     </listitem>
     <listitem>
