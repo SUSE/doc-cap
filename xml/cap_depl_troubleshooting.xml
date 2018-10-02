@@ -97,8 +97,9 @@ NAME            REVISION  UPDATED                  STATUS    CHART           NAM
    This example deletes the <literal>susecf-console</literal> release and
    namespace:
   </para>
-
-<screen>&prompt.user;helm delete susecf-console
+  
+<screen>
+&prompt.user;helm delete --purge susecf-console
 release "susecf-console" deleted
 &prompt.user;kubectl delete namespace stratos
 namespace "stratos" deleted</screen>
