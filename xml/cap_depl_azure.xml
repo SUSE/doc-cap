@@ -195,7 +195,14 @@
 
 <screen>&prompt.user;az aks create --resource-group $RGNAME --name $AKSNAME \
  --node-count $NODECOUNT --admin-username $ADMINUSERNAME \
- --ssh-key-value $SSHKEYVALUE --node-vm-size $NODEVMSIZE</screen>
+ --ssh-key-value $SSHKEYVALUE --node-vm-size $NODEVMSIZE \
+ --node-osdisk-size=60</screen>
+
+  <note>
+   <para>
+    An OS disk size of at least 60GB must be specified using the <command>--node-osdisk-size</command> flag.
+   </para>
+  </note>
 
   <para>
    This takes a few minutes. When it is completed, fetch your
