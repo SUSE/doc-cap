@@ -102,12 +102,14 @@
       on setting up &suse; &caasp; 3.
      </para>
      <para>
-      After installing <link xlink:href=
+      After installing
+      <link xlink:href=
       "https://www.suse.com/documentation/suse-caasp-2/">&caasp;
-      2</link> or <link xlink:href=
+      2</link> or
+      <link xlink:href=
       "https://www.suse.com/documentation/suse-caasp-3/">&caasp;
-      3</link> and logging into the Velum Web interface, check the box
-      to install Tiller (&helm;'s server component).
+      3</link> and logging into the Velum Web interface, check the box to
+      install Tiller (&helm;'s server component).
      </para>
      <figure xml:id="fig.cap.install-tiller-prod">
       <title>Install Tiller</title>
@@ -170,13 +172,13 @@
     <listitem>
      <para>
       To install <command>kubectl</command> on a &slea; 12 SP3 or 15
-      workstation, install the package
-      <package>kubernetes-client</package> from the <emphasis>Public
-      Cloud</emphasis> module. For other operating systems, follow the
-      instructions at <link xlink:href=
-      "https://kubernetes.io/docs/tasks/tools/install-kubectl/" />. After
-      installation, run this command to verify that it is installed,
-      and that is communicating correctly with your cluster:
+      workstation, install the package <package>kubernetes-client</package>
+      from the <emphasis>Public Cloud</emphasis> module. For other operating
+      systems, follow the instructions at
+      <link xlink:href=
+      "https://kubernetes.io/docs/tasks/tools/install-kubectl/" />.
+      After installation, run this command to verify that it is installed, and
+      that is communicating correctly with your cluster:
      </para>
 <screen>&prompt.user;kubectl version --short
 Client Version: v1.9.1
@@ -546,23 +548,36 @@ secrets:
     
     # Create a password for your UAA client secret
     UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable></screen>
+
+  <note>
+   <title>Protect UAA_ADMIN_CLIENT_SECRET</title>
+   <para>
+    The UAA_ADMIN_CLIENT_SECRET is the master password for access to your &cap;
+    cluster. Make this a very strong password, and protect it just as carefully
+    as you would protect any root password.
+   </para>
+  </note>
  </sect1>
  <sect1 xml:id="sec.cap.helm-deploy-prod">
   <title>Deploy with &helm;</title>
+
   <para>
-   The following list provides an overview of &helm; commands to complete
-   the deployment. Included are links to detailed descriptions.
+   The following list provides an overview of &helm; commands to complete the
+   deployment. Included are links to detailed descriptions.
   </para>
+
   <procedure>
    <step>
     <para>
-     Download the &suse; &kube; charts repository (<xref
+     Download the &suse; &kube; charts repository
+     (<xref
      linkend="sec.cap.addrepo-prod" />)
     </para>
    </step>
    <step>
     <para>
-     Create the UAA and SCF namespaces (<xref
+     Create the UAA and SCF namespaces
+     (<xref
      linkend="sec.cap.create-namespaces-prod" />)
     </para>
    </step>
@@ -579,8 +594,8 @@ secrets:
    </step>
    <step>
     <para>
-     Copy the UAA secret and certificate to the SCF namespace, deploy
-     SCF (<xref linkend="sec.cap.install-scf-prod" />)
+     Copy the UAA secret and certificate to the SCF namespace, deploy SCF
+     (<xref linkend="sec.cap.install-scf-prod" />)
     </para>
    </step>
   </procedure>
