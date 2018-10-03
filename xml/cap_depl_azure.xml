@@ -280,7 +280,7 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
 <screen>&prompt.user;export MCRGNAME=$(az group list -o table | grep MC_"$RGNAME"_ | awk '{print$1}')</screen>
    </step>
    <step>
-<screen>&prompt.user;vmnodes=$(az vm list -g $MCRGNAME | jq -r '.[] | select (.tags.poolName | contains("node")) | .name')</screen>
+<screen>&prompt.user;vmnodes=$(az vm list -g $MCRGNAME -ojson | jq -r '.[] | select (.tags.poolName | contains("node")) | .name')</screen>
    </step>
    <step>
 <screen>&prompt.user;for i in $vmnodes
