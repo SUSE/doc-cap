@@ -43,14 +43,15 @@
  </figure>
  <para>
   This minimal four-node deployment will run on a minimum of 32GB host system
-  memory, though more memory is better. 32GB is enough to test setting up
-  and configuring &suse; &caasp; and &scf;, and to run a few lightweight
-  workloads. You may also test connecting external servers with your cluster,
-  such as a separate name server, a storage server (e.g. &ses;), &scc;, or
-  &smtool;. You must be familiar with installing and configuring &caasp; (see
-  the <link xlink:href=
+  memory, though more memory is better. 32GB is enough to test setting up and
+  configuring &suse; &caasp; and &scf;, and to run a few lightweight workloads.
+  You may also test connecting external servers with your cluster, such as a
+  separate name server, a storage server (e.g. &ses;), &scc;, or &smtool;. You
+  must be familiar with installing and configuring &caasp; (see the
+  <link xlink:href=
   "https://www.suse.com/documentation/suse-caasp-3/book_caasp_deployment/data/book_caasp_deployment.html"
-  >&suse; &caasp; 3 Deployment Guide</link>).
+  >&suse;
+  &caasp; 3 Deployment Guide</link>).
  </para>
  <para>
   After you have installed &caasp; you will install and administer &scf;
@@ -76,10 +77,12 @@
   <important>
    <title>You must be familiar with &suse; &caasp;</title>
    <para>
-    Setting up &suse; &caasp; correctly, and knowledge of basic administration is
-    essential to a successful &productname; deployment. See the <link xlink:href=
+    Setting up &suse; &caasp; correctly, and knowledge of basic administration
+    is essential to a successful &productname; deployment. See the
+    <link xlink:href=
     "https://www.suse.com/documentation/suse-caasp-3/book_caasp_deployment/data/book_caasp_deployment.html"
-    >&suse; &caasp; 3 Deployment Guide</link>.
+    >&suse;
+    &caasp; 3 Deployment Guide</link>.
    </para>
   </important>
 
@@ -473,6 +476,15 @@ secrets:
     
     # Create a password for your UAA client secret
     UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable></screen>
+
+  <note>
+   <title>Protect UAA_ADMIN_CLIENT_SECRET</title>
+   <para>
+    The UAA_ADMIN_CLIENT_SECRET is the master password for access to your &cap;
+    cluster. Make this a very strong password, and protect it just as carefully
+    as you would protect any root password.
+   </para>
+  </note>
  </sect1>
  <sect1  xml:id="sec.cap.helm-deploy">
   <title>Deploy with &helm;</title>
