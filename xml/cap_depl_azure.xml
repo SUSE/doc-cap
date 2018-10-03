@@ -341,7 +341,7 @@ done</screen>
      Set the virtual machine network interfaces, then add them to the load
      balancer:
     </para>
-<screen>&prompt.user;NICNAMES=$(az network nic list --resource-group $MCRGNAME | jq -r '.[].name')
+<screen>&prompt.user;NICNAMES=$(az network nic list --resource-group $MCRGNAME -o json | jq -r '.[].name')
 
 &prompt.user;for i in $NICNAMES
 do
@@ -416,7 +416,7 @@ done</screen>
      levels range from 100-4096, with 100 the highest priority. Each rule must
      have a unique priority level:
     </para>
-<screen>&prompt.user;nsg=$(az network nsg list --resource-group=$MCRGNAME | jq -r '.[].name')
+<screen>&prompt.user;nsg=$(az network nsg list --resource-group=$MCRGNAME -o json | jq -r '.[].name')
 &prompt.user;pri=200</screen>
    </step>
    <step>
@@ -442,7 +442,7 @@ done</screen>
     </para>
 <screen>&prompt.user;echo -e "\n Resource Group:\t$RGNAME\n \
 Public IP:\t\t$(az network public-ip show --resource-group $MCRGNAME --name $AKSNAME-public-ip --query ipAddress)\n \
-Private IPs:\t\t\"$(az network nic list --resource-group $MCRGNAME | jq -r '.[].ipConfigurations[].privateIpAddress' | paste -s -d " " | sed -e 's/ /", "/g')\"\n"
+Private IPs:\t\t\"$(az network nic list --resource-group $MCRGNAME -o json | jq -r '.[].ipConfigurations[].privateIpAddress' | paste -s -d " " | sed -e 's/ /", "/g')\"\n"
 
  Resource Group:        cap-aks
  Public IP:             "&publicip;"
