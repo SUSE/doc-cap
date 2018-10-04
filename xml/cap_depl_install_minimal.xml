@@ -58,7 +58,7 @@
   remotely from your host workstation, using tools such as the
   <link xlink:href="https://docs.helm.sh/">&helm; package manager for
   Kubernetes</link>, and the Kubernetes command-line tool
-  <link xlink:href="https://kubernetes.io/docs/tasks/tools/install-kubectl/kubectl">
+  <link xlink:href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">
   kubectl</link>.
  </para>
  <warning>

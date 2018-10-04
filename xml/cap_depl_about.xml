@@ -36,8 +36,8 @@
 
   <para>
    &productname; is a software platform for cloud-native application deployment
-   based on &scf; and &suse; &caasp;. It serves different but complementary
-   purposes for operators and application developers.
+   based on &scf; and &kube;. It serves different but complementary purposes
+   for operators and application developers.
   </para>
 
   <para>
@@ -152,23 +152,25 @@
    (AKS), and Amazon Elastic Container Service for Kubernetes (EKS).
   </para>
 
-  <para>
-   &caasp; is a specialized application development and hosting platform built
-   on the &susemicros; container host operating system, container orchestration
-   with &kube;, and &salt; for automating installation and configuration.
-  </para>
-
   <important>
-   <title>Review the &suse; &caasp; Deployment Guide</title>
+   <title>Required Knowledge</title>
    <para>
-    Setting up &productname; on &suse; &caasp; correctly depends on setting up
-    &suse; &caasp; correctly. Review the
-    <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/">&suse;
-    &caasp; Deployment Guide</link> to understand how it operates, and
-    configuration and administration options. You should understand basic
-    Linux, &docker;, and &kube; administration and use.
+    Installing and administering &productname; requires knowledge of Linux,
+    &docker;, &kube;, and your &kube; platform (e.g. &suse; &caasp;, AKS, EKS,
+    OpenStack). You must plan resource allocation and network architecture by
+    taking into account the requirements of your &kube; platform in addition to
+    &cap; requirements. &cap; is a discrete component in your cloud stack, but
+    it still requires knowledge of administering and troubleshooting the
+    underlying stack.
    </para>
   </important>
+
+  <para>
+   &suse; &caasp; is a specialized application development and hosting platform
+   built on the &susemicros; container host operating system, container
+   orchestration with &kube;, and &salt; for automating installation and
+   configuration.
+  </para>
 
   <para>
    A supported deployment includes &scf; installed on &caasp;, Amazon EKS, or
@@ -225,5 +227,90 @@
    and Developing Buildpacks</link> to learn more about buildpacks, and
    creating and managing your own.)
   </para>
+
+  <para>
+   The following figures illustrate the main components of &productname;.
+   <xref linkend="fig.cap.cloud-101"/> shows a comparison of the basic cloud
+   platforms: Infrastructure as a Service (IaaS), Container as a Service
+   (CaaS), Platform as a Service (Paas), and Software as a Service (SaaS).
+   &suse; &caasp; is a Container as a Service platform, and &productname; is
+   Platform as a Service.
+  </para>
+
+  <figure xml:id="fig.cap.cloud-101">
+   <title>Cloud Platform Comparisons</title>
+   <mediaobject>
+    <imageobject role="fo">
+     <imagedata fileref="cloud-101.png" format="PNG" width="75%"/>
+    </imageobject>
+    <imageobject role="html">
+     <imagedata fileref="cloud-101.png"/>
+    </imageobject>
+    <textobject role="description"><phrase>Comparison of cloud platforms.</phrase>
+    </textobject>
+   </mediaobject>
+  </figure>
+
+  <para>
+   <xref linkend="fig.cap.containerized"/> illustrates how &suse; &caasp; and
+   &productname; containerize the platform itself.
+  </para>
+
+  <figure xml:id="fig.cap.containerized">
+   <title>Containerized Platforms</title>
+   <mediaobject>
+    <imageobject role="fo">
+     <imagedata fileref="cap-containerized.png" format="PNG" width="75%"/>
+    </imageobject>
+    <imageobject role="html">
+     <imagedata fileref="cap-containerized.png"/>
+    </imageobject>
+    <textobject role="description"><phrase>&suse; &caasp; and &productname; containerize the
+      platform itself.</phrase>
+    </textobject>
+   </mediaobject>
+  </figure>
+
+  <para>
+   <xref linkend="fig.cap.components"/> shows the relationships of the major
+   &productname; components. &cap; runs on &kube;, which in turn runs on
+   multiple platforms, from bare metal to various cloud stacks. Your
+   applications run on &cap; and provide services.
+  </para>
+
+  <figure xml:id="fig.cap.components">
+   <title>Main &productname; Components</title>
+   <mediaobject>
+    <imageobject role="fo">
+     <imagedata fileref="cap-kube.png" format="PNG" width="75%"/>
+    </imageobject>
+    <imageobject role="html">
+     <imagedata fileref="cap-kube.png"/>
+    </imageobject>
+    <textobject role="description"><phrase>Relationships of the main &cap;
+            components.</phrase>
+    </textobject>
+   </mediaobject>
+  </figure>
+
+  <para>
+   <xref linkend="fig.cap.internal-servces"/> provides a look at &cap;'s
+   internal services and their functions.
+  </para>
+
+  <figure xml:id="fig.cap.internal-servces">
+   <title>&productname; Internal Services</title>
+   <mediaobject>
+    <imageobject role="fo">
+     <imagedata fileref="cap-services.png" format="PNG" width="75%"/>
+    </imageobject>
+    <imageobject role="html">
+     <imagedata fileref="cap-services.png"/>
+    </imageobject>
+    <textobject role="description"><phrase>&cap;'s internal services and their
+            functions.</phrase>
+    </textobject>
+   </mediaobject>
+  </figure>
  </sect1>
 </chapter>
