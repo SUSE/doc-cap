@@ -165,14 +165,14 @@
    -----END CERTIFICATE-----
    
    # UAA cert
-   UAA_CA_CERT: |
-    -----BEGIN CERTIFICATE-----
-    MIIE8jCCAtqgAwIBAgIUSI02lj0a0InLb/zMrjNgW5d8EygwDQYJKoZIhvcNAQEN
-    [...]
-    to2GI8rPMb9W9fd2WwUXGEHTc+PqTg==
-    -----END CERTIFICATE-----
+  UAA_CA_CERT: |
+   -----BEGIN CERTIFICATE-----
+   MIIE8jCCAtqgAwIBAgIUSI02lj0a0InLb/zMrjNgW5d8EygwDQYJKoZIhvcNAQEN
+   [...]
+   to2GI8rPMb9W9fd2WwUXGEHTc+PqTg==
+   -----END CERTIFICATE-----
     
-  kube:
+kube:
    organization: cap
    registry: 
      hostname: "registry.suse.com"
@@ -283,7 +283,7 @@ suse/uaa                     2.13.3  A Helm chart for SUSE UAA</screen>
     xC8x/+zT0QkvcRJBio5gg670+25KJQ==
     -----END CERTIFICATE-----
    
-   # UAA certificate
+  # UAA certificate
    UAA_CA_CERT: |
     ----BEGIN CERTIFICATE-----
     MIIE8jCCAtqgAwIBAgIUSI02lj0a0InLb/zMrjNgW5d8EygwDQYJKoZIhvcNAQEN
@@ -291,14 +291,14 @@ suse/uaa                     2.13.3  A Helm chart for SUSE UAA</screen>
     to2GI8rPMb9W9fd2WwUXGEHTc+PqTg==
     -----END CERTIFICATE-----
    
-   SERVICE_TYPE: postgres   
+  SERVICE_TYPE: postgres   
     
-   kube:
-     organization: cap
-     registry: 
-       hostname: "registry.suse.com"
-       username: ""
-       password: ""</screen>
+kube:
+    organization: cap
+    registry: 
+      hostname: "registry.suse.com"
+      username: ""
+      password: ""</screen>
 
   <para>
    Create a namespace and install the chart:
