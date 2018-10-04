@@ -289,7 +289,11 @@ Happy Helming!</screen>
    <para>
     See
     <link xlink:href="https://kubernetes.io/docs/concepts/policy/pod-security-policy/">
-    Pod Security Policies</link> for more information.
+    Pod Security Policies</link>, 
+    <link xlink:href="https://docs.cloudfoundry.org/concepts/roles.html/">
+        Orgs, Spaces, Roles, and Permissions</link>, and
+    <link xlink:href="https://docs.cloudfoundry.org/uaa/identity-providers.html#id-flow">
+        Identity Provider Workflow</link> for more information.
    </para>
    <para>
     Currently, all the pods are created using the default
