@@ -548,11 +548,11 @@ suse        https://kubernetes-charts.suse.com/</screen>
    </para>
 <screen>&prompt.user;helm search suse
 NAME                         VERSION DESCRIPTION
-suse/cf                      2.11.0  A Helm chart for SUSE Cloud Foundry               
+suse/cf                      2.13.3  A Helm chart for SUSE Cloud Foundry               
 suse/cf-usb-sidecar-mysql    1.0.1   A Helm chart for SUSE Universal Service Broker ...
 suse/cf-usb-sidecar-postgres 1.0.1   A Helm chart for SUSE Universal Service Broker ...
-suse/console                 2.0.0   A Helm chart for deploying Stratos UI Console     
-suse/uaa                     2.11.0  A Helm chart for SUSE UAA</screen>
+suse/console                 2.1.0   A Helm chart for deploying Stratos UI Console     
+suse/uaa                     2.13.3  A Helm chart for SUSE UAA</screen>
   </sect2>
 
   <sect2 xml:id="sec.cap.create-namespaces">
@@ -615,6 +615,21 @@ sed 's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -</screen
     When the status shows RUNNING for all of the UAA nodes, then proceed to the
     next step.
    </para>
+  <important>
+      <title>Some Pods Show Not Running</title>
+      <para>
+          Some UAA and SCF pods perform only deployment tasks, and it is normal 
+          for them to show as unready after they have completed their tasks, as
+          these examples show:
+      </para>
+      <screen>
+&prompt.user;kubectl get pods --namespace uaa
+secret-generation-1-z4nlz   0/1       Completed
+          
+&prompt.user;kubectl get pods --namespace scf
+secret-generation-1-m6k2h       0/1       Completed
+post-deployment-setup-1-hnpln   0/1       Completed</screen>
+  </important>   
   </sect2>
 
   <sect2 xml:id="sec.cap.install-scf">
