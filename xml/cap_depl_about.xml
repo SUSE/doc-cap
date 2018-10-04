@@ -234,7 +234,7 @@
    platforms: Infrastructure as a Service (IaaS), Container as a Service
    (CaaS), Platform as a Service (Paas), and Software as a Service (SaaS).
    &suse; &caasp; is a Container as a Service platform, and &productname; is
-   Platform as a Service.
+   a PaaS.
   </para>
 
   <figure xml:id="fig.cap.cloud-101">
