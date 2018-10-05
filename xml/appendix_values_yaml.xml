@@ -30,729 +30,28 @@
   </para>
 
 <screen>---
-env:
-  # List of domains (including scheme) from which Cross-Origin requests will be
-  # accepted, a * can be used as a wildcard for any part of a domain.
-  ALLOWED_CORS_DOMAINS: "[]"
-
-  # Allow users to change the value of the app-level allow_ssh attribute.
-  ALLOW_APP_SSH_ACCESS: "true"
-
-  # Extra token expiry time while uploading big apps, in seconds.
-  APP_TOKEN_UPLOAD_GRACE_PERIOD: "1200"
-
-  # List of allow / deny rules for the blobstore internal server. Will be
-  # followed by 'deny all'. Each entry must be follow by a semicolon.
-  BLOBSTORE_ACCESS_RULES: "allow 10.0.0.0/8; allow 172.16.0.0/12; allow 192.168.0.0/16;"
-
-  # Maximal allowed file size for upload to blobstore, in megabytes.
-  BLOBSTORE_MAX_UPLOAD_SIZE: "5000"
-
-  # The set of CAT test suites to run. If not specified it falls back to a
-  # hardwired set of suites. This is for SUSE internal testing, and not
-  # for production deployments
-  CATS_SUITES: ~
-
-  # URI for a CDN to use for buildpack downloads.
-  CDN_URI: ""
-
-  # The Oauth2 authorities available to the cluster administrator.
-  CLUSTER_ADMIN_AUTHORITIES: "scim.write,scim.read,openid,cloud_controller.admin,clients.read,clients.write,doppler.firehose,routing.router_groups.read,routing.router_groups.write"
-
-  # 'build' attribute in the /v2/info endpoint
-  CLUSTER_BUILD: "2.0.2"
-
-  # 'description' attribute in the /v2/info endpoint
-  CLUSTER_DESCRIPTION: "SUSE Cloud Foundry"
-
-  # 'name' attribute in the /v2/info endpoint
-  CLUSTER_NAME: "SCF"
-
-  # 'version' attribute in the /v2/info endpoint
-  CLUSTER_VERSION: "2"
-
-  # The standard amount of disk (in MB) given to an application when not
-  # overriden by the user via manifest, command line, etc.
-  DEFAULT_APP_DISK_IN_MB: "1024"
-
-  # The standard amount of memory (in MB) given to an application when not
-  # overriden by the user via manifest, command line, etc.
-  DEFAULT_APP_MEMORY: "1024"
-
-  # If set apps pushed to spaces that allow SSH access will have SSH enabled by
-  # default.
-  DEFAULT_APP_SSH_ACCESS: "true"
-
-  # The default stack to use if no custom stack is specified by an app.
-  DEFAULT_STACK: "sle12"
-
-  # The container disk capacity the cell should manage. If this capacity is
-  # larger than the actual disk quota of the cell component, over-provisioning
-  # will occur.
-  DIEGO_CELL_DISK_CAPACITY_MB: "auto"
-
-  # The memory capacity the cell should manage. If this capacity is larger than
-  # the actual memory of the cell component, over-provisioning will occur.
-  DIEGO_CELL_MEMORY_CAPACITY_MB: "auto"
-
-  # Maximum network transmission unit length in bytes for application
-  # containers.
-  DIEGO_CELL_NETWORK_MTU: "1400"
-
-  # A CIDR subnet mask specifying the range of subnets available to be assigned
-  # to containers.
-  DIEGO_CELL_SUBNET: "10.38.0.0/16"
-
-  # Disable external buildpacks. Only admin buildpacks and system buildpacks
-  # will be available to users.
-  DISABLE_CUSTOM_BUILDPACKS: "false"
-
-  # The host to ping for confirmation of DNS resolution.
-  DNS_HEALTH_CHECK_HOST: "127.0.0.1"
-
-  # Base domain of the SCF cluster.
-  # Example: my-scf-cluster.com
-  DOMAIN: ~
-
-  # The number of versions of an application to keep. You will be able to
-  # rollback to this amount of versions.
-  DROPLET_MAX_STAGED_STORED: "5"
-
-  # Enables setting the X-Forwarded-Proto header if SSL termination happened
-  # upstream and the header value was set incorrectly. When this property is set
-  # to true, the gorouter sets the header X-Forwarded-Proto to https. When this
-  # value set to false, the gorouter sets the header X-Forwarded-Proto to the
-  # protocol of the incoming request.
-  FORCE_FORWARDED_PROTO_AS_HTTPS: "false"
-
-  # AppArmor profile name for garden-runc; set this to empty string to disable
-  # AppArmor support
-  GARDEN_APPARMOR_PROFILE: "garden-default"
-
-  # URL pointing to the Docker registry used for fetching Docker images. If not
-  # set, the Docker service default is used.
-  GARDEN_DOCKER_REGISTRY: "registry-1.docker.io"
-
-  # Whitelist of IP:PORT tuples and CIDR subnet masks. Pulling from docker
-  # registries with self signed certificates will not be permitted if the
-  # registry's address is not listed here.
-  GARDEN_INSECURE_DOCKER_REGISTRIES: ""
-
-  # Override DNS servers to be used in containers; defaults to the same as the
-  # host.
-  GARDEN_LINUX_DNS_SERVER: ""
-
-  # The filesystem driver to use (btrfs or overlay-xfs).
-  GARDEN_ROOTFS_DRIVER: "btrfs"
-
-  # Location of the proxy to use for secure web access.
-  HTTPS_PROXY: ~
-
-  # Location of the proxy to use for regular web access.
-  HTTP_PROXY: ~
-
-  KUBE_SERVICE_DOMAIN_SUFFIX: ~
-
-  # The cluster's log level: off, fatal, error, warn, info, debug, debug1,
-  # debug2.
-  LOG_LEVEL: "info"
-
-  # The maximum amount of disk a user can request for an application via
-  # manifest, command line, etc., in MB. See also DEFAULT_APP_DISK_IN_MB for the
-  # standard amount.
-  MAX_APP_DISK_IN_MB: "2048"
-
-  # Maximum health check timeout that can be set for an app, in seconds.
-  MAX_HEALTH_CHECK_TIMEOUT: "180"
-
-  # The time allowed for the MySQL server to respond to healthcheck queries, in
-  # milliseconds.
-  MYSQL_PROXY_HEALTHCHECK_TIMEOUT: "30000"
-
-  # Sets the maximum allowed size of the client request body, specified in the
-  # “Content-Length” request header field, in megabytes. If the size in a
-  # request exceeds the configured value, the 413 (Request Entity Too Large)
-  # error is returned to the client. Please be aware that browsers cannot
-  # correctly display this error. Setting size to 0 disables checking of client
-  # request body size. This limits application uploads, buildpack uploads, etc.
-  NGINX_MAX_REQUEST_BODY_SIZE: "2048"
-
-  # Comma separated list of IP addresses and domains which should not be
-  # directoed through a proxy, if any.
-  NO_PROXY: ~
-
-  # Comma separated list of white-listed options that may be set during create
-  # or bind operations.
-  # Example:
-  # uid,gid,allow_root,allow_other,nfs_uid,nfs_gid,auto_cache,fsname,username,password
-  PERSI_NFS_ALLOWED_OPTIONS: "uid,gid,auto_cache,username,password"
-
-  # Comma separated list of default values for nfs mount options. If a default
-  # is specified with an option not included in PERSI_NFS_ALLOWED_OPTIONS, then
-  # this default value will be set and it won't be overridable.
-  PERSI_NFS_DEFAULT_OPTIONS: ~
-
-  # Comma separated list of white-listed options that may be accepted in the
-  # mount_config options. Note a specific 'sloppy_mount:true' volume option
-  # tells the driver to ignore non-white-listed options, while a
-  # 'sloppy_mount:false' tells the driver to fail fast instead when receiving a
-  # non-white-listed option."
-  #
-  # Example:
-  # allow_root,allow_other,nfs_uid,nfs_gid,auto_cache,sloppy_mount,fsname
-  PERSI_NFS_DRIVER_ALLOWED_IN_MOUNT: "auto_cache"
-
-  # Comma separated list of white-listed options that may be configured in
-  # supported in the mount_config.source URL query params
-  #
-  # Example: uid,gid,auto-traverse-mounts,dircache
-  PERSI_NFS_DRIVER_ALLOWED_IN_SOURCE: "uid,gid"
-
-  # Comma separated list default values for options that may be configured in
-  # the mount_config options, formatted as 'option:default'. If an option is not
-  # specified in the volume mount, or the option is not white-listed, then the
-  # specified default value will be used instead.
-  #
-  # Example:
-  # allow_root:false,nfs_uid:2000,nfs_gid:2000,auto_cache:true,sloppy_mount:true
-  PERSI_NFS_DRIVER_DEFAULT_IN_MOUNT: "auto_cache:true"
-
-  # Comma separated list of default values for options in the source URL query
-  # params, formatted as 'option:default'. If an option is not specified in the
-  # volume mount, or the option is not white-listed, then the specified default
-  # value will be applied.
-  PERSI_NFS_DRIVER_DEFAULT_IN_SOURCE: ~
-
-  # Disable Persi NFS driver
-  PERSI_NFS_DRIVER_DISABLE: "false"
-
-  # LDAP server host name or ip address (required for LDAP integration only)
-  PERSI_NFS_DRIVER_LDAP_HOST: ""
-
-  # LDAP server port (required for LDAP integration only)
-  PERSI_NFS_DRIVER_LDAP_PORT: "389"
-
-  # LDAP server protocol (required for LDAP integration only)
-  PERSI_NFS_DRIVER_LDAP_PROTOCOL: "tcp"
-
-  # LDAP service account user name (required for LDAP integration only)
-  PERSI_NFS_DRIVER_LDAP_USER: ""
-
-  # LDAP fqdn for user records we will search against when looking up user uids
-  # (required for LDAP integration only)
-  # Example: cn=Users,dc=corp,dc=test,dc=com
-  PERSI_NFS_DRIVER_LDAP_USER_FQDN: ""
-
-  # Certficates to add to the rootfs trust store. Multiple certs are possible by
-  # concatenating their definitions into one big block of text.
-  ROOTFS_TRUSTED_CERTS: ""
-
-  # The algorithm used by the router to distribute requests for a route across
-  # backends. Supported values are round-robin and least-connection.
-  ROUTER_BALANCING_ALGORITHM: "round-robin"
-
-  # How to handle the x-forwarded-client-cert (XFCC) HTTP header. Supported
-  # values are always_forward, forward, and sanitize_set. See
-  # https://docs.cloudfoundry.org/concepts/http-routing.html for more
-  # information.
-  ROUTER_FORWARDED_CLIENT_CERT: "always_forward"
-
-  # The log destination to talk to. This has to point to a syslog server.
-  SCF_LOG_HOST: ~
-
-  # The port used by rsyslog to talk to the log destination. If not set it
-  # defaults to 514, the standard port of syslog.
-  SCF_LOG_PORT: ~
-
-  # The protocol used by rsyslog to talk to the log destination. The allowed
-  # values are tcp, and udp. The default is tcp.
-  SCF_LOG_PROTOCOL: "tcp"
-
-  # A comma-separated list of insecure Docker registries in the form of
-  # '&#60;HOSTNAME|IP>:PORT'. Each registry must be quoted separately.
-  #
-  # Example: "docker-registry.example.com:80", "hello.example.org:443"
-  STAGER_INSECURE_DOCKER_REGISTRIES: ""
-
-  # Timeout for staging an app, in seconds.
-  STAGING_TIMEOUT: "900"
-
-  # Support contact information for the cluster
-  SUPPORT_ADDRESS: "support@example.com"
-
-  # TCP routing domain of the SCF cluster; only used for testing;
-  # Example: tcp.my-scf-cluster.com
-  TCP_DOMAIN: ~
-
-  # Concatenation of trusted CA certificates to be made available on the cell.
-  TRUSTED_CERTS: ~
-
-  # The host name of the UAA server (root zone)
-  UAA_HOST: ~
-
-  # The tcp port the UAA server (root zone) listens on for requests.
-  UAA_PORT: "2793"
-
-  # Whether or not to use privileged containers for buildpack based
-  # applications. Containers with a docker-image-based rootfs will continue to
-  # always be unprivileged.
-  USE_DIEGO_PRIVILEGED_CONTAINERS: "false"
-
-  # Whether or not to use privileged containers for staging tasks.
-  USE_STAGER_PRIVILEGED_CONTAINERS: "false"
-
-sizing:
+kube:
+  external_ips: []
+
+  # Increment this counter to rotate all generated secrets
+  secrets_generation_counter: 1
+
+  storage_class:
+    persistent: "persistent"
+    shared: "shared"
+
+  # Whether HostPath volume mounts are available
+  hostpath_available: false
+
+  registry:
+    hostname: "registry.suse.com"
+    username: ""
+    password: ""
+  organization: "cap"
+  auth: "rbac"
+config:
   # Flag to activate high-availability mode
   HA: false
-
-  # The api role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - authorize-internal-ca: Install both internal and UAA CA certificates
-  #
-  # - patch-properties: Dummy BOSH job used to host parameters that are used in
-  #   SCF patches for upstream bugs
-  #
-  # - cloud_controller_ng: The Cloud Controller provides primary Cloud Foundry
-  #   API that is by the &cfcli;. The Cloud Controller uses a database to keep
-  #   tables for organizations, spaces, apps, services, service instances, user
-  #   roles, and more. Typically multiple instances of Cloud Controller are load
-  #   balanced.
-  #
-  # - route_registrar: Used for registering routes
-  #
-  # Also: metron_agent, statsd_injector, go-buildpack, binary-buildpack,
-  # nodejs-buildpack, ruby-buildpack, php-buildpack, python-buildpack,
-  # staticfile-buildpack, java-buildpack, dotnet-core-buildpack
-  api:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The api role can scale between 1 and 65535 instances.
-    # For high availability it needs at least 2 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 4000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 2421
-      limit: ~
-
-  # The blobstore role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - route_registrar: Used for registering routes
-  #
-  # Also: blobstore, metron_agent
-  blobstore:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The blobstore role cannot be scaled.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    disk_sizes:
-      blobstore_data: 50
-
-    # Unit [MiB]
-    memory:
-      request: 420
-      limit: ~
-
-  # The cc-clock role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - authorize-internal-ca: Install both internal and UAA CA certificates
-  #
-  # - cloud_controller_clock: The Cloud Controller clock periodically schedules
-  #   Cloud Controller clean up tasks for app usage events, audit events, failed
-  #   jobs, and more. Only single instance of this job is necessary.
-  #
-  # Also: metron_agent, statsd_injector
-  cc_clock:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The cc-clock role cannot be scaled.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 789
-      limit: ~
-
-  # The cc-uploader role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - authorize-internal-ca: Install both internal and UAA CA certificates
-  #
-  # Also: tps, cc_uploader, metron_agent
-  cc_uploader:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The cc-uploader role can scale between 1 and 3 instances.
-    # For high availability it needs at least 2 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 4000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 129
-      limit: ~
-
-  # The cc-worker role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - authorize-internal-ca: Install both internal and UAA CA certificates
-  #
-  # - cloud_controller_worker: Cloud Controller worker processes background
-  #   tasks submitted via the.
-  #
-  # Also: metron_agent
-  cc_worker:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The cc-worker role can scale between 1 and 65535 instances.
-    # For high availability it needs at least 2 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 753
-      limit: ~
-
-  # The cf-usb role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - authorize-internal-ca: Install both internal and UAA CA certificates
-  #
-  # - route_registrar: Used for registering routes
-  #
-  # Also: cf-usb
-  cf_usb:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The cf-usb role can scale between 1 and 3 instances.
-    # For high availability it needs at least 2 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 117
-      limit: ~
-
-  # The consul role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # Also: consul_agent
-  consul:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The consul role can scale between 0 and 1 instances.
-    # The instance count must be an odd number (not divisible by 2).
-    # For high availability it needs at least 1 instances.
-    count: 0
-
-    # Unit [millicore]
-    cpu:
-      request: 1000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 256
-      limit: ~
-
-  # Global CPU configuration
-  cpu:
-    # Flag to activate cpu requests
-    requests: false
-
-    # Flag to activate cpu limits
-    limits: false
-
-  # The diego-access role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - authorize-internal-ca: Install both internal and UAA CA certificates
-  #
-  # Also: ssh_proxy, metron_agent, file_server
-  diego_access:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The diego-access role can scale between 1 and 3 instances.
-    # For high availability it needs at least 2 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 123
-      limit: ~
-
-  # The diego-api role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - authorize-internal-ca: Install both internal and UAA CA certificates
-  #
-  # - patch-properties: Dummy BOSH job used to host parameters that are used in
-  #   SCF patches for upstream bugs
-  #
-  # Also: bbs, cfdot, metron_agent
-  diego_api:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The diego-api role can scale between 1 and 3 instances.
-    # The instance count must be an odd number (not divisible by 2).
-    # For high availability it needs at least 3 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 138
-      limit: ~
-
-  # The diego-brain role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - authorize-internal-ca: Install both internal and UAA CA certificates
-  #
-  # - patch-properties: Dummy BOSH job used to host parameters that are used in
-  #   SCF patches for upstream bugs
-  #
-  # Also: auctioneer, cfdot, metron_agent
-  diego_brain:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The diego-brain role can scale between 1 and 3 instances.
-    # For high availability it needs at least 2 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 4000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 99
-      limit: ~
-
-  # The diego-cell role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - authorize-internal-ca: Install both internal and UAA CA certificates
-  #
-  # - wait-for-uaa: Wait for UAA to be ready before starting any jobs
-  #
-  # - patch-properties: Dummy BOSH job used to host parameters that are used in
-  #   SCF patches for upstream bugs
-  #
-  # Also: rep, cfdot, route_emitter, garden, cflinuxfs2-rootfs-setup,
-  # opensuse42-rootfs-setup, cf-sle12-setup, metron_agent, nfsv3driver
-  diego_cell:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # The diego-cell role can scale between 1 and 254 instances.
-    # For high availability it needs at least 3 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 4000
-      limit: ~
-
-    disk_sizes:
-      grootfs_data: 50
-
-    # Unit [MiB]
-    memory:
-      request: 4677
-      limit: ~
-
-  # The diego-locket role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - authorize-internal-ca: Install both internal and UAA CA certificates
-  #
-  # Also: locket, metron_agent
-  diego_locket:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The diego-locket role can scale between 1 and 3 instances.
-    # For high availability it needs at least 3 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 90
-      limit: ~
-
-  # The doppler role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # Also: doppler, metron_agent
-  doppler:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The doppler role can scale between 1 and 65535 instances.
-    # For high availability it needs at least 2 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 390
-      limit: ~
-
-  # The loggregator role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - authorize-internal-ca: Install both internal and UAA CA certificates
-  #
-  # - route_registrar: Used for registering routes
-  #
-  # Also: loggregator_trafficcontroller, metron_agent
-  loggregator:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The loggregator role can scale between 1 and 65535 instances.
-    # For high availability it needs at least 2 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 153
-      limit: ~
 
   # Global memory configuration
   memory:
@@ -762,403 +61,17 @@ sizing:
     # Flag to activate memory limits
     limits: false
 
-  # The mysql role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - patch-properties: Dummy BOSH job used to host parameters that are used in
-  #   SCF patches for upstream bugs
-  #
-  # Also: mysql
-  mysql:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The mysql role can scale between 1 and 3 instances.
-    # For high availability it needs at least 2 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    disk_sizes:
-      mysql_data: 20
-
-    # Unit [MiB]
-    memory:
-      request: 2841
-      limit: ~
-
-  # The mysql-proxy role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - patch-properties: Dummy BOSH job used to host parameters that are used in
-  #   SCF patches for upstream bugs
-  #
-  # Also: proxy
-  mysql_proxy:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The mysql-proxy role can scale between 1 and 3 instances.
-    # For high availability it needs at least 2 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 63
-      limit: ~
-
-  # The nats role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - nats: The NATS server provides publish-subscribe messaging system for the
-  #   Cloud Controller, the DEA , HM9000, and other Cloud Foundry components.
-  #
-  # Also: metron_agent
-  nats:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The nats role can scale between 1 and 3 instances.
-    # For high availability it needs at least 2 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 60
-      limit: ~
-
-  # The nfs-broker role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - authorize-internal-ca: Install both internal and UAA CA certificates
-  #
-  # Also: metron_agent, nfsbroker
-  nfs_broker:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # The nfs-broker role can scale between 1 and 3 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 63
-      limit: ~
-
-  # The post-deployment-setup role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - authorize-internal-ca: Install both internal and UAA CA certificates
-  #
-  # - uaa-create-user: Create the initial user in UAA
-  #
-  # - configure-scf: Uses the &cfcli; to configure SCF once it's online (things
-  #   like proxy settings, service brokers, etc.)
-  post_deployment_setup:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The post-deployment-setup role cannot be scaled.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 1000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 256
-      limit: ~
-
-  # The postgres role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - postgres: The Postgres server provides a single instance Postgres database
-  #   that can be used with the Cloud Controller or the UAA. It does not provide
-  #   highly-available configuration.
-  postgres:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The postgres role can scale between 1 and 3 instances.
-    # For high availability it needs at least 2 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    disk_sizes:
-      postgres_data: 20
-
-    # Unit [MiB]
-    memory:
-      request: 3072
-      limit: ~
-
-  # The router role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - authorize-internal-ca: Install both internal and UAA CA certificates
-  #
-  # - gorouter: Gorouter maintains a dynamic routing table based on updates
-  #   received from NATS and (when enabled) the Routing API. This routing table
-  #   maps URLs to backends. The router finds the URL in the routing table that
-  #   most closely matches the host header of the request and load balances
-  #   across the associated backends.
-  #
-  # Also: metron_agent
-  router:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The router role can scale between 1 and 65535 instances.
-    # For high availability it needs at least 2 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 4000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 135
-      limit: ~
-
-  # The routing-api role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - authorize-internal-ca: Install both internal and UAA CA certificates
-  #
-  # Also: metron_agent, routing-api
-  routing_api:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The routing-api role can scale between 1 and 3 instances.
-    # For high availability it needs at least 2 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 4000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 114
-      limit: ~
-
-  # The secret-generation role contains the following jobs:
-  #
-  # - generate-secrets: This job will generate the secrets for the cluster
-  secret_generation:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The secret-generation role cannot be scaled.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 1000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 256
-      limit: ~
-
-  # The syslog-adapter role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # Also: adapter, metron_agent
-  syslog_adapter:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The syslog-adapter role can scale between 1 and 65535 instances.
-    # For high availability it needs at least 2 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 78
-      limit: ~
-
-  # The syslog-rlp role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # Also: metron_agent, reverse_log_proxy
-  syslog_rlp:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The syslog-rlp role can scale between 1 and 65535 instances.
-    # For high availability it needs at least 2 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 93
-      limit: ~
-
-  # The syslog-scheduler role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # Also: scheduler, metron_agent
-  syslog_scheduler:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The syslog-scheduler role cannot be scaled.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 69
-      limit: ~
-
-  # The tcp-router role contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - authorize-internal-ca: Install both internal and UAA CA certificates
-  #
-  # - wait-for-uaa: Wait for UAA to be ready before starting any jobs
-  #
-  # Also: tcp_router, metron_agent
-  tcp_router:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The tcp-router role can scale between 1 and 3 instances.
-    # For high availability it needs at least 2 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 99
-      limit: ~
-
-    ports:
-      tcp_route:
-        count: 9
-
+  # Global CPU configuration
+  cpu:
+    # Flag to activate cpu requests
+    requests: false
+
+    # Flag to activate cpu limits
+    limits: false
+
+services:
+  loadbalanced: false
 secrets:
-  # The password for the cluster administrator.
-  CLUSTER_ADMIN_PASSWORD: ~
-
-  # LDAP service account password (required for LDAP integration only)
-  PERSI_NFS_DRIVER_LDAP_PASSWORD: "-"
-
-  # The password of the admin client - a client named admin with uaa.admin as an
-  # authority.
-  UAA_ADMIN_CLIENT_SECRET: ~
-
-  # The CA certificate for UAA
-  UAA_CA_CERT: ~
-
   # PEM encoded RSA private key used to identify host.
   # This value uses a generated default.
   APP_SSH_KEY: ~
@@ -1183,6 +96,88 @@ secrets:
   # PEM-encoded server key
   # This value uses a generated default.
   AUCTIONEER_SERVER_KEY: ~
+
+  # A PEM-encoded TLS certificate for clients to connect to the Autoscaler
+  # Actors. This includes the Autoscaler Scheduler and the Scaling Engine.
+  # This value uses a generated default.
+  AUTOSCALER_ASACTORS_CLIENT_CERT: ~
+
+  # A PEM-encoded TLS key for clients to connect to the Autoscaler Actors. This
+  # includes the Autoscaler Scheduler and the Scaling Engine.
+  # This value uses a generated default.
+  AUTOSCALER_ASACTORS_CLIENT_KEY: ~
+
+  # A PEM-encoded TLS certificate of the Autoscaler Actors https server. This
+  # includes the Autoscaler Scheduler and the Scaling Engine.
+  # This value uses a generated default.
+  AUTOSCALER_ASACTORS_SERVER_CERT: ~
+
+  # A PEM-encoded TLS key of the Autoscaler Actors https server. This includes
+  # the Autoscaler Scheduler and the Scaling Engine.
+  # This value uses a generated default.
+  AUTOSCALER_ASACTORS_SERVER_KEY: ~
+
+  # A PEM-encoded TLS certificate for clients to connect to the Autoscaler API.
+  # This includes the Autoscaler ApiServer and the Service Broker.
+  # This value uses a generated default.
+  AUTOSCALER_ASAPI_CLIENT_CERT: ~
+
+  # A PEM-encoded TLS key for clients to connect to the Autoscaler API. This
+  # includes the Autoscaler ApiServer and the Service Broker.
+  # This value uses a generated default.
+  AUTOSCALER_ASAPI_CLIENT_KEY: ~
+
+  # A PEM-encoded TLS certificate of the Autoscaler API public https server.
+  # This includes the Autoscaler ApiServer and the Service Broker.
+  # This value uses a generated default.
+  AUTOSCALER_ASAPI_PUBLIC_SERVER_CERT: ~
+
+  # A PEM-encoded TLS key of the Autoscaler API public https server. This
+  # includes the Autoscaler ApiServer and the Service Broker.
+  # This value uses a generated default.
+  AUTOSCALER_ASAPI_PUBLIC_SERVER_KEY: ~
+
+  # A PEM-encoded TLS certificate of the Autoscaler API https server. This
+  # includes the Autoscaler ApiServer and the Service Broker.
+  # This value uses a generated default.
+  AUTOSCALER_ASAPI_SERVER_CERT: ~
+
+  # A PEM-encoded TLS key of the Autoscaler API https server. This includes the
+  # Autoscaler ApiServer and the Service Broker.
+  # This value uses a generated default.
+  AUTOSCALER_ASAPI_SERVER_KEY: ~
+
+  # A PEM-encoded TLS certificate for clients to connect to the Autoscaler
+  # Metrics. This includes the Autoscaler Metrics Collector and Event Generator.
+  # This value uses a generated default.
+  AUTOSCALER_ASMETRICS_CLIENT_CERT: ~
+
+  # A PEM-encoded TLS key for clients to connect to the Autoscaler Metrics. This
+  # includes the Autoscaler Metrics Collector and Event Generator.
+  # This value uses a generated default.
+  AUTOSCALER_ASMETRICS_CLIENT_KEY: ~
+
+  # A PEM-encoded TLS certificate of the Autoscaler Metrics https server. This
+  # includes the Autoscaler Metrics Collector and Event Generator.
+  # This value uses a generated default.
+  AUTOSCALER_ASMETRICS_SERVER_CERT: ~
+
+  # A PEM-encoded TLS key of the Autoscaler Metrics https server. This includes
+  # the Autoscaler Metrics Collector and Event Generator.
+  # This value uses a generated default.
+  AUTOSCALER_ASMETRICS_SERVER_KEY: ~
+
+  # The password for the Autoscaler postgres database.
+  # This value uses a generated default.
+  AUTOSCALER_DB_PASSWORD: ~
+
+  # The password for the Autoscaler Service Broker.
+  # This value uses a generated default.
+  AUTOSCALER_SERVICE_BROKER_PASSWORD: ~
+
+  # the uaa client secret used by Autoscaler.
+  # This value uses a generated default.
+  AUTOSCALER_UAA_CLIENT_SECRET: ~
 
   # PEM-encoded certificate
   # This value uses a generated default.
@@ -1239,6 +234,9 @@ secrets:
   # This value uses a generated default.
   BULK_API_PASSWORD: ~
 
+  # A map of labels and encryption keys
+  CC_DB_ENCRYPTION_KEYS: "~"
+
   # The PEM-encoded certificate for internal cloud controller traffic.
   # This value uses a generated default.
   CC_SERVER_CRT: ~
@@ -1264,9 +262,12 @@ secrets:
   CF_USB_BROKER_SERVER_KEY: ~
 
   # The password for access to the Universal Service Broker.
-  # Example: password
   # This value uses a generated default.
+  # Example: "password"
   CF_USB_PASSWORD: ~
+
+  # The password for the cluster administrator.
+  CLUSTER_ADMIN_PASSWORD: ~
 
   # PEM-encoded consul client certificate
   # This value uses a generated default.
@@ -1313,6 +314,14 @@ secrets:
   # This value uses a generated default.
   INTERNAL_CA_KEY: ~
 
+  # PEM-encoded certificate.
+  # This value uses a generated default.
+  LOGGREGATOR_AGENT_CERT: ~
+
+  # PEM-encoded key.
+  # This value uses a generated default.
+  LOGGREGATOR_AGENT_KEY: ~
+
   # PEM-encoded client certificate for loggregator mutual authentication
   # This value uses a generated default.
   LOGGREGATOR_CLIENT_CERT: ~
@@ -1320,14 +329,6 @@ secrets:
   # PEM-encoded client key for loggregator mutual authentication
   # This value uses a generated default.
   LOGGREGATOR_CLIENT_KEY: ~
-
-  # PEM-encoded certificate.
-  # This value uses a generated default.
-  METRON_CERT: ~
-
-  # PEM-encoded key.
-  # This value uses a generated default.
-  METRON_KEY: ~
 
   # Password used for the monit API.
   # This value uses a generated default.
@@ -1342,8 +343,8 @@ secrets:
   MYSQL_CCDB_ROLE_PASSWORD: ~
 
   # The password for access to the usb config database.
-  # Example: password
   # This value uses a generated default.
+  # Example: "password"
   MYSQL_CF_USB_PASSWORD: ~
 
   # The password for the cluster logger health user.
@@ -1382,6 +383,9 @@ secrets:
   # This value uses a generated default.
   PERSI_NFS_BROKER_PASSWORD: ~
 
+  # LDAP service account password (required for LDAP integration only)
+  PERSI_NFS_DRIVER_LDAP_PASSWORD: "-"
+
   # PEM-encoded server certificate
   # This value uses a generated default.
   REP_SERVER_CERT: ~
@@ -1395,17 +399,34 @@ secrets:
   # This value uses a generated default.
   ROUTER_SERVICES_SECRET: ~
 
-  # The public ssl cert for ssl termination.
+  # The public ssl cert for ssl termination. Will be ignored if ROUTER_TLS_PEM
+  # is set.
   # This value uses a generated default.
   ROUTER_SSL_CERT: ~
 
-  # The private ssl key for ssl termination.
+  # The private ssl key for ssl termination. Will be ignored if ROUTER_TLS_PEM
+  # is set.
   # This value uses a generated default.
   ROUTER_SSL_KEY: ~
 
   # Password for HTTP basic auth to the varz/status endpoint.
   # This value uses a generated default.
   ROUTER_STATUS_PASSWORD: ~
+
+  # Array of private keys and certificates used for TLS handshakes with
+  # downstream clients. Each element in the array is an object containing fields
+  # 'private_key' and 'cert_chain', each of which supports a PEM block. This
+  # setting overrides ROUTER_SSL_CERT and ROUTER_SSL_KEY.
+  # Example:
+  #   - cert_chain: |
+  #       -----BEGIN CERTIFICATE-----
+  #       -----END CERTIFICATE-----
+  #       -----BEGIN CERTIFICATE-----
+  #       -----END CERTIFICATE-----
+  #     private_key: |
+  #       -----BEGIN RSA PRIVATE KEY-----
+  #       -----END RSA PRIVATE KEY-----
+  ROUTER_TLS_PEM: ~
 
   # The password for access to the uploader of staged droplets.
   # This value uses a generated default.
@@ -1454,6 +475,13 @@ secrets:
   # infra structure.
   # This value uses a generated default.
   TRAFFICCONTROLLER_KEY: ~
+
+  # The password of the admin client - a client named admin with uaa.admin as an
+  # authority.
+  UAA_ADMIN_CLIENT_SECRET: ~
+
+  # The CA certificate for UAA
+  UAA_CA_CERT: ~
 
   # The password for UAA access by the Cloud Controller.
   # This value uses a generated default.
@@ -1508,8 +536,1417 @@ secrets:
   # This value uses a generated default.
   UAA_CLIENTS_TCP_ROUTER_SECRET: ~
 
-services:
-  loadbalanced: false
+env:
+  # List of domains (including scheme) from which Cross-Origin requests will be
+  # accepted, a * can be used as a wildcard for any part of a domain.
+  ALLOWED_CORS_DOMAINS: "[]"
+
+  # Allow users to change the value of the app-level allow_ssh attribute.
+  ALLOW_APP_SSH_ACCESS: "true"
+
+  # Extra token expiry time while uploading big apps, in seconds.
+  APP_TOKEN_UPLOAD_GRACE_PERIOD: "1200"
+
+  # Idle connection timeout for the Autoscaler API Server database, in seconds.
+  AUTOSCALER_API_SERVER_DB_CONFIG_IDLE_TIMEOUT: "100"
+
+  # The maximum number of connections to the Autoscaler API Server database.
+  AUTOSCALER_API_SERVER_DB_CONFIG_MAX_CONNECTIONS: "10"
+
+  # The minimum number of connections to the Autoscaler API Server database.
+  AUTOSCALER_API_SERVER_DB_CONFIG_MIN_CONNECTIONS: "0"
+
+  # The build version of Autoscaler. It should be defined when it is deployed to
+  # a product environment.
+  AUTOSCALER_API_SERVER_INFO_BUILD: "beta"
+
+  # The description of Autoscaler. It should be defined when it is deployed to a
+  # product environment.
+  AUTOSCALER_API_SERVER_INFO_DESCRIPTION: "autoscaler"
+
+  # The name of the Autoscaler API Server. It should be defined when it is
+  # deployed to a product environment.
+  AUTOSCALER_API_SERVER_INFO_NAME: "autoscalerapiserver"
+
+  # The support url of autoscaler where the users could find support
+  # information. It should be defined when it is deployed to a product
+  # environment.
+  AUTOSCALER_API_SERVER_INFO_SUPPORT_URL: ""
+
+  # The maximum age of a connection that can be reused for the Autoscaler
+  # appmetrics database.
+  AUTOSCALER_APPMETRICS_DB_CONNECTION_CONFIG_CONNECTION_MAX_LIFETIME: "60s"
+
+  # The maximum number of connections to the Autoscaler appmetrics database.
+  AUTOSCALER_APPMETRICS_DB_CONNECTION_CONFIG_MAX_IDLE_CONNECTIONS: "10"
+
+  # The minimum number of connections to the Autoscaler appmetrics database.
+  AUTOSCALER_APPMETRICS_DB_CONNECTION_CONFIG_MAX_OPEN_CONNECTIONS: "100"
+
+  # Whether to skip ssl validation when Autoscaler components to communicate
+  # with CloudFoundry components.
+  AUTOSCALER_CF_SKIP_SSL_VALIDATION: "true"
+
+  # The maximum number of connections the Autoscaler postgres database server
+  # could serve.
+  AUTOSCALER_DATABASE_MAX_CONNECTIONS: "1000"
+
+  # The default breach duration for the Autoscaler Event Generator, in
+  # seconds.The breach duration means the App Autoscaler won’t take the
+  # desired adjustment until the application has been breaching the Autoscaler
+  # policy for a period longer than breach_duration_secs setting.
+  AUTOSCALER_DEFAULT_BREACH_DURATION_SECS: "300"
+
+  # The default cooldown duration between two scaling action for the Autoscaler
+  # Event Generator, in seconds.
+  AUTOSCALER_DEFAULT_COOLDOWN_SECS: "300"
+
+  # The default statistic window duration between two scaling action for the
+  # Autoscaler Event Generator, in seconds.
+  AUTOSCALER_DEFAULT_STAT_WINDOW_SECS: "300"
+
+  # The size of golang channel used by the Autoscaler Event Generator as a
+  # buffer to save metrics by batch.
+  AUTOSCALER_EVENT_GENERATOR_AGGREGATOR_APP_METRIC_CHANNEL_SIZE: "1000"
+
+  # The size of golang channel used by the Autoscaler Event Generator to
+  # exchange data.
+  AUTOSCALER_EVENT_GENERATOR_AGGREGATOR_APP_MONITOR_CHANNEL_SIZE: "200"
+
+  # The duration defines how long does Autoscaler Event Generator aggregate
+  # appmetrics.
+  AUTOSCALER_EVENT_GENERATOR_AGGREGATOR_EXECUTE_INTERVAL: "40s"
+
+  # The number of metricpollers in Autoscaler Event Generator.
+  AUTOSCALER_EVENT_GENERATOR_AGGREGATOR_METRIC_POLLER_COUNT: "20"
+
+  # The duration defines how long does the Autoscaler Event Generator reload
+  # data from policy database.
+  AUTOSCALER_EVENT_GENERATOR_AGGREGATOR_POLICY_POLLER_INTERVAL: "40s"
+
+  # The duration defines how long does the Autoscaler Event Generator save
+  # appmetrics to database by batch.
+  AUTOSCALER_EVENT_GENERATOR_AGGREGATOR_SAVE_INTERVAL: "5s"
+
+  # The initial exponential back off interval for the circuit breaker of the
+  # Autoscaler Event Generator.
+  AUTOSCALER_EVENT_GENERATOR_CIRCUIT_BREAKER_BACK_OFF_INITIAL_INTERVAL: "5m"
+
+  # The maximum exponential back off interval for the circuit breaker of the
+  # Autoscaler Event Generator.
+  AUTOSCALER_EVENT_GENERATOR_CIRCUIT_BREAKER_BACK_OFF_MAX_INTERVAL: "120m"
+
+  # The number of consecutive failure to trip the circuit down for the circuit
+  # breaker of the Autoscaler Event Generator.
+  AUTOSCALER_EVENT_GENERATOR_CIRCUIT_BREAKER_CONSECUTIVE_FAILURE_COUNT: "3"
+
+  # The duration defines how long does the Autoscaler Event Generator evaluate
+  # appmetrics.
+  AUTOSCALER_EVENT_GENERATOR_EVALUATOR_EVALUATION_MANAGER_EXECUTE_INTERVAL: "40s"
+
+  # The number of evaluators in the Autoscaler Event Generator.
+  AUTOSCALER_EVENT_GENERATOR_EVALUATOR_EVALUATOR_COUNT: "20"
+
+  # The size of golang channel used by the Autoscaler Event Generator App
+  # Evaluation Manager to pass triggers to evaluators.
+  AUTOSCALER_EVENT_GENERATOR_EVALUATOR_TRIGGER_ARRAY_CHANNEL_SIZE: "200"
+
+  # The maximum age of a connection that can be reused for the Autoscaler
+  # instance metrics database.
+  AUTOSCALER_INSTANCE_METRICS_DB_CONNECTION_CONFIG_CONNECTION_MAX_LIFETIME: "60s"
+
+  # The maximum number of idle connections to the Autoscaler instance metrics
+  # database.
+  AUTOSCALER_INSTANCE_METRICS_DB_CONNECTION_CONFIG_MAX_IDLE_CONNECTIONS: "10"
+
+  # The maximum number of connections to the Autoscaler instance metrics
+  # database.
+  AUTOSCALER_INSTANCE_METRICS_DB_CONNECTION_CONFIG_MAX_OPEN_CONNECTIONS: "100"
+
+  # The maximum age of a connection that can be reused for the Autoscaler lock
+  # database.
+  AUTOSCALER_LOCK_DB_CONNECTION_CONFIG_CONNECTION_MAX_LIFETIME: "60s"
+
+  # The maximum number of idle connections to the Autoscaler lock database.
+  AUTOSCALER_LOCK_DB_CONNECTION_CONFIG_MAX_IDLE_CONNECTIONS: "10"
+
+  # The maximum number of connections to the Autoscaler lock database.
+  AUTOSCALER_LOCK_DB_CONNECTION_CONFIG_MAX_OPEN_CONNECTIONS: "100"
+
+  # The duration defines how long does the Autoscaler Metrics Collector
+  # aggregate collected instance metrics.
+  AUTOSCALER_METRICS_COLLECTOR_COLLECTOR_COLLECT_INTERVAL: "30s"
+
+  # The duration defines how long does the Autoscaler Metrics Collector reload
+  # data from policy database.
+  AUTOSCALER_METRICS_COLLECTOR_COLLECTOR_REFRESH_INTERVAL: "60s"
+
+  # The duration defines how long does the Autoscaler Metrics Collector save
+  # instance metrics to database by batch.
+  AUTOSCALER_METRICS_COLLECTOR_COLLECTOR_SAVE_INTERVAL: "30s"
+
+  # The method type of the Autoscaler Metrics Collector to fetch metrics from
+  # cloudfoundry: polling or streaming.
+  AUTOSCALER_METRICS_COLLECTOR_COLLECT_METHOD: "streaming"
+
+  # The maximum age of a connection that can be reused for the Autoscaler policy
+  # database.
+  AUTOSCALER_POLICY_DB_CONNECTION_CONFIG_CONNECTION_MAX_LIFETIME: "60s"
+
+  # The maximum number of idle connections to the Autoscaler policy database.
+  AUTOSCALER_POLICY_DB_CONNECTION_CONFIG_MAX_IDLE_CONNECTIONS: "10"
+
+  # The maximum number of connections to the Autoscaler policy database.
+  AUTOSCALER_POLICY_DB_CONNECTION_CONFIG_MAX_OPEN_CONNECTIONS: "100"
+
+  # The duration defines how many days of appmetrics data does the Autoscaler
+  # Pruner kept for each pruning.
+  AUTOSCALER_PRUNER_APP_METRICS_DB_CUTOFF_DAYS: "30"
+
+  # The duration between two pruning opertions for appmetrics database in the
+  # Autoscaler Pruner.
+  AUTOSCALER_PRUNER_APP_METRICS_DB_REFRESH_INTERVAL: "24h"
+
+  # Whether to enable the Autoscaler Pruner's db lock. If there are more than
+  # one pruners, the value should be true
+  AUTOSCALER_PRUNER_ENABLE_DB_LOCK: "true"
+
+  # The duration defines how many days of instance metrics data does the
+  # Autoscaler Pruner kept for each pruning.
+  AUTOSCALER_PRUNER_INSTANCE_METRICS_DB_CUTOFF_DAYS: "30"
+
+  # The duration between two pruning opertions for instance metrics database in
+  # the Autoscaler Pruner.
+  AUTOSCALER_PRUNER_INSTANCE_METRICS_DB_REFRESH_INTERVAL: "24h"
+
+  # The interval for each Autoscaler Pruner instance to retry to get database
+  # lock.
+  AUTOSCALER_PRUNER_LOCK_RETRY_INTERVAL: "10s"
+
+  # The maximum duration of a Autoscaler Pruner instance could hold the database
+  # lock.
+  AUTOSCALER_PRUNER_LOCK_TTL: "15s"
+
+  # The duration defines how many days of the scaling history data does the
+  # Autoscaler Pruner kept for each pruning.
+  AUTOSCALER_PRUNER_SCALING_ENGINE_DB_CUTOFF_DAYS: "30"
+
+  # The duration between two pruning opertions for scalingengine database in the
+  # Autoscaler Pruner.
+  AUTOSCALER_PRUNER_SCALING_ENGINE_DB_FRESH_INTERVAL: "24h"
+
+  # The maximum age of a connection that can be reused for the Autoscaler
+  # Scaling Engine database.
+  AUTOSCALER_SCALING_ENGINE_DB_CONNECTION_CONFIG_CONNECTION_MAX_LIFETIME: "60s"
+
+  # The maximum number of idle connections to the Autoscaler Scaling Engine
+  # database.
+  AUTOSCALER_SCALING_ENGINE_DB_CONNECTION_CONFIG_MAX_IDLE_CONNECTIONS: "10"
+
+  # The maximum number of connections to the Autoscaler Scaling Engine database.
+  AUTOSCALER_SCALING_ENGINE_DB_CONNECTION_CONFIG_MAX_OPEN_CONNECTIONS: "100"
+
+  # The time interval to emit health metrics for the Autoscaler Scaling Engine."
+  AUTOSCALER_SCALING_ENGINE_HEALTH_EMIT_INTERVAL: "15s"
+
+  # The lock number of the Autoscaler Scaling Engine to do synchronization for
+  # multiple scaling requests.
+  AUTOSCALER_SCALING_ENGINE_LOCK_SIZE: "32"
+
+  # The duration defines how long does the Autoscaler Scaling Engine to
+  # synchronize its schedules with the Autoscaler Scheduler database.
+  AUTOSCALER_SCALING_ENGINE_SYNCHRONIZER_ACTIVE_SCHEDULE_SYNC_INTERVAL: "600s"
+
+  # The maximum age of a connection that can be reused for the Autoscaler
+  # Scheduler database.
+  AUTOSCALER_SCHEDULER_DB_CONNECTION_CONFIG_CONNECTION_MAX_LIFETIME: "60s"
+
+  # The maximum number of idle connections to the Autoscaler Scheduler database.
+  AUTOSCALER_SCHEDULER_DB_CONNECTION_CONFIG_MAX_IDLE_CONNECTIONS: "10"
+
+  # The maximum number of connections to the Autoscaler Scaling Engine database.
+  AUTOSCALER_SCHEDULER_DB_CONNECTION_CONFIG_MAX_OPEN_CONNECTIONS: "100"
+
+  # Rescheduling interval for quartz job for the Autoscaler Scheduler, in
+  # milliseconds.
+  AUTOSCALER_SCHEDULER_JOB_RESCHEDULE_INTERVAL_MILISECOND: "100"
+
+  # Maximum number of jobs can be re-scheduled in the Autoscaler Scheduler.
+  AUTOSCALER_SCHEDULER_JOB_RESCHEDULE_MAXCOUNT: "6"
+
+  # Maximum number of notification sent to Autoscaler Scaling Engine for job
+  # re-schedule.
+  AUTOSCALER_SCHEDULER_NOTIFICATION_RESCHEDULE_MAXCOUNT: "3"
+
+  # Idle connection timeout for the Autoscaler Service Broker database, in
+  # seconds.
+  AUTOSCALER_SERVICE_BROKER_DB_CONFIG_IDLE_TIMEOUT: "1000"
+
+  # The maximum number of connections to the Autoscaler Service Broker database.
+  AUTOSCALER_SERVICE_BROKER_DB_CONFIG_MAX_CONNECTIONS: "10"
+
+  # The minimum number of connections to the Autoscaler Service Broker database.
+  AUTOSCALER_SERVICE_BROKER_DB_CONFIG_MIN_CONNECTIONS: "0"
+
+  # The timeout in milliseconds for http request from Autoscaler Service Broker
+  # to other Autoscaler components.
+  AUTOSCALER_SERVICE_BROKER_HTTP_REQUEST_TIMEOUT: "5000"
+
+  # Whether Autoscaler is provided as a cloudfoundry service, default is false.
+  AUTOSCALER_SERVICE_OFFERING_ENABLED: "false"
+
+  # List of allow / deny rules for the blobstore internal server. Will be
+  # followed by 'deny all'. Each entry must be follow by a semicolon.
+  BLOBSTORE_ACCESS_RULES: "allow 10.0.0.0/8; allow 172.16.0.0/12; allow 192.168.0.0/16;"
+
+  # Maximal allowed file size for upload to blobstore, in megabytes.
+  BLOBSTORE_MAX_UPLOAD_SIZE: "5000"
+
+  # For requests to service brokers, this is the HTTP (open and read) timeout
+  # setting, in seconds.
+  BROKER_CLIENT_TIMEOUT_SECONDS: "70"
+
+  # The set of CAT test suites to run. If not specified it falls back to a
+  # hardwired set of suites.
+  CATS_SUITES: ~
+
+  # The key used to encrypt entries in the CC database
+  CC_DB_CURRENT_KEY_LABEL: ""
+
+  # URI for a CDN to use for buildpack downloads.
+  CDN_URI: ""
+
+  # Expiration for generated certificates (in days)
+  CERT_EXPIRATION: "10950"
+
+  # The Oauth2 authorities available to the cluster administrator.
+  CLUSTER_ADMIN_AUTHORITIES: "scim.write,scim.read,openid,cloud_controller.admin,clients.read,clients.write,doppler.firehose,routing.router_groups.read,routing.router_groups.write"
+
+  # 'build' attribute in the /v2/info endpoint
+  CLUSTER_BUILD: "2.0.2"
+
+  # 'description' attribute in the /v2/info endpoint
+  CLUSTER_DESCRIPTION: "SUSE Cloud Foundry"
+
+  # 'name' attribute in the /v2/info endpoint
+  CLUSTER_NAME: "SCF"
+
+  # 'version' attribute in the /v2/info endpoint
+  CLUSTER_VERSION: "2"
+
+  # The standard amount of disk (in MB) given to an application when not
+  # overriden by the user via manifest, command line, etc.
+  DEFAULT_APP_DISK_IN_MB: "1024"
+
+  # The standard amount of memory (in MB) given to an application when not
+  # overriden by the user via manifest, command line, etc.
+  DEFAULT_APP_MEMORY: "1024"
+
+  # If set apps pushed to spaces that allow SSH access will have SSH enabled by
+  # default.
+  DEFAULT_APP_SSH_ACCESS: "true"
+
+  # The default stack to use if no custom stack is specified by an app.
+  DEFAULT_STACK: "sle12"
+
+  # The container disk capacity the cell should manage. If this capacity is
+  # larger than the actual disk quota of the cell component, over-provisioning
+  # will occur.
+  DIEGO_CELL_DISK_CAPACITY_MB: "auto"
+
+  # The memory capacity the cell should manage. If this capacity is larger than
+  # the actual memory of the cell component, over-provisioning will occur.
+  DIEGO_CELL_MEMORY_CAPACITY_MB: "auto"
+
+  # Maximum network transmission unit length in bytes for application
+  # containers.
+  DIEGO_CELL_NETWORK_MTU: "1400"
+
+  # A CIDR subnet mask specifying the range of subnets available to be assigned
+  # to containers.
+  DIEGO_CELL_SUBNET: "10.38.0.0/16"
+
+  # Disable external buildpacks. Only admin buildpacks and system buildpacks
+  # will be available to users.
+  DISABLE_CUSTOM_BUILDPACKS: "false"
+
+  # The host to ping for confirmation of DNS resolution.
+  DNS_HEALTH_CHECK_HOST: "127.0.0.1"
+
+  # Base domain of the SCF cluster.
+  # Example: "my-scf-cluster.com"
+  DOMAIN: ~
+
+  # The number of versions of an application to keep. You will be able to
+  # rollback to this amount of versions.
+  DROPLET_MAX_STAGED_STORED: "5"
+
+  # By default, Cloud Foundry does not enable Cloud Controller request logging.
+  # To enable this feature, you must set this property to "true". You can learn
+  # more about the format of the logs here
+  # https://docs.cloudfoundry.org/loggregator/cc-uaa-logging.html#cc
+  ENABLE_SECURITY_EVENT_LOGGING: "false"
+
+  # Enables setting the X-Forwarded-Proto header if SSL termination happened
+  # upstream and the header value was set incorrectly. When this property is set
+  # to true, the gorouter sets the header X-Forwarded-Proto to https. When this
+  # value set to false, the gorouter sets the header X-Forwarded-Proto to the
+  # protocol of the incoming request.
+  FORCE_FORWARDED_PROTO_AS_HTTPS: "false"
+
+  # AppArmor profile name for garden-runc; set this to empty string to disable
+  # AppArmor support
+  GARDEN_APPARMOR_PROFILE: "garden-default"
+
+  # URL pointing to the Docker registry used for fetching Docker images. If not
+  # set, the Docker service default is used.
+  GARDEN_DOCKER_REGISTRY: "registry-1.docker.io"
+
+  # Override DNS servers to be used in containers; defaults to the same as the
+  # host.
+  GARDEN_LINUX_DNS_SERVER: ""
+
+  # The filesystem driver to use (btrfs or overlay-xfs).
+  GARDEN_ROOTFS_DRIVER: "btrfs"
+
+  # Location of the proxy to use for secure web access.
+  HTTPS_PROXY: ~
+
+  # Location of the proxy to use for regular web access.
+  HTTP_PROXY: ~
+
+  # A comma-separated whitelist of insecure Docker registries in the form of
+  # '&#60;HOSTNAME|IP>:PORT'. Each registry must be quoted separately.
+  #
+  # Example: "\"docker-registry.example.com:80\", \"hello.example.org:443\""
+  INSECURE_DOCKER_REGISTRIES: ""
+
+  KUBERNETES_CLUSTER_DOMAIN: ~
+
+  # The cluster's log level: off, fatal, error, warn, info, debug, debug1,
+  # debug2.
+  LOG_LEVEL: "info"
+
+  # The maximum amount of disk a user can request for an application via
+  # manifest, command line, etc., in MB. See also DEFAULT_APP_DISK_IN_MB for the
+  # standard amount.
+  MAX_APP_DISK_IN_MB: "2048"
+
+  # Maximum health check timeout that can be set for an app, in seconds.
+  MAX_HEALTH_CHECK_TIMEOUT: "180"
+
+  # The time allowed for the MySQL server to respond to healthcheck queries, in
+  # milliseconds.
+  MYSQL_PROXY_HEALTHCHECK_TIMEOUT: "30000"
+
+  # Sets the maximum allowed size of the client request body, specified in the
+  # “Content-Length” request header field, in megabytes. If the size in a
+  # request exceeds the configured value, the 413 (Request Entity Too Large)
+  # error is returned to the client. Please be aware that browsers cannot
+  # correctly display this error. Setting size to 0 disables checking of client
+  # request body size. This limits application uploads, buildpack uploads, etc.
+  NGINX_MAX_REQUEST_BODY_SIZE: "2048"
+
+  # Comma separated list of IP addresses and domains which should not be
+  # directoed through a proxy, if any.
+  NO_PROXY: ~
+
+  # Comma separated list of white-listed options that may be set during create
+  # or bind operations.
+  # Example:
+  # "uid,gid,allow_root,allow_other,nfs_uid,nfs_gid,auto_cache,fsname,username,password"
+  PERSI_NFS_ALLOWED_OPTIONS: "uid,gid,auto_cache,username,password"
+
+  # Comma separated list of default values for nfs mount options. If a default
+  # is specified with an option not included in PERSI_NFS_ALLOWED_OPTIONS, then
+  # this default value will be set and it won't be overridable.
+  PERSI_NFS_DEFAULT_OPTIONS: ~
+
+  # Comma separated list of white-listed options that may be accepted in the
+  # mount_config options. Note a specific 'sloppy_mount:true' volume option
+  # tells the driver to ignore non-white-listed options, while a
+  # 'sloppy_mount:false' tells the driver to fail fast instead when receiving a
+  # non-white-listed option."
+  #
+  # Example:
+  # "allow_root,allow_other,nfs_uid,nfs_gid,auto_cache,sloppy_mount,fsname"
+  PERSI_NFS_DRIVER_ALLOWED_IN_MOUNT: "auto_cache"
+
+  # Comma separated list of white-listed options that may be configured in
+  # supported in the mount_config.source URL query params
+  #
+  # Example: "uid,gid,auto-traverse-mounts,dircache"
+  PERSI_NFS_DRIVER_ALLOWED_IN_SOURCE: "uid,gid"
+
+  # Comma separated list default values for options that may be configured in
+  # the mount_config options, formatted as 'option:default'. If an option is not
+  # specified in the volume mount, or the option is not white-listed, then the
+  # specified default value will be used instead.
+  #
+  # Example:
+  # "allow_root:false,nfs_uid:2000,nfs_gid:2000,auto_cache:true,sloppy_mount:true"
+  PERSI_NFS_DRIVER_DEFAULT_IN_MOUNT: "auto_cache:true"
+
+  # Comma separated list of default values for options in the source URL query
+  # params, formatted as 'option:default'. If an option is not specified in the
+  # volume mount, or the option is not white-listed, then the specified default
+  # value will be applied.
+  PERSI_NFS_DRIVER_DEFAULT_IN_SOURCE: ~
+
+  # Disable Persi NFS driver
+  PERSI_NFS_DRIVER_DISABLE: "false"
+
+  # LDAP server host name or ip address (required for LDAP integration only)
+  PERSI_NFS_DRIVER_LDAP_HOST: ""
+
+  # LDAP server port (required for LDAP integration only)
+  PERSI_NFS_DRIVER_LDAP_PORT: "389"
+
+  # LDAP server protocol (required for LDAP integration only)
+  PERSI_NFS_DRIVER_LDAP_PROTOCOL: "tcp"
+
+  # LDAP service account user name (required for LDAP integration only)
+  PERSI_NFS_DRIVER_LDAP_USER: ""
+
+  # LDAP fqdn for user records we will search against when looking up user uids
+  # (required for LDAP integration only)
+  # Example: "cn=Users,dc=corp,dc=test,dc=com"
+  PERSI_NFS_DRIVER_LDAP_USER_FQDN: ""
+
+  # Certficates to add to the rootfs trust store. Multiple certs are possible by
+  # concatenating their definitions into one big block of text.
+  ROOTFS_TRUSTED_CERTS: ""
+
+  # The algorithm used by the router to distribute requests for a route across
+  # backends. Supported values are round-robin and least-connection.
+  ROUTER_BALANCING_ALGORITHM: "round-robin"
+
+  # How to handle client certificates. Supported values are none, request, or
+  # require. See
+  # https://docs.cloudfoundry.org/adminguide/securing-traffic.html#gorouter_mutual_auth
+  # for more information.
+  ROUTER_CLIENT_CERT_VALIDATION: "request"
+
+  # How to handle the x-forwarded-client-cert (XFCC) HTTP header. Supported
+  # values are always_forward, forward, and sanitize_set. See
+  # https://docs.cloudfoundry.org/concepts/http-routing.html for more
+  # information.
+  ROUTER_FORWARDED_CLIENT_CERT: "always_forward"
+
+  # The log destination to talk to. This has to point to a syslog server.
+  SCF_LOG_HOST: ~
+
+  # The port used by rsyslog to talk to the log destination. It defaults to 514,
+  # the standard port of syslog.
+  SCF_LOG_PORT: "514"
+
+  # The protocol used by rsyslog to talk to the log destination. The allowed
+  # values are tcp, and udp. The default is tcp.
+  SCF_LOG_PROTOCOL: "tcp"
+
+  # Timeout for staging an app, in seconds.
+  STAGING_TIMEOUT: "900"
+
+  # Support contact information for the cluster
+  SUPPORT_ADDRESS: "support@example.com"
+
+  # TCP routing domain of the SCF cluster; only used for testing;
+  # Example: "tcp.my-scf-cluster.com"
+  TCP_DOMAIN: ~
+
+  # Concatenation of trusted CA certificates to be made available on the cell.
+  TRUSTED_CERTS: ~
+
+  # The host name of the UAA server (root zone)
+  UAA_HOST: ~
+
+  # The tcp port the UAA server (root zone) listens on for requests.
+  UAA_PORT: "2793"
+
+  # Whether or not to use privileged containers for buildpack based
+  # applications. Containers with a docker-image-based rootfs will continue to
+  # always be unprivileged.
+  USE_DIEGO_PRIVILEGED_CONTAINERS: "false"
+
+  # Whether or not to use privileged containers for staging tasks.
+  USE_STAGER_PRIVILEGED_CONTAINERS: "false"
+
+# The sizing section contains configuration to change each individual instance
+# group. Due to limitations on the allowable names, any dashes ("-") in the
+# instance group names are replaced with underscores ("_").
+sizing:
+  # The adapter instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # Also: adapter, loggregator_agent
+  adapter:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The adapter instance group can scale between 1 and 65535 instances.
+    # For high availability it needs at least 2 instances.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 2000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 78
+      limit: ~
+
+  # The api instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - authorize-internal-ca: Install both internal and UAA CA certificates
+  #
+  # - patch-properties: Dummy BOSH job used to host parameters that are used in
+  #   SCF patches for upstream bugs
+  #
+  # - cloud_controller_ng: The Cloud Controller provides primary Cloud Foundry
+  #   API that is by the CF CLI. The Cloud Controller uses a database to keep
+  #   tables for organizations, spaces, apps, services, service instances, user
+  #   roles, and more. Typically multiple instances of Cloud Controller are load
+  #   balanced.
+  #
+  # - route_registrar: Used for registering routes
+  #
+  # Also: loggregator_agent, statsd_injector, go-buildpack, binary-buildpack,
+  # nodejs-buildpack, ruby-buildpack, php-buildpack, python-buildpack,
+  # staticfile-buildpack, java-buildpack, dotnet-core-buildpack
+  api:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The api instance group can scale between 1 and 65535 instances.
+    # For high availability it needs at least 2 instances.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 4000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 2421
+      limit: ~
+
+  # The autoscaler-actors instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - authorize-internal-ca: Install both internal and UAA CA certificates
+  #
+  # Also: scalingengine, scheduler, pruner
+  autoscaler_actors:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The autoscaler-actors instance group can scale between 0 and 3 instances.
+    # For high availability it needs at least 2 instances.
+    count: 0
+
+    # Unit [millicore]
+    cpu:
+      request: 2000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 1024
+      limit: ~
+
+  # The autoscaler-api instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - route_registrar: Used for registering routes
+  #
+  # Also: apiserver, servicebroker
+  autoscaler_api:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The autoscaler-api instance group can scale between 0 and 3 instances.
+    # For high availability it needs at least 2 instances.
+    count: 0
+
+    # Unit [millicore]
+    cpu:
+      request: 2000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 256
+      limit: ~
+
+  # The autoscaler-metrics instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - authorize-internal-ca: Install both internal and UAA CA certificates
+  #
+  # Also: metricscollector, eventgenerator
+  autoscaler_metrics:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The autoscaler-metrics instance group can scale between 0 and 3 instances.
+    # For high availability it needs at least 2 instances.
+    count: 0
+
+    # Unit [millicore]
+    cpu:
+      request: 4000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 1024
+      limit: ~
+
+  # The autoscaler-postgres instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - postgres: The Postgres server provides a single instance Postgres database
+  #   that can be used with the Cloud Controller or the UAA. It does not provide
+  #   highly-available configuration.
+  autoscaler_postgres:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The autoscaler-postgres instance group can scale between 0 and 3
+    # instances.
+    # For high availability it needs at least 2 instances.
+    count: 0
+
+    # Unit [millicore]
+    cpu:
+      request: 2000
+      limit: ~
+
+    disk_sizes:
+      postgres_data: 100
+
+    # Unit [MiB]
+    memory:
+      request: 1024
+      limit: ~
+
+  # The blobstore instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - route_registrar: Used for registering routes
+  #
+  # Also: blobstore, loggregator_agent
+  blobstore:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The blobstore instance group cannot be scaled.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 2000
+      limit: ~
+
+    disk_sizes:
+      blobstore_data: 50
+
+    # Unit [MiB]
+    memory:
+      request: 420
+      limit: ~
+
+  # The cc-clock instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - authorize-internal-ca: Install both internal and UAA CA certificates
+  #
+  # - cloud_controller_clock: The Cloud Controller clock periodically schedules
+  #   Cloud Controller clean up tasks for app usage events, audit events, failed
+  #   jobs, and more. Only single instance of this job is necessary.
+  #
+  # Also: loggregator_agent, statsd_injector
+  cc_clock:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The cc-clock instance group can scale between 1 and 3 instances.
+    # For high availability it needs at least 2 instances.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 2000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 789
+      limit: ~
+
+  # The cc-uploader instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - authorize-internal-ca: Install both internal and UAA CA certificates
+  #
+  # Also: tps, cc_uploader, loggregator_agent
+  cc_uploader:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The cc-uploader instance group can scale between 1 and 3 instances.
+    # For high availability it needs at least 2 instances.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 4000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 129
+      limit: ~
+
+  # The cc-worker instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - authorize-internal-ca: Install both internal and UAA CA certificates
+  #
+  # - cloud_controller_worker: Cloud Controller worker processes background
+  #   tasks submitted via the.
+  #
+  # Also: loggregator_agent
+  cc_worker:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The cc-worker instance group can scale between 1 and 65535 instances.
+    # For high availability it needs at least 2 instances.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 2000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 753
+      limit: ~
+
+  # The cf-usb instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - authorize-internal-ca: Install both internal and UAA CA certificates
+  #
+  # - route_registrar: Used for registering routes
+  #
+  # Also: cf-usb
+  cf_usb:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The cf-usb instance group can scale between 1 and 3 instances.
+    # For high availability it needs at least 2 instances.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 2000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 117
+      limit: ~
+
+  # The consul instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # Also: consul_agent
+  consul:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The consul instance group can scale between 0 and 1 instances.
+    # The instance count must be an odd number (not divisible by 2).
+    # For high availability it needs at least 1 instances.
+    count: 0
+
+    # Unit [millicore]
+    cpu:
+      request: 1000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 256
+      limit: ~
+
+  # The diego-access instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - authorize-internal-ca: Install both internal and UAA CA certificates
+  #
+  # Also: ssh_proxy, loggregator_agent, file_server
+  diego_access:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The diego-access instance group can scale between 1 and 3 instances.
+    # For high availability it needs at least 2 instances.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 2000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 123
+      limit: ~
+
+  # The diego-api instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - authorize-internal-ca: Install both internal and UAA CA certificates
+  #
+  # - patch-properties: Dummy BOSH job used to host parameters that are used in
+  #   SCF patches for upstream bugs
+  #
+  # Also: bbs, cfdot, loggregator_agent, locket
+  diego_api:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The diego-api instance group can scale between 1 and 3 instances.
+    # For high availability it needs at least 2 instances.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 2000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 310
+      limit: ~
+
+  # The diego-brain instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - authorize-internal-ca: Install both internal and UAA CA certificates
+  #
+  # - patch-properties: Dummy BOSH job used to host parameters that are used in
+  #   SCF patches for upstream bugs
+  #
+  # Also: auctioneer, cfdot, loggregator_agent
+  diego_brain:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The diego-brain instance group can scale between 1 and 3 instances.
+    # For high availability it needs at least 2 instances.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 4000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 99
+      limit: ~
+
+  # The diego-cell instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - authorize-internal-ca: Install both internal and UAA CA certificates
+  #
+  # - wait-for-uaa: Wait for UAA to be ready before starting any jobs
+  #
+  # - patch-properties: Dummy BOSH job used to host parameters that are used in
+  #   SCF patches for upstream bugs
+  #
+  # Also: rep, cfdot, route_emitter, garden, groot-btrfs,
+  # cflinuxfs2-rootfs-setup, opensuse42-rootfs-setup, cf-sle12-setup,
+  # loggregator_agent, nfsv3driver
+  diego_cell:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # The diego-cell instance group can scale between 1 and 254 instances.
+    # For high availability it needs at least 3 instances.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 4000
+      limit: ~
+
+    disk_sizes:
+      grootfs_data: 50
+
+    # Unit [MiB]
+    memory:
+      request: 4677
+      limit: ~
+
+  # The doppler instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # Also: doppler, loggregator_agent
+  doppler:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The doppler instance group can scale between 1 and 65535 instances.
+    # For high availability it needs at least 2 instances.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 2000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 390
+      limit: ~
+
+  # The log-api instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - authorize-internal-ca: Install both internal and UAA CA certificates
+  #
+  # - route_registrar: Used for registering routes
+  #
+  # Also: loggregator_trafficcontroller, loggregator_agent, reverse_log_proxy
+  log_api:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The log-api instance group can scale between 1 and 65535 instances.
+    # For high availability it needs at least 2 instances.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 2000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 250
+      limit: ~
+
+  # The mysql instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - patch-properties: Dummy BOSH job used to host parameters that are used in
+  #   SCF patches for upstream bugs
+  #
+  # Also: mysql, proxy
+  mysql:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The mysql instance group can scale between 1 and 3 instances.
+    # For high availability it needs at least 2 instances.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 2000
+      limit: ~
+
+    disk_sizes:
+      mysql_data: 20
+
+    # Unit [MiB]
+    memory:
+      request: 2950
+      limit: ~
+
+  # The nats instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - nats: The NATS server provides publish-subscribe messaging system for the
+  #   Cloud Controller, the DEA , HM9000, and other Cloud Foundry components.
+  #
+  # Also: loggregator_agent
+  nats:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The nats instance group can scale between 1 and 3 instances.
+    # For high availability it needs at least 2 instances.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 2000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 60
+      limit: ~
+
+  # The nfs-broker instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - authorize-internal-ca: Install both internal and UAA CA certificates
+  #
+  # Also: loggregator_agent, nfsbroker
+  nfs_broker:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # The nfs-broker instance group can scale between 1 and 3 instances.
+    # For high availability it needs at least 2 instances.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 2000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 63
+      limit: ~
+
+  # The post-deployment-setup instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - authorize-internal-ca: Install both internal and UAA CA certificates
+  #
+  # - uaa-create-user: Create the initial user in UAA
+  #
+  # - configure-scf: Uses the cf CLI to configure SCF once it's online (things
+  #   like proxy settings, service brokers, etc.)
+  post_deployment_setup:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The post-deployment-setup instance group cannot be scaled.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 1000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 256
+      limit: ~
+
+  # The postgres instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - postgres: The Postgres server provides a single instance Postgres database
+  #   that can be used with the Cloud Controller or the UAA. It does not provide
+  #   highly-available configuration.
+  postgres:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The postgres instance group can scale between 1 and 3 instances.
+    # For high availability it needs at least 2 instances.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 2000
+      limit: ~
+
+    disk_sizes:
+      postgres_data: 20
+
+    # Unit [MiB]
+    memory:
+      request: 3072
+      limit: ~
+
+  # The router instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - authorize-internal-ca: Install both internal and UAA CA certificates
+  #
+  # - gorouter: Gorouter maintains a dynamic routing table based on updates
+  #   received from NATS and (when enabled) the Routing API. This routing table
+  #   maps URLs to backends. The router finds the URL in the routing table that
+  #   most closely matches the host header of the request and load balances
+  #   across the associated backends.
+  #
+  # Also: loggregator_agent
+  router:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The router instance group can scale between 1 and 65535 instances.
+    # For high availability it needs at least 2 instances.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 4000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 135
+      limit: ~
+
+  # The routing-api instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - authorize-internal-ca: Install both internal and UAA CA certificates
+  #
+  # Also: loggregator_agent, routing-api
+  routing_api:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The routing-api instance group can scale between 1 and 3 instances.
+    # For high availability it needs at least 2 instances.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 4000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 114
+      limit: ~
+
+  # The secret-generation instance group contains the following jobs:
+  #
+  # - generate-secrets: This job will generate the secrets for the cluster
+  secret_generation:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The secret-generation instance group cannot be scaled.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 1000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 256
+      limit: ~
+
+  # The syslog-scheduler instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # Also: scheduler, loggregator_agent
+  syslog_scheduler:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The syslog-scheduler instance group can scale between 1 and 3 instances.
+    # For high availability it needs at least 2 instances.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 2000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 69
+      limit: ~
+
+  # The tcp-router instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - authorize-internal-ca: Install both internal and UAA CA certificates
+  #
+  # - wait-for-uaa: Wait for UAA to be ready before starting any jobs
+  #
+  # Also: tcp_router, loggregator_agent
+  tcp_router:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The tcp-router instance group can scale between 1 and 3 instances.
+    # For high availability it needs at least 2 instances.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 2000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 99
+      limit: ~
+
+    ports:
+      tcp_route:
+        count: 9
+</screen>
+ </sect1>
+ <sect1 xml:id="app.uaa.values.yaml">
+  <title>Complete UAA values.yaml file</title>
+
+  <para>
+   This is the UAA <filename>values.yaml</filename> configuration file that is
+   shipped with the &helm; charts. It provides a complete reference of
+   configuration options for UAA, and their default settings.
+  </para>
+
+<screen>---
 kube:
   external_ips: []
 
@@ -1528,51 +1965,10 @@ kube:
     username: ""
     password: ""
   organization: "cap"
-  auth: "rbac"</screen>
- </sect1>
- <sect1 xml:id="app.uaa.values.yaml">
-  <title>Complete UAA values.yaml file</title>
-
-  <para>
-   This is the UAA <filename>values.yaml</filename> configuration file that is
-   shipped with the &helm; charts. It provides a complete reference of
-   configuration options for UAA, and their default settings.
-  </para>
-
-<screen>---
-env:
-  # Base domain name of the UAA endpoint; `uaa.${DOMAIN}` must be correctly
-  # configured to point to this UAA instance
-  DOMAIN: ~
-
-  KUBE_SERVICE_DOMAIN_SUFFIX: ~
-
-  # The cluster's log level: off, fatal, error, warn, info, debug, debug1,
-  # debug2.
-  LOG_LEVEL: "info"
-
-  # The log destination to talk to. This has to point to a syslog server.
-  SCF_LOG_HOST: ~
-
-  # The port used by rsyslog to talk to the log destination. If not set it
-  # defaults to 514, the standard port of syslog.
-  SCF_LOG_PORT: ~
-
-  # The protocol used by rsyslog to talk to the log destination. The allowed
-  # values are tcp, and udp. The default is tcp.
-  SCF_LOG_PROTOCOL: "tcp"
-
-sizing:
+  auth: "rbac"
+config:
   # Flag to activate high-availability mode
   HA: false
-
-  # Global CPU configuration
-  cpu:
-    # Flag to activate cpu requests
-    requests: false
-
-    # Flag to activate cpu limits
-    limits: false
 
   # Global memory configuration
   memory:
@@ -1582,129 +1978,17 @@ sizing:
     # Flag to activate memory limits
     limits: false
 
-  # The mysql role contains the following jobs:
-  #
-  # - global-uaa-properties: Dummy BOSH job used to host global parameters that
-  #   are required to configure SCF / fissile
-  #
-  # - patch-properties: Dummy BOSH job used to host parameters that are used in
-  #   SCF patches for upstream bugs
-  #
-  # Also: mysql
-  mysql:
-    # Node affinity rules can be specified here
-    affinity: {}
+  # Global CPU configuration
+  cpu:
+    # Flag to activate cpu requests
+    requests: false
 
-    # Additional privileges can be specified here
-    capabilities: []
+    # Flag to activate cpu limits
+    limits: false
 
-    # The mysql role can scale between 1 and 3 instances.
-    # For high availability it needs at least 2 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    disk_sizes:
-      mysql_data: 20
-
-    # Unit [MiB]
-    memory:
-      request: 1779
-      limit: ~
-
-  # The mysql-proxy role contains the following jobs:
-  #
-  # - global-uaa-properties: Dummy BOSH job used to host global parameters that
-  #   are required to configure SCF / fissile
-  #
-  # - patch-properties: Dummy BOSH job used to host parameters that are used in
-  #   SCF patches for upstream bugs
-  #
-  # Also: proxy
-  mysql_proxy:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The mysql-proxy role can scale between 1 and 3 instances.
-    # For high availability it needs at least 2 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 63
-      limit: ~
-
-  # The secret-generation role contains the following jobs:
-  #
-  # - generate-uaa-secrets: This job will generate the secrets for the cluster
-  secret_generation:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The secret-generation role cannot be scaled.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 1000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 256
-      limit: ~
-
-  # The uaa role contains the following jobs:
-  #
-  # - global-uaa-properties: Dummy BOSH job used to host global parameters that
-  #   are required to configure SCF / fissile
-  #
-  # - uaa: The UAA is the identity management service for Cloud Foundry. It's
-  #   primary role is as an OAuth2 provider, issuing tokens for client
-  #   applications to use when they act on behalf of Cloud Foundry users. It can
-  #   also authenticate users with their Cloud Foundry credentials, and can act
-  #   as an SSO service using those credentials (or others). It has endpoints
-  #   for managing user accounts and for registering OAuth2 clients, as well as
-  #   various other management functions.
-  uaa:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The uaa role can scale between 1 and 65535 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 2205
-      limit: ~
-
+services:
+  loadbalanced: false
 secrets:
-  # The password of the admin client - a client named admin with uaa.admin as an
-  # authority.
-  UAA_ADMIN_CLIENT_SECRET: ~
-
   # PEM-encoded CA certificate used to sign the TLS certificate used by all
   # components to secure their communications.
   # This value uses a generated default.
@@ -1754,6 +2038,10 @@ secrets:
   # This value uses a generated default.
   UAADB_PASSWORD: ~
 
+  # The password of the admin client - a client named admin with uaa.admin as an
+  # authority.
+  UAA_ADMIN_CLIENT_SECRET: ~
+
   # The server's ssl certificate. The default is a self-signed certificate and
   # should always be replaced for production deployments.
   # This value uses a generated default.
@@ -1763,26 +2051,128 @@ secrets:
   # This value uses a generated default.
   UAA_SERVER_KEY: ~
 
-services:
-  loadbalanced: false
-kube:
-  external_ips: []
+env:
+  # Expiration for generated certificates (in days)
+  CERT_EXPIRATION: "10950"
 
-  # Increment this counter to rotate all generated secrets
-  secrets_generation_counter: 1
+  # Base domain name of the UAA endpoint; `uaa.${DOMAIN}` must be correctly
+  # configured to point to this UAA instance
+  DOMAIN: ~
 
-  storage_class:
-    persistent: "persistent"
-    shared: "shared"
+  KUBERNETES_CLUSTER_DOMAIN: ~
 
-  # Whether HostPath volume mounts are available
-  hostpath_available: false
+  # The cluster's log level: off, fatal, error, warn, info, debug, debug1,
+  # debug2.
+  LOG_LEVEL: "info"
 
-  registry:
-    hostname: "registry.suse.com"
-    username: ""
-    password: ""
-  organization: "cap"
-  auth: "rbac"</screen>
+  # The log destination to talk to. This has to point to a syslog server.
+  SCF_LOG_HOST: ~
+
+  # The port used by rsyslog to talk to the log destination. It defaults to 514,
+  # the standard port of syslog.
+  SCF_LOG_PORT: "514"
+
+  # The protocol used by rsyslog to talk to the log destination. The allowed
+  # values are tcp, and udp. The default is tcp.
+  SCF_LOG_PROTOCOL: "tcp"
+
+# The sizing section contains configuration to change each individual instance
+# group. Due to limitations on the allowable names, any dashes ("-") in the
+# instance group names are replaced with underscores ("_").
+sizing:
+  # The mysql instance group contains the following jobs:
+  #
+  # - global-uaa-properties: Dummy BOSH job used to host global parameters that
+  #   are required to configure SCF / fissile
+  #
+  # - patch-properties: Dummy BOSH job used to host parameters that are used in
+  #   SCF patches for upstream bugs
+  #
+  # Also: mysql, proxy
+  mysql:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The mysql instance group can scale between 1 and 3 instances.
+    # For high availability it needs at least 2 instances.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 2000
+      limit: ~
+
+    disk_sizes:
+      mysql_data: 20
+
+    # Unit [MiB]
+    memory:
+      request: 1900
+      limit: ~
+
+  # The secret-generation instance group contains the following jobs:
+  #
+  # - generate-secrets: This job will generate the secrets for the cluster
+  secret_generation:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The secret-generation instance group cannot be scaled.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 1000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 256
+      limit: ~
+
+  # The uaa instance group contains the following jobs:
+  #
+  # - global-uaa-properties: Dummy BOSH job used to host global parameters that
+  #   are required to configure SCF / fissile
+  #
+  # - wait-for-database: This is a pre-start job to delay starting the rest of
+  #   the role until a database connection is ready. Currently it only checks
+  #   that a response can be obtained from the server, and not that it responds
+  #   intelligently.
+  #
+  #
+  # - uaa: The UAA is the identity management service for Cloud Foundry. It's
+  #   primary role is as an OAuth2 provider, issuing tokens for client
+  #   applications to use when they act on behalf of Cloud Foundry users. It can
+  #   also authenticate users with their Cloud Foundry credentials, and can act
+  #   as an SSO service using those credentials (or others). It has endpoints
+  #   for managing user accounts and for registering OAuth2 clients, as well as
+  #   various other management functions.
+  uaa:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # Additional privileges can be specified here
+    capabilities: []
+
+    # The uaa instance group can scale between 1 and 65535 instances.
+    # For high availability it needs at least 2 instances.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 2000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 2205
+      limit: ~</screen>
  </sect1>
 </appendix>
