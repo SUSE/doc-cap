@@ -421,11 +421,6 @@ Custom TCP Rule 	TCP 	20000-20009 	0.0.0.0/0 	TCP Routing</screen>
    </listitem>
    <listitem>
     <para>
-     diego_locket
-    </para>
-   </listitem>
-   <listitem>
-    <para>
      diego_access
     </para>
    </listitem>
@@ -476,8 +471,6 @@ sizing:
   routing_api:
     capabilities: ["ALL"]
   router:
-    capabilities: ["ALL"]
-  diego_locket:
     capabilities: ["ALL"]
   diego_access:
     capabilities: ["ALL"]

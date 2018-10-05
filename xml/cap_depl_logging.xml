@@ -77,13 +77,13 @@ router/0:/# cd /var/vcap/sys/log
 
 router/0:/var/vcap/sys/log# ls -R
 .:
-gorouter  metron_agent
+gorouter  loggregator_agent
 
 ./gorouter:
 access.log  gorouter.err.log  gorouter.log  post-start.err.log	post-start.log
 
-./metron_agent:
-metron.log</screen>
+./loggregator_agent:
+agent.log</screen>
       </listitem>
      </orderedlist>
     </listitem>
