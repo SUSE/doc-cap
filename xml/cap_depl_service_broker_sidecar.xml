@@ -164,20 +164,20 @@
     xC8x/+zT0QkvcRJBio5gg670+25KJQ==
     -----END CERTIFICATE-----
    
-   # UAA cert
-   UAA_CA_CERT: |
-     -----BEGIN CERTIFICATE-----
-     MIIE8jCCAtqgAwIBAgIUSI02lj0a0InLb/zMrjNgW5d8EygwDQYJKoZIhvcNAQEN
-     [...]
-     to2GI8rPMb9W9fd2WwUXGEHTc+PqTg==
-     -----END CERTIFICATE-----
+  # UAA cert
+  UAA_CA_CERT: |
+    -----BEGIN CERTIFICATE-----
+    MIIE8jCCAtqgAwIBAgIUSI02lj0a0InLb/zMrjNgW5d8EygwDQYJKoZIhvcNAQEN
+    [...]
+    to2GI8rPMb9W9fd2WwUXGEHTc+PqTg==
+    -----END CERTIFICATE-----
     
 kube:
-   organization: cap
-   registry: 
-     hostname: "registry.suse.com"
-     username: ""
-     password: ""</screen>
+  organization: cap
+  registry: 
+    hostname: "registry.suse.com"
+    username: ""
+    password: ""</screen>
  </sect1>
  <sect1 xml:id="sec.cap.configure-mysql">
   <title>Deploying the MySQL Chart</title>
