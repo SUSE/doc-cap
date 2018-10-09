@@ -119,7 +119,6 @@ NAME            REVISION  UPDATED                  STATUS    CHART           NAM
 
 <screen>&prompt.user;kubectl delete statefulsets --all --namespace uaa
 statefulset "mysql" deleted
-statefulset "mysql-proxy" deleted
 statefulset "uaa" deleted
 &prompt.user;helm delete --purge susecf-uaa
 release "susecf-uaa" deleted

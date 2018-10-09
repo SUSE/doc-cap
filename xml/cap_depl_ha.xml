@@ -47,31 +47,18 @@ Another way is to use Perl to extract the information for each role from the
 namespace.
 </para>
 
-<note>
-    <title>mysql_proxy does not scale</title>
-    <para>
-    Currently <literal>mysql_proxy</literal> does not scale. This will change in
-    the &productname; 1.2 release, and then scaling will be supported.
-</para>
-</note>
-
 <screen>
 &prompt.user;helm inspect values suse/uaa | \
 perl -ne '/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail|scale|count/ }'
- 60:    # The mysql role can scale between 1 and 3 instances.
- 61:    # For high availability it needs at least 2 instances.
- 62:    count: 1
- 93:    # The mysql-proxy role can scale between 1 and 3 instances.
- 94:    # For high availability it needs at least 2 instances.
- 95:    count: 1
- 117:    # The secret-generation role cannot be scaled.
- 118:    count: 1
- 140:  #   for managing user accounts and for registering OAuth2 clients, as well as
- 149:    # The uaa role can scale between 1 and 65535 instances.
- 150:    count: 1
- 230:  # Increment this counter to rotate all generated secrets
- 231:  secrets_generation_counter: 1
-</screen>
+151:    # The mysql instance group can scale between 1 and 3 instances.
+152:    # For high availability it needs at least 2 instances.
+153:    count: 1
+178:    # The secret-generation instance group cannot be scaled.
+179:    count: 1
+207:  #   for managing user accounts and for registering OAuth2 clients, as well as
+216:    # The uaa instance group can scale between 1 and 65535 instances.
+217:    # For high availability it needs at least 2 instances.
+218:    count: 1</screen>
 
 <para>
     The default <filename>values.yaml</filename> files are also included in this
@@ -142,6 +129,8 @@ sizing:
 </para>
 <screen>
 sizing:
+  adapter:
+    count: 7
   api:
     count: 6
   cc_clock:
@@ -162,11 +151,9 @@ sizing:
     count: 2
   diego_cell:
     count: 3
-  diego_locket:
-    count: 3
   doppler:
     count: 4
-  loggregator:
+  log-api:
     count: 7
   mysql:
     count: 3
@@ -180,10 +167,6 @@ sizing:
     count: 13
   routing_api:
     count: 3
-  syslog_adapter:
-    count: 7
-  syslog_rlp:
-    count: 7
   syslog_scheduler:
     count: 3
   tcp_router:
@@ -249,16 +232,6 @@ sizing:
         for <literal>.consul-lock.acquiring-lock</literal>.
     </para>
     
-<!-- TODO commenting this out until 1.2 release. cs june 28 2018, then revisiting
-    for correct information
-    <para>
-        Some roles cannot be scaled. <command>mysql_proxy</command> needs a 
-        proper active/passive configuration. <command>tcp_router</command> has 
-        no mechanism for exposing ports correctly. <command>blobstore</command> 
-        needs shared volume support and an active/passive configuration.
-    </para> -->
-    
-    <!-- this will change in 1.2 release  cs june 28 2018 -->   
     <para>
 Some roles follow an active/passive scaling model, meaning all pods except 
 the active one will be shown as NOT READY by &kube;. This is appropriate and 
