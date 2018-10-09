@@ -158,19 +158,19 @@
   
   # SCF cert
   CF_CA_CERT: |
-   -----BEGIN CERTIFICATE-----
-   MIIE8jCCAtqgAwIBAgIUT/Yu/Sv4UHl5zHZYZKCy5RKJqmYwDQYJKoZIhvcNAQEN
-   [...]
-   xC8x/+zT0QkvcRJBio5gg670+25KJQ==
-   -----END CERTIFICATE-----
+    -----BEGIN CERTIFICATE-----
+    MIIE8jCCAtqgAwIBAgIUT/Yu/Sv4UHl5zHZYZKCy5RKJqmYwDQYJKoZIhvcNAQEN
+    [...]
+    xC8x/+zT0QkvcRJBio5gg670+25KJQ==
+    -----END CERTIFICATE-----
    
    # UAA cert
-  UAA_CA_CERT: |
-   -----BEGIN CERTIFICATE-----
-   MIIE8jCCAtqgAwIBAgIUSI02lj0a0InLb/zMrjNgW5d8EygwDQYJKoZIhvcNAQEN
-   [...]
-   to2GI8rPMb9W9fd2WwUXGEHTc+PqTg==
-   -----END CERTIFICATE-----
+   UAA_CA_CERT: |
+     -----BEGIN CERTIFICATE-----
+     MIIE8jCCAtqgAwIBAgIUSI02lj0a0InLb/zMrjNgW5d8EygwDQYJKoZIhvcNAQEN
+     [...]
+     to2GI8rPMb9W9fd2WwUXGEHTc+PqTg==
+     -----END CERTIFICATE-----
     
 kube:
    organization: cap
@@ -258,25 +258,26 @@ suse/uaa                     2.13.3  A Helm chart for SUSE UAA</screen>
 
 <screen>env:
   # Database access credentials
-   SERVICE_POSTGRESQL_HOST: <replaceable>postgres.example.com</replaceable>
-   SERVICE_POSTGRESQL_PORT: 5432
-   SERVICE_POSTGRESQL_USER: <replaceable>pgsql-admin-user</replaceable>
-   SERVICE_POSTGRESQL_PASS: <replaceable>pgsql-admin-password</replaceable>
+  SERVICE_POSTGRESQL_HOST: <replaceable>postgres.example.com</replaceable>
+  SERVICE_POSTGRESQL_PORT: 5432
+  SERVICE_POSTGRESQL_USER: <replaceable>pgsql-admin-user</replaceable>
+  SERVICE_POSTGRESQL_PASS: <replaceable>pgsql-admin-password</replaceable>
+  
   # The SSL connection mode when connecting to the database.  For a list of
   # valid values, please see <link xlink:href="https://godoc.org/github.com/lib/pq"/>
-   SERVICE_POSTGRESQL_SSLMODE: disable
+  SERVICE_POSTGRESQL_SSLMODE: disable
   
   # CAP access credentials, from your original deployment configuration 
   # (see <xref linkend="sec.cap.configure-prod"/>)
-   CF_ADMIN_USER: <replaceable>admin</replaceable>
-   CF_ADMIN_PASSWORD: <replaceable>password</replaceable>
-   CF_DOMAIN: <replaceable>example.com</replaceable>
+  CF_ADMIN_USER: <replaceable>admin</replaceable>
+  CF_ADMIN_PASSWORD: <replaceable>password</replaceable>
+  CF_DOMAIN: <replaceable>example.com</replaceable>
   
   # Copy the certificates you extracted above, as shown in these
   # abbreviated examples, prefaced with the pipe character
   
   # SCF certificate
-   CF_CA_CERT: |
+  CF_CA_CERT: |
     -----BEGIN CERTIFICATE-----
     MIIE8jCCAtqgAwIBAgIUT/Yu/Sv4UHl5zHZYZKCy5RKJqmYwDQYJKoZIhvcNAQEN
     [...]
@@ -284,7 +285,7 @@ suse/uaa                     2.13.3  A Helm chart for SUSE UAA</screen>
     -----END CERTIFICATE-----
    
   # UAA certificate
-   UAA_CA_CERT: |
+  UAA_CA_CERT: |
     ----BEGIN CERTIFICATE-----
     MIIE8jCCAtqgAwIBAgIUSI02lj0a0InLb/zMrjNgW5d8EygwDQYJKoZIhvcNAQEN
     [...]
