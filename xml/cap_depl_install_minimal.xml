@@ -441,41 +441,39 @@ hostpath   kubernetes.io/host-path</screen>
   </para>
 
 <screen>env:    
-    # Enter the domain you created for your CAP cluster
-    DOMAIN: <replaceable>&exampledomain;</replaceable>
+  # Enter the domain you created for your CAP cluster
+  DOMAIN: <replaceable>&exampledomain;</replaceable>
     
-    # UAA host and port
-    UAA_HOST: uaa.<replaceable>&exampledomain;</replaceable>
-    UAA_PORT: 2793
+  # UAA host and port
+  UAA_HOST: uaa.<replaceable>&exampledomain;</replaceable>
+  UAA_PORT: 2793
 
 kube:
-    # # The IP address assigned to the kube node pointed to by the domain.
-    external_ips: ["<replaceable>&kubeip;</replaceable>"]
+  # # The IP address assigned to the kube node pointed to by the domain.
+  external_ips: ["<replaceable>&kubeip;</replaceable>"]
     
-    # Run kubectl get storageclasses
-    # to view your available storage classes
-    storage_class: 
-        persistent: "hostpath"
-        shared: "shared"
+  # Run kubectl get storageclasses
+  # to view your available storage classes
+  storage_class:
+    persistent: "hostpath"
+    shared: "shared"
         
-    # The registry the images will be fetched from. 
-    # The values below should work for
-    # a default installation from the SUSE registry.
-    registry: 
-        hostname: "registry.suse.com"
-        username: ""
-        password: ""
-    organization: "cap"
-
-    # Required for CaaSP 2
-    auth: rbac 
+  # The registry the images will be fetched from.
+  # The values below should work for
+  # a default installation from the SUSE registry.
+  registry:
+    hostname: "registry.suse.com"
+    username: ""
+    password: ""
+  organization: "cap"
+  auth: "rbac"
 
 secrets:
-    # Create a password for your CAP cluster
-    CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable> 
+  # Create a password for your CAP cluster
+  CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
     
-    # Create a password for your UAA client secret
-    UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable></screen>
+  # Create a password for your UAA client secret
+  UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable></screen>
 
   <note>
    <title>Protect UAA_ADMIN_CLIENT_SECRET</title>

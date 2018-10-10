@@ -173,7 +173,7 @@
     -----END CERTIFICATE-----
     
 kube:
-  organization: cap
+  organization: "cap"
   registry: 
     hostname: "registry.suse.com"
     username: ""
@@ -295,11 +295,11 @@ suse/uaa                     2.13.3  A Helm chart for SUSE UAA</screen>
   SERVICE_TYPE: postgres   
     
 kube:
-    organization: cap
-    registry: 
-      hostname: "registry.suse.com"
-      username: ""
-      password: ""</screen>
+  organization: "cap"
+  registry:
+    hostname: "registry.suse.com"
+    username: ""
+    password: ""</screen>
 
   <para>
    Create a namespace and install the chart:

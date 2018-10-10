@@ -106,9 +106,9 @@ agent.log</screen>
     values below are configured for an external ELK stack.
    </para>
 <screen>env:
-    SCF_LOG_HOST: elk.example.com
-    SCF_LOG_PORT: 5001
-    SCF_LOG_PROTOCOL: "tcp"</screen>
+  SCF_LOG_HOST: elk.example.com
+  SCF_LOG_PORT: 5001
+  SCF_LOG_PROTOCOL: "tcp"</screen>
   </sect2>
 
   <sect2 xml:id="sec.cap.log-elk">
