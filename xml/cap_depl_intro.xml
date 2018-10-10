@@ -31,7 +31,7 @@
   &scf; is designed to run on any Kubernetes cluster. This guide describes how
   to deploy it on
   <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_deployment/data/book_caasp_deployment.html">SUSE
-  Container as a Service (CaaS) Platform 2.0</link>.
+  Container as a Service (CaaS) Platform 3.0</link>.
  </para>
  <xi:include href="common_intro_target_audience_i.xml"/>
  <xi:include href="common_intro_available_doc_i.xml"/>
