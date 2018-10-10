@@ -24,17 +24,7 @@
    Maintenance updates are delivered as container images from the &suse;
    registry and applied with &helm;. (See the
    <link xlink:href="https://www.suse.com/releasenotes/">Release Notes</link>
-   for additional upgrade information.)
-   </para>
-   
-   <para>
-       The supported upgrade process is to apply all upgrades in order, without
-       skipping any. Do not change any sizing values during an upgrade. You may 
-       change sizing values after the upgrade (see 
-       <xref linkend="sec.cap.ha-prod-upgrade"/>).
-   </para>
-   <para>
-       Check for available updates:
+   for additional upgrade information.) Check for available updates:
   </para>
 
 <screen>&prompt.user;helm repo update
@@ -59,8 +49,8 @@ Update Complete. ⎈ Happy Helming!⎈</screen>
 <screen>&prompt.user;helm list
 NAME            REVISION  UPDATED                  STATUS    CHART           NAMESPACE
 <replaceable>susecf-console</replaceable>  1         Tue Aug 14 11:53:28 2018 DEPLOYED  console-2.0.0   stratos  
-<replaceable>susecf-scf</replaceable>      1         Tue Aug 14 10:58:16 2018 DEPLOYED  cf-2.12.0       scf      
-<replaceable>susecf-uaa</replaceable>      1         Tue Aug 14 10:49:30 2018 DEPLOYED  uaa-2.12.0      uaa
+<replaceable>susecf-scf</replaceable>      1         Tue Aug 14 10:58:16 2018 DEPLOYED  cf-2.11.0       scf      
+<replaceable>susecf-uaa</replaceable>      1         Tue Aug 14 10:49:30 2018 DEPLOYED  uaa-2.11.0      uaa
 
 &prompt.user;helm repo list
 NAME            URL                                             

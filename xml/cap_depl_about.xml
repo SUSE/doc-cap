@@ -319,20 +319,20 @@
   </figure>
 
   <para>
-   <xref linkend="fig.cap.internal-components"/> provides a look at &cap;'s
-   internal components and their functions.
+   <xref linkend="fig.cap.internal-servces"/> provides a look at &cap;'s
+   internal services and their functions.
   </para>
 
-  <figure xml:id="fig.cap.internal-components">
-   <title>&productname; Internal Components</title>
+  <figure xml:id="fig.cap.internal-servces">
+   <title>&productname; Internal Services</title>
    <mediaobject>
     <imageobject role="fo">
-     <imagedata fileref="cap-components.png" format="PNG" width="75%"/>
+     <imagedata fileref="cap-services.png" format="PNG" width="75%"/>
     </imageobject>
     <imageobject role="html">
-     <imagedata fileref="cap-components.png"/>
+     <imagedata fileref="cap-services.png"/>
     </imageobject>
-    <textobject role="description"><phrase>&cap;'s internal componnets and their
+    <textobject role="description"><phrase>&cap;'s internal services and their
             functions.</phrase>
     </textobject>
    </mediaobject>
