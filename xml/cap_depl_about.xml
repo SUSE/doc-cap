@@ -231,8 +231,33 @@
   <para>
    The following figures illustrate the main components of &productname;.
    <xref linkend="fig.cap.cloud-101"/> shows a comparison of the basic cloud
-   platforms: Infrastructure as a Service (IaaS), Container as a Service
-   (CaaS), Platform as a Service (Paas), and Software as a Service (SaaS).
+   platforms:
+   </para>
+   
+   <itemizedlist>
+       <listitem>
+           <para>
+               Infrastructure as a Service (IaaS)
+           </para>
+        </listitem>
+        <listitem>
+            <para>
+               Container as a Service (CaaS) 
+           </para>
+       </listitem>
+       <listitem>
+           <para>
+               Platform as a Service (Paas)
+           </para>
+       </listitem>
+       <listitem>
+           <para>
+             Software as a Service (SaaS)
+         </para>
+     </listitem>
+ </itemizedlist>
+ 
+ <para>
    &suse; &caasp; is a Container as a Service platform, and &productname; is
    a PaaS.
   </para>
