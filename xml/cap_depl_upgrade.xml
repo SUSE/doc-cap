@@ -18,32 +18,87 @@
 <!-- helm rollback does not work, so upgrades are one-way for now
 -->
  <sect1 xml:id="sec.cap.update">
-  <title>Upgrading SCF, UAA, and Stratos</title>
+  <title>Upgrading &productname;</title>
 
   <para>
-   Maintenance updates are delivered as container images from the &suse;
-   registry and applied with &helm;. (See the
+   UAA, SCF, and Stratos together make up a &productname; release. Maintenance 
+   updates are delivered as container images from the &suse;
+   registry and applied with &helm;. (Always review the
    <link xlink:href="https://www.suse.com/releasenotes/">Release Notes</link>
-   for additional upgrade information.) Check for available updates:
+   for additional upgrade information.)
   </para>
+  
+  <para>
+      The supported upgrade method is to install all upgrades, in order. Skipping
+      releases is not supported. This table lists the &helm; chart 
+      versions for each release:
+  </para>
+  
+  <informaltable>
+  <tgroup cols="3">
+    <thead>
+      <row>
+        <entry>CAP Release</entry>
+        <entry>SCF and UAA &helm; Chart Version</entry>
+        <entry>Stratos &helm; Chart Version</entry>
+      </row>
+    </thead>
+    <tbody>
+      <row>
+        <entry>1.2.1</entry>
+        <entry>2.13.3</entry>
+        <entry>2.1.0</entry>
+      </row>
+      <row>
+        <entry>1.2.0</entry>
+        <entry>2.11.0</entry>
+        <entry>2.0.0</entry>
+      </row>
+            <row>
+        <entry>1.1.1</entry>
+        <entry>2.10.1</entry>
+        <entry>1.1.0</entry>
+      </row>
+            <row>
+        <entry>1.1.0</entry>
+        <entry>2.8.0</entry>
+        <entry>1.1.0</entry>
+      </row>
+            <row>
+        <entry>1.0.1</entry>
+        <entry>2.7.0</entry>
+        <entry>1.0.2</entry>
+      </row>
+            <row>
+        <entry>1.0</entry>
+        <entry>2.6.11</entry>
+        <entry>1.0.0</entry>
+      </row>
+    </tbody>
+  </tgroup>
+</informaltable>
+
+<para>
+    Do not make changes to pod counts when you upgrade. You may make sizing
+    changes before or after an upgrade (see <xref linkend="sec.cap.ha-prod"/>).
+</para>
+
+<para>
+    Use &helm; to check for updates:
+</para>
 
 <screen>&prompt.user;helm repo update
 Hang tight while we grab the latest from your chart repositories...
 ...Skip local chart repository
 ...Successfully got an update from the "stable" chart repository
 ...Successfully got an update from the "suse" chart repository
-Update Complete. ⎈ Happy Helming!⎈</screen>
+Update Complete. ⎈ Happy Helming!⎈
+</screen>
 
   <para>
-   For the &productname; 1.1 release, update your
-   <filename>scf-config-values.yaml</filename> file with the changes for
-   secrets handling and external IP addresses. (See
-   <xref linkend="sec.cap.configure-prod"/> for an example.)
-  </para>
-
-  <para>
-   Get your release and chart names (your releases may have different names
-   than the examples), and then apply the updates:
+   Get your currently-installed release versions and chart names (your releases 
+   may have different names than the examples), and then view the upgrade 
+   versions:
   </para>
 
 <screen>&prompt.user;helm list
@@ -51,12 +106,6 @@ NAME            REVISION  UPDATED                  STATUS    CHART           NAM
 <replaceable>susecf-console</replaceable>  1         Tue Aug 14 11:53:28 2018 DEPLOYED  console-2.0.0   stratos  
 <replaceable>susecf-scf</replaceable>      1         Tue Aug 14 10:58:16 2018 DEPLOYED  cf-2.11.0       scf      
 <replaceable>susecf-uaa</replaceable>      1         Tue Aug 14 10:49:30 2018 DEPLOYED  uaa-2.11.0      uaa
-
-&prompt.user;helm repo list
-NAME            URL                                             
-stable          https://kubernetes-charts.storage.googleapis.com
-local           http://127.0.0.1:8879/charts                    
-suse            https://kubernetes-charts.suse.com/             
 
 &prompt.user;helm search suse
 NAME                         VERSION DESCRIPTION
@@ -67,17 +116,24 @@ suse/console                 2.1.0   A Helm chart for deploying Stratos UI Conso
 suse/uaa                     2.13.3  A Helm chart for SUSE UAA</screen>
 
   <para>
-   Run the following commands to perform the upgrade. Wait for each command to
-   complete before running the next command.
+   When you have verified that the upgrade is the next release from your current 
+   release, run the following commands to perform the upgrade. What if you missed
+   a release? See <xref linkend="sec.cap.skipped-release"/>. 
+</para>
+<para>
+   Wait for each command to complete before running the next command.
   </para>
 
-<note>
-    <title>Important Changes</title>
+<important>
+    <title>Changes to Commands</title>
     <para>
         Take note of the new commands for extracting and using secrets and 
-        certificates.
-    </para>
-</note>
+        certificates. If you are still on the &productname; 1.1 release, update 
+        your <filename>scf-config-values.yaml</filename> file with the changes for
+        secrets handling and external IP addresses. (See
+        <xref linkend="sec.cap.configure-prod"/> for an example.)
+  </para>
+</important>
 
 <screen>&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-uaa</replaceable> suse/uaa \
  --values scf-config-values.yaml
@@ -93,5 +149,32 @@ suse/uaa                     2.13.3  A Helm chart for SUSE UAA</screen>
 
 &prompt.user;helm upgrade --recreate-pods <replaceable>susecf-console</replaceable> suse/console \
  --values scf-config-values.yaml</screen>
+ 
+ <para>
+     Your pods will be unavailable to answer requests until the upgrade is
+     complete.
+     </para>
  </sect1>
+ 
+ <sect1 xml:id="sec.cap.skipped-release">
+     <title>Installing Skipped Releases</title>
+     <para>     
+By default, &helm; always installs the latest release. What if you accidentally 
+skipped a release, and need to apply it before upgrading to the current release? 
+Install the missing release by specifying the &helm; chart version number. For 
+example, your current UAA and SCF versions are 2.10.1. Consult the table at the 
+beginning of this chapter to see which releases you have missed. In this example, 
+the missing &helm; chart version for UAA and SCF is 2.11.0. Use the 
+<command>--version</command> option to install a specific version:
+</para>
+
+<screen>&prompt.user;helm install --version 2.11.0 suse/uaa \
+--name susecf-uaa \
+--namespace uaa \
+--values scf-config-values.yaml</screen>
+
+<para>
+    Be sure to install the corresponding versions for SCF and Stratos.
+</para>
+</sect1>         
 </chapter>
