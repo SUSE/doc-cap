@@ -389,10 +389,10 @@ kind: ClusterRole
 metadata:
   name: suse:cap:psp
 rules:
-  - apiGroups: ['extensions']
-    resources: ['podsecuritypolicies']
-    verbs: ['use']
-    resourceNames: ['suse.cap.psp']
+- apiGroups: ['extensions']
+  resources: ['podsecuritypolicies']
+  verbs: ['use']
+  resourceNames: ['suse.cap.psp']
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -519,40 +519,39 @@ persistentvolumeclaim "test-sc-persistent" deleted</screen>
   </para>
 
 <screen>env:    
-    # Enter the domain you created for your CAP cluster
-    DOMAIN: <replaceable>&exampledomain;</replaceable>
+  # Enter the domain you created for your CAP cluster
+  DOMAIN: <replaceable>&exampledomain;</replaceable>
     
-    # UAA host and port
-    UAA_HOST: uaa.<replaceable>&exampledomain;</replaceable>
-    UAA_PORT: 2793
+  # UAA host and port
+  UAA_HOST: uaa.<replaceable>&exampledomain;</replaceable>
+  UAA_PORT: 2793
 
 kube:
-    # The IP address assigned to the kube node pointed to by the domain.
-    external_ips: ["<replaceable>&kubeip;</replaceable>"]
+  # The IP address assigned to the kube node pointed to by the domain.
+  external_ips: ["<replaceable>&kubeip;</replaceable>"]
     
-    # Run kubectl get storageclasses
-    # to view your available storage classes
-    storage_class: 
-        persistent: <replaceable>"persistent"</replaceable>
-        shared: "shared"
+  # Run kubectl get storageclasses
+  # to view your available storage classes
+  storage_class:
+    persistent: <replaceable>"persistent"</replaceable>
+      shared: "shared"
         
-    # The registry the images will be fetched from. 
-    # The values below should work for
-    # a default installation from the SUSE registry.
-    registry: 
-        hostname: "registry.suse.com"
-        username: ""
-        password: ""
-    organization: "cap"
-
-    auth: rbac 
+  # The registry the images will be fetched from.
+  # The values below should work for
+  # a default installation from the SUSE registry.
+  registry:
+    hostname: "registry.suse.com"
+    username: ""
+    password: ""
+  organization: "cap"
+  auth: "rbac"
 
 secrets:
-    # Create a password for your CAP cluster
-    CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable> 
+  # Create a password for your CAP cluster
+  CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
     
-    # Create a password for your UAA client secret
-    UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable></screen>
+  # Create a password for your UAA client secret
+  UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable></screen>
 
   <note>
    <title>Protect UAA_ADMIN_CLIENT_SECRET</title>

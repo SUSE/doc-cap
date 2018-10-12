@@ -262,8 +262,8 @@ cf login</screen>
   </para>
 
 <screen>kube:
-    # Increment this counter to rotate all generated secrets
-    secrets_generation_counter: 2</screen>
+  # Increment this counter to rotate all generated secrets
+  secrets_generation_counter: 2</screen>
 
   <para>
    Next, perform a <command>helm upgrade</command> to apply the change.
