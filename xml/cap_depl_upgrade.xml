@@ -168,7 +168,7 @@ the missing &helm; chart version for UAA and SCF is 2.11.0. Use the
 <command>--version</command> option to install a specific version:
 </para>
 
-<screen>&prompt.user;helm install --version 2.11.0 suse/uaa \
+<screen>&prompt.user;helm upgrade --version 2.11.0 suse/uaa \
 --name susecf-uaa \
 --namespace uaa \
 --values scf-config-values.yaml</screen>
