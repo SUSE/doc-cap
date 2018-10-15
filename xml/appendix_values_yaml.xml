@@ -14,22 +14,31 @@
   </dm:docmanager>
  </info>
  <para>
-  This appendix contains copies of the complete
-  <filename>values.yaml</filename> files that are included in the &helm; charts
-  for the SCF and UAA namespaces. These are useful references as they provide a
-  complete listing of configuration options and their default settings. (See
-  <xref linkend="sec.cap.ha-defaults"/> to learn how to find and read these
-  files from the &helm; charts.)
+  This appendix contains copies of the complete default
+  <filename>values.yaml</filename> files for the current
+  <literal>suse/cf</literal> and <literal>suse/uaa</literal> &helm; chart
+  releases. These are useful references as they provide a complete listing of
+  configuration options and their default settings. Run <command>helm search
+  suse</command> to list your available &helm; charts, and <command>helm
+  inspect <replaceable>name</replaceable></command> to see the default
+  <filename>values.yaml</filename> for a particular chart.
  </para>
  <sect1 xml:id="app.scf.values.yaml">
-  <title>Complete SCF values.yaml file</title>
+  <title>Complete suse/cf values.yaml file</title>
 
   <para>
-   This is the <filename>values.yaml</filename> configuration file that is
-   shipped with the &helm; charts for the SCF namespace.
+   This is the complete output of <command>helm inspect suse/cf</command> for
+   the current &productname; release.
   </para>
 
 <screen>---
+apiVersion: 2.13.3+cf2.7.0.0.gf95d9aed
+description: A Helm chart for SUSE Cloud Foundry
+name: cf
+version: 2.13.3
+
+---
+---
 kube:
   external_ips: []
 
@@ -916,7 +925,7 @@ env:
   HTTP_PROXY: ~
 
   # A comma-separated whitelist of insecure Docker registries in the form of
-  # '&#60;HOSTNAME|IP>:PORT'. Each registry must be quoted separately.
+  # '&lt;HOSTNAME|IP>:PORT'. Each registry must be quoted separately.
   #
   # Example: "\"docker-registry.example.com:80\", \"hello.example.org:443\""
   INSECURE_DOCKER_REGISTRIES: ""
@@ -1938,15 +1947,20 @@ sizing:
 </screen>
  </sect1>
  <sect1 xml:id="app.uaa.values.yaml">
-  <title>Complete UAA values.yaml file</title>
+  <title>Complete suse/uaa values.yaml file</title>
 
   <para>
-   This is the UAA <filename>values.yaml</filename> configuration file that is
-   shipped with the &helm; charts. It provides a complete reference of
-   configuration options for UAA, and their default settings.
+   This is the complete output of <literal>helm inspect suse/uaa</literal> for
+   the current &productname; release.
   </para>
 
-<screen>---
+<screen>apiVersion: 2.13.3+cf2.7.0.0.gf95d9aed
+description: A Helm chart for SUSE UAA
+name: uaa
+version: 2.13.3
+
+---
+---
 kube:
   external_ips: []
 
@@ -2173,6 +2187,7 @@ sizing:
     # Unit [MiB]
     memory:
       request: 2205
-      limit: ~</screen>
+      limit: ~
+</screen>
  </sect1>
 </appendix>
