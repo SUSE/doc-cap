@@ -45,7 +45,8 @@
     </thead>
     <tbody>
       <row>
-        <entry>1.2.1</entry>
+          <!-- TODO remember to keep this table updated -->          
+        <entry>1.2.1 (current release)</entry>
         <entry>2.13.3</entry>
         <entry>2.1.0</entry>
       </row>
