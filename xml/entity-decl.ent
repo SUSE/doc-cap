@@ -23,6 +23,9 @@
 <!ENTITY tiller	      "Tiller">
 <!ENTITY docker	      "Docker">
 <!ENTITY cfcli        "cf CLI">
+<!ENTITY latestuaachart "2.13.3">
+<!ENTITY latestscfchart "2.13.3">
+<!ENTITY lateststratoschart "2.1.0">
 
 <!ENTITY suse      "SUSE">
 <!ENTITY novell    "Novell">
