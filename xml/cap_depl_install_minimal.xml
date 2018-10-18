@@ -527,7 +527,7 @@ secrets:
   </itemizedlist>
 
   <sect2 xml:id="sec.cap.addrepo-min">
-   <title>Install the &kube; charts repository</title>
+   <title>Add the &kube; charts repository</title>
    <para>
     Download the &suse; &kube; charts repository with &helm;:
    </para>
