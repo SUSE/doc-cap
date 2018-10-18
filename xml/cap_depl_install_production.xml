@@ -292,7 +292,7 @@ Happy Helming!</screen>
     See
     <link xlink:href="https://kubernetes.io/docs/concepts/policy/pod-security-policy/">
     Pod Security Policies</link>, 
-    <link xlink:href="https://docs.cloudfoundry.org/concepts/roles.html/">
+    <link xlink:href="https://docs.cloudfoundry.org/concepts/roles.html">
         Orgs, Spaces, Roles, and Permissions</link>, and
     <link xlink:href="https://docs.cloudfoundry.org/uaa/identity-providers.html#id-flow">
         Identity Provider Workflow</link> for more information.

@@ -27,7 +27,7 @@
   <title>Prerequisites</title>
 
   <para>
-   The following prequisites should be met before attempting to deploy
+   The following prerequisites should be met before attempting to deploy
    &productname; on OpenStack. The memory and disk space requirements are
    minimums, and may need to be larger according to your workloads.
   </para>

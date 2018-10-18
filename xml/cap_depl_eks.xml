@@ -275,7 +275,7 @@
   <procedure xml:id="pro.attach-filesystems">
    <step>
     <para>
-     Login to each node and run <command>sudo growpart /dev/nvme0n1 1
+     Log into each node and run <command>sudo growpart /dev/nvme0n1 1
      &amp;&amp; sudo xfs_growfs -d /</command>
     </para>
     <para>
