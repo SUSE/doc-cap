@@ -61,7 +61,7 @@
    </listitem>
    <listitem>
     <para>
-     Create the LDAP identity provider. A 201 response will be returned when the identity provider is successfully created. See the <link xlink:href="http://docs.cloudfoundry.org/api/uaa/version/4.21.0/index.html#ldap">UAA API Reference</link> and <link xlink:href="https://github.com/cloudfoundry/uaa/blob/master/docs/UAA-LDAP.md">&cf; UAA-LDAP Documentation</link>for information regarding the request parameters and additional options available to configure your identity provider.
+     Create the LDAP identity provider. A 201 response will be returned when the identity provider is successfully created. See the <link xlink:href="http://docs.cloudfoundry.org/api/uaa/version/4.21.0/index.html#ldap">UAA API Reference</link> and <link xlink:href="https://github.com/cloudfoundry/uaa/blob/4.21.0/docs/UAA-LDAP.md">&cf; UAA-LDAP Documentation</link>for information regarding the request parameters and additional options available to configure your identity provider.
     </para>
     <para>
      The following is an example of a <literal>uaac curl</literal> command and its request parameters used to create an identity provider. Specify the parameters according to your LDAP server's credentials and directory structure. Ensure the user specifed in the <literal>bindUserDn</literal> has permissions to search the directory.
@@ -81,10 +81,10 @@
     "userSearchFilter" : "<replaceable>uid</replaceable>={0}",
     "ldapGroupFile" : "ldap/ldap-groups-map-to-scopes.xml",
     "groupSearchBase" : "<replaceable>dc=example,dc=com</replaceable>",
-    "groupSearchFilter" : "<replaceable>member={0}</replaceable>"
+    "groupSearchFilter" : "<replaceable>member</replaceable>={0}"
   },
   "originKey" : "ldap",
-  "name" : "<replaceable>My LDAP Server"</replaceable>,
+  "name" : "<replaceable>My LDAP Server</replaceable>",
   "active" : true
   }'
 </screen>
