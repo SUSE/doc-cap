@@ -630,11 +630,11 @@ suse            https://kubernetes-charts.suse.com/</screen>
 
 <screen>&prompt.user;helm search suse
 NAME                         VERSION DESCRIPTION
-suse/cf                      2.13.3  A Helm chart for SUSE Cloud Foundry               
+suse/cf                      &latestscfchart;  A Helm chart for SUSE Cloud Foundry
 suse/cf-usb-sidecar-mysql    1.0.1   A Helm chart for SUSE Universal Service Broker ...
 suse/cf-usb-sidecar-postgres 1.0.1   A Helm chart for SUSE Universal Service Broker ...
-suse/console                 2.1.0   A Helm chart for deploying Stratos UI Console     
-suse/uaa                     2.13.3  A Helm chart for SUSE UAA</screen>
+suse/console                 &lateststratoschart;   A Helm chart for deploying Stratos UI Console
+suse/uaa                     &latestuaachart;  A Helm chart for SUSE UAA</screen>
  </sect1>
  <sect1 xml:id="sec.cap.create-namespaces-prod">
   <title>Create Namespaces</title>
