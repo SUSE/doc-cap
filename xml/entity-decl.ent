@@ -6,7 +6,7 @@
 <!ENTITY productnamereg "&suse;&reg; Cloud Application Platform">
 <!ENTITY productnumber  "1.2">
 <!ENTITY github.url     "https://github.com/SUSE/doc-cap">
-<!ENTITY cap            "Cloud Application Platform">
+<!ENTITY cap            "CAP">
 
 <!-- ====================================================================== -->
 <!-- Company and Products                                                   -->
