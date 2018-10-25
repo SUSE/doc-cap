@@ -816,7 +816,7 @@
         </para>
     
   <figure xml:id="fig.cap.detailed-services">
-   <title>Simple Services Diagram</title>
+   <title>Detailed Services Diagram</title>
    <mediaobject>
     <imageobject role="fo">
      <imagedata fileref="cap-detailed-services.png" format="PNG" width="75%"/>
