@@ -671,7 +671,8 @@
     <title>&scf; service diagram</title>
     <para>
     This simple service diagram illustrates how &scf; components communicate with
-    each other (<xref linkend="fig.cap.simple-services"/>).
+    each other (<xref linkend="fig.cap.simple-services"/>). See 
+    <xref linkend="fig.cap.detailed-services"/> for a more detailed view.
 </para>
 
   <figure xml:id="fig.cap.simple-services">
@@ -803,7 +804,31 @@
     </tbody>
   </tgroup>
 </informaltable> 
-  
-  </sect2>
- </sect1>
+</sect2>
+
+<sect2 xml:id="sec.cap.services-detailed">
+    <title>Detailed Services Diagram</title>
+    <para>
+        <xref linkend="fig.cap.detailed-services"/> presents a more detailed view
+            of &scf; services and how they interact with each other. Services 
+            labeled in red are unencrypted, while services labeled in green run
+            over HTTPS.
+        </para>
+    
+  <figure xml:id="fig.cap.detailed-services">
+   <title>Simple Services Diagram</title>
+   <mediaobject>
+    <imageobject role="fo">
+     <imagedata fileref="cap-detailed-services.png" format="PNG" width="75%"/>
+    </imageobject>
+    <imageobject role="html">
+     <imagedata fileref="cap-detailed-services.png"/>
+    </imageobject>
+    <textobject role="description"><phrase>Detailed Services Diagram</phrase>
+    </textobject>
+   </mediaobject>
+  </figure>
+</sect2>
+    
+</sect1>
 </chapter>
