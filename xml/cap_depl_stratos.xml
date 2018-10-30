@@ -131,9 +131,9 @@ console  1        1        1s</screen>
 
 <screen>&prompt.user;helm list
 NAME            REVISION  UPDATED                  STATUS   CHART           NAMESPACE
-susecf-console  1         Tue Aug 14 11:53:28 2018 DEPLOYED &lateststratoschart;   stratos  
-susecf-scf      1         Tue Aug 14 10:58:16 2018 DEPLOYED &latestscfchart;       scf      
-susecf-uaa      1         Tue Aug 14 10:49:30 2018 DEPLOYED &latestuaachart;      uaa 
+susecf-console  1         Tue Aug 14 11:53:28 2018 DEPLOYED console-&lateststratoschart;   stratos
+susecf-scf      1         Tue Aug 14 10:58:16 2018 DEPLOYED cf-&latestscfchart;       scf
+susecf-uaa      1         Tue Aug 14 10:49:30 2018 DEPLOYED uaa-&latestuaachart;      uaa
 
 &prompt.user;helm status susecf-console
 LAST DEPLOYED: Tue Aug 14 11:53:28 2018

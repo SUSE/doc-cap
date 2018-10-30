@@ -364,9 +364,9 @@ kube:
     </para>
 <screen>&prompt.user;helm list
 NAME           REVISION UPDATED                   STATUS    CHART                      NAMESPACE
-susecf-console 1        Wed Aug 14 08:35:58 2018  DEPLOYED  &lateststratoschart;              stratos  
-susecf-scf     1        Tue Aug 14 12:24:36 2018  DEPLOYED  &latestscfchart;                  scf      
-susecf-uaa     1        Tue Aug 14 12:01:17 2018  DEPLOYED  &latestuaachart;                  uaa
+susecf-console 1        Wed Aug 14 08:35:58 2018  DEPLOYED  console-&lateststratoschart;              stratos
+susecf-scf     1        Tue Aug 14 12:24:36 2018  DEPLOYED  cf-&latestscfchart;                  scf
+susecf-uaa     1        Tue Aug 14 12:01:17 2018  DEPLOYED  uaa-&latestuaachart;                 uaa
 mysql-service  1        Mon May 21 11:40:11 2018  DEPLOYED  cf-usb-sidecar-mysql-1.0.1 mysql-sidecar
 
 &prompt.user;helm delete --purge mysql-service</screen>
