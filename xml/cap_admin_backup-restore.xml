@@ -15,6 +15,8 @@
   </dm:docmanager>
   <title>Backup and Restore</title>
  </info>
+ <sect1 xml:id="sec.cap.backup-restore-with-plugin">
+  <title>Backup and restore using cf-plugin-backup</title>
  <para>
   <literal>cf-plugin-backup</literal> backs up and restores your cloud
   controller database (CDDB), using the &cf; command line interface (&cfcli;).
@@ -63,7 +65,7 @@
    </para>
   </listitem>
  </itemizedlist>
- <sect1 xml:id="sec.cap.install-backup-restore">
+ <sect2 xml:id="sec.cap.install-backup-restore-plugin">
   <title>Installing the cf-plugin-backup</title>
 
   <para>
@@ -101,8 +103,8 @@
   to a local file
 
  Use 'cf repo-plugins' to list plugins in registered repos available to install.</screen>
- </sect1>
- <sect1 xml:id="sec.cap.using-plugin">
+ </sect2>
+ <sect2 xml:id="sec.cap.using-backup-restore-plugin">
   <title>Using cf-plugin-backup</title>
 
   <para>
@@ -175,8 +177,8 @@
    <command>--include-security-groups</command> and
    <command>--include-quota-definitions</command>.
   </para>
- </sect1>
- <sect1 xml:id="sec.cap.plugin-scope">
+ </sect2>
+ <sect2 xml:id="sec.cap.backup-restore-plugin-scope">
   <title>Scope of Backup</title>
 
   <para>
@@ -521,5 +523,249 @@
     </listitem>
    </varlistentry>
   </variablelist>
+ </sect2>
+ </sect1>
+ <sect1 xml:id="sec.cap.backup-restore-of-raw-data">
+  <title>Raw data backup and restore of SCF</title>
+  <para>
+   A backup and restore of a SCF deployment's raw data can be used to migrate all data (applications, services, etc.) to a new SCF deployment. Specifically, the components migrated are:
+  </para>
+  <itemizedlist>
+    <listitem>
+     <para>
+      The Cloud Controller Database (CCDB). (See <xref linkend="sec.cap.backup-restore-plugin-scope"/> on what the CCDB backup encompasses.)
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      The Cloud Controller Blobstore, which includes the types of binary large object (blob) files listed below. (See <link xlink:href="https://docs.cloudfoundry.org/concepts/architecture/cloud-controller.html#blob-store">Blobstore</link> to learn more about each blob type.)
+     </para>
+     <itemizedlist>
+      <listitem>
+       <para>
+        App Packages
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        Buildpacks
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        Resource Cache
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        Buildpack Cache
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        Droplets
+       </para>
+      </listitem>
+     </itemizedlist>
+    </listitem>
+   </itemizedlist>
+  <note>
+   <title>Restore to the same version</title>
+   <para>
+    This process is intended for backing up and restoring to a target deployment with the same version as the source deployment.
+   </para>
+  </note>
+  <sect2 xml:id="sec.cap.raw-data-backup-procedure">
+   <title>Performing a raw data backup</title>
+   <para>
+    Perform the following steps to create a backup of your source SCF deployment.
+   </para>
+   <procedure>
+    <step>
+     <para>
+      Connect to the <literal>blobstore</literal> pod:
+     </para>
+<screen>&prompt.user;kubectl exec -it blobstore-0 --namespace scf -- env /bin/bash</screen>
+    </step>
+    <step>
+     <para>
+      Create an archive of the blobstore directory to preserve all needed files (droplets and other artifacts) then disconnect from the pod:
+     </para>
+<screen>&prompt.user;tar cfvz <replaceable>blobstore-src.tgz</replaceable> /var/vcap/store/shared</screen>
+<screen>&prompt.user;exit</screen>
+    </step>
+    <step>
+     <para>
+      Copy the archive to a location outside of the pod:
+     </para>
+<screen>&prompt.user;kubectl cp scf/blobstore-0:blobstore-src.tar.gz <replaceable>/tmp/blobstore-src.tgz</replaceable></screen>
+    </step>
+    <step>
+     <para>
+      Export the Cloud Controller Database (CCDB) into a file:
+     </para>
+<screen>&prompt.user;kubectl exec mysql-0 --namespace scf -- bash -c \
+  '/var/vcap/packages/mariadb/bin/mysqldump \
+  --defaults-file=/var/vcap/jobs/mysql/config/mylogin.cnf \
+  ccdb' > <replaceable>/tmp/ccdb-src.sql</replaceable>
+</screen>
+    </step>
+    <step xml:id="get-encryption-key">
+     <para>
+      Next, obtain the CCDB encryption key(s). The method used to capture the key will depend on whether <literal>current_key_label</literal> has been defined on the source cluster. This value is defined in <filename>/var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml</filename> of the <literal>api-group-0</literal> pod and also found in various tables of the MySQL database.
+     </para>
+     <para>
+      Begin by examining the config file for the<literal>current_key_label</literal> setting:
+     </para>
+<screen>&prompt.user;kubectl exec -it --namespace scf api-group-0 -- bash -c "cat /var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml | grep -A 3 database_encryption"</screen>
+     <itemizedlist>
+      <listitem>
+       <para>
+        If the output contains the <literal>current_key_label</literal> setting, save the output for the restoration process. Adjust the <command>-A</command> flag as needed to include all keys.
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        If the output does not contain the <literal>current_key_label</literal> setting, run the following command and save the output for the restoration process:
+       </para>
+      <screen>&prompt.user;kubectl exec api-0 --namespace scf -- bash -c 'echo $DB_ENCRYPTION_KEY'</screen>
+      </listitem>
+     </itemizedlist>
+    </step>
+   </procedure>
+  </sect2>
+  <sect2 xml:id="sec.cap.raw-data-restore-procedure">
+   <title>Performing a raw data restore</title>
+   <para>
+    Perform the following steps to restore your backed up data to the target SCF deployment.
+   </para>
+   <important>
+    <title>Ensure access to the correct SCF deployment</title>
+     <para>
+      Working with multiple &kube; clusters simultaneously can be confusing. Ensure you're communicating with the desired cluster <link xlink:href="https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/#set-the-kubeconfig-environment-variable">by setting <literal>$KUBECONFIG</literal> correctly</link>.
+     </para>
+   </important>
+   <procedure>
+    <step>
+     <para>
+      The target SCF cluster needs to be deployed with the correct database encryption key(s) set in your <filename>scf-config-values.yaml</filename> before data can be restored. How the encryption key(s) will be prepared in your <filename>scf-config-values.yaml</filename> depends on the result of <xref linkend="get-encryption-key"/> in <xref linkend="sec.cap.raw-data-backup-procedure"/>
+     </para>
+     <itemizedlist>
+      <listitem>
+       <para>
+        If <literal>current_key_label</literal> was set, use the <literal>current_key_label</literal>
+        obtained as the value of <literal>CC_DB_CURRENT_KEY_LABEL</literal> and all the keys under the
+        <literal>keys</literal> are defined under <literal>CC_DB_ENCRYPTION_KEYS</literal>.
+        See the following example <filename>scf-config-values.yaml</filename>:
+       </para>
+<screen>env:
+  CC_DB_CURRENT_KEY_LABEL: <replaceable>migrated_key_1</replaceable>
+
+secrets:
+  CC_DB_ENCRYPTION_KEYS:
+    <replaceable>migrated_key_1</replaceable>: "<replaceable>&lt;key_goes_here></replaceable>"
+    <replaceable>migrated_key_2</replaceable>: "<replaceable>&lt;key_goes_here></replaceable>"
+</screen>
+      </listitem>
+      <listitem>
+       <para>
+        If <literal>current_key_label</literal> was not set, create one for the new cluster
+	through <filename>scf-config-values.yaml</filename> and set it to the
+	<literal>$DB_ENCRYPTION_KEY</literal> value from the old cluster.In this example,
+	<literal>migrated_key</literal> is the new <literal>current_key_label</literal> created:
+       </para>
+<screen>env:
+  CC_DB_CURRENT_KEY_LABEL: <replaceable>migrated_key</replaceable>
+
+secrets:
+  CC_DB_ENCRYPTION_KEYS:
+  <replaceable>migrated_key</replaceable>: "<replaceable>OLD_CLUSTER_DB_ENCRYPTION_KEY</replaceable>"
+</screen>
+      </listitem>
+     </itemizedlist>
+    </step>
+    <step>
+     <para>
+       Deploy a non-high-availability configuration of SCF (see <xref linkend="sec.cap.install-scf-prod"/>) and waiting until all pods are ready before proceeding.
+     </para>
+    </step>
+    <step>
+     <para>
+      In the <filename>ccdb-src.sql</filename> file created earlier, replace the domain name of the source deployment with the domain name of the target deployment.
+     </para>
+     <screen>&prompt.user;sed -i 's/old-example.com/new-example.com/g' /tmp/ccdb-src.sql</screen>
+    </step>
+    <step>
+     <para>
+      Stop the monit services on the <literal>api-group-0</literal>, <literal>cc-worker-0</literal>, and <literal>cc-clock-0</literal> pods:
+     </para>
+<screen>&prompt.user;for n in api-group-0 cc-worker-0 cc-clock-0; do
+  kubectl exec -it --namespace scf $n -- bash -l -c 'monit stop all'
+done
+</screen>
+    </step>
+    <step>
+     <para>
+      Copy the <filename>blobstore-src.tgz</filename> archive to the <literal>blobstore</literal> pod:
+     </para>
+    <screen>&prompt.user;kubectl cp <replaceable>/tmp/blobstore-src.tgz</replaceable> scf/blobstore-0:/</screen>
+    </step>
+    <step>
+     <para>
+      Restore the contents of the archive created during the backup process to the <literal>blobstore</literal> pod:
+     </para>
+<screen>&prompt.user;kubectl exec -it --namespace scf blobstore-0 -- bash -l -c 'monit stop all &amp; sleep 10 &amp; rm -rf /var/vcap/store/shared/* &amp; tar xvf blobstore-src.tgz &amp; monit start all &amp; rm blobstore-src.tgz'</screen>
+    </step>
+    <step>
+     <para>
+      Recreate the CCDB on the <literal>mysql</literal> pod:
+     </para>
+<screen>&prompt.user;kubectl exec mysql-0 --namespace scf -- bash -c \
+    "/var/vcap/packages/mariadb/bin/mysql \
+    --defaults-file=/var/vcap/jobs/mysql/config/mylogin.cnf \
+    -e 'drop database ccdb; create database ccdb;'"</screen>
+    </step>
+    <step>
+     <para>
+      Restore the CCDB on the <literal>mysql</literal> pod:
+     </para>
+     <screen>&prompt.user;kubectl exec -i mysql-0 --namespace scf -- bash -c '/var/vcap/packages/mariadb/bin/mysql --defaults-file=/var/vcap/jobs/mysql/config/mylogin.cnf ccdb' &lt; /tmp/ccdb-src.sql</screen>
+    </step>
+    <step>
+     <para>
+      Start the monit services on the <literal>api-group-0</literal>, <literal>cc-worker-0</literal>, and <literal>cc-clock-0</literal> pods
+     </para>
+<screen>&prompt.user;for n in api-group-0 cc-worker-0 cc-clock-0; do
+  kubectl exec -it --namespace scf $n -- bash -l -c 'monit start all'
+done
+</screen>
+    </step>
+    <step>
+     <para>
+      If your old cluster did not have <literal>current_key_label</literal> defined, perform a key rotation. Otherwise, a key rotation is not necessary.
+     </para>
+     <substeps>
+      <step>
+       <para>
+        Change the encryption key in the config file:
+       </para>
+      <screen>&prompt.user;kubectl exec --namespace scf api-group-0 -- bash -c 'sed -i "/db_encryption_key:/c\\db_encryption_key: \"$(echo $CC_DB_ENCRYPTION_KEYS | jq -r .migrated_key)\"" /var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml'
+</screen>
+      </step>
+      <step>
+       <para>
+        Run the rotation for the encryption keys:
+       </para>
+       <screen>&prompt.user;kubectl exec --namespace scf api-group-0 -- bash -c 'export PATH=/var/vcap/packages/ruby-2.4/bin:$PATH ; export CLOUD_CONTROLLER_NG_CONFIG=/var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml ; cd /var/vcap/packages/cloud_controller_ng/cloud_controller_ng ; /var/vcap/packages/ruby-2.4/bin/bundle exec rake rotate_cc_database_key:perform'</screen>
+      </step>
+     </substeps>
+    </step>
+    <step>
+     <para>
+      The data restore is now complete. Run commands such as <command>cf apps</command>, <command>cf marketplace</command>, <command>cf services</command>, etc. and verify data from the old cluster is returned.
+     </para>
+    </step>
+   </procedure>
+  </sect2>
  </sect1>
 </chapter>
