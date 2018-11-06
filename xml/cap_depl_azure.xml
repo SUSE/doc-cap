@@ -16,7 +16,7 @@
   </dm:docmanager>
  </info>
  <para>
-  &productname; version 1.1 and up supports deployment on Microsoft Azure
+  &productname; supports deployment on Microsoft Azure
   Kubernetes Service (AKS), Microsoft's managed &kube; service. This chapter
   describes the steps for preparing Azure for a &productname; deployment, with
   a basic Azure load balancer. (See
@@ -80,7 +80,7 @@
 
 <screen>&prompt.user;az account show --query "{ subscription_id: id }"
 {
-"subscription_id": "<replaceable>a900cdi2-5983-0376-s7je-d4jdmsif84ca"</replaceable>
+"subscription_id": <replaceable>"a900cdi2-5983-0376-s7je-d4jdmsif84ca"</replaceable>
 }</screen>
 
   <para>
@@ -89,11 +89,9 @@
    variable and set it as the current subscription:
   </para>
 
-<screen>&prompt.user;export SUBSCRIPTION_ID=<replaceable>a900cdi2-5983-0376-s7je-d4jdmsif84ca"</replaceable>
+<screen>&prompt.user;export SUBSCRIPTION_ID=<replaceable>"a900cdi2-5983-0376-s7je-d4jdmsif84ca"</replaceable>
 
 &prompt.user;az account set --subscription $SUBSCRIPTION_ID</screen>
-
-<!-- not sure this is necessary. cs 13 june 2018 -->
 
   <para>
    Verify that the <literal>Microsoft.Network</literal>,
@@ -108,21 +106,32 @@
    register -n <replaceable>provider</replaceable></command> command.
   </para>
  </sect1>
+ 
  <sect1 xml:id="sec.cap.create-aks-instance">
   <title>Create Resource Group and AKS Instance</title>
 
   <para>
    Now you can create a new Azure resource group and AKS instance. Set the
    required variables as environment variables, which helps to speed up the
-   setup, and to reduce errors.
+   setup, and to reduce errors. Verify your environment variables at any time
+   with <command>echo $<replaceable>varname</replaceable></command>, for
+   example:
   </para>
-
+  <screen>&prompt.user;echo $RGNAME
+cap-aks</screen>
+<para>
+    This is especially useful when you run long compound commands to
+    extract and set environment variables.
+</para>
   <note>
    <title>Use different names</title>
    <para>
-    It is better to use unique resource group and cluster names, and not copy
+    It is better to use unique resource group and managed cluster names, and not copy
     the examples, especially when your Azure subscription supports multiple
-    users.
+    users. Azure has no tools for sorting resources by user, so creating unique names and putting 
+    everything in your deployment in a single resource group
+    helps you keep track. It speeds up testing because you can delete the whole deployment by deleting the
+    resource group.
    </para>
   </note>
 
@@ -137,20 +146,17 @@
     <para>
      Create and set the AKS managed cluster name. Azure's default is to use the
      resource group name, then prepend it with <literal>MC</literal> and append
-     the location, e.g. MC_cap-aks_cap-aks_eastus. This example command gives
-     it the same name as the resource group; you may give it a different name.
+     the location, e.g. <literal>MC_cap-aks_cap-aks_eastus</literal>. This example uses the creator's initials, which results in 
+     <literal>MC_cap-aks_cjs_eastus</literal>:
     </para>
-<screen>&prompt.user;export AKSNAME=<replaceable>$RGNAME</replaceable></screen>
+<screen>&prompt.user;export AKSNAME=<replaceable>cjs</replaceable></screen>
    </step>
    <step>
     <para>
-     Set the Azure location. See
-     <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough">
-     Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster</link> for
-     supported locations. Current supported Azure locations are
-     <literal>eastus</literal>, <literal>westeurope</literal>,
-     <literal>centralus</literal>, <literal>canadacentral</literal>, and
-     <literal>canadaeast</literal>.
+     Set the Azure location. (See
+     <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/container-service-quotas">
+     Quotas and region availability for Azure Kubernetes Service (AKS)</link> for
+     supported locations.)
     </para>
 <screen>&prompt.user;export REGION="<replaceable>eastus</replaceable>"</screen>
    </step>
@@ -180,6 +186,14 @@
     </para>
 <screen>&prompt.user;export ADMINUSERNAME="<replaceable>scf-admin</replaceable>"</screen>
    </step>
+   <step>
+    <para>
+        Create a unique nodepool name. The default is 
+        <literal>aks-nodepool</literal> followed by an auto-generated number,
+        e.g. <literal>aks-nodepool1-39318075-2</literal>. The following example changes it to <literal>aks-mypool</literal>:
+    </para>
+<screen>&prompt.user;export NODEPOOLNAME="<replaceable>mypool</replaceable>"</screen>
+   </step>   
   </procedure>
 
   <para>
@@ -190,13 +204,13 @@
 <screen>&prompt.user;az group create --name $RGNAME --location $REGION</screen>
 
   <para>
-   Create a new AKS managed cluster:
+   Now you can create a new AKS managed cluster:
   </para>
 
 <screen>&prompt.user;az aks create --resource-group $RGNAME --name $AKSNAME \
  --node-count $NODECOUNT --admin-username $ADMINUSERNAME \
  --ssh-key-value $SSHKEYVALUE --node-vm-size $NODEVMSIZE \
- --node-osdisk-size=60</screen>
+ --node-osdisk-size=60 --nodepool-name $NODEPOOLNAME</screen>
 
   <note>
    <para>
@@ -209,7 +223,7 @@
    <command>kubectl</command> credentials. The default behavior for <command>az
    aks get-credentials</command> is to merge the new credentials with the
    existing default configuration, and to set the new credentials as as the
-   current &kube; context. You should first backup your current configuration,
+   current &kube; context. The context name is your AKSNAME value. You should first backup your current configuration,
    or move it to a different location, then fetch the new credentials:
   </para>
 
@@ -221,10 +235,10 @@
   </para>
 
 <screen>&prompt.user;kubectl get nodes
-NAME                       STATUS    ROLES     AGE       VERSION
-aks-nodepool1-47788232-0   Ready     agent     5m        v1.9.6
-aks-nodepool1-47788232-1   Ready     agent     6m        v1.9.6
-aks-nodepool1-47788232-2   Ready     agent     6m        v1.9.6
+NAME                    STATUS    ROLES     AGE       VERSION
+aks-mypool-47788232-0   Ready     agent     5m        v1.9.6
+aks-mypool-47788232-1   Ready     agent     6m        v1.9.6
+aks-mypool-47788232-2   Ready     agent     6m        v1.9.6
 
 &prompt.user;kubectl get pods --all-namespaces
 NAMESPACE     NAME                                READY  STATUS    RESTARTS   AGE
@@ -260,7 +274,7 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
   <para>
    You may disable RBAC during cluster creation with the
    <command>--disable-rbac</command> option, and then set 
-   <literal>auth: none</literal>. Do not apply the PSPS.
+   <literal>auth: none</literal>. Do not apply the PSPs.
    This is less secure, but may be useful for testing.
   </para>
  </sect1>
@@ -270,7 +284,7 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
   <para>
    Identify and set the cluster resource group, then enable kernel swap
    accounting. Swap accounting is required by &cap;, but it is not the default
-   in AKS nodes. The following commands use the <replaceable>az</replaceable>
+   in AKS nodes. The following commands use the <command>az</command>
    command to modify the GRUB configuration on each node, and then reboot the
    virtual machines.
   </para>
@@ -280,27 +294,32 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
 <screen>&prompt.user;export MCRGNAME=$(az group list -o table | grep MC_"$RGNAME"_ | awk '{print$1}')</screen>
    </step>
    <step>
-<screen>&prompt.user;vmnodes=$(az vm list -g $MCRGNAME -o json | jq -r '.[] | select (.tags.poolName | contains("node")) | .name')</screen>
+       <para>
+           Replace <literal>mypool</literal> with your NODEPOOLNAME value:
+       </para>
+       <screen>&prompt.user;VMNODES=$(az vm list -g $MCRGNAME -o json | jq -r '.[] | select (.tags.poolName | contains("<replaceable>mypool</replaceable>")) | .name')</screen>
    </step>
    <step>
-<screen>&prompt.user;for i in $vmnodes
+<screen>&prompt.user;for i in $VMNODES
  do
    az vm run-command invoke -g $MCRGNAME -n $i --command-id RunShellScript \
    --scripts "sudo sed -i 's|linux.*./boot/vmlinuz-.*|&amp; swapaccount=1|' /boot/grub/grub.cfg"
 done</screen>
    </step>
    <step>
-<screen>&prompt.user;for i in $vmnodes
-do
-   az vm restart -g $MCRGNAME -n $i
-done</screen>
+          <para>
+       Look for <literal>"Provisioning succeeded"</literal> messages when step 3
+       has completed, then reboot your virtual machines, which takes
+       a few minutes:
+       </para>
+<screen>&prompt.user;for i in $VMNODES; 
+do 
+    az vm restart -g $MCRGNAME -n $i;
+done
+</screen>
    </step>
   </procedure>
 
-  <para>
-   When this runs correctly, you will see multiple <literal>"status":
-   "Succeeded"</literal> messages for all of your virtual machines.
-  </para>
  </sect1>
  <sect1 xml:id="sec.cap.loadbalancer-azure">
   <title>Create a Basic Load Balancer and Public IP Address</title>
@@ -355,6 +374,7 @@ done</screen>
    </step>
   </procedure>
  </sect1>
+ 
  <sect1 xml:id="sec.cap.security-rules">
   <title>Configure Load Balancing and Network Security Rules</title>
 
@@ -416,8 +436,8 @@ done</screen>
      levels range from 100-4096, with 100 the highest priority. Each rule must
      have a unique priority level:
     </para>
-<screen>&prompt.user;nsg=$(az network nsg list --resource-group=$MCRGNAME -o json | jq -r '.[].name')
-&prompt.user;pri=200</screen>
+<screen>&prompt.user;NSG=$(az network nsg list --resource-group=$MCRGNAME -o json | jq -r '.[].name')
+&prompt.user;PRI=200</screen>
    </step>
    <step>
     <para>
@@ -427,13 +447,13 @@ done</screen>
 do
     az network nsg rule create \
     --resource-group $MCRGNAME \
-    --priority $pri \
-    --nsg-name $nsg \
+    --priority $PRI \
+    --nsg-name $NSG \
     --name $AKSNAME-$i \
     --direction Inbound \
     --destination-port-ranges $i \
     --access Allow
-    pri=$(expr $pri + 1)
+    PRI=$(expr $PRI + 10)
 done</screen>
    </step>
    <step>
@@ -450,13 +470,41 @@ Private IPs:\t\t\"$(az network nic list --resource-group $MCRGNAME -o json | jq 
    </step>
   </procedure>
  </sect1>
- <sect1 xml:id="sec.cap.sample-config">
-  <title>Example &productname; Configuration File</title>
+<sect1 xml:id="sec.cap.tiller-service">
+    <title>Create &tiller; Service</title>
+    <para>
+        You must create a &tiller; service in order to give it sufficient
+        permissions to make changes on your cluster. Run these commands
+        to create your &tiller; service:
+    </para>
+    <screen>&prompt.user;kubectl -n kube-system create serviceaccount tiller
+ serviceaccount "tiller" created
 
+&prompt.user;kubectl create clusterrolebinding tiller \
+--clusterrole cluster-admin \
+--serviceaccount=kube-system:tiller
+ clusterrolebinding.rbac.authorization.k8s.io "tiller" created
+
+&prompt.user;helm init --upgrade --service-account tiller
+ $HELM_HOME has been configured at /home/&exampleuser_plain;/.helm.
+
+ Tiller (the Helm server-side component) has been installed into your Kubernetes Cluster.
+ Happy Helming!</screen>
+</sect1>
+ 
+<sect1>
+    <title>Deploy &productname;</title>
   <para>
-   The following example <filename>scf-config-values.yaml</filename> contains
+   Now Azure is ready, and you can deploy &productname; on it. After reviewing
+   the rest of this section proceed to <xref linkend="sec.cap.helm-deploy-prod"/>. (Note that you
+   will not install &suse; &caasp;, which provides a &kube; cluster, because
+   AKS provides a managed &kube; cluster.) 
+   </para>
+<para>
+   The following example <filename>scf-azure-values.yaml</filename> contains
    parameters particular to running &productname; on Azure Kubernetes Service.
-   You need the IP addresses from the last command in the previous section.
+   You need the IP addresses from the last command in 
+   <xref linkend="sec.cap.security-rules"/>.
    This is a simplified example that does not use Azure's DNS services. For
    quick testing and proof of concept, you can use the free wildcard DNS
    services, <link xlink:href="http://xip.io/">xip.io</link> or
@@ -505,15 +553,7 @@ kube:
     password: ""
   organization: "cap"
   auth: "rbac"</screen>
-
-  <para>
-   Now Azure is ready, and you can deploy &productname; on it. Note that you
-   will not install &suse; &caasp;, which provides a &kube; cluster, because
-   AKS provides a managed &kube; cluster. Start with the "Helm Init" sections
-   of the <xref linkend="cha.cap.install-production"/> or
-   <xref linkend="cha.cap.install-minimal"/> guides.
-  </para>
-
+  
   <para>
    When your UAA deployment has completed, test that it is operating correctly
    by running <command>curl</command> on the DNS name that you configured for
@@ -529,6 +569,10 @@ kube:
 <screen>{"issuer":"https://uaa.&publicip;.xip.io:2793/oauth/token",
 "authorization_endpoint":"https://uaa.&publicip;.xip.io:2793
 /oauth/authorize","token_endpoint":"https://uaa.&publicip;.
-xip.io:2793/oauth/token",</screen>
+xip.io:2793/oauth/token"</screen>
+
+<para>
+    Now you can complete your deployment.
+</para>
  </sect1>
 </chapter>

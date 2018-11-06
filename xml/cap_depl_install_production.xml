@@ -415,7 +415,10 @@ subjects:
    <para>
     Apply it to your cluster with <command>kubectl</command>:
    </para>
-<screen>&prompt.user;kubectl create -f cap-psp-rbac.yaml</screen>
+<screen>&prompt.user;kubectl create -f cap-psp-rbac.yaml
+podsecuritypolicy.extensions "suse.cap.psp" created
+clusterrole.rbac.authorization.k8s.io "suse:cap:psp" created
+clusterrolebinding.rbac.authorization.k8s.io "cap:clusterrole" created</screen>
    <para>
     Then continue by deploying UAA and SCF.
    </para>
