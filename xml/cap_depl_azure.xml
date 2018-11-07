@@ -114,7 +114,7 @@
    Now you can create a new Azure resource group and AKS instance. Set the
    required variables as environment variables, which helps to speed up the
    setup, and to reduce errors. Verify your environment variables at any time
-   with <command>echo $<replaceable>varname</replaceable></command>, for
+   with <command>echo $<replaceable>VARNAME</replaceable></command>, for
    example:
   </para>
   <screen>&prompt.user;echo $RGNAME
