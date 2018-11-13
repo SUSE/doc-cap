@@ -337,7 +337,8 @@
     <listitem>
      <para>
          Clients for developers and admins to interact with &scf;: the 
-         &cfcli;, Stratos Web interface, IDE plugins.
+         &cfcli;, which provides the <command>cf</command> command, Stratos Web 
+         interface, IDE plugins.
      </para>
  </listitem>
     <listitem>
