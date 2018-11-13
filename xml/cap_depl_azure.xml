@@ -103,7 +103,7 @@
 
   <para>
    If any of these are missing, enable them with the <command>az provider
-   register -n <replaceable>provider</replaceable></command> command.
+   register --name <replaceable>provider</replaceable></command> command.
   </para>
  </sect1>
  
@@ -130,7 +130,7 @@ cap-aks</screen>
     the examples, especially when your Azure subscription supports multiple
     users. Azure has no tools for sorting resources by user, so creating unique names and putting 
     everything in your deployment in a single resource group
-    helps you keep track. It speeds up testing because you can delete the whole deployment by deleting the
+    helps you keep track, and you can delete the whole deployment by deleting the
     resource group.
    </para>
   </note>
@@ -138,16 +138,20 @@ cap-aks</screen>
   <procedure xml:id="pro.envvars-azure">
    <step>
     <para>
-     Create and set the resource group name:
+     Create the resource group name:
     </para>
 <screen>&prompt.user;export RGNAME="<replaceable>cap-aks</replaceable>"</screen>
    </step>
    <step>
     <para>
-     Create and set the AKS managed cluster name. Azure's default is to use the
+     Create the AKS managed cluster name. Azure's default is to use the
      resource group name, then prepend it with <literal>MC</literal> and append
-     the location, e.g. <literal>MC_cap-aks_cap-aks_eastus</literal>. This example uses the creator's initials, which results in 
-     <literal>MC_cap-aks_cjs_eastus</literal>:
+     the location, e.g. <literal>MC_cap-aks_cap-aks_eastus</literal>. This 
+     example uses the creator's initials for the <literal>AKSNAME</literal> environment
+     variable, which will be mapped to the <command>az</command> command's 
+     <command>--name</command> option. The <command>--name</command> option is for
+creating arbitrary names for your AKS resources.
+     This example will create a managed cluster named <literal>MC_cap-aks_cjs_eastus</literal>:
     </para>
 <screen>&prompt.user;export AKSNAME=<replaceable>cjs</replaceable></screen>
    </step>
@@ -190,10 +194,16 @@ cap-aks</screen>
     <para>
         Create a unique nodepool name. The default is 
         <literal>aks-nodepool</literal> followed by an auto-generated number,
-        e.g. <literal>aks-nodepool1-39318075-2</literal>. The following example changes it to <literal>aks-mypool</literal>:
+        e.g. <literal>aks-nodepool1-39318075-2</literal>. You have the option to
+        change <literal>nodepool1</literal> and create your own unique 
+        identifier, for example, <literal>mypool</literal>:
     </para>
 <screen>&prompt.user;export NODEPOOLNAME="<replaceable>mypool</replaceable>"</screen>
-   </step>   
+   <para>
+       Which results in something like <literal>aks-mypool-39318075-2</literal>.
+   </para>
+   </step>
+
   </procedure>
 
   <para>
@@ -291,18 +301,18 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
 
   <procedure xml:id="pro.swap-account">
    <step>
-<screen>&prompt.user;export MCRGNAME=$(az group list -o table | grep MC_"$RGNAME"_ | awk '{print$1}')</screen>
+<screen>&prompt.user;export MCRGNAME=$(az group list -o table | grep MC_"$RGNAME"_ | awk '{print $1}')</screen>
    </step>
    <step>
        <para>
            Replace <literal>mypool</literal> with your NODEPOOLNAME value:
        </para>
-       <screen>&prompt.user;VMNODES=$(az vm list -g $MCRGNAME -o json | jq -r '.[] | select (.tags.poolName | contains("<replaceable>mypool</replaceable>")) | .name')</screen>
+       <screen>&prompt.user;VMNODES=$(az vm list --resource-group $MCRGNAME -o json | jq -r '.[] | select (.tags.poolName | contains("<replaceable>mypool</replaceable>")) | .name')</screen>
    </step>
    <step>
 <screen>&prompt.user;for i in $VMNODES
  do
-   az vm run-command invoke -g $MCRGNAME -n $i --command-id RunShellScript \
+   az vm run-command invoke --resource-group $MCRGNAME --name $i --command-id RunShellScript \
    --scripts "sudo sed -i 's|linux.*./boot/vmlinuz-.*|&amp; swapaccount=1|' /boot/grub/grub.cfg"
 done</screen>
    </step>
@@ -314,7 +324,7 @@ done</screen>
        </para>
 <screen>&prompt.user;for i in $VMNODES; 
 do 
-    az vm restart -g $MCRGNAME -n $i;
+    az vm restart --resource-group $MCRGNAME --name $i;
 done
 </screen>
    </step>
@@ -415,7 +425,7 @@ done</screen>
     <para>
      Verify port setup:
     </para>
-<screen>&prompt.user;az network lb rule list -g $MCRGNAME --lb-name $AKSNAME-lb|grep -i port
+<screen>&prompt.user;az network lb rule list --resource-group $MCRGNAME --lb-name $AKSNAME-lb|grep -i port
     
     "backendPort": 8443,
     "frontendPort": 8443,
@@ -471,13 +481,13 @@ Private IPs:\t\t\"$(az network nic list --resource-group $MCRGNAME -o json | jq 
   </procedure>
  </sect1>
 <sect1 xml:id="sec.cap.tiller-service">
-    <title>Create &tiller; Service</title>
+    <title>Create &tiller; Service Account</title>
     <para>
-        You must create a &tiller; service in order to give it sufficient
-        permissions to make changes on your cluster. Run these commands
-        to create your &tiller; service:
+        You must create a &tiller; service account in order to give &tiller; 
+        sufficient permissions to make changes on your cluster. Run these commands
+        to create your &tiller; service account:
     </para>
-    <screen>&prompt.user;kubectl -n kube-system create serviceaccount tiller
+    <screen>&prompt.user;kubectl --name kube-system create serviceaccount tiller
  serviceaccount "tiller" created
 
 &prompt.user;kubectl create clusterrolebinding tiller \
