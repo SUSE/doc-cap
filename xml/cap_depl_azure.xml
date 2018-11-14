@@ -50,8 +50,10 @@
 
   <para>
    You also need the <command>kubectl</command>, <command>curl</command>,
-   <command>sed</command>, and <command>jq</command> commands, and the name of
-   the SSH key that is attached to your Azure account.
+   <command>sed</command>, and <command>jq</command> commands, &helm; 2.9 or newer,
+   and the name of the SSH key that is attached to your Azure account. (Get
+   &helm; from
+   <link xlink:href="https://github.com/helm/helm/releases">Helm Releases</link>.)
   </para>
 
   <para>
@@ -270,6 +272,72 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
    next steps.
   </para>
  </sect1>
+ 
+<sect1 xml:id="sec.cap.tiller-service">
+    <title>Create &tiller; Service Account</title>
+    <para>
+        You must create a &tiller; service account in order to give &tiller; 
+        sufficient permissions to make changes on your cluster. There are two ways
+        to create a service account: from the command line with 
+        <command>kubectl</command>, or applying a configuration file with <command>kubectl</command> and <command>helm</command>.
+    </para>
+    <para>
+        Run these <command>kubectl</command> commands
+        to create your &tiller; service account:
+    </para>
+    <screen>&prompt.user;kubectl --name kube-system create serviceaccount tiller
+ serviceaccount "tiller" created
+
+&prompt.user;kubectl create clusterrolebinding tiller \
+--clusterrole cluster-admin \
+--serviceaccount=kube-system:tiller
+ clusterrolebinding.rbac.authorization.k8s.io "tiller" created
+
+&prompt.user;helm init --upgrade --service-account tiller
+ $HELM_HOME has been configured at /home/&exampleuser_plain;/.helm.
+
+ Tiller (the Helm server-side component) has been installed into your Kubernetes Cluster.
+ Happy Helming!</screen>
+ 
+  <para>
+   Creating your &tiller; service account with a configuration file requires
+    &helm; version 2.9 or newer (see
+   <link xlink:href="https://github.com/helm/helm/releases"/>
+  </para>
+
+  <para>
+  First create the configuration file, which this example is  
+  <filename>rbac-config.yaml</filename>:
+  </para>
+
+<screen>apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tiller
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: tiller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: tiller
+    namespace: kube-system</screen>
+
+  <para>
+   Apply it to your cluster with these commands:
+  </para>
+
+<screen>&prompt.user;kubectl create -f rbac-config.yaml
+&prompt.user;helm init --service-account tiller</screen>
+ </sect1> 
+ 
+ 
  <sect1 xml:id="sec.cap.psp">
   <title>Apply Pod Security Policies</title>
 
@@ -278,7 +346,8 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
    instructions in <xref linkend="sec.cap.caasp-3"/> to apply pod security
    policies (PSPs) to your new AKS cluster. Also note that when you create your
    &cap; configuration file (e.g. <filename>scf-config-values.yaml</filename>),
-   you must set <literal>auth: "rbac"</literal>.
+   you must set <literal>auth: "rbac"</literal>. (See 
+   <xref linkend="sec.cap.cap-on-azure"/> for an example configuration file.)
   </para>
 
   <para>
@@ -288,6 +357,7 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
    This is less secure, but may be useful for testing.
   </para>
  </sect1>
+ 
  <sect1 xml:id="sec.cap.swap-accounting">
   <title>Enable Swap Accounting</title>
 
@@ -480,29 +550,10 @@ Private IPs:\t\t\"$(az network nic list --resource-group $MCRGNAME -o json | jq 
    </step>
   </procedure>
  </sect1>
-<sect1 xml:id="sec.cap.tiller-service">
-    <title>Create &tiller; Service Account</title>
-    <para>
-        You must create a &tiller; service account in order to give &tiller; 
-        sufficient permissions to make changes on your cluster. Run these commands
-        to create your &tiller; service account:
-    </para>
-    <screen>&prompt.user;kubectl --name kube-system create serviceaccount tiller
- serviceaccount "tiller" created
 
-&prompt.user;kubectl create clusterrolebinding tiller \
---clusterrole cluster-admin \
---serviceaccount=kube-system:tiller
- clusterrolebinding.rbac.authorization.k8s.io "tiller" created
-
-&prompt.user;helm init --upgrade --service-account tiller
- $HELM_HOME has been configured at /home/&exampleuser_plain;/.helm.
-
- Tiller (the Helm server-side component) has been installed into your Kubernetes Cluster.
- Happy Helming!</screen>
-</sect1>
  
-<sect1>
+ 
+<sect1 xml:id="sec.cap.cap-on-azure">
     <title>Deploy &productname;</title>
   <para>
    Now Azure is ready, and you can deploy &productname; on it. After reviewing
