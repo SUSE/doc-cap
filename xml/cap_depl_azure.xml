@@ -16,10 +16,10 @@
   </dm:docmanager>
  </info>
  <para>
-  &productname; supports deployment on Microsoft Azure
-  Kubernetes Service (AKS), Microsoft's managed &kube; service. This chapter
-  describes the steps for preparing Azure for a &productname; deployment, with
-  a basic Azure load balancer. (See
+  &productname; supports deployment on Microsoft Azure Kubernetes Service
+  (AKS), Microsoft's managed &kube; service. This chapter describes the steps
+  for preparing Azure for a &productname; deployment, with a basic Azure load
+  balancer. (See
   <link xlink:href="https://azure.microsoft.com/en-us/services/container-service/">
   Azure Kubernetes Service (AKS)</link> for more information.)
  </para>
@@ -50,10 +50,11 @@
 
   <para>
    You also need the <command>kubectl</command>, <command>curl</command>,
-   <command>sed</command>, and <command>jq</command> commands, &helm; 2.9 or newer,
-   and the name of the SSH key that is attached to your Azure account. (Get
-   &helm; from
-   <link xlink:href="https://github.com/helm/helm/releases">Helm Releases</link>.)
+   <command>sed</command>, and <command>jq</command> commands, &helm; 2.9 or
+   newer, and the name of the SSH key that is attached to your Azure account.
+   (Get &helm; from
+   <link xlink:href="https://github.com/helm/helm/releases">Helm
+   Releases</link>.)
   </para>
 
   <para>
@@ -108,7 +109,6 @@
    register --name <replaceable>provider</replaceable></command> command.
   </para>
  </sect1>
- 
  <sect1 xml:id="sec.cap.create-aks-instance">
   <title>Create Resource Group and AKS Instance</title>
 
@@ -119,21 +119,24 @@
    with <command>echo $<replaceable>VARNAME</replaceable></command>, for
    example:
   </para>
-  <screen>&prompt.user;echo $RGNAME
+
+<screen>&prompt.user;echo $RGNAME
 cap-aks</screen>
-<para>
-    This is especially useful when you run long compound commands to
-    extract and set environment variables.
-</para>
+
+  <para>
+   This is especially useful when you run long compound commands to extract and
+   set environment variables.
+  </para>
+
   <note>
    <title>Use different names</title>
    <para>
-    It is better to use unique resource group and managed cluster names, and not copy
-    the examples, especially when your Azure subscription supports multiple
-    users. Azure has no tools for sorting resources by user, so creating unique names and putting 
-    everything in your deployment in a single resource group
-    helps you keep track, and you can delete the whole deployment by deleting the
-    resource group.
+    It is better to use unique resource group and managed cluster names, and
+    not copy the examples, especially when your Azure subscription supports
+    multiple users. Azure has no tools for sorting resources by user, so
+    creating unique names and putting everything in your deployment in a single
+    resource group helps you keep track, and you can delete the whole
+    deployment by deleting the resource group.
    </para>
   </note>
 
@@ -148,12 +151,13 @@ cap-aks</screen>
     <para>
      Create the AKS managed cluster name. Azure's default is to use the
      resource group name, then prepend it with <literal>MC</literal> and append
-     the location, e.g. <literal>MC_cap-aks_cap-aks_eastus</literal>. This 
-     example uses the creator's initials for the <literal>AKSNAME</literal> environment
-     variable, which will be mapped to the <command>az</command> command's 
-     <command>--name</command> option. The <command>--name</command> option is for
-creating arbitrary names for your AKS resources.
-     This example will create a managed cluster named <literal>MC_cap-aks_cjs_eastus</literal>:
+     the location, e.g. <literal>MC_cap-aks_cap-aks_eastus</literal>. This
+     example uses the creator's initials for the <literal>AKSNAME</literal>
+     environment variable, which will be mapped to the <command>az</command>
+     command's <command>--name</command> option. The <command>--name</command>
+     option is for creating arbitrary names for your AKS resources. This
+     example will create a managed cluster named
+     <literal>MC_cap-aks_cjs_eastus</literal>:
     </para>
 <screen>&prompt.user;export AKSNAME=<replaceable>cjs</replaceable></screen>
    </step>
@@ -161,8 +165,8 @@ creating arbitrary names for your AKS resources.
     <para>
      Set the Azure location. (See
      <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/container-service-quotas">
-     Quotas and region availability for Azure Kubernetes Service (AKS)</link> for
-     supported locations.)
+     Quotas and region availability for Azure Kubernetes Service (AKS)</link>
+     for supported locations.)
     </para>
 <screen>&prompt.user;export REGION="<replaceable>eastus</replaceable>"</screen>
    </step>
@@ -194,18 +198,17 @@ creating arbitrary names for your AKS resources.
    </step>
    <step>
     <para>
-        Create a unique nodepool name. The default is 
-        <literal>aks-nodepool</literal> followed by an auto-generated number,
-        e.g. <literal>aks-nodepool1-39318075-2</literal>. You have the option to
-        change <literal>nodepool1</literal> and create your own unique 
-        identifier, for example, <literal>mypool</literal>:
+     Create a unique nodepool name. The default is
+     <literal>aks-nodepool</literal> followed by an auto-generated number, e.g.
+     <literal>aks-nodepool1-39318075-2</literal>. You have the option to change
+     <literal>nodepool1</literal> and create your own unique identifier, for
+     example, <literal>mypool</literal>:
     </para>
 <screen>&prompt.user;export NODEPOOLNAME="<replaceable>mypool</replaceable>"</screen>
-   <para>
-       Which results in something like <literal>aks-mypool-39318075-2</literal>.
-   </para>
+    <para>
+     Which results in something like <literal>aks-mypool-39318075-2</literal>.
+    </para>
    </step>
-
   </procedure>
 
   <para>
@@ -226,7 +229,8 @@ creating arbitrary names for your AKS resources.
 
   <note>
    <para>
-    An OS disk size of at least 60GB must be specified using the <command>--node-osdisk-size</command> flag.
+    An OS disk size of at least 60GB must be specified using the
+    <command>--node-osdisk-size</command> flag.
    </para>
   </note>
 
@@ -235,8 +239,9 @@ creating arbitrary names for your AKS resources.
    <command>kubectl</command> credentials. The default behavior for <command>az
    aks get-credentials</command> is to merge the new credentials with the
    existing default configuration, and to set the new credentials as as the
-   current &kube; context. The context name is your AKSNAME value. You should first backup your current configuration,
-   or move it to a different location, then fetch the new credentials:
+   current &kube; context. The context name is your AKSNAME value. You should
+   first backup your current configuration, or move it to a different location,
+   then fetch the new credentials:
   </para>
 
 <screen>&prompt.user;az aks get-credentials --resource-group $RGNAME --name $AKSNAME
@@ -272,20 +277,23 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
    next steps.
   </para>
  </sect1>
- 
-<sect1 xml:id="sec.cap.tiller-service">
-    <title>Create &tiller; Service Account</title>
-    <para>
-        You must create a &tiller; service account in order to give &tiller; 
-        sufficient permissions to make changes on your cluster. There are two ways
-        to create a service account: from the command line with 
-        <command>kubectl</command>, or applying a configuration file with <command>kubectl</command> and <command>helm</command>.
-    </para>
-    <para>
-        Run these <command>kubectl</command> commands
-        to create your &tiller; service account:
-    </para>
-    <screen>&prompt.user;kubectl --name kube-system create serviceaccount tiller
+ <sect1 xml:id="sec.cap.tiller-service">
+  <title>Create &tiller; Service Account</title>
+
+  <para>
+   You must create a &tiller; service account in order to give &tiller;
+   sufficient permissions to make changes on your cluster. There are two ways
+   to create a service account: from the command line with
+   <command>kubectl</command>, or applying a configuration file with
+   <command>kubectl</command> and <command>helm</command>.
+  </para>
+
+  <para>
+   Run these <command>kubectl</command> commands to create your &tiller;
+   service account:
+  </para>
+
+<screen>&prompt.user;kubectl --name kube-system create serviceaccount tiller
  serviceaccount "tiller" created
 
 &prompt.user;kubectl create clusterrolebinding tiller \
@@ -298,16 +306,16 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
 
  Tiller (the Helm server-side component) has been installed into your Kubernetes Cluster.
  Happy Helming!</screen>
- 
+
   <para>
    Creating your &tiller; service account with a configuration file requires
-    &helm; version 2.9 or newer (see
+   &helm; version 2.9 or newer (see
    <link xlink:href="https://github.com/helm/helm/releases"/>
   </para>
 
   <para>
-  First create the configuration file, which this example is  
-  <filename>rbac-config.yaml</filename>:
+   First create the configuration file, which this example is
+   <filename>rbac-config.yaml</filename>:
   </para>
 
 <screen>apiVersion: v1
@@ -335,9 +343,7 @@ subjects:
 
 <screen>&prompt.user;kubectl create -f rbac-config.yaml
 &prompt.user;helm init --service-account tiller</screen>
- </sect1> 
- 
- 
+ </sect1>
  <sect1 xml:id="sec.cap.psp">
   <title>Apply Pod Security Policies</title>
 
@@ -346,27 +352,26 @@ subjects:
    instructions in <xref linkend="sec.cap.caasp-3"/> to apply pod security
    policies (PSPs) to your new AKS cluster. Also note that when you create your
    &cap; configuration file (e.g. <filename>scf-config-values.yaml</filename>),
-   you must set <literal>auth: "rbac"</literal>. (See 
+   you must set <literal>auth: "rbac"</literal>. (See
    <xref linkend="sec.cap.cap-on-azure"/> for an example configuration file.)
   </para>
 
   <para>
    You may disable RBAC during cluster creation with the
-   <command>--disable-rbac</command> option, and then set 
-   <literal>auth: none</literal>. Do not apply the PSPs.
-   This is less secure, but may be useful for testing.
+   <command>--disable-rbac</command> option, and then set <literal>auth:
+   none</literal>. Do not apply the PSPs. This is less secure, but may be
+   useful for testing.
   </para>
  </sect1>
- 
  <sect1 xml:id="sec.cap.swap-accounting">
   <title>Enable Swap Accounting</title>
 
   <para>
    Identify and set the cluster resource group, then enable kernel swap
    accounting. Swap accounting is required by &cap;, but it is not the default
-   in AKS nodes. The following commands use the <command>az</command>
-   command to modify the GRUB configuration on each node, and then reboot the
-   virtual machines.
+   in AKS nodes. The following commands use the <command>az</command> command
+   to modify the GRUB configuration on each node, and then reboot the virtual
+   machines.
   </para>
 
   <procedure xml:id="pro.swap-account">
@@ -374,10 +379,10 @@ subjects:
 <screen>&prompt.user;export MCRGNAME=$(az group list -o table | grep MC_"$RGNAME"_ | awk '{print $1}')</screen>
    </step>
    <step>
-       <para>
-           Replace <literal>mypool</literal> with your NODEPOOLNAME value:
-       </para>
-       <screen>&prompt.user;VMNODES=$(az vm list --resource-group $MCRGNAME -o json | jq -r '.[] | select (.tags.poolName | contains("<replaceable>mypool</replaceable>")) | .name')</screen>
+    <para>
+     Replace <literal>mypool</literal> with your NODEPOOLNAME value:
+    </para>
+<screen>&prompt.user;VMNODES=$(az vm list --resource-group $MCRGNAME -o json | jq -r '.[] | select (.tags.poolName | contains("<replaceable>mypool</replaceable>")) | .name')</screen>
    </step>
    <step>
 <screen>&prompt.user;for i in $VMNODES
@@ -387,11 +392,11 @@ subjects:
 done</screen>
    </step>
    <step>
-          <para>
-       Look for <literal>"Provisioning succeeded"</literal> messages when step 3
-       has completed, then reboot your virtual machines, which takes
-       a few minutes:
-       </para>
+    <para>
+     Look for <literal>"Provisioning succeeded"</literal> messages when step 3
+     has completed, then reboot your virtual machines, which takes a few
+     minutes:
+    </para>
 <screen>&prompt.user;for i in $VMNODES; 
 do 
     az vm restart --resource-group $MCRGNAME --name $i;
@@ -399,7 +404,6 @@ done
 </screen>
    </step>
   </procedure>
-
  </sect1>
  <sect1 xml:id="sec.cap.loadbalancer-azure">
   <title>Create a Basic Load Balancer and Public IP Address</title>
@@ -454,7 +458,6 @@ done</screen>
    </step>
   </procedure>
  </sect1>
- 
  <sect1 xml:id="sec.cap.security-rules">
   <title>Configure Load Balancing and Network Security Rules</title>
 
@@ -550,25 +553,25 @@ Private IPs:\t\t\"$(az network nic list --resource-group $MCRGNAME -o json | jq 
    </step>
   </procedure>
  </sect1>
+ <sect1 xml:id="sec.cap.cap-on-azure">
+  <title>Deploy &productname;</title>
 
- 
- 
-<sect1 xml:id="sec.cap.cap-on-azure">
-    <title>Deploy &productname;</title>
   <para>
    Now Azure is ready, and you can deploy &productname; on it. After reviewing
-   the rest of this section proceed to <xref linkend="sec.cap.helm-deploy-prod"/>. (Note that you
-   will not install &suse; &caasp;, which provides a &kube; cluster, because
-   AKS provides a managed &kube; cluster.) 
-   </para>
-<para>
+   the rest of this section proceed to
+   <xref linkend="sec.cap.helm-deploy-prod"/>. (Note that you will not install
+   &suse; &caasp;, which provides a &kube; cluster, because AKS provides a
+   managed &kube; cluster.)
+  </para>
+
+  <para>
    The following example <filename>scf-azure-values.yaml</filename> contains
    parameters particular to running &productname; on Azure Kubernetes Service.
-   You need the IP addresses from the last command in 
-   <xref linkend="sec.cap.security-rules"/>.
-   This is a simplified example that does not use Azure's DNS services. For
-   quick testing and proof of concept, you can use the free wildcard DNS
-   services, <link xlink:href="http://xip.io/">xip.io</link> or
+   You need the IP addresses from the last command in
+   <xref linkend="sec.cap.security-rules"/>. This is a simplified example that
+   does not use Azure's DNS services. For quick testing and proof of concept,
+   you can use the free wildcard DNS services,
+   <link xlink:href="http://xip.io/">xip.io</link> or
    <link xlink:href="http://nip.io/">nip.io</link>. See
    <link xlink:href="https://docs.microsoft.com/en-us/azure/dns/"> Azure DNS
    Documentation</link> to learn more about Azure's name services.
@@ -614,7 +617,7 @@ kube:
     password: ""
   organization: "cap"
   auth: "rbac"</screen>
-  
+
   <para>
    When your UAA deployment has completed, test that it is operating correctly
    by running <command>curl</command> on the DNS name that you configured for
@@ -632,8 +635,8 @@ kube:
 /oauth/authorize","token_endpoint":"https://uaa.&publicip;.
 xip.io:2793/oauth/token"</screen>
 
-<para>
-    Now you can complete your deployment.
-</para>
+  <para>
+   Now you can complete your deployment.
+  </para>
  </sect1>
 </chapter>

@@ -51,9 +51,7 @@
 
   <variablelist>
    <varlistentry>
-    <term>
-	    Minimum Hardware Requirements
-	  </term>
+    <term>Minimum Hardware Requirements</term>
     <listitem>
      <para>
       8GB of memory per &caasp; dashboard and &kube; master nodes.
@@ -92,9 +90,7 @@
     </listitem>
    </varlistentry>
    <varlistentry>
-    <term>
-     Install &suse; &caasp;
-   </term>
+    <term>Install &suse; &caasp;</term>
     <listitem>
      <para>
       &productname; is supported on &suse; &caasp; 2 and 3. Installation is
@@ -213,9 +209,7 @@ d028551.example.com   Ready    &lt;none>    4h   v1.9.8
     </listitem>
    </varlistentry>
    <varlistentry>
-    <term>
-          Install &helm;
-      </term>
+    <term>Install &helm;</term>
     <listitem>
      <para>
       Deploying &productname; is different than the usual method of installing
@@ -223,7 +217,7 @@ d028551.example.com   Ready    &lt;none>    4h   v1.9.8
       Zypper, you will install the &helm; client on your workstation to install
       the required Kubernetes applications to set up &productname;, and to
       administer your cluster remotely. &helm; is the &kube; package manager.
-      The &helm; client goes on your remote administration computer, and Tiller 
+      The &helm; client goes on your remote administration computer, and Tiller
       is &helm;'s server, which is installed on your &kube; cluster.
      </para>
      <para>
@@ -291,11 +285,11 @@ Happy Helming!</screen>
    <para>
     See
     <link xlink:href="https://kubernetes.io/docs/concepts/policy/pod-security-policy/">
-    Pod Security Policies</link>, 
-    <link xlink:href="https://docs.cloudfoundry.org/concepts/roles.html">
-        Orgs, Spaces, Roles, and Permissions</link>, and
+    Pod Security Policies</link>,
+    <link xlink:href="https://docs.cloudfoundry.org/concepts/roles.html"> Orgs,
+    Spaces, Roles, and Permissions</link>, and
     <link xlink:href="https://docs.cloudfoundry.org/uaa/identity-providers.html#id-flow">
-        Identity Provider Workflow</link> for more information.
+    Identity Provider Workflow</link> for more information.
    </para>
    <para>
     Currently, all the pods are created using the default
@@ -689,15 +683,15 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -</screen>
    &suse; &cf;. Pressing <keycombo> <keycap function="control"/>
    <keycap>C</keycap> </keycombo> stops the <command>watch</command> command.
   </para>
-  
+
   <important>
-      <title>Some Pods Show Not Running</title>
-      <para>
-          Some UAA and SCF pods perform only deployment tasks, and it is normal 
-          for them to show as unready after they have completed their tasks, as
-          these examples show:
-      </para>
-      <screen>
+   <title>Some Pods Show Not Running</title>
+   <para>
+    Some UAA and SCF pods perform only deployment tasks, and it is normal for
+    them to show as unready after they have completed their tasks, as these
+    examples show:
+   </para>
+<screen>
 &prompt.user;kubectl get pods --namespace uaa
 secret-generation-1-z4nlz   0/1       Completed
           
@@ -705,8 +699,7 @@ secret-generation-1-z4nlz   0/1       Completed
 secret-generation-1-m6k2h       0/1       Completed
 post-deployment-setup-1-hnpln   0/1       Completed</screen>
   </important>
-  </sect1>
- 
+ </sect1>
  <sect1 xml:id="sec.cap.install-scf-prod">
   <title>Deploy SCF</title>
 

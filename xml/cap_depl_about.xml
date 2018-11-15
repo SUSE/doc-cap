@@ -15,13 +15,9 @@
   </dm:docmanager>
   <title>About &productname;</title>
  </info>
- 
- <!--references-->
- 
- <!--https://www.slideshare.net/NETWAYS/osdc-2018-highly-available-cloud-foundry-on-kubernetes-by-cornelius-schumacher -->
- 
- <!-- https://github.com/SUSE/cloudfoundry/wiki/Documentation-for-Security-Review#service-architecture-diagram --> 
- 
+<!--references-->
+<!--https://www.slideshare.net/NETWAYS/osdc-2018-highly-available-cloud-foundry-on-kubernetes-by-cornelius-schumacher -->
+<!-- https://github.com/SUSE/cloudfoundry/wiki/Documentation-for-Security-Review#service-architecture-diagram -->
  <sect1 xml:id="sec.cap.changes">
   <title>New in Version &productnumber;</title>
 
@@ -38,7 +34,6 @@
    </para>
   </note>
  </sect1>
- 
  <sect1 xml:id="sec.cap.overview">
   <title>&productname; Overview</title>
 
@@ -151,17 +146,16 @@
    and configurations which are deployed to &kube; clusters using &helm;.
   </para>
  </sect1>
- 
-  <sect1 xml:id="sec.cap.requirements">
-  <title>Minimum Requirements</title>  
-  
+ <sect1 xml:id="sec.cap.requirements">
+  <title>Minimum Requirements</title>
+
   <para>
    This guide details the steps for deploying &scf; on &suse; &caasp;, and on
    supported &kube; environments such as Microsoft Azure Kubernetes Service
-   (AKS), and Amazon Elastic Container Service for Kubernetes (EKS). &suse; &caasp; is a specialized application development and hosting platform
-   built on the &susemicros; container host operating system, container
-   orchestration with &kube;, and &salt; for automating installation and
-   configuration.
+   (AKS), and Amazon Elastic Container Service for Kubernetes (EKS). &suse;
+   &caasp; is a specialized application development and hosting platform built
+   on the &susemicros; container host operating system, container orchestration
+   with &kube;, and &salt; for automating installation and configuration.
   </para>
 
   <important>
@@ -176,7 +170,7 @@
     underlying stack.
    </para>
   </important>
-  
+
   <para>
    A supported deployment includes &scf; installed on &caasp;, Amazon EKS, or
    Azure AKS. You also need a storage backend, such as &ses;, a DNS/DHCP
@@ -184,6 +178,7 @@
    installation and ~10GB of Docker images on each &kube; worker after
    installation.
   </para>
+
   <para>
    A production deployment requires considerable resources. &productname;
    includes an entitlement of &suse; &caasp; and &ses;. &ses; alone has
@@ -231,43 +226,42 @@
    and Developing Buildpacks</link> to learn more about buildpacks, and
    creating and managing your own.)
   </para>
-</sect1>
-
-
-<sect1 xml:id="sec.cap.architecture">
+ </sect1>
+ <sect1 xml:id="sec.cap.architecture">
   <title>&productname; Architecture</title>
+
   <para>
-   The following figures illustrate the main structural concepts of &productname;.
-   <xref linkend="fig.cap.cloud-101"/> shows a comparison of the basic cloud
-   platforms:
-   </para>
-   
-   <itemizedlist>
-       <listitem>
-           <para>
-               Infrastructure as a Service (IaaS)
-           </para>
-        </listitem>
-        <listitem>
-            <para>
-               Container as a Service (CaaS) 
-           </para>
-       </listitem>
-       <listitem>
-           <para>
-               Platform as a Service (Paas)
-           </para>
-       </listitem>
-       <listitem>
-           <para>
-             Software as a Service (SaaS)
-         </para>
-     </listitem>
- </itemizedlist>
- 
- <para>
-   &suse; &caasp; is a Container as a Service platform, and &productname; is
-   a PaaS.
+   The following figures illustrate the main structural concepts of
+   &productname;. <xref linkend="fig.cap.cloud-101"/> shows a comparison of the
+   basic cloud platforms:
+  </para>
+
+  <itemizedlist>
+   <listitem>
+    <para>
+     Infrastructure as a Service (IaaS)
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Container as a Service (CaaS)
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Platform as a Service (Paas)
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Software as a Service (SaaS)
+    </para>
+   </listitem>
+  </itemizedlist>
+
+  <para>
+   &suse; &caasp; is a Container as a Service platform, and &productname; is a
+   PaaS.
   </para>
 
   <figure xml:id="fig.cap.cloud-101">
@@ -306,9 +300,9 @@
 
   <para>
    <xref linkend="fig.cap.stack"/> shows the relationships of the major
-   components of the software stack. &productname; runs on &kube;, which in turn 
-   runs on multiple platforms, from bare metal to various cloud stacks. Your
-   applications run on &productname; and provide services.
+   components of the software stack. &productname; runs on &kube;, which in
+   turn runs on multiple platforms, from bare metal to various cloud stacks.
+   Your applications run on &productname; and provide services.
   </para>
 
   <figure xml:id="fig.cap.stack">
@@ -325,511 +319,465 @@
     </textobject>
    </mediaobject>
   </figure>
-  
-<sect2 xml:id="sec.cap.components">
+
+  <sect2 xml:id="sec.cap.components">
    <title>&scf; Components</title>
    <para>
-       &scf; is comprised of developer and administrator clients, trusted
-       download sites, transient and long-running components, APIs, and
-       authentication:
+    &scf; is comprised of developer and administrator clients, trusted download
+    sites, transient and long-running components, APIs, and authentication:
    </para>
-<itemizedlist>
+   <itemizedlist>
     <listitem>
      <para>
-         Clients for developers and admins to interact with &scf;: the 
-         &cfcli;, which provides the <command>cf</command> command, Stratos Web 
-         interface, IDE plugins.
+      Clients for developers and admins to interact with &scf;: the &cfcli;,
+      which provides the <command>cf</command> command, Stratos Web interface,
+      IDE plugins.
      </para>
- </listitem>
+    </listitem>
     <listitem>
      <para>
-         Docker Trusted Registry owned by SUSE.
+      Docker Trusted Registry owned by SUSE.
      </para>
- </listitem>
+    </listitem>
     <listitem>
      <para>
-         &suse; Helm chart repository.
+      &suse; Helm chart repository.
      </para>
- </listitem>
+    </listitem>
     <listitem>
      <para>
-         &helm;, the &kube; package manager, which includes Tiller, the &helm;
-         server, and the <command>helm</command> command-line client.
+      &helm;, the &kube; package manager, which includes Tiller, the &helm;
+      server, and the <command>helm</command> command-line client.
      </para>
- </listitem>
-     <listitem>
+    </listitem>
+    <listitem>
      <para>
-         <command>kubectl</command>, the command-line client for &kube;.
+      <command>kubectl</command>, the command-line client for &kube;.
      </para>
- </listitem>
-     <listitem>
+    </listitem>
+    <listitem>
      <para>
-         Long-running &scf; components.
+      Long-running &scf; components.
      </para>
- </listitem> 
-      <listitem>
+    </listitem>
+    <listitem>
      <para>
-         &scf; post-deployment components: Transient &scf; components that start after all &scf; components are started, perform their tasks, and then
-         exit.
+      &scf; post-deployment components: Transient &scf; components that start
+      after all &scf; components are started, perform their tasks, and then
+      exit.
      </para>
- </listitem>
-       <listitem>
+    </listitem>
+    <listitem>
      <para>
-         &scf; Linux cell, an elastic runtime component that runs Linux applications.
+      &scf; Linux cell, an elastic runtime component that runs Linux
+      applications.
      </para>
- </listitem>
-        <listitem>
+    </listitem>
+    <listitem>
      <para>
-         UAA, a &cap; service for authentication and authorization.
+      UAA, a &cap; service for authentication and authorization.
      </para>
- </listitem>
-         <listitem>
+    </listitem>
+    <listitem>
      <para>
-         The &kube; API.
+      The &kube; API.
      </para>
- </listitem>
-</itemizedlist> 
+    </listitem>
+   </itemizedlist>
   </sect2>
-  
-<sect2 xml:id="sec.cap.containers">
-    <title>&scf; containers</title>
+
+  <sect2 xml:id="sec.cap.containers">
+   <title>&scf; containers</title>
    <para>
-   <xref linkend="fig.cap.cap-containers"/> provides a look at &scf;'s
-   containers.
-  </para>
-
-  <figure xml:id="fig.cap.cap-containers">
-   <title>&scf; Containers, Grouped by Function</title>
-   <mediaobject>
-    <imageobject role="fo">
-     <imagedata fileref="cap-containers.png" format="PNG" width="75%"/>
-    </imageobject>
-    <imageobject role="html">
-     <imagedata fileref="cap-containers.png"/>
-    </imageobject>
-    <textobject role="description"><phrase>&scf;'s containers, grouped
+    <xref linkend="fig.cap.cap-containers"/> provides a look at &scf;'s
+    containers.
+   </para>
+   <figure xml:id="fig.cap.cap-containers">
+    <title>&scf; Containers, Grouped by Function</title>
+    <mediaobject>
+     <imageobject role="fo">
+      <imagedata fileref="cap-containers.png" format="PNG" width="75%"/>
+     </imageobject>
+     <imageobject role="html">
+      <imagedata fileref="cap-containers.png"/>
+     </imageobject>
+     <textobject role="description"><phrase>&scf;'s containers, grouped
             by functionality.</phrase>
-    </textobject>
-   </mediaobject>
-  </figure>
-  
- <variablelist>
-     <title>List of &scf; Containers</title>
-   <varlistentry>
-    <term>
-	    api
-	  </term>
-    <listitem>
-     <para>
-         Contains the &scf; Cloud Controller, which implements the CF API. It is exposed via the router.
-     </para>
- </listitem>
- </varlistentry>
+     </textobject>
+    </mediaobject>
+   </figure>
+   <variablelist>
+    <title>List of &scf; Containers</title>
     <varlistentry>
-    <term>
-	    blobstore
-	  </term>
-    <listitem>
-     <para>
-         A WebDAV blobstore for storing application bits, buildpacks, and stacks.
-     </para>
- </listitem>
-</varlistentry>
+     <term>api</term>
+     <listitem>
+      <para>
+       Contains the &scf; Cloud Controller, which implements the CF API. It is
+       exposed via the router.
+      </para>
+     </listitem>
+    </varlistentry>
     <varlistentry>
-    <term>
-	    cc-clock
-	  </term>
-    <listitem>
-     <para>
-         Sidekick to the Cloud Controller, periodically performing maintenance tasks such as resource cleanup.
-     </para>
-    </listitem>  
-</varlistentry>     
+     <term>blobstore</term>
+     <listitem>
+      <para>
+       A WebDAV blobstore for storing application bits, buildpacks, and stacks.
+      </para>
+     </listitem>
+    </varlistentry>
     <varlistentry>
-    <term>
-	    cc-uploader
-	  </term>
-    <listitem>
-     <para>
-         Assists droplet upload from Diego.
-     </para>     
- </listitem>
-</varlistentry>
+     <term>cc-clock</term>
+     <listitem>
+      <para>
+       Sidekick to the Cloud Controller, periodically performing maintenance
+       tasks such as resource cleanup.
+      </para>
+     </listitem>
+    </varlistentry>
     <varlistentry>
-    <term>
-	    cc-worker
-	  </term>
-    <listitem>
-     <para>
-         Sidekick to the Cloud Controller, processes background tasks.
-     </para>     
- </listitem>
-</varlistentry>
+     <term>cc-uploader</term>
+     <listitem>
+      <para>
+       Assists droplet upload from Diego.
+      </para>
+     </listitem>
+    </varlistentry>
     <varlistentry>
-    <term>
-	    cf-usb
-	  </term>
-    <listitem>
-     <para>
-         Universal Service Broker; &suse;'s own component for managing and publishing service brokers.
-     </para>     
- </listitem>
-</varlistentry>
+     <term>cc-worker</term>
+     <listitem>
+      <para>
+       Sidekick to the Cloud Controller, processes background tasks.
+      </para>
+     </listitem>
+    </varlistentry>
     <varlistentry>
-    <term>
-	    diego-access
-	  </term>
-    <listitem>
-     <para>
-         Provides SSH access to user applications, exposed via a &kube; service.
-     </para>     
- </listitem>
-</varlistentry>
+     <term>cf-usb</term>
+     <listitem>
+      <para>
+       Universal Service Broker; &suse;'s own component for managing and
+       publishing service brokers.
+      </para>
+     </listitem>
+    </varlistentry>
     <varlistentry>
-    <term>
-	    diego-api 
-	  </term>
-    <listitem>
-     <para>
-         API for the Diego scheduler.
-     </para>     
- </listitem>
-</varlistentry>
+     <term>diego-access</term>
+     <listitem>
+      <para>
+       Provides SSH access to user applications, exposed via a &kube; service.
+      </para>
+     </listitem>
+    </varlistentry>
     <varlistentry>
-    <term>
-	    diego-brain 
-	  </term>
-    <listitem>
-     <para>
-         Contains the Diego auctioning system that schedules user applications across the elastic layer.
-     </para>     
- </listitem>
-</varlistentry>
+     <term>diego-api</term>
+     <listitem>
+      <para>
+       API for the Diego scheduler.
+      </para>
+     </listitem>
+    </varlistentry>
     <varlistentry>
-    <term>
-	    diego-cell (privileged) 
-	  </term>
-    <listitem>
-     <para>
-          The elastic layer of &scf;, where applications live.
-     </para>     
- </listitem>
-</varlistentry>
+     <term>diego-brain</term>
+     <listitem>
+      <para>
+       Contains the Diego auctioning system that schedules user applications
+       across the elastic layer.
+      </para>
+     </listitem>
+    </varlistentry>
     <varlistentry>
-    <term>
-	    diego-locket 
-	  </term>
-    <listitem>
-     <para>
-          A distributed locking service, for components that scale using an active/passive model.
-     </para>     
- </listitem>
-</varlistentry>
+     <term>diego-cell (privileged)</term>
+     <listitem>
+      <para>
+       The elastic layer of &scf;, where applications live.
+      </para>
+     </listitem>
+    </varlistentry>
     <varlistentry>
-    <term>
-	    doppler
-	  </term>
-    <listitem>
-     <para>
-         Routes log messages from applications and components.
-     </para>     
- </listitem>
-</varlistentry>
+     <term>diego-locket</term>
+     <listitem>
+      <para>
+       A distributed locking service, for components that scale using an
+       active/passive model.
+      </para>
+     </listitem>
+    </varlistentry>
     <varlistentry>
-    <term>
-	    loggregator
-	  </term>
-    <listitem>
-     <para>
-         Part of the logging system; exposes log streams to users using web sockets. Exposed using the router.
-     </para>     
- </listitem>
-</varlistentry>
+     <term>doppler</term>
+     <listitem>
+      <para>
+       Routes log messages from applications and components.
+      </para>
+     </listitem>
+    </varlistentry>
     <varlistentry>
-    <term>
-	    mysql 
-	  </term>
-    <listitem>
-     <para>
-         A MariaDB server. (A separate copy is deployed for UAA.)
-     </para>     
- </listitem>
-</varlistentry>
+     <term>loggregator</term>
+     <listitem>
+      <para>
+       Part of the logging system; exposes log streams to users using web
+       sockets. Exposed using the router.
+      </para>
+     </listitem>
+    </varlistentry>
     <varlistentry>
-    <term>
-	    mysql-proxy 
-	  </term>
-    <listitem>
-     <para>
-         Routes requests to MariaDB replicas. 
-     </para>     
- </listitem>
-</varlistentry>
+     <term>mysql</term>
+     <listitem>
+      <para>
+       A MariaDB server. (A separate copy is deployed for UAA.)
+      </para>
+     </listitem>
+    </varlistentry>
     <varlistentry>
-    <term>
-	    nats 
-	  </term>
-    <listitem>
-     <para>
-         A pub-sub messaging queue for the routing system.  
-     </para>     
- </listitem>
-</varlistentry>
+     <term>mysql-proxy</term>
+     <listitem>
+      <para>
+       Routes requests to MariaDB replicas.
+      </para>
+     </listitem>
+    </varlistentry>
     <varlistentry>
-    <term>
-	    nfs-broker (privileged)
-	  </term>
-    <listitem>
-     <para>
-         A service broker for enabling NFS-based application persistent storage. 
-     </para>     
- </listitem>
-</varlistentry>
+     <term>nats</term>
+     <listitem>
+      <para>
+       A pub-sub messaging queue for the routing system.
+      </para>
+     </listitem>
+    </varlistentry>
     <varlistentry>
-    <term>
-	    post-deployment-setup 
-	  </term>
-    <listitem>
-     <para>
-         Used as a &kube; job, performs cluster setup after installation has completed.  
-     </para>     
- </listitem>
-</varlistentry>
+     <term>nfs-broker (privileged)</term>
+     <listitem>
+      <para>
+       A service broker for enabling NFS-based application persistent storage.
+      </para>
+     </listitem>
+    </varlistentry>
     <varlistentry>
-    <term>
-	    router 
-	  </term>
-    <listitem>
-     <para>
-         Routes application and API traffic. Exposed using a Kubernetes service.  
-     </para>     
- </listitem>
-</varlistentry>
+     <term>post-deployment-setup</term>
+     <listitem>
+      <para>
+       Used as a &kube; job, performs cluster setup after installation has
+       completed.
+      </para>
+     </listitem>
+    </varlistentry>
     <varlistentry>
-    <term>
-	    routing-api
-	  </term>
-    <listitem>
-     <para>
-         API for the routing system.  
-     </para>     
- </listitem>
-</varlistentry>
+     <term>router</term>
+     <listitem>
+      <para>
+       Routes application and API traffic. Exposed using a Kubernetes service.
+      </para>
+     </listitem>
+    </varlistentry>
     <varlistentry>
-    <term>
-	    secret-generation 
-	  </term>
-    <listitem>
-     <para>
-         Used as a &kube; job to create secrets (certificates) when the cluster is installed.
-     </para>     
- </listitem>
-</varlistentry>
+     <term>routing-api</term>
+     <listitem>
+      <para>
+       API for the routing system.
+      </para>
+     </listitem>
+    </varlistentry>
     <varlistentry>
-    <term>
-	    syslog-adapter 
-	  </term>
-    <listitem>
-     <para>
-         Part of the logging system, manages connections to user application syslog drains. 
-     </para>     
- </listitem>
-</varlistentry>
+     <term>secret-generation</term>
+     <listitem>
+      <para>
+       Used as a &kube; job to create secrets (certificates) when the cluster
+       is installed.
+      </para>
+     </listitem>
+    </varlistentry>
     <varlistentry>
-    <term>
-	    syslog-rlp  
-	  </term>
-    <listitem>
-     <para>
-         Proxies user application log messages to syslog drains.
-     </para>     
- </listitem>
-</varlistentry>
+     <term>syslog-adapter</term>
+     <listitem>
+      <para>
+       Part of the logging system, manages connections to user application
+       syslog drains.
+      </para>
+     </listitem>
+    </varlistentry>
     <varlistentry>
-    <term>
-	    syslog-scheduler   
-	  </term>
-    <listitem>
-     <para>
-         Part of the logging system that allows user applications to be bound to a syslog drain.
-     </para>     
- </listitem>
-</varlistentry>
+     <term>syslog-rlp</term>
+     <listitem>
+      <para>
+       Proxies user application log messages to syslog drains.
+      </para>
+     </listitem>
+    </varlistentry>
     <varlistentry>
-    <term>
-	    tcp-router   
-	  </term>
-    <listitem>
-     <para>
-         Routes TCP traffic for your applications.
-     </para>     
- </listitem>
-</varlistentry>
-</variablelist>
-</sect2>
+     <term>syslog-scheduler</term>
+     <listitem>
+      <para>
+       Part of the logging system that allows user applications to be bound to
+       a syslog drain.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>tcp-router</term>
+     <listitem>
+      <para>
+       Routes TCP traffic for your applications.
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </sect2>
 
-<sect2 xml:id="sec.cap.service-diagram">
-    <title>&scf; service diagram</title>
-    <para>
-    This simple service diagram illustrates how &scf; components communicate with
-    each other (<xref linkend="fig.cap.simple-services"/>). See 
+  <sect2 xml:id="sec.cap.service-diagram">
+   <title>&scf; service diagram</title>
+   <para>
+    This simple service diagram illustrates how &scf; components communicate
+    with each other (<xref linkend="fig.cap.simple-services"/>). See
     <xref linkend="fig.cap.detailed-services"/> for a more detailed view.
-</para>
+   </para>
+   <figure xml:id="fig.cap.simple-services">
+    <title>Simple Services Diagram</title>
+    <mediaobject>
+     <imageobject role="fo">
+      <imagedata fileref="cap-simple-services.png" format="PNG" width="75%"/>
+     </imageobject>
+     <imageobject role="html">
+      <imagedata fileref="cap-simple-services.png"/>
+     </imageobject>
+     <textobject role="description"><phrase>Simple Services Diagram</phrase>
+     </textobject>
+    </mediaobject>
+   </figure>
+   <para>
+    This table describes how these services operate.
+   </para>
+   <informaltable>
+    <tgroup cols="11">
+     <thead>
+      <row>
+       <entry>Interface</entry>
+       <entry>Network Name</entry>
+       <entry>Network Protocol</entry>
+       <entry>Requestor</entry>
+       <entry>Request</entry>
+       <entry>Request Credentials</entry>
+       <entry>Request Authorization</entry>
+       <entry>Listener</entry>
+       <entry>Response</entry>
+       <entry>Response Credentials</entry>
+       <entry>Description of Operation</entry>
+      </row>
+     </thead>
+     <tbody>
+      <row>
+       <entry>1</entry>
+       <entry>External</entry>
+       <entry>HTTPS</entry>
+       <entry>Helm Client</entry>
+       <entry>Deploy &cap;</entry>
+       <entry>OAuth2 Bearer token</entry>
+       <entry>Deployment of &cap; Services on &kube;</entry>
+       <entry>&helm;/&kube; API</entry>
+       <entry>Operation ack and handle</entry>
+       <entry>TLS certificate on external endpoint</entry>
+       <entry>Operator deploys &cap; on &kube;</entry>
+      </row>
+      <row>
+       <entry>2</entry>
+       <entry>External</entry>
+       <entry>HTTPS</entry>
+       <entry>Internal &kube; components</entry>
+       <entry>Download Docker Images</entry>
+       <entry>Refer to registry.suse.com</entry>
+       <entry>Refer to registry.suse.com</entry>
+       <entry>registry.suse.com</entry>
+       <entry>Docker images</entry>
+       <entry>None</entry>
+       <entry>Docker images that make up &cap; are downloaded</entry>
+      </row>
+      <row>
+       <entry>3</entry>
+       <entry>Tenant</entry>
+       <entry>HTTPS</entry>
+       <entry>&cap; components</entry>
+       <entry>Get tokens</entry>
+       <entry>OAuth2 client secret</entry>
+       <entry>Varies, based on configured OAuth2 client scopes</entry>
+       <entry>UAA</entry>
+       <entry>An OAuth2 refresh token used to interact with other service</entry>
+       <entry>TLS certificate</entry>
+       <entry>&scf; components ask UAA for tokens so they can talk to each other</entry>
+      </row>
+      <row>
+       <entry>4</entry>
+       <entry>External</entry>
+       <entry>HTTPS</entry>
+       <entry>&scf; clients</entry>
+       <entry>&scf; API Requests</entry>
+       <entry>OAuth2 Bearer token</entry>
+       <entry>&scf; application management</entry>
+       <entry>&cap; components</entry>
+       <entry>JSON object and HTTP Status code</entry>
+       <entry>TLS certificate on external endpoint</entry>
+       <entry>&cap; Clients interact with the &scf; API (e.g. users deploying apps)</entry>
+      </row>
+      <row>
+       <entry>5</entry>
+       <entry>External</entry>
+       <entry>WSS</entry>
+       <entry>&scf; clients</entry>
+       <entry>Log streaming</entry>
+       <entry>OAuth2 Bearer token</entry>
+       <entry>&scf; application management</entry>
+       <entry>&cap; components</entry>
+       <entry>A stream of &scf; logs</entry>
+       <entry>TLS certificate on external endpoint</entry>
+       <entry>&scf; clients ask for logs (e.g. user looking at application logs or administrator viewing system logs)</entry>
+      </row>
+      <row>
+       <entry>6</entry>
+       <entry>External</entry>
+       <entry>SSH</entry>
+       <entry>&scf; clients, SSH clients</entry>
+       <entry>SSH Access to Application</entry>
+       <entry>OAuth2 bearer token</entry>
+       <entry>&scf; application management</entry>
+       <entry>&cap; components</entry>
+       <entry>A duplex connection is created allowing the user to interact with a shell</entry>
+       <entry>RSA SSH Key on external endpoint</entry>
+       <entry>&scf; Clients open an SSH connection to an application's container (e.g. users debugging their applications)</entry>
+      </row>
+      <row>
+       <entry>7</entry>
+       <entry>External</entry>
+       <entry>HTTPS</entry>
+       <entry>&helm;</entry>
+       <entry>Download charts</entry>
+       <entry>Refer to kubernetes-charts.suse.com</entry>
+       <entry>Refer to kubernetes-charts.suse.com</entry>
+       <entry>kubernetes-charts.suse.com</entry>
+       <entry>&helm; charts</entry>
+       <entry>TLS certificate on external endpoint</entry>
+       <entry>&helm; charts for &cap; are downloaded</entry>
+      </row>
+     </tbody>
+    </tgroup>
+   </informaltable>
+  </sect2>
 
-  <figure xml:id="fig.cap.simple-services">
-   <title>Simple Services Diagram</title>
-   <mediaobject>
-    <imageobject role="fo">
-     <imagedata fileref="cap-simple-services.png" format="PNG" width="75%"/>
-    </imageobject>
-    <imageobject role="html">
-     <imagedata fileref="cap-simple-services.png"/>
-    </imageobject>
-    <textobject role="description"><phrase>Simple Services Diagram</phrase>
-    </textobject>
-   </mediaobject>
-  </figure>
-  
-  <para>
-      This table describes how these services operate.
-  </para>
-<informaltable>
-  <tgroup cols="11">
-    <thead>
-      <row>
-        <entry>Interface</entry>
-        <entry>Network Name</entry>
-        <entry>Network Protocol</entry>
-        <entry>Requestor</entry>
-        <entry>Request</entry>
-        <entry>Request Credentials</entry>
-        <entry>Request Authorization</entry>
-        <entry>Listener</entry>
-        <entry>Response</entry>
-        <entry>Response Credentials</entry>
-        <entry>Description of Operation</entry>
-      </row>
-    </thead>
-    <tbody>
-      <row>
-        <entry>1</entry>
-        <entry>External</entry>        
-        <entry>HTTPS</entry>
-        <entry>Helm Client</entry>
-        <entry>Deploy &cap;</entry>
-        <entry>OAuth2 Bearer token</entry>
-        <entry>Deployment of &cap; Services on &kube;</entry>
-        <entry>&helm;/&kube; API</entry>
-        <entry>Operation ack and handle</entry>
-        <entry>TLS certificate on external endpoint</entry>
-        <entry>Operator deploys &cap; on &kube;</entry>
-      </row>
-      <row>
-        <entry>2</entry>
-        <entry>External</entry>
-        <entry>HTTPS</entry>
-        <entry>Internal &kube; components</entry>
-        <entry>Download Docker Images</entry>
-        <entry>Refer to registry.suse.com</entry>
-        <entry>Refer to registry.suse.com</entry>
-        <entry>registry.suse.com</entry>
-        <entry>Docker images</entry>
-        <entry>None</entry>
-        <entry>Docker images that make up &cap; are downloaded</entry>
-      </row>
-      <row>
-        <entry>3</entry>
-        <entry>Tenant</entry>
-        <entry>HTTPS</entry>
-        <entry>&cap; components</entry>
-        <entry>Get tokens</entry>
-        <entry>OAuth2 client secret</entry>
-        <entry>Varies, based on configured OAuth2 client scopes</entry>
-        <entry>UAA</entry>
-        <entry>An OAuth2 refresh token used to interact with other service</entry>
-        <entry>TLS certificate</entry>
-        <entry>&scf; components ask UAA for tokens so they can talk to each other</entry>
-      </row>
-      <row>
-        <entry>4</entry>
-        <entry>External</entry>
-        <entry>HTTPS</entry>
-        <entry>&scf; clients</entry>
-        <entry>&scf; API Requests</entry>
-        <entry>OAuth2 Bearer token</entry>
-        <entry>&scf; application management</entry>
-        <entry>&cap; components</entry>
-        <entry>JSON object and HTTP Status code</entry>
-        <entry>TLS certificate on external endpoint</entry>
-        <entry>&cap; Clients interact with the &scf; API (e.g. users deploying apps)</entry>
-      </row>
-      <row>
-        <entry>5</entry>
-        <entry>External</entry>
-        <entry>WSS</entry>
-        <entry>&scf; clients</entry>
-        <entry>Log streaming</entry>
-        <entry>OAuth2 Bearer token</entry>
-        <entry>&scf; application management</entry>
-        <entry>&cap; components</entry>
-        <entry>A stream of &scf; logs</entry>
-        <entry>TLS certificate on external endpoint</entry>
-        <entry>&scf; clients ask for logs (e.g. user looking at application logs or administrator viewing system logs)</entry>
-      </row>  
-      <row>
-        <entry>6</entry>
-        <entry>External</entry>
-        <entry>SSH</entry>
-        <entry>&scf; clients, SSH clients</entry>
-        <entry>SSH Access to Application</entry>
-        <entry>OAuth2 bearer token</entry>
-        <entry>&scf; application management</entry>
-        <entry>&cap; components</entry>
-        <entry>A duplex connection is created allowing the user to interact with a shell</entry>
-        <entry>RSA SSH Key on external endpoint</entry>
-        <entry>&scf; Clients open an SSH connection to an application's container (e.g. users debugging their applications)</entry>
-      </row>
-      <row>
-        <entry>7</entry>
-        <entry>External</entry>
-        <entry>HTTPS</entry>
-        <entry>&helm;</entry>
-        <entry>Download charts</entry>
-        <entry>Refer to kubernetes-charts.suse.com</entry>
-        <entry>Refer to kubernetes-charts.suse.com</entry>
-        <entry>kubernetes-charts.suse.com</entry>
-        <entry>&helm; charts</entry>
-        <entry>TLS certificate on external endpoint</entry>
-        <entry>&helm; charts for &cap; are downloaded</entry>
-      </row>      
-    </tbody>
-  </tgroup>
-</informaltable> 
-</sect2>
-
-<sect2 xml:id="sec.cap.services-detailed">
-    <title>Detailed Services Diagram</title>
-    <para>
-        <xref linkend="fig.cap.detailed-services"/> presents a more detailed view
-            of &scf; services and how they interact with each other. Services 
-            labeled in red are unencrypted, while services labeled in green run
-            over HTTPS.
-        </para>
-    
-  <figure xml:id="fig.cap.detailed-services">
+  <sect2 xml:id="sec.cap.services-detailed">
    <title>Detailed Services Diagram</title>
-   <mediaobject>
-    <imageobject role="fo">
-     <imagedata fileref="cap-detailed-services.png" format="PNG" width="75%"/>
-    </imageobject>
-    <imageobject role="html">
-     <imagedata fileref="cap-detailed-services.png"/>
-    </imageobject>
-    <textobject role="description"><phrase>Detailed Services Diagram</phrase>
-    </textobject>
-   </mediaobject>
-  </figure>
-</sect2>
-    
-</sect1>
+   <para>
+    <xref linkend="fig.cap.detailed-services"/> presents a more detailed view
+    of &scf; services and how they interact with each other. Services labeled
+    in red are unencrypted, while services labeled in green run over HTTPS.
+   </para>
+   <figure xml:id="fig.cap.detailed-services">
+    <title>Detailed Services Diagram</title>
+    <mediaobject>
+     <imageobject role="fo">
+      <imagedata fileref="cap-detailed-services.png" format="PNG" width="75%"/>
+     </imageobject>
+     <imageobject role="html">
+      <imagedata fileref="cap-detailed-services.png"/>
+     </imageobject>
+     <textobject role="description"><phrase>Detailed Services Diagram</phrase>
+     </textobject>
+    </mediaobject>
+   </figure>
+  </sect2>
+ </sect1>
 </chapter>

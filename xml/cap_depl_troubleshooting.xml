@@ -69,23 +69,23 @@ routing-api-0            0/1   Running   0         16h</screen>
    warnings, and errors. You should find the reason for the failure in this
    output.
   </para>
+
   <important>
-      <title>Some Pods Correctly Show Not Running</title>
-      <para>
-          Some UAA and SCF pods perform only deployment tasks, and it is normal 
-          for them to show as unready after they have completed their tasks, as
-          these examples show:
-      </para>
-      <screen>
+   <title>Some Pods Correctly Show Not Running</title>
+   <para>
+    Some UAA and SCF pods perform only deployment tasks, and it is normal for
+    them to show as unready after they have completed their tasks, as these
+    examples show:
+   </para>
+<screen>
 &prompt.user;kubectl get pods --namespace uaa
 secret-generation-1-z4nlz   0/1       Completed
           
 &prompt.user;kubectl get pods --namespace scf
 secret-generation-1-m6k2h       0/1       Completed
 post-deployment-setup-1-hnpln   0/1       Completed</screen>
-  </important>  
+  </important>
  </sect1>
- 
  <sect1 xml:id="sec.cap.rebuild.depl">
   <title>Deleting and Rebuilding a Deployment</title>
 
@@ -94,13 +94,20 @@ post-deployment-setup-1-hnpln   0/1       Completed</screen>
    example when there are errors in your
    <filename>scf-config-values.yaml</filename> file, you wish to test
    configuration changes, or a deployment fails and you want to try it again.
-   This has five steps: first delete the StatefulSets of the namespace associated with the release or releases you want to re-deploy, then delete the release or releases,
-   delete its namespace, then re-create the namespace and re-deploy
-   the release.
+   This has five steps: first delete the StatefulSets of the namespace
+   associated with the release or releases you want to re-deploy, then delete
+   the release or releases, delete its namespace, then re-create the namespace
+   and re-deploy the release.
   </para>
 
   <para>
- The namespace is also deleted as part of the process because the SCF and UAA namespaces contain generated secrets which Helm is not aware of and will note remove when a release is deleted. When deleting a release, busy systems may encounter timeouts. By first deleting the StatefulSets, it ensures that this operation is more likely to succeed. Using the <command>delete statefulsets</command> command requires <command>kubectl</command> v1.9.6 or newer.
+   The namespace is also deleted as part of the process because the SCF and UAA
+   namespaces contain generated secrets which Helm is not aware of and will
+   note remove when a release is deleted. When deleting a release, busy systems
+   may encounter timeouts. By first deleting the StatefulSets, it ensures that
+   this operation is more likely to succeed. Using the <command>delete
+   statefulsets</command> command requires <command>kubectl</command> v1.9.6 or
+   newer.
   </para>
 
   <para>
@@ -114,7 +121,8 @@ NAME            REVISION  UPDATED                  STATUS    CHART           NAM
 <replaceable>susecf-uaa</replaceable>      1         Tue Aug 14 10:49:30 2018 DEPLOYED  uaa-&latestuaachart;      uaa</screen>
 
   <para>
-   This example deletes the <literal>susecf-uaa</literal> release and namespace:
+   This example deletes the <literal>susecf-uaa</literal> release and
+   namespace:
   </para>
 
 <screen>&prompt.user;kubectl delete statefulsets --all --namespace uaa

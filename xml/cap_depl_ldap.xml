@@ -16,36 +16,52 @@
   <title>LDAP Integration</title>
  </info>
  <para>
-  &productname; can be integrated with <link xlink:href="https://docs.cloudfoundry.org/uaa/identity-providers.html">identity providers</link> to help manage authentication of users. The Lightweight Directory Access Protocol (LDAP) is an example of an identity provider that &cap; integrates with. This section describes the necessary components and steps in order to configure the integration. See <link xlink:href="https://docs.cloudfoundry.org/uaa/uaa-user-management.html">User Account and Authentication LDAP Integration</link> for more information.
+  &productname; can be integrated with
+  <link xlink:href="https://docs.cloudfoundry.org/uaa/identity-providers.html">identity
+  providers</link> to help manage authentication of users. The Lightweight
+  Directory Access Protocol (LDAP) is an example of an identity provider that
+  &cap; integrates with. This section describes the necessary components and
+  steps in order to configure the integration. See
+  <link xlink:href="https://docs.cloudfoundry.org/uaa/uaa-user-management.html">User
+  Account and Authentication LDAP Integration</link> for more information.
  </para>
  <sect1 xml:id="sec.cap.ldap-prereqs">
   <title>Prerequisites</title>
+
   <para>
-   The following prerequisites are required in order to complete an LDAP integration with &productname;.
+   The following prerequisites are required in order to complete an LDAP
+   integration with &productname;.
   </para>
+
   <itemizedlist>
    <listitem>
     <para>
-     The Cloud Foundry command line interface (&cfcli;). (See <xref linkend="sec.cap.cf-cli"/>.)
+     The Cloud Foundry command line interface (&cfcli;). (See
+     <xref linkend="sec.cap.cf-cli"/>.)
     </para>
    </listitem>
    <listitem>
     <para>
-     <link xlink:href="https://docs.cloudfoundry.org/uaa/uaa-user-management.html">The Cloud Foundry UAA command line interface (UAAC)</link>.
+     <link xlink:href="https://docs.cloudfoundry.org/uaa/uaa-user-management.html">The
+     Cloud Foundry UAA command line interface (UAAC)</link>.
     </para>
    </listitem>
    <listitem>
     <para>
-     An LDAP server and the credentials for a user/service account with permissions to search the directory.
+     An LDAP server and the credentials for a user/service account with
+     permissions to search the directory.
     </para>
    </listitem>
   </itemizedlist>
  </sect1>
  <sect1 xml:id="sec.cap.ldap-integration">
   <title>Example LDAP Integration</title>
+
   <para>
-   Run the following commands to complete the integration of your &cap; deployment and LDAP server.
+   Run the following commands to complete the integration of your &cap;
+   deployment and LDAP server.
   </para>
+
   <itemizedlist>
    <listitem>
     <para>
@@ -55,16 +71,29 @@
    </listitem>
    <listitem>
     <para>
-     Authenticate to the UAA server as <literal>admin</literal> using the <literal>UAA_ADMIN_CLIENT_SECRET</literal> set in your <filename>scf-config-values.yaml</filename> file.
+     Authenticate to the UAA server as <literal>admin</literal> using the
+     <literal>UAA_ADMIN_CLIENT_SECRET</literal> set in your
+     <filename>scf-config-values.yaml</filename> file.
     </para>
 <screen>&prompt.user;uaac token client get admin -s <replaceable>password</replaceable></screen>
    </listitem>
    <listitem>
     <para>
-     Create the LDAP identity provider. A 201 response will be returned when the identity provider is successfully created. See the <link xlink:href="http://docs.cloudfoundry.org/api/uaa/version/4.21.0/index.html#ldap">UAA API Reference</link> and <link xlink:href="https://github.com/cloudfoundry/uaa/blob/4.21.0/docs/UAA-LDAP.md">&cf; UAA-LDAP Documentation</link>for information regarding the request parameters and additional options available to configure your identity provider.
+     Create the LDAP identity provider. A 201 response will be returned when
+     the identity provider is successfully created. See the
+     <link xlink:href="http://docs.cloudfoundry.org/api/uaa/version/4.21.0/index.html#ldap">UAA
+     API Reference</link> and
+     <link xlink:href="https://github.com/cloudfoundry/uaa/blob/4.21.0/docs/UAA-LDAP.md">&cf;
+     UAA-LDAP Documentation</link>for information regarding the request
+     parameters and additional options available to configure your identity
+     provider.
     </para>
     <para>
-     The following is an example of a <literal>uaac curl</literal> command and its request parameters used to create an identity provider. Specify the parameters according to your LDAP server's credentials and directory structure. Ensure the user specifed in the <literal>bindUserDn</literal> has permissions to search the directory.
+     The following is an example of a <literal>uaac curl</literal> command and
+     its request parameters used to create an identity provider. Specify the
+     parameters according to your LDAP server's credentials and directory
+     structure. Ensure the user specifed in the <literal>bindUserDn</literal>
+     has permissions to search the directory.
     </para>
 <screen>&prompt.user;uaac curl /identity-providers?rawConfig=true -X POST \
     -k \
@@ -91,7 +120,9 @@
    </listitem>
    <listitem>
     <para>
-     Verify the LDAP identify provider has been created in the <literal>scf</literal> zone. The output should now contain an entry for the <literal>ldap</literal> type.
+     Verify the LDAP identify provider has been created in the
+     <literal>scf</literal> zone. The output should now contain an entry for
+     the <literal>ldap</literal> type.
     </para>
 <screen>&prompt.user;uaac curl /identity-providers -k -H "X-Identity-Zone-Id: scf"</screen>
    </listitem>
@@ -128,7 +159,13 @@ TIP: Assign roles with 'cf set-org-role' and 'cf set-space-role'.
    </listitem>
    <listitem>
     <para>
-     Assign the user a role. Roles define the permissions a user has for a given org or space and a user can be assigned  multiple roles. See <link xlink:href="https://docs.cloudfoundry.org/concepts/roles.html">Orgs, Spaces, Roles, and Permissions</link> for available roles and their corresponding permissions. The following example assumes that an org named <replaceable>Org</replaceable> and a space named <replaceable>Space</replaceable> have already been created.
+     Assign the user a role. Roles define the permissions a user has for a
+     given org or space and a user can be assigned multiple roles. See
+     <link xlink:href="https://docs.cloudfoundry.org/concepts/roles.html">Orgs,
+     Spaces, Roles, and Permissions</link> for available roles and their
+     corresponding permissions. The following example assumes that an org named
+     <replaceable>Org</replaceable> and a space named
+     <replaceable>Space</replaceable> have already been created.
     </para>
 <screen>&prompt.user;cf set-space-role <replaceable>username</replaceable> <replaceable>Org</replaceable> <replaceable>Space</replaceable> <replaceable>SpaceDeveloper</replaceable>
 Assigning role RoleSpaceDeveloper to user username in org Org / space Space as admin...
@@ -140,7 +177,8 @@ OK
    </listitem>
    <listitem>
     <para>
-     Verify the user can log into your &productname; deployment using their associated LDAP server credentials.
+     Verify the user can log into your &productname; deployment using their
+     associated LDAP server credentials.
     </para>
 <screen>&prompt.user;cf login
 API endpoint: https://api.example.com
