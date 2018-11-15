@@ -290,7 +290,7 @@ NAME                         STATUS  ROLES     AGE  VERSION
       your cluster remotely.
      </para>
      <para>
-      Helm client version 2.6 or higher is required.
+      &helm; client version 2.9 or higher is required.
      </para>
      <warning>
       <title>Initialize Only the &helm; Client</title>

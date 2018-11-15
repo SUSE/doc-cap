@@ -221,7 +221,7 @@ d028551.example.com   Ready    &lt;none>    4h   v1.9.8
       is &helm;'s server, which is installed on your &kube; cluster.
      </para>
      <para>
-      Helm client version 2.6 or higher is required.
+      &helm; client version 2.9 or higher is required.
      </para>
      <warning>
       <title>Initialize Only the &helm; Client</title>
