@@ -426,9 +426,7 @@
 
   <variablelist>
    <varlistentry>
-    <term>
-          Shared Domains
-      </term>
+    <term>Shared Domains</term>
     <listitem>
      <para>
       Attempts to create domains from the backup. Existing domains are
@@ -437,9 +435,7 @@
     </listitem>
    </varlistentry>
    <varlistentry>
-    <term>
-     Feature Flags     
-  </term>
+    <term>Feature Flags</term>
     <listitem>
      <para>
       Attempts to update flags from the backup.
@@ -447,9 +443,7 @@
     </listitem>
    </varlistentry>
    <varlistentry>
-    <term>
-      Quota Definitions    
-  </term>
+    <term>Quota Definitions</term>
     <listitem>
      <para>
       Existing quotas are overwritten from the backup (deleted, re-created).
@@ -457,9 +451,7 @@
     </listitem>
    </varlistentry>
    <varlistentry>
-    <term>
-     Orgs     
-  </term>
+    <term>Orgs</term>
     <listitem>
      <para>
       Attempts to create orgs from the backup. Attempts to update existing orgs
@@ -468,9 +460,7 @@
     </listitem>
    </varlistentry>
    <varlistentry>
-    <term>
-     Space Quota Definitions     
-  </term>
+    <term>Space Quota Definitions</term>
     <listitem>
      <para>
       Existing quotas are overwritten from the backup (deleted, re-created).
@@ -478,9 +468,7 @@
     </listitem>
    </varlistentry>
    <varlistentry>
-    <term>
-     User roles     
-  </term>
+    <term>User roles</term>
     <listitem>
      <para>
       Expect the referenced user to exist. Will fail when the user is already
@@ -489,9 +477,7 @@
     </listitem>
    </varlistentry>
    <varlistentry>
-    <term>
-     (private) Domains     
-  </term>
+    <term>(private) Domains</term>
     <listitem>
      <para>
       Attempts to create domains from the backup. Existing domains are
@@ -500,9 +486,7 @@
     </listitem>
    </varlistentry>
    <varlistentry>
-    <term>
-       Spaces   
-  </term>
+    <term>Spaces</term>
     <listitem>
      <para>
       Attempts to create spaces from the backup. Attempts to update existing
@@ -511,9 +495,7 @@
     </listitem>
    </varlistentry>
    <varlistentry>
-    <term>
-      User roles    
-  </term>
+    <term>User roles</term>
     <listitem>
      <para>
       Expect the referenced user to exist. Will fail when the user is already
@@ -522,9 +504,7 @@
     </listitem>
    </varlistentry>
    <varlistentry>
-    <term>
-       Apps   
-  </term>
+    <term>Apps</term>
     <listitem>
      <para>
       Attempts to create apps from the backup. Attempts to update existing apps
@@ -533,9 +513,7 @@
     </listitem>
    </varlistentry>
    <varlistentry>
-    <term>
-     Security groups     
-  </term>
+    <term>Security groups</term>
     <listitem>
      <para>
       Existing groups are overwritten from the backup

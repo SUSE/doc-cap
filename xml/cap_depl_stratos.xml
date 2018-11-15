@@ -108,11 +108,11 @@ NAME     DESIRED  CURRENT  AGE
 console  1        1        1s</screen>
 
   <para>
-   In this example, pointing your web browser to https://example.com:8443
-   opens the console. Wade through the nag screens about the self-signed
-   certificates and log in as <literal>admin</literal> with the password you
-   created in <filename>scf-config-values.yaml</filename>. If you see an
-   upgrade message, wait a few minutes and try again.
+   In this example, pointing your web browser to https://example.com:8443 opens
+   the console. Wade through the nag screens about the self-signed certificates
+   and log in as <literal>admin</literal> with the password you created in
+   <filename>scf-config-values.yaml</filename>. If you see an upgrade message,
+   wait a few minutes and try again.
   </para>
 
   <figure xml:id="fig.cap.stratos-prod">
