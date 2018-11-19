@@ -293,7 +293,7 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
    service account:
   </para>
 
-<screen>&prompt.user;kubectl --name kube-system create serviceaccount tiller
+<screen>&prompt.user;kubectl create serviceaccount tiller --namespace kube-system
  serviceaccount "tiller" created
 
 &prompt.user;kubectl create clusterrolebinding tiller \
