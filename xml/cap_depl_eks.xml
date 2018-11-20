@@ -410,7 +410,7 @@ Custom TCP Rule 	TCP 	20000-20009 	0.0.0.0/0 	TCP Routing</screen>
   </itemizedlist>
 
   <para>
-   The following roles must have all capabilities:
+   The following roles require <literal>SYS_RESOURCE</literal> capabilities:
   </para>
 
   <itemizedlist>
@@ -421,7 +421,7 @@ Custom TCP Rule 	TCP 	20000-20009 	0.0.0.0/0 	TCP Routing</screen>
    </listitem>
    <listitem>
     <para>
-     diego_access
+     diego_ssh
     </para>
    </listitem>
    <listitem>
@@ -468,19 +468,19 @@ Custom TCP Rule 	TCP 	20000-20009 	0.0.0.0/0 	TCP Routing</screen>
 
 sizing:
   cc_uploader:
-    capabilities: ["ALL"]
+    capabilities: ["SYS_RESOURCE"]
   nats:
-    capabilities: ["ALL"]
+    capabilities: ["SYS_RESOURCE"]
   routing_api:
-    capabilities: ["ALL"]
+    capabilities: ["SYS_RESOURCE"]
   router:
-    capabilities: ["ALL"]
+    capabilities: ["SYS_RESOURCE"]
   diego_access:
-    capabilities: ["ALL"]
+    capabilities: ["SYS_RESOURCE"]
   diego_brain:
-    capabilities: ["ALL"]
+    capabilities: ["SYS_RESOURCE"]
   diego_api:
-    capabilities: ["ALL"]
+    capabilities: ["SYS_RESOURCE"]
 
 kube:
   # The IP address assigned to the kube node pointed to by the domain.
