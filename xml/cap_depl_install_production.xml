@@ -531,7 +531,7 @@ kube:
   # to view your available storage classes
   storage_class:
     persistent: <replaceable>"persistent"</replaceable>
-      shared: "shared"
+    shared: "shared"
         
   # The registry the images will be fetched from.
   # The values below should work for
