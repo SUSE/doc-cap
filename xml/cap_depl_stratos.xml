@@ -57,7 +57,7 @@ suse/uaa                     &latestuaachart;  A Helm chart for SUSE UAA</screen
 <screen>&prompt.user;helm install suse/console \
     --name <replaceable>susecf-console</replaceable> \
     --namespace stratos \
-    --values scf-config-values.yaml \
+    --values scf-config-values.yaml
 </screen>
 
   <para>
