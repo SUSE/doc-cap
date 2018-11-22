@@ -51,15 +51,14 @@ suse/console                 &lateststratoschart;   A Helm chart for deploying S
 suse/uaa                     &latestuaachart;  A Helm chart for SUSE UAA</screen>
 
   <para>
-   Install Stratos, and if you have not set a default storage class you must
-   specify it:
+   Use &helm; to install Stratos:
   </para>
 
 <screen>&prompt.user;helm install suse/console \
     --name <replaceable>susecf-console</replaceable> \
     --namespace stratos \
     --values scf-config-values.yaml \
-    --set storageClass=<replaceable>persistent</replaceable></screen>
+</screen>
 
   <para>
    Monitor progress:
