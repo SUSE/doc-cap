@@ -393,8 +393,8 @@ done</screen>
    <step>
     <para>
      Verify that all nodes are in state "Ready" again, before you continue.
-<screen>&prompt.user;kubectl get nodes</screen>
     </para>
+<screen>&prompt.user;kubectl get nodes</screen>
    </step>
   </procedure>
  </sect1>
