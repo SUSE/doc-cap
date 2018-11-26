@@ -384,21 +384,17 @@ subjects:
    <step>
 <screen>&prompt.user;for i in $VMNODES
  do
-   az vm run-command invoke --resource-group $MCRGNAME --name $i --command-id RunShellScript \
-   --scripts "sudo sed -i 's|linux.*./boot/vmlinuz-.*|&amp; swapaccount=1|' /boot/grub/grub.cfg"
+   az vm run-command invoke -g $MCRGNAME -n $i --command-id RunShellScript --scripts \
+   "sudo sed -i -r 's|^(GRUB_CMDLINE_LINUX_DEFAULT=)\"(.*.)\"|\1\"\2 swapaccount=1\"|' \
+   /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub"
+   az vm restart -g $MCRGNAME -n $i
 done</screen>
    </step>
    <step>
     <para>
-     Look for <literal>"Provisioning succeeded"</literal> messages when step 3
-     has completed, then reboot your virtual machines, which takes a few
-     minutes:
+     Verify that all nodes are in state "Ready" again, before you continue.
+<screen>&prompt.user;kubectl get nodes</screen>
     </para>
-<screen>&prompt.user;for i in $VMNODES; 
-do 
-    az vm restart --resource-group $MCRGNAME --name $i;
-done
-</screen>
    </step>
   </procedure>
  </sect1>
