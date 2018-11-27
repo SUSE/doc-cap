@@ -379,29 +379,22 @@ subjects:
 <screen>&prompt.user;export MCRGNAME=$(az group list -o table | grep MC_"$RGNAME"_ | awk '{print $1}')</screen>
    </step>
    <step>
-    <para>
-     Replace <literal>mypool</literal> with your NODEPOOLNAME value:
-    </para>
-<screen>&prompt.user;VMNODES=$(az vm list --resource-group $MCRGNAME -o json | jq -r '.[] | select (.tags.poolName | contains("<replaceable>mypool</replaceable>")) | .name')</screen>
+<screen>&prompt.user;export VMNODES=$(az vm list --resource-group $MCRGNAME -o json | jq -r '.[] | select (.tags.poolName | contains("'$NODEPOOLNAME'")) | .name')</screen>
    </step>
    <step>
 <screen>&prompt.user;for i in $VMNODES
  do
-   az vm run-command invoke --resource-group $MCRGNAME --name $i --command-id RunShellScript \
-   --scripts "sudo sed -i 's|linux.*./boot/vmlinuz-.*|&amp; swapaccount=1|' /boot/grub/grub.cfg"
+   az vm run-command invoke -g $MCRGNAME -n $i --command-id RunShellScript --scripts \
+   "sudo sed -i -r 's|^(GRUB_CMDLINE_LINUX_DEFAULT=)\"(.*.)\"|\1\"\2 swapaccount=1\"|' \
+   /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub"
+   az vm restart -g $MCRGNAME -n $i
 done</screen>
    </step>
    <step>
     <para>
-     Look for <literal>"Provisioning succeeded"</literal> messages when step 3
-     has completed, then reboot your virtual machines, which takes a few
-     minutes:
+     Verify that all nodes are in state "Ready" again, before you continue.
     </para>
-<screen>&prompt.user;for i in $VMNODES; 
-do 
-    az vm restart --resource-group $MCRGNAME --name $i;
-done
-</screen>
+<screen>&prompt.user;kubectl get nodes</screen>
    </step>
   </procedure>
  </sect1>
@@ -444,7 +437,7 @@ done
      Set the virtual machine network interfaces, then add them to the load
      balancer:
     </para>
-<screen>&prompt.user;NICNAMES=$(az network nic list --resource-group $MCRGNAME -o json | jq -r '.[].name')
+<screen>&prompt.user;export NICNAMES=$(az network nic list --resource-group $MCRGNAME -o json | jq -r '.[].name')
 
 &prompt.user;for i in $NICNAMES
 do
@@ -519,8 +512,8 @@ done</screen>
      levels range from 100-4096, with 100 the highest priority. Each rule must
      have a unique priority level:
     </para>
-<screen>&prompt.user;NSG=$(az network nsg list --resource-group=$MCRGNAME -o json | jq -r '.[].name')
-&prompt.user;PRI=200</screen>
+<screen>&prompt.user;export AZNSG=$(az network nsg list --resource-group=$MCRGNAME -o json | jq -r '.[].name')
+&prompt.user;export NSGPRI=200</screen>
    </step>
    <step>
     <para>
@@ -530,13 +523,13 @@ done</screen>
 do
     az network nsg rule create \
     --resource-group $MCRGNAME \
-    --priority $PRI \
-    --nsg-name $NSG \
+    --priority $NSGPRI \
+    --nsg-name $AZNSG \
     --name $AKSNAME-$i \
     --direction Inbound \
     --destination-port-ranges $i \
     --access Allow
-    PRI=$(expr $PRI + 10)
+    export NSGPRI=$(expr $NSGPRI + 10)
 done</screen>
    </step>
    <step>
