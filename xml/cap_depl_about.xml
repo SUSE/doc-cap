@@ -39,7 +39,45 @@
 
   <para>
    &productname; is a software platform for cloud-native application deployment
-   based on &scf; and &kube;. It serves different but complementary purposes
+   based on &scf; and &kube;.
+</para>
+   
+ <para>
+&productname; describes the complete software stack, including the operating 
+system, &kube;, and &scf;. 
+  </para>
+   <para>
+&productname; is comprised of the &sle; builds of the UAA (User Account and
+Authentication) server, &scf;, the Stratos Web user interface, and Stratos Metrics (scheduled for the &productname; 1.3 release).
+</para>
+
+<para>
+  The &cf; code base provides the basic functionality. &scf; differentiates
+  itself from other &cf; distributions by running in Linux containers managed
+  by &kube;, rather than virtual machines managed with &bosh;, for greater
+  fault tolerance and lower memory use.
+ </para>
+
+<para>
+    All Docker images for the &sle; builds are hosted on <literal>registry.suse.com</literal>.
+    These are the commercially-supported images. (Community-supported images for 
+    &opensuse; are hosted on <link xlink:href="https://hub.docker.com">
+        Docker Hub</link>.) Product manuals on
+    <link xlink:href="https://www.suse.com/documentation/cloud-application-platform-1/">SUSE Doc: SUSE Cloud Application Platform 1</link> refer
+    to the commercially-supported &sle; version.
+</para>
+
+ <para>
+  &scf; is designed to run on any Kubernetes cluster. This guide describes how
+  to deploy it on
+  <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_deployment/data/book_caasp_deployment.html">SUSE
+  Container as a Service (CaaS) Platform 3.0</link>, Microsoft Azure, and
+  Amazon EKS.
+ </para>  
+   
+   
+ <para>
+   &productname; serves different but complementary purposes
    for operators and application developers.
   </para>
 
@@ -171,16 +209,16 @@
    </para>
   </important>
 
-  <para>
-   A supported deployment includes &scf; installed on &caasp;, Amazon EKS, or
-   Azure AKS. You also need a storage backend, such as &ses;, a DNS/DHCP
-   server, and an Internet connection to download additional packages during
-   installation and ~10GB of Docker images on each &kube; worker after
-   installation.
+ <para>
+  A supported deployment includes &scf; installed on &suse; &caasp;, Amazon EKS, 
+  or Azure AKS. You also need a storage backend such as &ses;, a DNS/DHCP server, 
+  and an Internet connection to download additional packages during installation 
+  and ~10GB of &docker; images on each &kube; worker after installation.
   </para>
-
+  
   <para>
-   A production deployment requires considerable resources. &productname;
+   A production deployment requires considerable resources.   
+   &productname;
    includes an entitlement of &suse; &caasp; and &ses;. &ses; alone has
    substantial requirements; see the
    <link xlink:href="https://www.suse.com/products/suse-enterprise-storage/">Tech
