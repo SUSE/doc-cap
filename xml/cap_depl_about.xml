@@ -47,8 +47,8 @@
 system, &kube;, and &scf;. 
   </para>
    <para>
-&scf; is comprised of the &sle; builds of the UAA (User Account and
-Authentication) server, &scf;, the Stratos Web user interface, and Stratos Metrics (scheduled for the &scf; 1.3 release).
+&productname; is comprised of the &sle; builds of the UAA (User Account and
+Authentication) server, &scf;, the Stratos Web user interface, and Stratos Metrics (scheduled for the &productname; 1.3 release).
 </para>
 
 <para>
@@ -59,9 +59,9 @@ Authentication) server, &scf;, the Stratos Web user interface, and Stratos Metri
  </para>
 
 <para>
-    All Docker images for the &sle; builds are hosted on registry.suse.com.
+    All Docker images for the &sle; builds are hosted on <literal>registry.suse.com</literal>.
     These are the commercially-supported images. (Community-supported images for 
-    openSUSE are hosted on <link xlink:href="https://hub.docker.com">
+    &opensuse; are hosted on <link xlink:href="https://hub.docker.com">
         Docker Hub</link>.) Product manuals on
     <link xlink:href="https://www.suse.com/documentation/cloud-application-platform-1/">SUSE Doc: SUSE Cloud Application Platform 1</link> refer
     to the commercially-supported &sle; version.
