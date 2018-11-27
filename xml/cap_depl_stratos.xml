@@ -250,30 +250,30 @@ susecf-console-ui-ext   172.24.84.50    10.10.100.82   8443:32511/TCP  19m</scre
     with the following contents:</para>
 
 <screen>kubernetes:
-  authEndpoint: <replaceable>$KUBE_SERVER_ADDRESS</replaceable>
+  authEndpoint: <replaceable>kube_server_address.example.com</replaceable>
 prometheus:
   kubeStateMetrics:
     enabled: true
 nginx:
-  username: <replaceable>$USERNAME</replaceable>
-  password: <replaceable>$PASSWORD</replaceable></screen>
+  username: <replaceable>username</replaceable>
+  password: <replaceable>password</replaceable></screen>
 
     <para>where:</para>
 
     <itemizedlist>
       <listitem>
-        <para><replaceable>$KUBE_SERVER_ADDRESS</replaceable> is the same URL that you
+        <para><literal>authEndpoint</literal> is the same URL that you
         used when registering your Kubernetes environment with Stratos (the Kubernetes
         API Server URL)</para>
       </listitem>
 
       <listitem>
-        <para><replaceable>$USERNAME</replaceable> should be chosen by you as the
+        <para><literal>username</literal> should be chosen by you as the
         username that you will use when connecting to Stratos Metrics</para>
       </listitem>
 
       <listitem>
-	<para><replaceable>$PASSWORD</replaceable> should be chosen by you as the 
+	<para><literal>password</literal> should be chosen by you as the 
 	password that you will use when connecting to Stratos Metrics</para>
       </listitem>
     </itemizedlist>
