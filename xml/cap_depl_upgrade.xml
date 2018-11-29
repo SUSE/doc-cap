@@ -46,7 +46,12 @@
     <tbody>
      <row>
 <!-- TODO remember to keep this table updated -->
-      <entry>1.2.1 (current release)</entry>
+      <entry>1.3 (current release)</entry>
+      <entry>2.14.5</entry>
+      <entry>2.2.0</entry>
+     </row>
+     <row>
+      <entry>1.2.1</entry>
       <entry>2.13.3</entry>
       <entry>2.1.0</entry>
      </row>
@@ -109,12 +114,17 @@ NAME            REVISION  UPDATED                  STATUS    CHART           NAM
 <replaceable>susecf-uaa</replaceable>      1         Tue Aug 14 10:49:30 2018 DEPLOYED  uaa-2.11.0      uaa
 
 &prompt.user;helm search suse
-NAME                         VERSION DESCRIPTION
-suse/cf                      &latestscfchart;  A Helm chart for SUSE Cloud Foundry
-suse/cf-usb-sidecar-mysql    1.0.1   A Helm chart for SUSE Universal Service Broker ...
-suse/cf-usb-sidecar-postgres 1.0.1   A Helm chart for SUSE Universal Service Broker ...
-suse/console                 &lateststratoschart;   A Helm chart for deploying Stratos UI Console
-suse/uaa                     &latestuaachart;  A Helm chart for SUSE UAA</screen>
+NAME                            VERSION DESCRIPTION
+suse/cf-opensuse                &latestscfchart;  A Helm chart for SUSE Cloud Foundry
+suse/uaa-opensuse               &latestuaachart;  A Helm chart for SUSE UAA
+suse/cf                         &latestscfchart;  A Helm chart for SUSE Cloud Foundry
+suse/cf-usb-sidecar-mysql       1.0.1   A Helm chart for SUSE Universal Service Broker ...
+suse/cf-usb-sidecar-postgres    1.0.1   A Helm chart for SUSE Universal Service Broker ...
+suse/console                    &lateststratoschart;   A Helm chart for deploying Stratos UI Console
+suse/metrics                    1.0.0   A Helm chart for Stratos Metrics
+suse/nginx-ingress              0.28.3  An nginx Ingress controller that uses ConfigMap...
+suse/uaa                        &latestuaachart;  A Helm chart for SUSE UAA
+</screen>
 
   <para>
    View all charts in a release, and their versions:
@@ -122,11 +132,14 @@ suse/uaa                     &latestuaachart;  A Helm chart for SUSE UAA</screen
 
 <screen>&prompt.user;helm search suse/uaa -l
 NAME            VERSION     DESCRIPTION              
+suse/uaa        2.14.5      A Helm chart for SUSE UAA
 suse/uaa        2.13.3      A Helm chart for SUSE UAA
 suse/uaa        2.11.0      A Helm chart for SUSE UAA
 suse/uaa        2.10.1      A Helm chart for SUSE UAA
 suse/uaa        2.8.0       A Helm chart for SUSE UAA
-suse/uaa        2.7.0       A Helm chart for SUSE UAA</screen>
+suse/uaa        2.7.0       A Helm chart for SUSE UAA
+...
+</screen>
 
   <para>
    When you have verified that the upgrade is the next release from your
