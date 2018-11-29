@@ -421,7 +421,7 @@ Custom TCP Rule 	TCP 	20000-20009 	0.0.0.0/0 	TCP Routing</screen>
    </listitem>
    <listitem>
     <para>
-     diego_ssh
+     diego_api
     </para>
    </listitem>
    <listitem>
@@ -431,12 +431,17 @@ Custom TCP Rule 	TCP 	20000-20009 	0.0.0.0/0 	TCP Routing</screen>
    </listitem>
    <listitem>
     <para>
-     diego_api
+     diego_ssh
     </para>
    </listitem>
    <listitem>
     <para>
      nats
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     router
     </para>
    </listitem>
    <listitem>
@@ -469,17 +474,17 @@ Custom TCP Rule 	TCP 	20000-20009 	0.0.0.0/0 	TCP Routing</screen>
 sizing:
   cc_uploader:
     capabilities: ["SYS_RESOURCE"]
-  nats:
-    capabilities: ["SYS_RESOURCE"]
-  routing_api:
-    capabilities: ["SYS_RESOURCE"]
-  router:
-    capabilities: ["SYS_RESOURCE"]
-  diego_access:
+  diego_api:
     capabilities: ["SYS_RESOURCE"]
   diego_brain:
     capabilities: ["SYS_RESOURCE"]
-  diego_api:
+  diego_ssh:
+    capabilities: ["SYS_RESOURCE"]
+  nats:
+    capabilities: ["SYS_RESOURCE"]
+  router:
+    capabilities: ["SYS_RESOURCE"]
+  routing_api:
     capabilities: ["SYS_RESOURCE"]
 
 kube:

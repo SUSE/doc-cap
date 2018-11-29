@@ -118,7 +118,7 @@ sizing:
 sizing:
   adapter:
     count: 7
-  api:
+  api_group:
     count: 6
   cc_clock:
     count: 3
@@ -130,13 +130,13 @@ sizing:
     count: 3
   consul:
     count: 1
-  diego_access:
-    count: 3
   diego_api:
     count: 3
   diego_brain:
     count: 2
   diego_cell:
+    count: 3
+  diego_ssh:
     count: 3
   doppler:
     count: 4
