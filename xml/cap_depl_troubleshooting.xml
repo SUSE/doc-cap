@@ -103,7 +103,7 @@ post-deployment-setup-1-hnpln   0/1       Completed</screen>
   <para>
    The namespace is also deleted as part of the process because the SCF and UAA
    namespaces contain generated secrets which Helm is not aware of and will
-   note remove when a release is deleted. When deleting a release, busy systems
+   not remove when a release is deleted. When deleting a release, busy systems
    may encounter timeouts. By first deleting the StatefulSets, it ensures that
    this operation is more likely to succeed. Using the <command>delete
    statefulsets</command> command requires <command>kubectl</command> v1.9.6 or
