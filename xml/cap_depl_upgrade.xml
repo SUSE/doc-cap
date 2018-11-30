@@ -175,6 +175,29 @@ suse/uaa        2.7.0       A Helm chart for SUSE UAA</screen>
 <screen>&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}"</screen>
 
+  <important>
+    <title>Change in URL of internal cf-usb broker endpoint</title>
+    <para>
+     This change is only applicable for upgrades from &cap; 1.2.1 to &cap; 1.3. The URL of the internal cf-usb broker endpoint has changed. Brokers for PostgreSQL and MySQL that use cf-usb will require the following manual fix after upgrading to reconnect with SCF/CAP:
+    </para>
+    <para>
+     Get the name of the secret (e.g. <literal>secrets-2.14.5-1</literal>):
+    </para>
+    <screen>&prompt.user;kubectl get secret --namespace scf</screen>
+    <para>
+     Get the URL of the <literal>cf-usb</literal> host (e.g. <literal>https://cf-usb.scf.svc.cluster.local:24054/</literal>):
+    </para>
+    <screen>&prompt.user;cf service-brokers</screen>
+    <para>
+     Get the current <literal>cf-usb</literal> password, where <literal>&lt;secret_name></literal> is the name from the first step:
+    </para>
+    <screen>&prompt.user;kubectl get secret --namespace scf <replaceable>&lt;secret_name></replaceable> -o yaml | grep \\scf-usb-password: | cut -d: -f2 | base64 -id</screen>
+    <para>
+     Update the service broker, where <literal>&lt;password></literal> is the password from the previous step, and the URL is the result of the second step with the leading <literal>cf-usb</literal> part doubled with a dash separator
+    </para>
+    <screen>&prompt.user;cf update-service-broker usb broker-admin <replaceable>&lt;password></replaceable> <replaceable>https://cf-usb-cf-usb.scf.svc.cluster.local:24054</replaceable></screen>
+  </important>
+
   <para>
    Then upgrade Stratos:
   </para>
