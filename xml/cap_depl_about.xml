@@ -450,7 +450,16 @@
    <variablelist>
     <title>List of &scf; Containers</title>
     <varlistentry>
-     <term>api</term>
+     <term>adapter</term>
+     <listitem>
+      <para>
+       Part of the logging system, manages connections to user application
+       syslog drains.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>api-group</term>
      <listitem>
       <para>
        Contains the &scf; Cloud Controller, which implements the CF API. It is
@@ -501,14 +510,6 @@
      </listitem>
     </varlistentry>
     <varlistentry>
-     <term>diego-access</term>
-     <listitem>
-      <para>
-       Provides SSH access to user applications, exposed via a &kube; service.
-      </para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
      <term>diego-api</term>
      <listitem>
       <para>
@@ -534,11 +535,10 @@
      </listitem>
     </varlistentry>
     <varlistentry>
-     <term>diego-locket</term>
+     <term>diego-ssh</term>
      <listitem>
       <para>
-       A distributed locking service, for components that scale using an
-       active/passive model.
+       Provides SSH access to user applications, exposed via a &kube; service.
       </para>
      </listitem>
     </varlistentry>
@@ -551,11 +551,12 @@
      </listitem>
     </varlistentry>
     <varlistentry>
-     <term>loggregator</term>
+     <term>log-api</term>
      <listitem>
       <para>
        Part of the logging system; exposes log streams to users using web
-       sockets. Exposed using the router.
+       sockets and proxies user application log messages to syslog drains.
+       Exposed using the router.
       </para>
      </listitem>
     </varlistentry>
@@ -563,15 +564,8 @@
      <term>mysql</term>
      <listitem>
       <para>
-       A MariaDB server. (A separate copy is deployed for UAA.)
-      </para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
-     <term>mysql-proxy</term>
-     <listitem>
-      <para>
-       Routes requests to MariaDB replicas.
+       A MariaDB server and component to route requests to replicas.
+       (A separate copy is deployed for UAA.)
       </para>
      </listitem>
     </varlistentry>
@@ -622,23 +616,6 @@
       <para>
        Used as a &kube; job to create secrets (certificates) when the cluster
        is installed.
-      </para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
-     <term>syslog-adapter</term>
-     <listitem>
-      <para>
-       Part of the logging system, manages connections to user application
-       syslog drains.
-      </para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
-     <term>syslog-rlp</term>
-     <listitem>
-      <para>
-       Proxies user application log messages to syslog drains.
       </para>
      </listitem>
     </varlistentry>
