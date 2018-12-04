@@ -177,7 +177,7 @@
       that is communicating correctly with your cluster:
      </para>
 <screen>&prompt.user;kubectl version --short
-Client Version: v1.9.1
+Client Version: v1.10.7
 Server Version: v1.9.8</screen>
      <para>
       As the client is on your workstation, and the server is on your cluster,
@@ -259,7 +259,7 @@ Happy Helming!</screen>
   </variablelist>
 
   <sect2 xml:id="sec.cap.caasp-3">
-   <title>Installation on &suse; &caasp; 3</title>
+   <title>&suse; &caasp; 3 PodSecurityPolicy</title>
    <para>
     &suse; &caasp; 3 introduces PodSecurityPolicy (PSP) support. This change
     adds two new PSPs to &caasp; 3:
@@ -414,6 +414,8 @@ podsecuritypolicy.extensions "suse.cap.psp" created
 clusterrole.rbac.authorization.k8s.io "suse:cap:psp" created
 clusterrolebinding.rbac.authorization.k8s.io "cap:clusterrole" created</screen>
    <para>
+    Verify that the new PSPs exist by running the
+    <command>kubectl get psp</command> command to list them.
     Then continue by deploying UAA and SCF.
    </para>
   </sect2>
@@ -494,6 +496,7 @@ pvc/test-sc-persistent   Bound     pvc-c464ed6a-3852-11e8-bd10-90b8d0c59f1c   1G
 
 <screen>&prompt.user;kubectl delete pv/pvc-c464ed6a-3852-11e8-bd10-90b8d0c59f1c
 persistentvolume "pvc-c464ed6a-3852-11e8-bd10-90b8d0c59f1c" deleted
+
 &prompt.user;kubectl delete pvc/test-sc-persistent
 persistentvolumeclaim "test-sc-persistent" deleted</screen>
 
