@@ -251,8 +251,9 @@
       cluster:
      </para>
 <screen>&prompt.user;kubectl version --short
-Client Version: v1.9.1
-Server Version: v1.9.8</screen>
+Client Version: v1.10.7
+Server Version: v1.9.8
+    </screen>
      <para>
       As the client is on your workstation, and the server is on your cluster,
       reporting the server version verifies that <command>kubectl</command> is
