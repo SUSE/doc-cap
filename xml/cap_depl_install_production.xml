@@ -416,8 +416,18 @@ clusterrolebinding.rbac.authorization.k8s.io "cap:clusterrole" created</screen>
    <para>
     Verify that the new PSPs exist by running the
     <command>kubectl get psp</command> command to list them.
-    Then continue by deploying UAA and SCF.
+    Then continue by deploying UAA and SCF. Ensure that your
+    <filename>scf-config-values.yaml</filename> file specifies
+    the name of your PSP in the <literal>kube:</literal>
+    section. These settings will grant only the
+    <literal>diego-cell</literal>, <literal>nfs-broker</literal>,
+    and <literal>router</literal> roles to be privileged.
    </para>
+<screen>kube:
+  psp:
+    nonprivileged: <replaceable>"suse.cap.psp"</replaceable>
+    privileged: <replaceable>"suse.cap.psp"</replaceable>
+</screen>
   </sect2>
  </sect1>
  <sect1 xml:id="sec.cap.storageclass-prod">

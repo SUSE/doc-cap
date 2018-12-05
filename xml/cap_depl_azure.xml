@@ -610,7 +610,11 @@ kube:
     username: ""
     password: ""
   organization: "cap"
-  auth: "rbac"</screen>
+  auth: "rbac"
+  psp:
+    nonprivileged: <replaceable>"suse.cap.psp"</replaceable>
+    privileged: <replaceable>"suse.cap.psp"</replaceable>
+</screen>
 
   <para>
    When your UAA deployment has completed, test that it is operating correctly
