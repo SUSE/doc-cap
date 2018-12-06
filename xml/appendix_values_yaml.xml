@@ -31,7 +31,13 @@
    the current &productname; release.
   </para>
 
-<screen>---
+<screen>apiVersion: 2.14.5+cf2.7.0.0.g6360c016
+description: A Helm chart for SUSE Cloud Foundry
+name: cf
+version: 2.14.5
+
+---
+---
 kube:
   external_ips: []
 
@@ -908,7 +914,7 @@ env:
   HTTP_PROXY: ~
 
   # A comma-separated whitelist of insecure Docker registries in the form of
-  # '&lt;HOSTNAME|IP>:PORT'. Each registry must be quoted separately.
+  # ''&lt;HOSTNAME|IP>:PORT'. Each registry must be quoted separately.
   #
   # Example: "\"docker-registry.example.com:80\", \"hello.example.org:443\""
   INSECURE_DOCKER_REGISTRIES: ""
@@ -1899,6 +1905,7 @@ sizing:
       tcp_route:
         count: 9
 </screen>
+
  </sect1>
  <sect1 xml:id="app.uaa.values.yaml">
   <title>Complete suse/uaa values.yaml file</title>
@@ -1908,7 +1915,13 @@ sizing:
    the current &productname; release.
   </para>
 
-<screen>---
+<screen>apiVersion: 2.14.5+cf2.7.0.0.g6360c016
+description: A Helm chart for SUSE UAA
+name: uaa
+version: 2.14.5
+
+---
+---
 kube:
   external_ips: []
 
