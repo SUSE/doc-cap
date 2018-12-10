@@ -9,14 +9,14 @@
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
  <info>
-  <title>Setting up and Using a Service Broker Sidecar</title>
+  <title>Setting up and Using a Service Broker</title>
   <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
    <dm:bugtracker></dm:bugtracker>
    <dm:translation>yes</dm:translation>
   </dm:docmanager>
  </info>
  <para>
-  The Open Service Broker API provides your &scf; applications with access to
+  The Open Service Broker API provides your &productname; applications with access to
   external dependencies and platform-level capabilities, such as databases,
   filesystems, external repositories, and messaging systems. These resources
   are called services. Services are created, used, and deleted as needed, and

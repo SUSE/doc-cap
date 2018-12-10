@@ -11,7 +11,7 @@
 <!ENTITY latestscfchart "2.14.5">
 <!ENTITY lateststratoschart "2.2.0">
 <!ENTITY cfcli        "cf CLI">
-
+<!ENTITY guide         "<citetitle xmlns='http://docbook.org/ns/docbook'>Deployment, Administration, and User Guide</citetitle>">
 <!-- ====================================================================== -->
 <!-- Company and Products                                                   -->
 <!-- ====================================================================== -->
@@ -201,6 +201,7 @@
 <!-- ============================================================= -->
 <!--                    Books                                      -->
 <!-- ============================================================= -->
+
 
 <!ENTITY deploy         "<citetitle xmlns='http://docbook.org/ns/docbook'>Deployment Guide</citetitle>">
 <!ENTITY instquick      "<citetitle xmlns='http://docbook.org/ns/docbook'>Installation Quick Start</citetitle>">
