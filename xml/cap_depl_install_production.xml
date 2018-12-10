@@ -536,6 +536,22 @@ persistentvolumeclaim "test-sc-persistent" deleted</screen>
   UAA_HOST: uaa.<replaceable>&exampledomain;</replaceable>
   UAA_PORT: 2793
 
+sizing:
+  cc_uploader:
+    capabilities: ["SYS_RESOURCE"]
+  diego_api:
+    capabilities: ["SYS_RESOURCE"]
+  diego_brain:
+    capabilities: ["SYS_RESOURCE"]
+  diego_ssh:
+    capabilities: ["SYS_RESOURCE"]
+  nats:
+    capabilities: ["SYS_RESOURCE"]
+  router:
+    capabilities: ["SYS_RESOURCE"]
+  routing_api:
+    capabilities: ["SYS_RESOURCE"]
+
 kube:
   # The IP address assigned to the kube node pointed to by the domain.
   external_ips: ["<replaceable>&kubeip;</replaceable>"]
@@ -555,6 +571,9 @@ kube:
     password: ""
   organization: "cap"
   auth: "rbac"
+  psp:
+    nonprivileged: "suse.cap.psp"
+    privileged: "suse.cap.psp"
 
 secrets:
   # Create a password for your CAP cluster
