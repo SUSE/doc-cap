@@ -564,8 +564,8 @@
      <term>mysql</term>
      <listitem>
       <para>
-       A MariaDB server and component to route requests to replicas.
-       (A separate copy is deployed for UAA.)
+       A MariaDB server and component to route requests to replicas. (A
+       separate copy is deployed for UAA.)
       </para>
      </listitem>
     </varlistentry>

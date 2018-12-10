@@ -579,7 +579,6 @@ suse/metrics                    1.0.0   A Helm chart for Stratos Metrics
 suse/nginx-ingress              0.28.3  An nginx Ingress controller that uses ConfigMap...
 suse/uaa                        &latestuaachart;  A Helm chart for SUSE UAA
 </screen>
-
   </sect2>
 
   <sect2 xml:id="sec.cap.create-namespaces">
@@ -627,12 +626,11 @@ sed 's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -</screen
    <important>
     <title>Always install to a fresh namespace</title>
     <para>
-     During a <command>helm delete</command>, &helm; will not remove
-     generated secrets from the SCF and UAA namespaces as it is not
-     aware of them. This leaves behind secrets from previous deployments,
-     which when used can cause issues. See
-     <xref linkend="sec.cap.rebuild.depl"/> for steps to ensure a fresh
-     namespace is used to avoid this.
+     During a <command>helm delete</command>, &helm; will not remove generated
+     secrets from the SCF and UAA namespaces as it is not aware of them. This
+     leaves behind secrets from previous deployments, which when used can cause
+     issues. See <xref linkend="sec.cap.rebuild.depl"/> for steps to ensure a
+     fresh namespace is used to avoid this.
     </para>
    </important>
    <para>
@@ -675,12 +673,11 @@ post-deployment-setup-1-hnpln   0/1       Completed</screen>
    <important>
     <title>Always install to a fresh namespace</title>
     <para>
-     During a <command>helm delete</command>, &helm; will not remove
-     generated secrets from the SCF and UAA namespaces as it is not
-     aware of them. This leaves behind secrets from previous deployments,
-     which when used can cause issues. See
-     <xref linkend="sec.cap.rebuild.depl"/> for steps to ensure a fresh
-     namespace is used to avoid this.
+     During a <command>helm delete</command>, &helm; will not remove generated
+     secrets from the SCF and UAA namespaces as it is not aware of them. This
+     leaves behind secrets from previous deployments, which when used can cause
+     issues. See <xref linkend="sec.cap.rebuild.depl"/> for steps to ensure a
+     fresh namespace is used to avoid this.
     </para>
    </important>
    <para>

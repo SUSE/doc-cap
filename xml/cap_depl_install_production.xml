@@ -414,13 +414,11 @@ podsecuritypolicy.extensions "suse.cap.psp" created
 clusterrole.rbac.authorization.k8s.io "suse:cap:psp" created
 clusterrolebinding.rbac.authorization.k8s.io "cap:clusterrole" created</screen>
    <para>
-    Verify that the new PSPs exist by running the
-    <command>kubectl get psp</command> command to list them.
-    Then continue by deploying UAA and SCF. Ensure that your
-    <filename>scf-config-values.yaml</filename> file specifies
-    the name of your PSP in the <literal>kube:</literal>
-    section. These settings will grant only a limited subset of
-    roles to be privileged.
+    Verify that the new PSPs exist by running the <command>kubectl get
+    psp</command> command to list them. Then continue by deploying UAA and SCF.
+    Ensure that your <filename>scf-config-values.yaml</filename> file specifies
+    the name of your PSP in the <literal>kube:</literal> section. These
+    settings will grant only a limited subset of roles to be privileged.
    </para>
 <screen>kube:
   psp:
@@ -698,16 +696,15 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -</screen>
   <title>Deploy UAA</title>
 
   <important>
-    <title>Always install to a fresh namespace</title>
-    <para>
-     During a <command>helm delete</command>, &helm; will not remove
-     generated secrets from the SCF and UAA namespaces as it is not
-     aware of them. This leaves behind secrets from previous deployments,
-     which when used can cause issues. See
-     <xref linkend="sec.cap.rebuild.depl"/> for steps to ensure a fresh
-     namespace is used to avoid this.
-    </para>
-   </important>
+   <title>Always install to a fresh namespace</title>
+   <para>
+    During a <command>helm delete</command>, &helm; will not remove generated
+    secrets from the SCF and UAA namespaces as it is not aware of them. This
+    leaves behind secrets from previous deployments, which when used can cause
+    issues. See <xref linkend="sec.cap.rebuild.depl"/> for steps to ensure a
+    fresh namespace is used to avoid this.
+   </para>
+  </important>
 
   <para>
    Use &helm; to deploy the UAA (User Account and Authentication) server. You
@@ -752,16 +749,15 @@ post-deployment-setup-1-hnpln   0/1       Completed</screen>
   <title>Deploy SCF</title>
 
   <important>
-    <title>Always install to a fresh namespace</title>
-    <para>
-     During a <command>helm delete</command>, &helm; will not remove
-     generated secrets from the SCF and UAA namespaces as it is not
-     aware of them. This leaves behind secrets from previous deployments,
-     which when used can cause issues. See
-     <xref linkend="sec.cap.rebuild.depl"/> for steps to ensure a fresh
-     namespace is used to avoid this.
-    </para>
-   </important>
+   <title>Always install to a fresh namespace</title>
+   <para>
+    During a <command>helm delete</command>, &helm; will not remove generated
+    secrets from the SCF and UAA namespaces as it is not aware of them. This
+    leaves behind secrets from previous deployments, which when used can cause
+    issues. See <xref linkend="sec.cap.rebuild.depl"/> for steps to ensure a
+    fresh namespace is used to avoid this.
+   </para>
+  </important>
 
   <para>
    First pass your UAA secret and certificate to SCF, then use &helm; to

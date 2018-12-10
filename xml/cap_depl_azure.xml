@@ -180,9 +180,9 @@ cap-aks</screen>
     <para>
      Set the virtual machine size (see
      <link xlink:href="https://docs.microsoft.com/en-us/azure/cloud-services/cloud-services-sizes-specs">
-     Sizes for Cloud Services</link>). A virtual machine size of <literal>Standard_D4_v2</literal> or 
-     higher is recommended:
-   </para>
+     Sizes for Cloud Services</link>). A virtual machine size of
+     <literal>Standard_D4_v2</literal> or higher is recommended:
+    </para>
 <screen>&prompt.user;export NODEVMSIZE="<replaceable>Standard_D4_v2</replaceable>"</screen>
    </step>
    <step>

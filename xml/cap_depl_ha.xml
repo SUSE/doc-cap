@@ -80,12 +80,11 @@ config:
    <important>
     <title>Always install to a fresh namespace</title>
     <para>
-     During a <command>helm delete</command>, &helm; will not remove
-     generated secrets from the SCF and UAA namespaces as it is not
-     aware of them. This leaves behind secrets from previous deployments,
-     which when used can cause issues. See
-     <xref linkend="sec.cap.rebuild.depl"/> for steps to ensure a fresh
-     namespace is used to avoid this.
+     During a <command>helm delete</command>, &helm; will not remove generated
+     secrets from the SCF and UAA namespaces as it is not aware of them. This
+     leaves behind secrets from previous deployments, which when used can cause
+     issues. See <xref linkend="sec.cap.rebuild.depl"/> for steps to ensure a
+     fresh namespace is used to avoid this.
     </para>
    </important>
 <screen>
@@ -173,12 +172,11 @@ sizing:
    <important>
     <title>Always install to a fresh namespace</title>
     <para>
-     During a <command>helm delete</command>, &helm; will not remove
-     generated secrets from the SCF and UAA namespaces as it is not
-     aware of them. This leaves behind secrets from previous deployments,
-     which when used can cause issues. See
-     <xref linkend="sec.cap.rebuild.depl"/> for steps to ensure a fresh
-     namespace is used to avoid this.
+     During a <command>helm delete</command>, &helm; will not remove generated
+     secrets from the SCF and UAA namespaces as it is not aware of them. This
+     leaves behind secrets from previous deployments, which when used can cause
+     issues. See <xref linkend="sec.cap.rebuild.depl"/> for steps to ensure a
+     fresh namespace is used to avoid this.
     </para>
    </important>
    <para>
@@ -197,12 +195,11 @@ sizing:
    <important>
     <title>Always install to a fresh namespace</title>
     <para>
-     During a <command>helm delete</command>, &helm; will not remove
-     generated secrets from the SCF and UAA namespaces as it is not
-     aware of them. This leaves behind secrets from previous deployments,
-     which when used can cause issues. See
-     <xref linkend="sec.cap.rebuild.depl"/> for steps to ensure a fresh
-     namespace is used to avoid this.
+     During a <command>helm delete</command>, &helm; will not remove generated
+     secrets from the SCF and UAA namespaces as it is not aware of them. This
+     leaves behind secrets from previous deployments, which when used can cause
+     issues. See <xref linkend="sec.cap.rebuild.depl"/> for steps to ensure a
+     fresh namespace is used to avoid this.
     </para>
    </important>
    <para>
@@ -288,23 +285,27 @@ sizing:
  </sect1>
  <sect1 xml:id="sec.cap.ha-custom-availability-zone-handling">
   <title>Handling Custom Availability Zone Information</title>
+
   <sect2 xml:id="sec.cap.availability-zones">
    <title>Availability Zones</title>
    <para>
     Availability Zones (AZ) are logical arrangements of compute nodes within a
-    region that provide isolation from each other. A deployment that is distributed
-    across multiple AZs can use this separation to increase resiliency against
-    downtime in the event a given zone experiences issues. See
+    region that provide isolation from each other. A deployment that is
+    distributed across multiple AZs can use this separation to increase
+    resiliency against downtime in the event a given zone experiences issues.
+    See
     <link xlink:href="https://docs.cloudfoundry.org/concepts/high-availability.html#azs">
     Availability Zones</link> for more information.
    </para>
   </sect2>
+
   <sect2 xml:id="sec.cap.enable-custom-availability-zone-handling">
    <title>Enable Custom Availability Zone Information Handling</title>
    <para>
-    By default, handling of custom AZ information is disabled. To enable it, provide
-    a label name as a string to the <literal>AZ_LABEL_NAME</literal> field in the
-    <literal>env:</literal> section of your <filename>scf-config-values.yaml</filename>:
+    By default, handling of custom AZ information is disabled. To enable it,
+    provide a label name as a string to the <literal>AZ_LABEL_NAME</literal>
+    field in the <literal>env:</literal> section of your
+    <filename>scf-config-values.yaml</filename>:
    </para>
 <screen>env:
   AZ_LABEL_NAME: <replaceable>"zone-label"</replaceable>
@@ -321,11 +322,11 @@ NAME                         STATUS  ROLES     AGE  VERSION
    <para>
     Set your chosen label on the worker nodes and specify an AZ:
    </para>
-   <screen>&prompt.user;kubectl label nodes <replaceable>34ce7eb0.infra.caasp.local</replaceable> <replaceable>zone-label</replaceable>=<replaceable>availability-zone-1</replaceable></screen>
+<screen>&prompt.user;kubectl label nodes <replaceable>34ce7eb0.infra.caasp.local</replaceable> <replaceable>zone-label</replaceable>=<replaceable>availability-zone-1</replaceable></screen>
    <para>
     Restart all <literal>diego-cell</literal> pods:
    </para>
-   <screen>&prompt.user;kubectl delete pod diego-cell-0 --namespace scf</screen>
+<screen>&prompt.user;kubectl delete pod diego-cell-0 --namespace scf</screen>
    <para>
     Run the following and verify that similar output is received:
    </para>

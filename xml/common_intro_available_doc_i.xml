@@ -41,11 +41,12 @@
 
  <variablelist>
   <varlistentry os="sles;sled">
-   <term><xref linkend="book.cap.guides"/>
-   </term>
+   <term><xref linkend="book.cap.guides"/></term>
    <listitem>
     <para>
-     The &productname; guide is a comprehensive guide providing deployment, administration, and user guides, and      architecture and minimum system requirements.
+     The &productname; guide is a comprehensive guide providing deployment,
+     administration, and user guides, and architecture and minimum system
+     requirements.
     </para>
    </listitem>
   </varlistentry>
