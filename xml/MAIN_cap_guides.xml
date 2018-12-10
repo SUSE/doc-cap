@@ -31,5 +31,5 @@
   </dm:docmanager>
  </info>
 <?dbhtml filename="index.html"?>
- <xi:include href="book_cap_deployment.xml" parse="xml"/>
+ <xi:include href="book_cap_guides.xml" parse="xml"/>
 </set>

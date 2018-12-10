@@ -4,8 +4,8 @@
 ## ----------------------------
 
 ## Basics
-MAIN="MAIN_cap_deployment.xml"
-ROOTID="book.cap.deployment"
+MAIN="MAIN_cap_guides.xml"
+ROOTID="book.cap.guides"
 
 ## Profiling
 #PROFOS="sles"
