@@ -31,7 +31,7 @@
 <!--============================================================================
 About this guide
 =============================================================================--> 
- <xi:include href="cap_depl_intro.xml"/>
+ <xi:include href="cap_intro.xml"/>
 
 <!--============================================================================
 Part: Overview of SUSE CAP
@@ -39,8 +39,8 @@ Part: Overview of SUSE CAP
  <part xml:id="part.cap.overview">
   <title>Overview of &productname;</title>
   <info/>
-<xi:include href="cap_depl_overview.xml"/>
-<xi:include href="cap_depl_kube_requirements.xml"/>
+<xi:include href="cap_overview.xml"/>
+<xi:include href="cap_kube_requirements.xml"/>
 </part>
 
 <!--============================================================================
@@ -66,12 +66,12 @@ Part: CAP Administration Guide
  <part xml:id="part.cap.administration">
   <title>&productname; Administration</title>
   <info/>
-<xi:include href="cap_depl_upgrade.xml"/>
-<xi:include href="cap_depl_passwords.xml"/>
-<xi:include href="cap_depl_backup-restore.xml"/>
-<xi:include href="cap_depl_service_broker.xml"/>
-<xi:include href="cap_depl_logging.xml"/>
-<xi:include href="cap_depl_certificates.xml"/>
+<xi:include href="cap_admin_upgrade.xml"/>
+<xi:include href="cap_admin_passwords.xml"/>
+<xi:include href="cap_admin_backup-restore.xml"/>
+<xi:include href="cap_admin_service_broker.xml"/>
+<xi:include href="cap_admin_logging.xml"/>
+<xi:include href="cap_admin_certificates.xml"/>
 </part>
 
 <!--============================================================================
@@ -80,7 +80,7 @@ Part: CAP User Guide
  <part xml:id="part.cap.user-guide">
   <title>&productname; User Guide</title>
   <info/>
-<xi:include href="cap_depl_cf_cli.xml"/>  
+<xi:include href="cap_user_cf_cli.xml"/>  
   </part>
   
 <!--============================================================================
@@ -89,7 +89,7 @@ Part: Troubleshooting
  <part xml:id="part.cap.troubleshooting">
   <title>Troubleshooting</title>
   <info/>
-<xi:include href="cap_depl_troubleshooting.xml"/>
+<xi:include href="cap_troubleshooting.xml"/>
 </part>
 
 <!--============================================================================
