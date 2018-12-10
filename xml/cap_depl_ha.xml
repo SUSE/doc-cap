@@ -77,6 +77,17 @@ config:
     Or, you may pass it as a command-line option when you are deploying with
     &helm;, for example:
    </para>
+   <important>
+    <title>Always install to a fresh namespace</title>
+    <para>
+     During a <command>helm delete</command>, &helm; will not remove
+     generated secrets from the SCF and UAA namespaces as it is not
+     aware of them. This leaves behind secrets from previous deployments,
+     which when used can cause issues. See
+     <xref linkend="sec.cap.rebuild.depl"/> for steps to ensure a fresh
+     namespace is used to avoid this.
+    </para>
+   </important>
 <screen>
 &prompt.user;helm install suse/uaa \
  --name susecf-uaa \
@@ -159,6 +170,17 @@ sizing:
   tcp_router:
     count: 3
 </screen>
+   <important>
+    <title>Always install to a fresh namespace</title>
+    <para>
+     During a <command>helm delete</command>, &helm; will not remove
+     generated secrets from the SCF and UAA namespaces as it is not
+     aware of them. This leaves behind secrets from previous deployments,
+     which when used can cause issues. See
+     <xref linkend="sec.cap.rebuild.depl"/> for steps to ensure a fresh
+     namespace is used to avoid this.
+    </para>
+   </important>
    <para>
     After creating your configuration files, follow the steps in
     <xref linkend="sec.cap.configure-prod"/> until you get to
@@ -172,6 +194,17 @@ sizing:
 --values scf-config-values.yaml \
 --values uaa-sizing.yaml
 </screen>
+   <important>
+    <title>Always install to a fresh namespace</title>
+    <para>
+     During a <command>helm delete</command>, &helm; will not remove
+     generated secrets from the SCF and UAA namespaces as it is not
+     aware of them. This leaves behind secrets from previous deployments,
+     which when used can cause issues. See
+     <xref linkend="sec.cap.rebuild.depl"/> for steps to ensure a fresh
+     namespace is used to avoid this.
+    </para>
+   </important>
    <para>
     When the status shows RUNNING for all of the UAA nodes, deploy SCF with
     these commands:

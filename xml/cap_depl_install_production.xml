@@ -679,6 +679,18 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -</screen>
  <sect1 xml:id="sec.cap.install-uaa-prod">
   <title>Deploy UAA</title>
 
+  <important>
+    <title>Always install to a fresh namespace</title>
+    <para>
+     During a <command>helm delete</command>, &helm; will not remove
+     generated secrets from the SCF and UAA namespaces as it is not
+     aware of them. This leaves behind secrets from previous deployments,
+     which when used can cause issues. See
+     <xref linkend="sec.cap.rebuild.depl"/> for steps to ensure a fresh
+     namespace is used to avoid this.
+    </para>
+   </important>
+
   <para>
    Use &helm; to deploy the UAA (User Account and Authentication) server. You
    may create your own release <literal>--name</literal>:
@@ -720,6 +732,18 @@ post-deployment-setup-1-hnpln   0/1       Completed</screen>
  </sect1>
  <sect1 xml:id="sec.cap.install-scf-prod">
   <title>Deploy SCF</title>
+
+  <important>
+    <title>Always install to a fresh namespace</title>
+    <para>
+     During a <command>helm delete</command>, &helm; will not remove
+     generated secrets from the SCF and UAA namespaces as it is not
+     aware of them. This leaves behind secrets from previous deployments,
+     which when used can cause issues. See
+     <xref linkend="sec.cap.rebuild.depl"/> for steps to ensure a fresh
+     namespace is used to avoid this.
+    </para>
+   </important>
 
   <para>
    First pass your UAA secret and certificate to SCF, then use &helm; to
