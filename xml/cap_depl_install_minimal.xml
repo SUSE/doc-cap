@@ -326,6 +326,15 @@ Not installing &tiller; due to 'client-only' flag having been set
 Happy Helming!</screen>
     </listitem>
    </varlistentry>
+   <varlistentry>
+    <term>Apply PodSecurityPolicy</term>
+    <listitem>
+     <para>
+      See <xref linkend="sec.cap.caasp-3"/> for important information on
+      applying the required PodSecurityPolicy (PSP) to your deployment.
+     </para>
+    </listitem>
+   </varlistentry>
   </variablelist>
  </sect1>
  <sect1 xml:id="sec.cap.storageclass">

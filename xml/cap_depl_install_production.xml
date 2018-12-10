@@ -419,9 +419,8 @@ clusterrolebinding.rbac.authorization.k8s.io "cap:clusterrole" created</screen>
     Then continue by deploying UAA and SCF. Ensure that your
     <filename>scf-config-values.yaml</filename> file specifies
     the name of your PSP in the <literal>kube:</literal>
-    section. These settings will grant only the
-    <literal>diego-cell</literal>, <literal>nfs-broker</literal>,
-    and <literal>router</literal> roles to be privileged.
+    section. These settings will grant only a limited subset of
+    roles to be privileged.
    </para>
 <screen>kube:
   psp:
