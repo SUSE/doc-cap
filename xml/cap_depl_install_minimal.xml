@@ -488,8 +488,8 @@ kube:
   organization: "cap"
   auth: "rbac"
   psp:
-    nonprivileged: <replaceable>"suse.cap.psp"</replaceable>
-    privileged: <replaceable>"suse.cap.psp"</replaceable>
+    nonprivileged: "suse.cap.psp"
+    privileged: "suse.cap.psp"
 
 secrets:
   # Create a password for your CAP cluster

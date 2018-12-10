@@ -424,8 +424,8 @@ clusterrolebinding.rbac.authorization.k8s.io "cap:clusterrole" created</screen>
    </para>
 <screen>kube:
   psp:
-    nonprivileged: <replaceable>"suse.cap.psp"</replaceable>
-    privileged: <replaceable>"suse.cap.psp"</replaceable>
+    nonprivileged: "suse.cap.psp"
+    privileged: "suse.cap.psp"
 </screen>
   </sect2>
  </sect1>
