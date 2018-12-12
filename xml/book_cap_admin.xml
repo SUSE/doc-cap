@@ -7,12 +7,12 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<book version="5.1" xml:lang="en" xml:id="book.cap.deployment"
+<book version="5.1" xml:lang="en" xml:id="book.cap.admin"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
  <info>
-  <title>&deploy;</title>
+  <title>&admin;</title>
   <productname>&productname;</productname>
   <productnumber>&productnumber;</productnumber><date>
 <?dbtimestamp format="B d, Y"?></date>
@@ -28,44 +28,42 @@
    <dm:translation>no</dm:translation>
   </dm:docmanager>
  </info>
- 
+
 <!--============================================================================
 About this guide
 =============================================================================-->
- <xi:include href="cap_intro.xml"/>
+<!-- <xi:include href="cap_intro.xml"/> -->
 
 <!--============================================================================
-Part: Overview of SUSE CAP
+Part: CAP Administration Guide
 =============================================================================-->
- <part xml:id="part.cap.overview">
-  <title>Overview of &productname;</title>
-  <info/>
-<xi:include href="cap_overview.xml"/>
-<xi:include href="cap_kube_requirements.xml"/>
-</part>
+
+<!-- FIXME cwickert 2018-10-12: parts commented out for now. We might want to
+ reintroduce them once we have more content we need to structure -->
+
+<!--
+ <part xml:id="part.cap.administration">
+  <title>&productname; Administration</title>
+  <info/>  -->
+<xi:include href="cap_admin_upgrade.xml"/>
+<xi:include href="cap_admin_passwords.xml"/>
+<xi:include href="cap_admin_backup-restore.xml"/>
+<xi:include href="cap_admin_service_broker.xml"/>
+<xi:include href="cap_admin_logging.xml"/>
+<xi:include href="cap_admin_certificates.xml"/>
 
 <!--============================================================================
-Part: CAP Deployment Guide
+Part: Troubleshooting
 =============================================================================-->
- <!-- FIXME cwickert 2018-10-12: parts commented out for now. We might want to
-  reintroduce them once we have more content we need to structure -->
-
-<!-- <part xml:id="part.cap.deployment">
-  <title>Deploying &productname;</title>
-  <info/> -->
-<xi:include href="cap_depl_install_production.xml"/>
-<xi:include href="cap_depl_stratos.xml"/>
-<xi:include href="cap_depl_ha.xml"/>
-<xi:include href="cap_depl_ldap.xml"/>
-<xi:include href="cap_depl_azure.xml"/>
-<xi:include href="cap_depl_eks.xml"/>
-<xi:include href="cap_depl_openstack.xml"/>
-<xi:include href="cap_depl_install_minimal.xml"/>
-<!-- </part> -->
+<!-- <part xml:id="part.cap.troubleshooting">
+  <title>Troubleshooting</title>
+  <info/>  -->
+<xi:include href="cap_troubleshooting.xml"/>
+<!-- </part>  -->
 
 <!--============================================================================
 Appendices
 ==============================================================================-->
-<xi:include href="appendix_values_yaml.xml"/>
+<!-- <xi:include href="appendix_values_yaml.xml"/>  -->
 <xi:include href="common_legal.xml"/>
 </book>
