@@ -34,13 +34,30 @@
  </para>
 
  <variablelist>
-  <varlistentry os="sles;sled">
-   <term><xref linkend="book.cap.guides"/></term>
+  <varlistentry>
+   <term><xref linkend="book.cap.deployment"/></term>
    <listitem>
     <para>
-     The &productname; guide is a comprehensive guide providing deployment,
-     administration, and user guides, and architecture and minimum system
-     requirements.
+     The &productname; &deploy; is a comprehensive guide providing deployment,
+     architecture, and minimum system requirements.
+    </para>
+   </listitem>
+  </varlistentry>
+  <varlistentry>
+   <term><xref linkend="book.cap.admin"/></term>
+   <listitem>
+    <para>
+     The &productname; &admin; covers system administration tasks like maintaining,
+     monitoring and customizing an initially installed system.
+    </para>
+   </listitem>
+  </varlistentry>
+  <varlistentry>
+   <term><xref linkend="book.cap.user"/></term>
+   <listitem>
+    <para>
+     The &productname; &user; covers operator and developer tasks like
+     deploying and Managing Applications with the &cf; Client
     </para>
    </listitem>
   </varlistentry>
