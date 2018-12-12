@@ -1,11 +1,11 @@
 ## ----------------------------
 ## Doc Config File for SUSE CAP
-## Special config for builds of the complete set
+## Administration Guide
 ## ----------------------------
 
 ## Basics
 MAIN="MAIN_cap.xml"
-ROOTID="set.cap"
+ROOTID="book.cap.admin"
 
 ## Profiling
 #PROFOS="sles"
