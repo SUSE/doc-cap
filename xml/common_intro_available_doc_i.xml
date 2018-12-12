@@ -18,13 +18,7 @@
    </dm:bugtracker>
    <dm:translation>no</dm:translation>
   </dm:docmanager>
- </info><indexterm>
-
- <primary>help</primary>
-
- <secondary>&suse; manuals</secondary></indexterm><indexterm>
-
- <primary>&suse; manuals</primary></indexterm>
+ </info>
 
  <para>
   We provide HTML and PDF versions of our books in different languages.
