@@ -7,7 +7,8 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<set xmlns="http://docbook.org/ns/docbook"
+<set xml:id="set.cap"
+ xmlns="http://docbook.org/ns/docbook"
  xmlns:xi="http://www.w3.org/2001/XInclude"
  xmlns:xlink="http://www.w3.org/1999/xlink"
  version="5.0" xml:lang="en">
@@ -31,5 +32,7 @@
   </dm:docmanager>
  </info>
 <?dbhtml filename="index.html"?>
- <xi:include href="book_cap_guides.xml" parse="xml"/>
+ <xi:include href="book_cap_deployment.xml"/>
+ <xi:include href="book_cap_admin.xml"/>
+ <xi:include href="book_cap_user.xml"/>
 </set>
