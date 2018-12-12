@@ -38,8 +38,7 @@
    <term><xref linkend="book.cap.deployment"/></term>
    <listitem>
     <para>
-     The &productname; &deploy; is a comprehensive guide providing deployment,
-     architecture, and minimum system requirements.
+     &abstract_deploy;
     </para>
    </listitem>
   </varlistentry>
@@ -47,8 +46,7 @@
    <term><xref linkend="book.cap.admin"/></term>
    <listitem>
     <para>
-     The &productname; &admin; covers system administration tasks like maintaining,
-     monitoring and customizing an initially installed system.
+     &abstract_admin;
     </para>
    </listitem>
   </varlistentry>
@@ -56,8 +54,7 @@
    <term><xref linkend="book.cap.user"/></term>
    <listitem>
     <para>
-     The &productname; &user; covers operator and developer tasks like
-     deploying and Managing Applications with the &cf; Client
+     &abstract_user;
     </para>
    </listitem>
   </varlistentry>
