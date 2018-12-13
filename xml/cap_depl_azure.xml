@@ -741,14 +741,13 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
 
 &prompt.user;cf create-space <replaceable>scftest</replaceable> -o <replaceable>testorg</replaceable>
 
-yh8lgt_987654/ gprompt.user;cf target -o "<replaceable>testorg</replaceable>" -s "<replaceable>scftest</replaceable>"
+&prompt.user;cf target -o "<replaceable>testorg</replaceable>" -s "<replaceable>scftest</replaceable>"
 
-&prompt.user;cf create-service azure-mysql-5-7 basic <replaceable>scf-rails-example-db</replaceable>\
+&prompt.user;cf create-service azure-mysql-5-7 basic <replaceable>scf-rails-example-db</replaceable> \
 -c "{ \"location\": \"${LOCATION}\", \"resourceGroup\": \"${RGNAME}\", \"firewallRules\": [{\"name\": \
 \"AllowAll\", \"startIPAddress\":\"0.0.0.0\",\"endIPAddress\":\"255.255.255.255\"}]}"
 
-&prompt.user;cf service <replaceable>scf-rails-example-db</replaceable> | \
-grep status
+&prompt.user;cf service <replaceable>scf-rails-example-db</replaceable> | grep status
 </screen>
 <para>
 Find your new service and disable TLS:
@@ -770,8 +769,8 @@ Find your new service and disable TLS:
 
 &prompt.user;cf push
 
-&prompt.user;cf ssh scf-rails-example -c "export PATH=/home/vcap/deps/0/bin:/usr/local/bin:/usr/bin:/bin &amp;&amp; 
-export BUNDLE_PATH=/home/vcap/deps/0/vendor_bundle/ruby/2.5.0 &amp;&amp; 
+&prompt.user;cf ssh scf-rails-example -c "export PATH=/home/vcap/deps/0/bin:/usr/local/bin:/usr/bin:/bin &amp;&amp; \
+export BUNDLE_PATH=/home/vcap/deps/0/vendor_bundle/ruby/2.5.0 &amp;&amp; \
 export BUNDLE_GEMFILE=/home/vcap/app/Gemfile &amp;&amp; cd app &amp;&amp; bundle exec rake db:seed"
 
 &prompt.user;cf service scf-rails-example-db # => bound apps
