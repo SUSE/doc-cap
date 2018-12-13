@@ -634,7 +634,166 @@ kube:
 xip.io:2793/oauth/token"</screen>
 
   <para>
-   Now you can complete your deployment.
+   Now you can complete your deployment by deploying UAA, SCF, and so on.
   </para>
  </sect1>
+ 
+<sect1 xml:id="sec.cap.azure-service-broker">
+  <title>Configuring and Testing the Native &aks; Service Broker</title>
+  <para>
+      &ms; &azureks; provides a service broker. This section describes
+      how to use it with your &productname; deployment.
+  </para>
+  <para>
+      Start by extracting and setting a batch of environment variables:
+  </para>
+  <screen>&prompt.user;SBRGNAME=$(tr -dc 'a-zA-Z0-9' &lt; /dev/urandom | head -c 8)-service-broker
+      
+&prompt.user;LOCATION=<replaceable>eastus</replaceable>
+
+&prompt.user;export AZURE_SUBSCRIPTION_ID=$(az account show | jq -r '.id')
+
+&prompt.user;az group create --name ${SBRGNAME} --location ${LOCATION}
+
+&prompt.user;SERVICE_PRINCIPAL_INFO=$(az ad sp create-for-rbac --name ${SBRGNAME})
+
+&prompt.user;AZURE_TENANT_ID=$(echo ${SERVICE_PRINCIPAL_INFO} | jq -r '.tenant')
+
+&prompt.user;AZURE_CLIENT_ID=$(echo ${SERVICE_PRINCIPAL_INFO} | jq -r '.appId')
+
+&prompt.user;AZURE_CLIENT_SECRET=$(echo ${SERVICE_PRINCIPAL_INFO} | jq -r '.password')
+
+&prompt.user;echo SBRGNAME=${SBRGNAME}
+
+&prompt.user;echo LOCATION=${LOCATION}
+
+&prompt.user;echo AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID} \; AZURE_TENANT_ID=${AZURE_TENANT_ID}\; AZURE_CLIENT_ID=${AZURE_CLIENT_ID}\; AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
+</screen>
+    
+    <para>
+        Add the necessary &helm; repositories and download the charts:
+    </para>
+    <screen>&prompt.user;helm repo add svc-cat https://svc-catalog-charts.storage.googleapis.com
+        
+&prompt.user;helm repo update
+
+&prompt.user;helm install svc-cat/catalog --name catalog --namespace catalog --set rbacEnable=false --set controllerManager.healthcheck.enabled=false --set apiserver.storage.etcd.persistence.storageClass=default
+
+&prompt.user;kubectl get apiservice
+
+&prompt.user;helm repo add azure https://kubernetescharts.blob.core.windows.net/azure
+
+&prompt.user;helm repo update
+</screen>
+
+<para>
+Set up the service broker with your variables:
+</para>
+<screen>
+&prompt.user;helm install azure/open-service-broker-azure \
+--name <replaceable>osba</replaceable> \
+--namespace <replaceable>osba</replaceable> \
+--set azure.subscriptionId=${AZURE_SUBSCRIPTION_ID} \
+--set azure.tenantId=${AZURE_TENANT_ID} \
+--set azure.clientId=${AZURE_CLIENT_ID} \
+--set azure.clientSecret=${AZURE_CLIENT_SECRET} \
+--set azure.defaultLocation=${LOCATION} \
+--set redis.persistence.storageClass=default \
+--set basicAuth.username=$(tr -dc 'a-zA-Z0-9' &lt; /dev/urandom | head -c 16) \
+--set basicAuth.password=$(tr -dc 'a-zA-Z0-9' &lt; /dev/urandom | head -c 16)
+
+&prompt.user;cf create-service-broker azure $(kubectl get deployment osba-open-service-broker-azure \
+--namespace osba -o jsonpath='{.spec.template.spec.containers[0].env[?(@.name == "BASIC_AUTH_USERNAME")].value}') $(kubectl get secret --namespace osba osba-open-service-broker-azure -o jsonpath='{.data.basic-auth-password}' | base64 -d) http://osba-open-service-broker-azure.osba
+</screen>
+<para>
+    Modify the database:
+</para>
+<screen>
+&prompt.user;kubectl exec -it mysql-0 --namespace scf -- env TERM=xterm-256color COLUMNS=135 LINES=62 /bin/bash
+  
+# mysql --defaults-file=/var/vcap/jobs/mysql/config/mylogin.cnf ccdb
+    MariaDB [ccdb]> ALTER TABLE ccdb.service_plans MODIFY COLUMN description VARCHAR(1024) COLLATE utf8_bin ;
+    MariaDB [ccdb]> exit
+
+# exit
+</screen>
+<para>
+    Register the service broker in &scf;:
+</para>
+<screen>
+&prompt.user;cf login
+
+&prompt.user;cf create-service-broker azure \
+$(kubectl get deployment osba-open-service-broker-azure \
+-namespace osba -o jsonpath='{.spec.template.spec.containers[0].env[?(@.name == "BASIC_AUTH_USERNAME")].value}') \
+$(kubectl get secret --namespace osba osba-open-service-broker-azure -o jsonpath='{.data.basic-auth-password}' | \
+base64 -d) http://osba-open-service-broker-azure.osba
+
+&prompt.user;cf service-access -b azure | \
+awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
+</screen>
+<para>
+    Test your new service broker with an example Rails app. First create a space
+    and org for your test app:
+</para>
+<screen>
+&prompt.user;cf create-org <replaceable>testorg</replaceable>
+
+&prompt.user;cf create-space <replaceable>scftest</replaceable> -o <replaceable>testorg</replaceable>
+
+&prompt.user;cf target -o "<replaceable>testorg</replaceable>" -s "<replaceable>scftest</replaceable>"
+
+&prompt.user;cf create-service azure-mysql-5-7 basic <replaceable>scf-rails-example-db</replaceable> \
+-c "{ \"location\": \"${LOCATION}\", \"resourceGroup\": \"${RGNAME}\", \"firewallRules\": [{\"name\": \
+\"AllowAll\", \"startIPAddress\":\"0.0.0.0\",\"endIPAddress\":\"255.255.255.255\"}]}"
+
+&prompt.user;cf service <replaceable>scf-rails-example-db</replaceable> | grep status
+</screen>
+<para>
+Find your new service and disable TLS:
+</para>
+<screen>
+&prompt.user;az mysql server list --resource-group $SBRGNAME
+
+&prompt.user;az mysql server update --resource-group $SBRGNAME \
+--name <replaceable>scftest</replaceable> --ssl-enforcement Disabled
+</screen>
+
+<para>
+    Build and push the test Rails app:
+</para>
+<screen>
+&prompt.user;git clone https://github.com/scf-samples/rails-example
+
+&prompt.user;cd rails-example
+
+&prompt.user;cf push
+
+&prompt.user;cf ssh scf-rails-example -c "export PATH=/home/vcap/deps/0/bin:/usr/local/bin:/usr/bin:/bin &amp;&amp; \
+export BUNDLE_PATH=/home/vcap/deps/0/vendor_bundle/ruby/2.5.0 &amp;&amp; \
+export BUNDLE_GEMFILE=/home/vcap/app/Gemfile &amp;&amp; cd app &amp;&amp; bundle exec rake db:seed"
+
+&prompt.user;cf service scf-rails-example-db # => bound apps
+</screen>
+<para>
+    Test your new service deployment with <command>curl</command>, replacing the
+    example IP address with your own IP address:
+</para>
+<screen>
+    &prompt.user;curl scf-rails-example.<replaceable>&publicip;</replaceable>
+</screen>
+<para>
+    A successful deployment returns output like this abbreviated example:
+</para>
+<screen>
+ &lt;h1>Hello from Rails on SCF!&lt;/h1>
+2018-12-19T12:53:30+00:00
+
+&lt;ul>
+  &lt;li>#1: Drink coffee&lt;/li>
+  &lt;li>#2: Go to work&lt;/li>
+  &lt;li>#3: Have some rest&lt;/li>
+&lt;/ul>
+</screen>
+</sect1>
 </chapter>

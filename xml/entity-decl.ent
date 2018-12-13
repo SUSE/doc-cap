@@ -163,7 +163,8 @@
 
 <!ENTITY ms             "Microsoft">
 <!ENTITY azureks        "Azure Kubernetes Service">
-<!ENTITY aks            "&ms; &azureks;">
+<!ENTITY msaks            "&ms; &azureks;">
+<!ENTITY aks             "Microsoft AKS">
 <!-- ============================================================= -->
 <!-- Virtualization                                                -->
 <!-- ============================================================= -->
