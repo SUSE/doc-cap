@@ -359,13 +359,13 @@ parameters:
    group to any one of your nodes:
   </para>
 
-<screen>  Type 	Protocol 	Port Range 	Source 	Description
-HTTP 	TCP 	80 	0.0.0.0/0 	CAP HTTP
-Custom TCP Rule 	TCP 	2793 	0.0.0.0/0 	CAP UAA
-Custom TCP Rule 	TCP 	2222 	0.0.0.0/0 	CAP SSH
-Custom TCP Rule 	TCP 	4443 	0.0.0.0/0 	CAP WSS
-Custom TCP Rule 	TCP 	443 	0.0.0.0/0 	CAP HTTPS
-Custom TCP Rule 	TCP 	20000-20009 	0.0.0.0/0 	TCP Routing</screen>
+<screen>Type       Protocol     Port Range      Source          Description
+HTTP               TCP          80              0.0.0.0/0       CAP HTTP
+Custom TCP Rule    TCP          2793            0.0.0.0/0       CAP UAA
+Custom TCP Rule    TCP          2222            0.0.0.0/0       CAP SSH
+Custom TCP Rule    TCP          4443            0.0.0.0/0       CAP WSS
+Custom TCP Rule    TCP          443             0.0.0.0/0       CAP HTTPS
+Custom TCP Rule    TCP          20000-20009     0.0.0.0/0       TCP Routing</screen>
  </sect1>
  <sect1 xml:id="sec.cap.eks-external-ips">
   <title>Find your <literal>kube.external_ips</literal></title>
