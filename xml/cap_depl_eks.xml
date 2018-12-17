@@ -359,7 +359,7 @@ parameters:
    group to any one of your nodes:
   </para>
 
-<screen>Type       Protocol     Port Range      Source          Description
+<screen>Type		   Protocol     Port Range      Source          Description
 HTTP               TCP          80              0.0.0.0/0       CAP HTTP
 Custom TCP Rule    TCP          2793            0.0.0.0/0       CAP UAA
 Custom TCP Rule    TCP          2222            0.0.0.0/0       CAP SSH
