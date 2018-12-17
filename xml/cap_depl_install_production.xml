@@ -425,7 +425,16 @@ clusterrolebinding.rbac.authorization.k8s.io "cap:clusterrole" created</screen>
     nonprivileged: "suse.cap.psp"
     privileged: "suse.cap.psp"
 </screen>
+
+<tip>
+    <para>
+        Note that the example <filename>cap-psp-rbac.yaml</filename> file sets
+        the name of the PSPs, which in the previous examples is
+        <literal>suse.cap.psp</literal>.
+    </para>
+</tip>
   </sect2>
+  
  </sect1>
  <sect1 xml:id="sec.cap.storageclass-prod">
   <title>Choose Storage Class</title>
