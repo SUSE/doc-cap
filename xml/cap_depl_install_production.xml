@@ -445,10 +445,28 @@ clusterrolebinding.rbac.authorization.k8s.io "cap:clusterrole" created</screen>
    storage cluster you are using (&ses; users, see
    <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_admin/data/cha_admin_integration.html">&suse;
    &caasp; Integration with SES</link>). After connecting your storage backend
-   use <command>kubectl</command> to see your available storage classes:
+   use <command>kubectl</command> to see your available storage classes. This 
+   example is for an NFS storage class:
   </para>
 
-<screen>&prompt.user;kubectl get storageclasses</screen>
+<screen>&prompt.user;kubectl get storageclass
+NAME         PROVISIONER   AGE
+persistent   nfs           10d    
+    </screen>
+
+    <para>
+        Creating a default storage class is useful for a number of scenarios,
+        such as using MiniBroker. When your storage class is already created, run
+        the following command (substituting the name of your storage class) 
+        to make it the default:
+    </para>
+<screen>&prompt.user;kubectl patch storageclass <replaceable>persistent</replaceable> \
+ -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+    
+&prompt.user;kubectl get storageclass
+NAME                   PROVISIONER   AGE
+persistent (default)   nfs           10d
+</screen>
 
   <para>
    See <xref linkend="sec.cap.configure-prod"/> to learn where to configure
@@ -588,14 +606,14 @@ secrets:
   # Create a password for your UAA client secret
   UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable></screen>
 
-  <note>
+  <important>
    <title>Protect UAA_ADMIN_CLIENT_SECRET</title>
    <para>
     The UAA_ADMIN_CLIENT_SECRET is the master password for access to your &cap;
     cluster. Make this a very strong password, and protect it just as carefully
     as you would protect any root password.
    </para>
-  </note>
+  </important>
  </sect1>
  <sect1 xml:id="sec.cap.helm-deploy-prod">
   <title>Deploy with &helm;</title>
@@ -707,11 +725,12 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -</screen>
   <important>
    <title>Always install to a fresh namespace</title>
    <para>
-    During a <command>helm delete</command>, &helm; will not remove generated
-    secrets from the SCF and UAA namespaces as it is not aware of them. This
-    leaves behind secrets from previous deployments, which when used can cause
-    issues. See <xref linkend="sec.cap.rebuild.depl"/> for steps to ensure a
-    fresh namespace is used to avoid this.
+    If you are not creating a fresh &productname; installation, but have deleted 
+    a previous deployment and are starting over, you must create new namespaces. 
+    Do not re-use your old namespaces. The <command>helm delete</command> command 
+    does not remove generated secrets from the SCF and UAA namespaces as it is 
+    not aware of them. These leftover secrets will cause problems. See 
+    <xref linkend="sec.cap.rebuild.depl"/> for more information.
    </para>
   </important>
 
@@ -730,7 +749,7 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -</screen>
    steps, which you can monitor with the <command>watch</command> command:
   </para>
 
-<screen>&prompt.user;watch -c 'kubectl get pods --all-namespaces'</screen>
+<screen>&prompt.user;watch -c 'kubectl get pods --namespace uaa'</screen>
 
   <para>
    When the status shows RUNNING for all of the UAA nodes, proceed to deploying
@@ -760,11 +779,12 @@ post-deployment-setup-1-hnpln   0/1       Completed</screen>
   <important>
    <title>Always install to a fresh namespace</title>
    <para>
-    During a <command>helm delete</command>, &helm; will not remove generated
-    secrets from the SCF and UAA namespaces as it is not aware of them. This
-    leaves behind secrets from previous deployments, which when used can cause
-    issues. See <xref linkend="sec.cap.rebuild.depl"/> for steps to ensure a
-    fresh namespace is used to avoid this.
+    If you are not creating a fresh &productname; installation, but have deleted 
+    a previous deployment and are starting over, you must create new namespaces. 
+    Do not re-use your old namespaces. The <command>helm delete</command> command 
+    does not remove generated secrets from the SCF and UAA namespaces as it is 
+    not aware of them. These leftover secrets will cause problems. See 
+    <xref linkend="sec.cap.rebuild.depl"/> for more information.
    </para>
   </important>
 
