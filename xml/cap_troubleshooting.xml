@@ -168,6 +168,13 @@ namespace "uaa" deleted</screen>
    </listitem>
    <listitem>
     <para>
+     List all of your running pods, their internal IP addresses, and which &kube; 
+     nodes they are running on:
+    </para>
+<screen>&prompt.user;kubectl get pods --all-namespaces --output-wide</screen>
+   </listitem>
+   <listitem>
+    <para>
      See all pods, including those with Completed or Failed statuses:
     </para>
 <screen>&prompt.user;kubectl get pods --show-all --all-namespaces</screen>
