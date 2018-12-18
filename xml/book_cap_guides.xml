@@ -70,6 +70,7 @@ Part: CAP Administration Guide
 <xi:include href="cap_admin_passwords.xml"/>
 <xi:include href="cap_admin_backup-restore.xml"/>
 <xi:include href="cap_admin_service_broker.xml"/>
+<xi:include href="cap_admin_app_autoscaler.xml"/>
 <xi:include href="cap_admin_logging.xml"/>
 <xi:include href="cap_admin_certificates.xml"/>
 </part>
