@@ -809,7 +809,7 @@ post-deployment-setup-1-hnpln   0/1       Completed</screen>
    Now sit back and wait for the pods come online:
   </para>
 
-<screen>&prompt.user;watch -c 'kubectl get pods --all-namespaces'</screen>
+<screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
 
   <para>
    When all services are running use the &cf; command-line interface to log in
