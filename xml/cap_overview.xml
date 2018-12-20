@@ -27,12 +27,13 @@
    Notes</link> for a list of changes, upgrade instructions, and known issues.
   </para>
 
-  <note>
+  <tip>
+      <title>Read the Release Notes</title>
    <para>
     Reviewing the Release Notes should be a priority, and will prevent a lot of
     frustration.
    </para>
-  </note>
+  </tip>
  </sect1>
  <sect1 xml:id="sec.cap.overview">
   <title>&productname; Overview</title>
@@ -213,11 +214,10 @@
   </important>
 
   <para>
-   A supported deployment includes &scf; installed on &suse; &caasp;, Amazon
-   EKS, or Azure AKS. You also need a storage backend such as &ses;, a DNS/DHCP
-   server, and an Internet connection to download additional packages during
-   installation and ~10GB of &docker; images on each &kube; worker after
-   installation.
+   You may create a minimal deployment on four &kube; nodes for testing. However,
+   this is insufficient for a production deployment. A supported deployment 
+   includes &scf; installed on &suse; &caasp;, Amazon EKS, or Azure AKS. You also need a storage backend such as &ses; or NFS, a DNS/DHCP server, and an Internet connection to download additional packages during installation and ~10GB of &docker; images on each &kube; worker after installation. 
+   (See <xref linkend="cha.cap.install-production"/>.)   
   </para>
 
   <para>
@@ -247,14 +247,6 @@
     </textobject>
    </mediaobject>
   </figure>
-
-  <para>
-   The minimum 4-node deployment is sufficient for a compact test deployment,
-   which you can run virtualized on a single workstation or laptop.
-   <xref linkend="cha.cap.install-production"/> details a basic production
-   deployment, and <xref linkend="cha.cap.install-minimal"/> describes a
-   minimal test deployment.
-  </para>
 
   <para>
    Note that after you have deployed your cluster and start building and
