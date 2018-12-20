@@ -112,62 +112,63 @@ config:
    </para>
    <para>
     The first example is for the UAA namespace,
-    <filename>uaa-sizing.yaml</filename>:
+    <filename>uaa-sizing.yaml</filename>. The values specified are the minimum
+    required for a &ha; deployment (i.e. equivalent to setting
+    <literal>config.HA</literal> to true):
    </para>
 <screen>
 sizing:
   mysql:
-    count: 3
+    count: 2
   uaa:
     count: 2
 </screen>
    <para>
-    The second example is for SCF, <filename>scf-sizing.yaml</filename>.
+    The second example is for SCF, <filename>scf-sizing.yaml</filename>. The
+    values specified are the minimum required for a &ha; deployment (i.e.
+    equivalent to setting <literal>config.HA</literal> to true), except for
+    <literal>diego-cell</literal> which includes additional instances:
    </para>
 <screen>
 sizing:
   adapter:
-    count: 7
+    count: 2
   api_group:
-    count: 6
+    count: 2
   cc_clock:
-    count: 3
+    count: 2
   cc_uploader:
-    count: 3
+    count: 2
   cc_worker:
-    count: 6
+    count: 2
   cf_usb:
-    count: 3
-  consul:
-    count: 1
+    count: 2
   diego_api:
-    count: 3
+    count: 2
   diego_brain:
     count: 2
   diego_cell:
-    count: 3
+    count: 6
   diego_ssh:
-    count: 3
+    count: 2
   doppler:
-    count: 4
+    count: 2
   log-api:
-    count: 7
+    count: 2
   mysql:
-    count: 3
+    count: 2
   nats:
     count: 2
   nfs_broker:
-    count: 3
-  postgres:
-    count: 3
+    count: 2
   router:
-    count: 13
+    count: 2
   routing_api:
-    count: 3
+    count: 2
   syslog_scheduler:
-    count: 3
+    count: 2
   tcp_router:
-    count: 3
+    count: 2
 </screen>
    <important>
     <title>Always install to a fresh namespace</title>
