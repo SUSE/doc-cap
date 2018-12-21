@@ -131,12 +131,12 @@ cap-aks</screen>
   <note>
    <title>Use different names</title>
    <para>
-    It is better to use unique resource group and managed cluster names, and
-    not copy the examples, especially when your Azure subscription supports
-    multiple users. Azure has no tools for sorting resources by user, so
-    creating unique names and putting everything in your deployment in a single
-    resource group helps you keep track, and you can delete the whole
-    deployment by deleting the resource group.
+    Ensure each of your AKS clusters use unique resource group and managed
+    cluster names, and not copy the examples, especially when your Azure
+    subscription supports multiple users. Azure has no tools for sorting
+    resources by user, so creating unique names and putting everything in
+    your deployment in a single resource group helps you keep track, and
+    you can delete the whole deployment by deleting the resource group.
    </para>
   </note>
 
