@@ -15,8 +15,7 @@
    <dm:translation>yes</dm:translation>
   </dm:docmanager>
  </info>
-<!-- helm rollback does not work, so upgrades are one-way for now
--->
+
  <sect1 xml:id="sec.cap.update">
   <title>Upgrading &productname;</title>
 
@@ -27,7 +26,21 @@
    <link xlink:href="https://www.suse.com/releasenotes/">Release Notes</link>
    for additional upgrade information.)
   </para>
-
+  
+  <warning>
+      <title><command>helm rollback</command> is not supported</title>
+      <para>          
+          <command>helm rollback</command> is not supported in &productname; or 
+          in upstream &cf;, and may break your cluster completely, because 
+          database migrations only run forward and cannot be reversed. Database 
+          schema can change over time. During upgrades both pods of the current 
+          and the next release may run concurrently, so the schema must stay 
+          compatible with the immediately previous release. But there is no
+          way to guarantee such compatibility for future upgrades. One way to
+          address this is to perform a full raw data backup and restore.
+      </para>
+  </warning>
+         
   <para>
    The supported upgrade method is to install all upgrades, in order. Skipping
    releases is not supported. This table lists the &helm; chart versions for
