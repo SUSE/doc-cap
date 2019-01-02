@@ -260,7 +260,6 @@ sizing:
    </para>
 <screen>
 &prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa \
---namespace uaa \ 
 --values scf-config-values.yaml \
 --values uaa-sizing.yaml 
 
@@ -271,7 +270,6 @@ sizing:
  -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"    
 
 &prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
---namespace scf \
 --values scf-config-values.yaml \
 --values scf-sizing.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
