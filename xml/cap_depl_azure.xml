@@ -356,17 +356,16 @@ subjects:
   <para>
    Role-based access control (RBAC) is enabled by default on AKS. Follow the
    instructions in <xref linkend="sec.cap.caasp-3"/> to apply pod security
-   policies (PSPs) to your new AKS cluster. Also note that when you create your
-   &cap; configuration file (e.g. <filename>scf-config-values.yaml</filename>),
-   you must set <literal>auth: "rbac"</literal>. (See
-   <xref linkend="sec.cap.cap-on-azure"/> for an example configuration file.)
+   policies (PSPs) to your new AKS cluster.
   </para>
 
   <para>
    You may disable RBAC during cluster creation with the
    <command>--disable-rbac</command> option, and then set <literal>auth:
-   none</literal>. Do not apply the PSPs. This is less secure, but may be
-   useful for testing.
+   none</literal> in the <literal>kube</literal> section of your
+   <filename>scf-config-values.yaml</filename> (see
+   <xref linkend="sec.cap.cap-on-azure"/> for an example configuration file).
+   Do not apply the PSPs. This is less secure, but may be useful for testing.
   </para>
  </sect1>
  <sect1 xml:id="sec.cap.swap-accounting">
@@ -615,7 +614,6 @@ kube:
     username: ""
     password: ""
   organization: "cap"
-  auth: "rbac"
   psp:
     nonprivileged: "suse.cap.psp"
     privileged: "suse.cap.psp"
