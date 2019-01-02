@@ -259,8 +259,7 @@ sizing:
     &helm;:
    </para>
 <screen>
-&prompt.user;helm upgrade suse/uaa \
---name <replaceable>susecf-uaa</replaceable> \
+&prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa \
 --namespace uaa \ 
 --values scf-config-values.yaml \
 --values uaa-sizing.yaml 
@@ -271,8 +270,7 @@ sizing:
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
  -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"    
 
-&prompt.user;helm upgrade suse/cf \
---name <replaceable>susecf-scf</replaceable> \
+&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --namespace scf \
 --values scf-config-values.yaml \
 --values scf-sizing.yaml \
