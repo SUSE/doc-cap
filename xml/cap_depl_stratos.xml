@@ -22,14 +22,11 @@
    Stratos UI is a modern web-based management application for Cloud Foundry.
    It provides a graphical management console for both developers and system
    administrators. Install Stratos with &helm; after all of the UAA and SCF
-   pods are running. Start by preparing the environment:
-  </para>
-
-<screen>&prompt.user;kubectl create namespace stratos</screen>
-
+   pods are running.
+   </para>
   <para>
    If you are using &ses; as your storage backend, copy the secret into the
-   Stratos namespace.
+   Stratos namespace:
   </para>
 
 <screen>&prompt.user;kubectl get secret ceph-secret-admin -o json --namespace default | \
@@ -69,7 +66,7 @@ suse/uaa                        &latestuaachart;  A Helm chart for SUSE UAA
    Monitor progress:
   </para>
 
-<screen>$ watch -c 'kubectl get pods --namespace stratos'
+<screen>&prompt.user;watch -c 'kubectl get pods --namespace stratos'
  Every 2.0s: kubectl get pods --namespace stratos
  
 NAME                               READY     STATUS    RESTARTS   AGE
@@ -78,42 +75,50 @@ console-mariadb-3697248891-5drf5   1/1       Running   0          30m</screen>
 
   <para>
    When all statuses show Ready, press <keycombo> <keycap function="control"/>
-   <keycap>C</keycap> </keycombo> to exit and to view your release information:
+   <keycap>C</keycap> </keycombo> to exit. Query with &helm; to view your release information:
   </para>
 
-<screen>NAME:   susecf-console
-LAST DEPLOYED: Tue Aug 14 11:53:28 2018
+<screen>&prompt.user;helm status susecf-console
+LAST DEPLOYED: Wed Jan  2 10:25:22 2019
 NAMESPACE: stratos
 STATUS: DEPLOYED
 
 RESOURCES:
 ==> v1/Secret
 NAME                           TYPE    DATA  AGE
-susecf-console-mariadb-secret  Opaque  2     2s
-susecf-console-secret          Opaque  2     2s
+susecf-console-secret          Opaque  2     1h
+susecf-console-mariadb-secret  Opaque  2     1h
 
 ==> v1/PersistentVolumeClaim
-NAME                                  STATUS  VOLUME                                    CAPACITY  ACCESSMODES  STORAGECLASS    AGE
-console-mariadb                       Bound   pvc-ef3a120d-3e76-11e8-946a-90b8d00d625f  1Gi       RWO          persistent      2s
-susecf-console-upgrade-volume         Bound   pvc-ef409e41-3e76-11e8-946a-90b8d00d625f  20Mi      RWO          persistent      2s
-susecf-console-encryption-key-volume  Bound   pvc-ef49b860-3e76-11e8-946a-90b8d00d625f  20Mi      RWO          persistent      2s
+NAME                                  STATUS  VOLUME                                    CAPACITY  ACCESS MODES  STORAGECLASS  AGE
+console-mariadb                       Bound   pvc-c41fb6be-0ebb-11e9-9b6c-fa163e0b27ed  1Gi       RWO           persistent    1h
+susecf-console-upgrade-volume         Bound   pvc-c420356f-0ebb-11e9-9b6c-fa163e0b27ed  20Mi      RWO           persistent    1h
+susecf-console-encryption-key-volume  Bound   pvc-c4292f69-0ebb-11e9-9b6c-fa163e0b27ed  20Mi      RWO           persistent    1h
 
 ==> v1/Service
-NAME                    CLUSTER-IP      EXTERNAL-IP    PORT(S)         AGE
-susecf-console-mariadb  172.24.181.255  &lt;none>         3306/TCP        2s
-susecf-console-ui-ext   172.24.84.50    10.10.100.82   8443:32511/TCP  1s
+NAME                    TYPE       CLUSTER-IP      EXTERNAL-IP                                        PORT(S)                      AGE
+susecf-console-mariadb  ClusterIP  172.24.60.105   &lt;none>                                             3306/TCP                     1h
+susecf-console-ui-ext   NodePort   172.24.164.199  10.86.1.15,172.24.10.12,172.24.10.16,172.24.10.14  80:31104/TCP,8443:31528/TCP  1h
 
 ==> v1beta1/Deployment
 NAME             DESIRED  CURRENT  UP-TO-DATE  AVAILABLE  AGE
-console-mariadb  1        1        1           0          1s
+console-mariadb  1        1        1           1          1h
 
 ==> v1beta1/StatefulSet
 NAME     DESIRED  CURRENT  AGE
-console  1        1        1s</screen>
+console  1        1        1h
+
+==> v1/Pod(related)
+NAME                              READY  STATUS   RESTARTS  AGE
+console-mariadb-66fc57b5b5-fzq7w  1/1    Running  0         1h
+console-0                         3/3    Running  0         1h
+</screen>
+
 
   <para>
-   In this example, pointing your web browser to https://example.com:8443 opens
-   the console. Wade through the nag screens about the self-signed certificates
+   Point your web browser to https://example.com:8443, or https://10.86.1.15:8443
+   (from the <command>helm list</command> output)
+   to see the Stratos console. Wade through the nag screens about the self-signed certificates
    and log in as <literal>admin</literal> with the password you created in
    <filename>scf-config-values.yaml</filename>. If you see an upgrade message,
    wait a few minutes and try again.
@@ -127,28 +132,8 @@ console  1        1        1s</screen>
     </imageobject>
    </mediaobject>
   </figure>
-
-  <para>
-   Another way to get the release name is with the <command>helm list</command>
-   command, then query the release name to get its IP address and port number:
-  </para>
-
-<screen>&prompt.user;helm list
-NAME            REVISION  UPDATED                  STATUS   CHART           NAMESPACE
-susecf-console  1         Tue Aug 14 11:53:28 2018 DEPLOYED console-&lateststratoschart;   stratos
-susecf-scf      1         Tue Aug 14 10:58:16 2018 DEPLOYED cf-&latestscfchart;       scf
-susecf-uaa      1         Tue Aug 14 10:49:30 2018 DEPLOYED uaa-&latestuaachart;      uaa
-
-&prompt.user;helm status susecf-console
-LAST DEPLOYED: Tue Aug 14 11:53:28 2018
-NAMESPACE: stratos
-STATUS: DEPLOYED
-[...]
-==> v1/Service
-NAME                    CLUSTER-IP      EXTERNAL-IP    PORT(S)         AGE
-susecf-console-mariadb  172.24.181.255  &lt;none>         3306/TCP        19m
-susecf-console-ui-ext   172.24.84.50    10.10.100.82   8443:32511/TCP  19m</screen>
- </sect1>
+</sect1>
+ 
  <sect1 xml:id="sec.cap.stratos-prod-kube">
   <title>Connecting Kubernetes</title>
 
