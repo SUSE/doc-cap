@@ -258,9 +258,7 @@ suse/uaa        2.7.0       A Helm chart for SUSE UAA
    specific version:
   </para>
 
-<screen>&prompt.user;helm upgrade --recreate-pods --version 2.11.0 suse/uaa \
---name susecf-uaa \
---namespace uaa \
+<screen>&prompt.user;helm upgrade --recreate-pods --version 2.11.0 <replaceable>susecf-uaa</replaceable> suse/uaa \
 --values scf-config-values.yaml</screen>
 
   <para>
