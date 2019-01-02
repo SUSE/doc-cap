@@ -180,7 +180,7 @@
      </para>
 <screen>&prompt.user;kubectl version --short
 Client Version: v1.10.7
-Server Version: v1.9.8</screen>
+Server Version: v1.10.11</screen>
      <para>
       As the client is on your workstation, and the server is on your cluster,
       reporting the server version verifies that <command>kubectl</command> is
@@ -203,10 +203,10 @@ contexts:
 
 &prompt.user;kubectl get nodes
 NAME                  STATUS   ROLES     AGE  VERSION
-ef254d3.example.com   Ready    Master    4h   v1.9.8
-b70748d.example.com   Ready    &lt;none>    4h   v1.9.8
-cb77881.example.com   Ready    &lt;none>    4h   v1.9.8
-d028551.example.com   Ready    &lt;none>    4h   v1.9.8
+ef254d3.example.com   Ready    Master    4h   v1.10.11
+b70748d.example.com   Ready    &lt;none>    4h   v1.10.11
+cb77881.example.com   Ready    &lt;none>    4h   v1.10.11
+d028551.example.com   Ready    &lt;none>    4h   v1.10.11
 [...]</screen>
     </listitem>
    </varlistentry>
@@ -424,7 +424,6 @@ clusterrolebinding.rbac.authorization.k8s.io "cap:clusterrole" created</screen>
    </para>
 <screen>kube:
   psp:
-    nonprivileged: "suse.cap.psp"
     privileged: "suse.cap.psp"
 </screen>
 
@@ -553,6 +552,15 @@ persistentvolumeclaim "test-sc-persistent" deleted</screen>
    <link xlink:href="https://www.suse.com/releasenotes/">Release Notes</link>
    for information on configuration changes.)
   </para>
+  <para>
+      The example <filename>scf-config-values.yaml</filename> file is for a
+      simple deployment without an ingress controller or load balancer. Instead,
+      one worker node is assigned an external IP address, and this is mapped to 
+      the domain name, providing external access to the cluster. In this case the
+      <literal>external_ips</literal> needs this address to provide access to the
+      Stratos Web interface. <literal>external_ips</literal> also needs the
+      internal IP addresses of the worker nodes to provide access to services.
+  </para>
 
 <screen>env:    
   # Enter the domain you created for your CAP cluster
@@ -562,28 +570,9 @@ persistentvolumeclaim "test-sc-persistent" deleted</screen>
   UAA_HOST: uaa.<replaceable>&exampledomain;</replaceable>
   UAA_PORT: 2793
 
-sizing:
-  cc_uploader:
-    capabilities: ["SYS_RESOURCE"]
-  diego_api:
-    capabilities: ["SYS_RESOURCE"]
-  diego_brain:
-    capabilities: ["SYS_RESOURCE"]
-  diego_ssh:
-    capabilities: ["SYS_RESOURCE"]
-  nats:
-    capabilities: ["SYS_RESOURCE"]
-  router:
-    capabilities: ["SYS_RESOURCE"]
-  routing_api:
-    capabilities: ["SYS_RESOURCE"]
-
 kube:
-  # The IP address assigned to the kube node pointed to by the domain.
-  external_ips: ["<replaceable>&kubeip;</replaceable>"]
-    
-  # Run kubectl get storageclasses
-  # to view your available storage classes
+  external_ips: ["<replaceable>&kubeip;</replaceable>", "<replaceable>&subnetI;</replaceable>", "<replaceable>&subnetII;</replaceable>", "<replaceable>&subnetIII;</replaceable>"]
+
   storage_class:
     persistent: <replaceable>"persistent"</replaceable>
     shared: "shared"
@@ -596,9 +585,8 @@ kube:
     username: ""
     password: ""
   organization: "cap"
-  auth: "rbac"
+
   psp:
-    nonprivileged: "suse.cap.psp"
     privileged: "suse.cap.psp"
 
 secrets:
@@ -631,13 +619,6 @@ secrets:
      Download the &suse; &kube; charts repository
      (<xref
      linkend="sec.cap.addrepo-prod" />)
-    </para>
-   </step>
-   <step>
-    <para>
-     Create the UAA and SCF namespaces
-     (<xref
-     linkend="sec.cap.create-namespaces-prod" />)
     </para>
    </step>
    <step>
@@ -696,17 +677,7 @@ suse/nginx-ingress          	0.28.3 	An nginx Ingress controller that uses Confi
 suse/uaa                    	&latestuaachart;  A Helm chart for SUSE UAA
 </screen>
  </sect1>
- <sect1 xml:id="sec.cap.create-namespaces-prod">
-  <title>Create Namespaces</title>
 
-  <para>
-   Create the UAA (User Account and Authentication) and SCF (SUSE Cloud
-   Foundry) namespaces:
-  </para>
-
-<screen>&prompt.user;kubectl create namespace uaa
-&prompt.user;kubectl create namespace scf</screen>
- </sect1>
  <sect1 xml:id="sec.cap.copy-secret-prod">
   <title>Copy &ses; Secret</title>
 
@@ -728,7 +699,10 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -</screen>
    <title>Always install to a fresh namespace</title>
    <para>
     If you are not creating a fresh &productname; installation, but have deleted 
-    a previous deployment and are starting over, you must create new namespaces. 
+    a previous deployment and are starting over, you must create new namespaces
+    with the 
+    <command>kubectl create namespace <replaceable>name</replaceable></command>
+        command. 
     Do not re-use your old namespaces. The <command>helm delete</command> command 
     does not remove generated secrets from the SCF and UAA namespaces as it is 
     not aware of them. These leftover secrets will cause problems. See 
