@@ -506,7 +506,6 @@ kube:
     username: ""
     password: ""
   organization: "cap"
-  auth: "rbac"
 secrets:
   # Password for user 'admin' in the cluster
   CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
