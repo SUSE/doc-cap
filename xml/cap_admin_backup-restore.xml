@@ -526,21 +526,39 @@
  </sect2>
  </sect1>
  <sect1 xml:id="sec.cap.backup-restore-of-raw-data">
-  <title>Raw data backup and restore of SCF</title>
+  <title>Disaster recovery in SCF through raw data backup and restore</title>
   <para>
-   A backup and restore of a SCF deployment's raw data can be used to migrate all data (applications, services, etc.) to a new SCF deployment. Specifically, the components migrated are:
+   A backup and restore of an existing SCF deployment's raw data can be used to migrate all data to a new SCF deployment. This procedure is applicable to deployments running on any &kube; cluster (e.g. &suse; &caasp;, Amazon EKS, and Azure AKS described in this guide) and can included in your disaster recovery solution.
+  </para>
+  <para>
+   In order to complete a raw data backup and restore it is required to have:
+  </para>
+  <itemizedlist>
+   <listitem>
+    <para>
+     Access to a running deployment of SCF to create a backup with
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Access to a new deployment of SCF (deployed with a <filename>scf-config-values.yaml</filename> configured according to <xref linkend="prepare-config-for-new-cluster"/> of <xref linkend="sec.cap.raw-data-restore-procedure"/>) to perform the restore to 
+    </para>
+   </listitem>
+  </itemizedlist>
+  <para>
+   The following lists the data that is included as part of the backup (and restore) procedure:
   </para>
   <itemizedlist>
     <listitem>
      <para>
-      The Cloud Controller Database (CCDB). (See <xref linkend="sec.cap.backup-restore-plugin-scope"/> on what the CCDB backup encompasses.)
+      The Cloud Controller Database (CCDB). In addition to what is encompassed by the CCDB listed in  <xref linkend="sec.cap.backup-restore-plugin-scope"/>, this will include service data as well.
      </para>
     </listitem>
     <listitem>
      <para>
       The Cloud Controller Blobstore, which includes the types of binary large object (blob) files listed below. (See <link xlink:href="https://docs.cloudfoundry.org/concepts/architecture/cloud-controller.html#blob-store">Blobstore</link> to learn more about each blob type.)
      </para>
-     <itemizedlist>
+     <itemizedlist xml:id="blobstore-contents">
       <listitem>
        <para>
         App Packages
@@ -589,7 +607,7 @@
     </step>
     <step>
      <para>
-      Create an archive of the blobstore directory to preserve all needed files (droplets and other artifacts) then disconnect from the pod:
+      Create an archive of the blobstore directory to preserve all needed files (see <xref linkend="blobstore-contents"/>) then disconnect from the pod:
      </para>
 <screen>&prompt.user;tar cfvz <replaceable>blobstore-src.tgz</replaceable> /var/vcap/store/shared</screen>
 <screen>&prompt.user;exit</screen>
@@ -615,7 +633,7 @@
       Next, obtain the CCDB encryption key(s). The method used to capture the key will depend on whether <literal>current_key_label</literal> has been defined on the source cluster. This value is defined in <filename>/var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml</filename> of the <literal>api-group-0</literal> pod and also found in various tables of the MySQL database.
      </para>
      <para>
-      Begin by examining the config file for the<literal>current_key_label</literal> setting:
+      Begin by examining the configuration file for the<literal>current_key_label</literal> setting:
      </para>
 <screen>&prompt.user;kubectl exec -it --namespace scf api-group-0 -- bash -c "cat /var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml | grep -A 3 database_encryption"</screen>
      <itemizedlist>
@@ -642,11 +660,11 @@
    <important>
     <title>Ensure access to the correct SCF deployment</title>
      <para>
-      Working with multiple &kube; clusters simultaneously can be confusing. Ensure you're communicating with the desired cluster <link xlink:href="https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/#set-the-kubeconfig-environment-variable">by setting <literal>$KUBECONFIG</literal> correctly</link>.
+      Working with multiple &kube; clusters simultaneously can be confusing. Ensure you are communicating with the desired cluster <link xlink:href="https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/#set-the-kubeconfig-environment-variable">by setting <literal>$KUBECONFIG</literal> correctly</link>.
      </para>
    </important>
    <procedure>
-    <step>
+    <step xml:id="prepare-config-for-new-cluster">
      <para>
       The target SCF cluster needs to be deployed with the correct database encryption key(s) set in your <filename>scf-config-values.yaml</filename> before data can be restored. How the encryption key(s) will be prepared in your <filename>scf-config-values.yaml</filename> depends on the result of <xref linkend="get-encryption-key"/> in <xref linkend="sec.cap.raw-data-backup-procedure"/>
      </para>
@@ -686,7 +704,7 @@ secrets:
     </step>
     <step>
      <para>
-       Deploy a non-high-availability configuration of SCF (see <xref linkend="sec.cap.install-scf-prod"/>) and waiting until all pods are ready before proceeding.
+       Deploy a non-high-availability configuration of SCF (see <xref linkend="sec.cap.install-scf-prod"/>) and wait until all pods are ready before proceeding.
      </para>
     </step>
     <step>
@@ -762,7 +780,7 @@ done
     </step>
     <step>
      <para>
-      The data restore is now complete. Run commands such as <command>cf apps</command>, <command>cf marketplace</command>, <command>cf services</command>, etc. and verify data from the old cluster is returned.
+      The data restore is now complete. Run some <command>cf</command> commands, such as <command>cf apps</command>, <command>cf marketplace</command>, or <command>cf services</command>, and verify data from the old cluster is returned.
      </para>
     </step>
    </procedure>
