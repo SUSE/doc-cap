@@ -37,7 +37,8 @@
           and the next release may run concurrently, so the schema must stay 
           compatible with the immediately previous release. But there is no
           way to guarantee such compatibility for future upgrades. One way to
-          address this is to perform a full raw data backup and restore.
+	  address this is to perform a full raw data backup and restore. (See
+	  <xref linkend="sec.cap.backup-restore-of-raw-data"/>)
       </para>
   </warning>
          
