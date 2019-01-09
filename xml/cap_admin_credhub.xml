@@ -9,7 +9,7 @@
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
  <info>
-  <title>Integrating Credhub with &productname;</title>
+  <title>Integrating CredHub with &productname;</title>
   <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
    <dm:bugtracker></dm:bugtracker>
    <dm:translation>yes</dm:translation>
@@ -17,16 +17,16 @@
  </info>
 
  <sect1 xml:id="sec.cap.credhub">
-     <title>Installing the Credhub Client</title>
+     <title>Installing the CredHub Client</title>
  <para>
-     &productname; supports Credhub integration. You should already have
-     a working Credhub instance, a Credhub service on your cluster, then apply 
+     &productname; supports CredHub integration. You should already have
+     a working CredHub instance, a CredHub service on your cluster, then apply 
      the steps in this chapter to connect &productname;.
  </para>
  
  <para>
-     Start by creating a new directory for the Credhub client on your local 
-     workstation, then download and unpack the Credhub client. The following
+     Start by creating a new directory for the CredHub client on your local 
+     workstation, then download and unpack the CredHub client. The following
      example is for the 2.2.0 Linux release; see 
      <link xlink:href="https://github.com/cloudfoundry-incubator/credhub-cli/releases">
 cloudfoundry-incubator/credhub-cli
@@ -40,11 +40,43 @@ cloudfoundry-incubator/credhub-cli
 </screen>
 </sect1>
 
-<sect1 xml:id="sec.cap.credhub-connect">
-     <title>Connecting to the Credhub Service</title>
+<sect1 xml:id="sec.cap.credhub-sizing">
+    <title>Enable the Credhub User</title>
+    <para>
+        You must enable the <literal>credhub</literal> user for your deployment
+        in the <literal>sizing</literal> section of your deployment configuration 
+        file, which in this guide is <filename>scf-config-values.yaml</filename>:
+    </para>
+    
+    <screen>
+sizing:   
+  credhub_user:
+    count: 1
+</screen>
+
 <para>
-Set environment variables for the Credhub client, your Credhub service location, 
-and &cap; namespace. In these guides the example namespace is SCF:
+    Then apply the change with <command>helm</command>. First fetch the 
+    <literal>uaa</literal> credentials, them apply the updated configuration:
+</para>
+
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+-o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+-o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+
+&prompt.user;helm install suse/cf \
+--name <replaceable>susecf-scf</replaceable> \
+--namespace scf \
+--values scf-config-values.yaml \
+--set "secrets.UAA_CA_CERT=${CA_CERT}"</screen>
+</sect1>
+
+<sect1 xml:id="sec.cap.credhub-connect">
+     <title>Connecting to the CredHub Service</title>
+<para>
+Set environment variables for the CredHub client, your CredHub service location, 
+and &cap; namespace. In these guides the example namespace is <literal>scf</literal>:
 </para>
 
 <screen>&prompt.user;CH_CLI=~/.chclient/credhub
@@ -53,7 +85,7 @@ and &cap; namespace. In these guides the example namespace is SCF:
 </screen>
 
 <para>
-    Set up the Credhub service location:
+    Set up the CredHub service location:
 </para>
 
 <screen>
@@ -65,7 +97,7 @@ and &cap; namespace. In these guides the example namespace is SCF:
 </screen>
 
 <para>
-    Now set the Credhub target through its &kube; service, then log into Credhub:
+    Set the CredHub target through its &kube; service, then log into CredHub:
 </para>
 
 <screen>
