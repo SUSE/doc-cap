@@ -275,7 +275,7 @@ cf login</screen>
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
  -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
-&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-scf</replaceable> suse/cf \
+&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
  --values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}"</screen>
  </sect1>
 </chapter>

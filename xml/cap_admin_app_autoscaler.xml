@@ -87,7 +87,7 @@ sizing:
   <para> 
    If this is an existing deployment, use <command>helm upgrade</command> to apply the change:
   </para>
-<screen>&prompt.user;helm upgrade --recreate-pods susecf-scf suse/cf \
+<screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
  </sect1>
