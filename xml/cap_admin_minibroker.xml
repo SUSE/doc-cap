@@ -9,7 +9,7 @@
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
  <info>
-  <title>Minibroker</title>
+  <title>Provisioning Services with Minibroker</title>
   <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
    <dm:bugtracker></dm:bugtracker>
    <dm:translation>yes</dm:translation>
@@ -22,6 +22,13 @@
   <link xlink:href="https://github.com/osbkit">Microsoft Azure team</link>. It
   provides a simple method to provision service brokers on Kubernetes clusters.
  </para>
+ <warning>
+  <title>Do not use Minibroker on production systems</title>
+  <para>
+   Minibroker is a technology preview that is useful for development and testing purposes. It
+   is currently not production-ready and not recommended for use with production systems.
+  </para>
+ </warning>
  <sect1 xml:id="sec.cap.minibroker-deployment">
   <title>Deploy Minibroker</title>
 
@@ -86,12 +93,6 @@ suse/minibroker             	0.2.0  	A minibroker for your minikube
       </para>
      </listitem>
     </itemizedlist>
-    <warning>
-     <title>Do not use Minibroker services on production systems</title>
-     <para>
-      The services used by Minibroker are not production grade and are not recommended for use with production systems.
-     </para>
-    </warning>
    </step>
    <step>
     <para>
@@ -142,7 +143,7 @@ minibroker         http://minibroker-minibroker.minibroker.svc.cluster.local
      Enable access to a service. Services that can be enabled are
      <literal>mariadb</literal>, <literal>mongodb</literal>,
      <literal>postgresql</literal>, and <literal>redis</literal>. The example
-     below will uses Redis as the service:
+     below uses Redis as the service:
     </para>
 <screen>&prompt.user;cf enable-service-access <replaceable>redis</replaceable></screen>
     <para>
@@ -236,7 +237,7 @@ minibroker-minibroker-5865f66bb8-6dxm7          2/2       Running            0  
   <procedure>
    <step>
     <para>
-     Obtain the demo application and use <command>cf push</command> with the
+     Obtain the demo application from Github and use <command>cf push</command> with the
      <literal>--no-start</literal> flag to deploy the application without
      starting it:
     </para>
