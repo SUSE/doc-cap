@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha.cap.minibroker"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <title>Provisioning Services with Minibroker</title>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+ </info>
+ <para>
+  <link xlink:href="https://github.com/SUSE/minibroker">Minibroker</link> is an
+  <link xlink:href="https://www.openservicebrokerapi.org/">OSBAPI compliant
+  broker</link> created by members of the
+  <link xlink:href="https://github.com/osbkit">Microsoft Azure team</link>. It
+  provides a simple method to provision service brokers on Kubernetes clusters.
+ </para>
+ <warning>
+  <title>Do not use Minibroker on production systems</title>
+  <para>
+   Minibroker is a technology preview that is useful for development and testing purposes. It
+   is currently not production-ready and not recommended for use with production systems.
+  </para>
+ </warning>
+ <sect1 xml:id="sec.cap.minibroker-deployment">
+  <title>Deploy Minibroker</title>
+
+  <procedure>
+   <step>
+    <para>
+     Minibroker is deployed using a &helm; chart. Ensure your SUSE &helm; chart
+     repository contains the most recent Minibroker chart:
+    </para>
+<screen>&prompt.user;helm repo update
+Hang tight while we grab the latest from your chart repositories...
+...Skip local chart repository
+...Successfully got an update from the "stable" chart repository
+...Successfully got an update from the "suse" chart repository
+Update Complete. ⎈ Happy Helming!⎈
+
+&prompt.user;helm search suse
+NAME                        	VERSION	DESCRIPTION                                       
+...
+suse/minibroker             	0.2.0  	A minibroker for your minikube                    
+...
+</screen>
+   </step>
+   <step>
+    <para>
+     Use &helm; to deploy Minibroker:
+    </para>
+<screen>&prompt.user;helm install suse/minibroker --name minibroker --namespace minibroker \
+        --set "helmRepoUrl=https://minibroker-helm-charts.s3.amazonaws.com/kubernetes-charts/" \
+        --set "deployServiceCatalog=false" \
+        --set "defaultNamespace=minibroker" \
+        --set "image=splatform/minibroker:latest"
+</screen>
+    <para>
+     The <literal>helmRepoUrl</literal> parameter points to a &helm; repository
+     containing
+     <link xlink:href="https://minibroker-helm-charts.s3.amazonaws.com/kubernetes-charts/index.yaml">charts
+     for the available services</link>.
+    </para>
+    <para>
+     The repository currently contains charts for the following services:
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       <link xlink:href="https://mariadb.org">MariaDB</link>
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       <link xlink:href="https://www.mongodb.com/">MongoDB</link>
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       <link xlink:href="https://www.postgresql.org/">PostgreSQL</link>
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       <link xlink:href="http://redis.io">Redis</link>
+      </para>
+     </listitem>
+    </itemizedlist>
+   </step>
+   <step>
+    <para>
+     Monitor the deployment progress. Wait until all pods are in a ready state
+     before proceeding:
+    </para>
+<screen>&prompt.user;watch -c 'kubectl get pods --namespace minibroker'</screen>
+   </step>
+  </procedure>
+ </sect1>
+ <sect1 xml:id="sec.cap.minibroker-environment-setup">
+  <title>Setting up the environment for Minibroker usage</title>
+
+  <procedure>
+   <step>
+    <para>
+     Begin by logging into your &cap; deployment. Select an organization and
+     space to work with, creating them if needed:
+    </para>
+<screen>&prompt.user;cf api --skip-ssl-validation <replaceable>https://api.example.com</replaceable>
+&prompt.user;cf login -u <replaceable>admin</replaceable> -p <replaceable>password</replaceable>
+&prompt.user;cf create-org <replaceable>org</replaceable>
+&prompt.user;cf create-space <replaceable>space</replaceable>
+&prompt.user;cf target -o <replaceable>org</replaceable> -s <replaceable>space</replaceable>
+</screen>
+   </step>
+   <step>
+    <para>
+     Create the service broker. Note that Minibroker does not require
+     authentication and the <literal>username</literal> and
+     <literal>password</literal> parameters act as dummy values to pass to the
+     <command>cf</command> command. These parameters do not need to be
+     customized for the &cap; installation:
+    </para>
+<screen>&prompt.user;cf create-service-broker <replaceable>minibroker</replaceable> <replaceable>username</replaceable> <replaceable>password</replaceable> http://minibroker-minibroker.minibroker.svc.cluster.local</screen>
+    <para>
+     Once the service broker is ready, it can be seen on your deployment:
+    </para>
+<screen>&prompt.user;cf service-brokers
+Getting service brokers as admin...
+
+name               url
+minibroker         http://minibroker-minibroker.minibroker.svc.cluster.local
+</screen>
+   </step>
+   <step>
+    <para>
+     Enable access to a service. Services that can be enabled are
+     <literal>mariadb</literal>, <literal>mongodb</literal>,
+     <literal>postgresql</literal>, and <literal>redis</literal>. The example
+     below uses Redis as the service:
+    </para>
+<screen>&prompt.user;cf enable-service-access <replaceable>redis</replaceable></screen>
+    <para>
+     Use <command>cf marketplace</command> to verify the service has been
+     enabled:
+    </para>
+<screen>&prompt.user;cf marketplace
+Getting services from marketplace in org org / space space as admin...
+OK
+
+service      plans     description
+redis        4-0-10    Helm Chart for redis
+
+TIP:  Use 'cf marketplace -s SERVICE' to view descriptions of individual plans of a given service.
+</screen>
+   </step>
+   <step>
+    <para>
+     Define your
+     <link xlink:href="https://docs.cloudfoundry.org/concepts/asg.html">Application
+     Security Group (ASG)</link> rules in a JSON file. Using the defined rules,
+     create an ASG and bind it to an organization and space:
+    </para>
+<screen>&prompt.user;echo > <replaceable>redis.json</replaceable> '[{ "protocol": "tcp", "destination": "<replaceable>10.0.0.0/8</replaceable>", "ports": "<replaceable>6379</replaceable>", "description": "<replaceable>Allow Redis traffic</replaceable>" }]'
+&prompt.user;cf create-security-group <replaceable>redis_networking</replaceable> <replaceable>redis.json</replaceable>
+&prompt.user;cf bind-security-group <replaceable>redis_networking</replaceable> <replaceable>org</replaceable> <replaceable>space</replaceable>
+</screen>
+    <para>
+     Use following ports to define your ASG for a given service:
+    </para>
+    <informaltable>
+     <tgroup cols="2">
+      <thead>
+       <row>
+        <entry>Service</entry>
+        <entry>Port</entry>
+       </row>
+      </thead>
+      <tbody>
+       <row>
+        <entry>MariaDB</entry>
+        <entry>3306</entry>
+       </row>
+       <row>
+        <entry>MongoDB</entry>
+        <entry>27017</entry>
+       </row>
+       <row>
+        <entry>PostgreSQL</entry>
+        <entry>5432</entry>
+       </row>
+       <row>
+        <entry>Redis</entry>
+        <entry>6379</entry>
+       </row>
+      </tbody>
+     </tgroup>
+    </informaltable>
+   </step>
+   <step>
+    <para>
+     Create an instance of the Redis service. The <command>cf
+     marketplace</command> or <command>cf marketplace -s redis</command>
+     commands can be used to see the available plans for the service:
+    </para>
+<screen>&prompt.user;cf create-service <replaceable>redis</replaceable> <replaceable>4-0-10</replaceable> <replaceable>redis-example-service</replaceable></screen>
+    <para>
+     Monitor the progress of the pods and wait until all pods are in a ready
+     state. The example below shows the additional <literal>redis</literal>
+     pods with a randomly generated name that have been created in the
+     <literal>minibroker</literal> namespace:
+    </para>
+<screen>&prompt.user;watch -c 'kubectl get pods --namespace minibroker'
+NAME                                            READY     STATUS             RESTARTS   AGE
+alternating-frog-redis-master-0                 1/1       Running            2          1h
+alternating-frog-redis-slave-7f7444978d-z86nr   1/1       Running            0          1h
+minibroker-minibroker-5865f66bb8-6dxm7          2/2       Running            0          1h
+</screen>
+   </step>
+  </procedure>
+ </sect1>
+ <sect1 xml:id="sec.cap.minibroker-application-usage">
+  <title>Using Minibroker with Applications</title>
+
+  <para>
+   This section demonstrates how to use Minibroker services with your
+   applications. The example below uses the Redis service instance created in
+   the previous section.
+  </para>
+
+  <procedure>
+   <step>
+    <para>
+     Obtain the demo application from Github and use <command>cf push</command> with the
+     <literal>--no-start</literal> flag to deploy the application without
+     starting it:
+    </para>
+<screen>&prompt.user;git clone https://github.com/scf-samples/cf-redis-example-app
+&prompt.user;cd cf-redis-example-app
+&prompt.user;cf push --no-start
+</screen>
+   </step>
+   <step>
+    <para>
+     Bind the service to your application and start the application:
+    </para>
+<screen>&prompt.user;cf bind-service redis-example-app redis-example-service
+&prompt.user;cf start redis-example-app
+</screen>
+   </step>
+   <step>
+    <para>
+     When the application is ready, it can be tested by storing a value into
+     the Redis service:
+    </para>
+<screen>&prompt.user;export APP=redis-example-app.example.com
+&prompt.user;curl -X GET $APP/foo
+&prompt.user;curl -X PUT $APP/foo -d 'data=bar'
+&prompt.user;curl -X GET $APP/foo
+</screen>
+    <para>
+     The first <literal>GET</literal> will return <literal>key not
+     present</literal>. After storing a value, it will return
+     <literal>bar</literal>.
+    </para>
+   </step>
+  </procedure>
+
+  <important>
+   <title>Database names for PostgreSQL and MariaDB instances</title>
+   <para>
+    By default, Minibroker creates PostgreSQL and MariaDB server instances
+    without a named database. A named database is required for normal usage
+    with these and will need to be added during the <command>cf
+    create-service</command> step using the <literal>-c</literal> flag. For
+    example:
+   </para>
+<screen>&prompt.user;cf create-service postgresql 9-6-2 djangocms-db -c '{"postgresDatabase":"mydjango"}'
+&prompt.user;cf create-service mariadb 10-1-34 my-db  -c '{"mariadbDatabase":"mydb"}'
+</screen>
+   <para>
+    Other options can be set too, but vary by service type.
+   </para>
+  </important>
+ </sect1>
+</chapter>
