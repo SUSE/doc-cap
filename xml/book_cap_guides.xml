@@ -66,6 +66,7 @@ Part: CAP Administration Guide
   <title>&productname; Administration</title>
   <info/>
 <xi:include href="cap_admin_upgrade.xml"/>
+<xi:include href="cap_admin_configuration_changes.xml"/>
 <xi:include href="cap_admin_passwords.xml"/>
 <xi:include href="cap_admin_backup-restore.xml"/>
 <xi:include href="cap_admin_service_broker.xml"/>
