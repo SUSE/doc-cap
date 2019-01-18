@@ -513,4 +513,225 @@ secrets:
   # Password for SCF to authenticate with UAA
   UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable></screen>
  </sect1>
+ <sect1 xml:id="sec.cap.aws-service-broker">
+  <title>Deploying and Using the AWS Service Broker</title>
+  <para>
+   The <link xlink:href="https://aws.amazon.com/partners/servicebroker/">AWS Service Broker</link> provides integration of native AWS services with &suse; &cap;.
+  </para>
+  <sect2 xml:id="sec.cap.aws-service-broker-prereqs">
+   <title>Prerequisites</title>
+   <para>
+    Deploying and using the AWS Service Broker requires the following:
+   </para>
+   <itemizedlist>
+    <listitem>
+     <para>
+      &cap; has been successfully deployed on Amazon EKS as described earlier in this chapter (see <xref linkend="cha.cap.eks"/>)
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      The <link xlink:href="https://aws.amazon.com/cli/">AWS Command Line Interface (CLI)</link>
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      The <link xlink:href="https://www.openssl.org/docs/man1.0.2/apps/openssl.html">OpenSSL command line tool</link>
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      Ensure the user or role running the broker has an IAM policy set as specified <link xlink:href="https://github.com/awslabs/aws-servicebroker/blob/master/docs/install_prereqs.md#iam">here</link>
+     </para>
+    </listitem>
+   </itemizedlist>
+  </sect2>
+  <sect2 xml:id="sec.cap.aws-service-broker-setup">
+   <title>Setup</title>
+   <procedure>
+    <step>
+     <para>
+      Create the required DynamoDB table where the AWS service broker will store its data. This example creates a table named <literal>awssb</literal>:
+     </para>
+<screen>&prompt.user;aws dynamodb create-table \
+		--attribute-definitions \
+			AttributeName=id,AttributeType=S \
+			AttributeName=userid,AttributeType=S \
+			AttributeName=type,AttributeType=S \
+		--key-schema \
+			AttributeName=id,KeyType=HASH \
+			AttributeName=userid,KeyType=RANGE \
+		--global-secondary-indexes \
+			'IndexName=type-userid-index,KeySchema=[{AttributeName=type,KeyType=HASH},{AttributeName=userid,KeyType=RANGE}],Projection={ProjectionType=INCLUDE,NonKeyAttributes=[id,userid,type,locked]},ProvisionedThroughput={ReadCapacityUnits=5,WriteCapacityUnits=5}' \
+		--provisioned-throughput \
+			ReadCapacityUnits=5,WriteCapacityUnits=5 \
+		--region ${AWS_REGION} --table-name <replaceable>awssb</replaceable>
+</screen>
+    </step>
+    <step>
+     <para>
+      Wait for the table to finish creating. The <literal>TableStatus</literal> should be <literal>ACTIVE</literal> when it's ready. Check the status using the <command><link xlink:href="https://docs.aws.amazon.com/cli/latest/reference/dynamodb/describe-table.html">describe-table</link></command> command: 
+     </para>
+     <screen>aws dynamodb describe-table --table-name <replaceable>awssb</replaceable></screen>
+    </step>
+    <step>
+     <para>
+      Set a name for the &kube; namespace you will install the service broker to. This name will also be used in the service broker URL:
+     </para>
+     <screen>&prompt.user;BROKER_NAMESPACE=aws-sb</screen>
+    </step>
+    <step>
+     <para>
+      Create a server certificate for the service broker:
+     </para>
+     <substeps>
+      <step>
+       <para>
+        Get the CA certificate:
+       </para>
+       <screen>kubectl get secret --namespace scf --output jsonpath='{.items[*].data.internal-ca-cert}' | base64 -di > ca.pem</screen>
+      </step>
+      <step>
+       <para>
+        Get the CA private key:
+       </para>
+       <screen>kubectl get secret --namespace scf --output jsonpath='{.items[*].data.internal-ca-cert-key}' | base64 -di > ca.key</screen>
+      </step>
+      <step>
+       <para>
+        Create a signing request:
+       </para>
+<screen>&prompt.user;openssl req -newkey rsa:4096 -keyout tls.key.encrypted -out tls.req -days 365 \
+  -passout pass:<replaceable>1234</replaceable> \
+  -subj '/CN=aws-servicebroker.${BROKER_NAMESPACE}' -batch \
+  &lt;/dev/null
+</screen>
+      </step>
+      <step>
+       <para>
+        Decrypt the generated broker private key:
+       </para>
+       <screen>&prompt.user;openssl rsa -in tls.key.encrypted -passin pass:<replaceable>1234</replaceable> -out tls.key</screen>
+      </step>
+      <step>
+       <para>
+        Sign the request with the CA certificate:
+       </para>
+       <screen>&prompt.user;openssl x509 -req -CA ca.pem -CAkey ca.key -CAcreateserial -in tls.req -out tls.pem</screen>
+      </step>
+     </substeps>
+    </step>
+    <step>
+     <para>
+      Install the AWS service broker as documented at <link xlink:href="https://github.com/awslabs/aws-servicebroker/blob/master/docs/getting-started-k8s.md"/>. Skip the installation of the Kubernetes Service Catalog. While installing the AWS Service Broker, make sure to update the &helm; chart version (the version as of this writing is <literal>1.0.0-beta.3</literal>). For the broker install, pass in a value indicating the Cluster Service Broker should not be installed (e.g. <command>--set deployClusterServiceBroker=false</command>). Ensure an account and role with adequate IAM rights is chosen (see <xref linkend="sec.cap.aws-service-broker-prereqs"/>:
+     </para>
+<screen>&prompt.user;helm install aws-sb/aws-servicebroker \
+	     --name aws-servicebroker \
+	     --namespace ${BROKER_NAMESPACE} \
+	     --version 1.0.0-beta.3 \
+	     --set aws.secretkey=$aws_access_key \
+	     --set aws.accesskeyid=$aws_key_id \
+	     --set deployClusterServiceBroker=false \
+	     --set tls.cert="$(base64 -w0 tls.pem)" \
+	     --set tls.key="$(base64 -w0 tls.key)" \
+	     --set-string aws.targetaccountid=${AWS_TARGET_ACCOUNT_ID} \
+	     --set aws.targetrolename=${AWS_TARGET_ROLE_NAME} \
+	     --set aws.tablename=awssb \
+	     --set aws.vpcid=$vpcid \
+	     --set aws.region=$aws_region \
+	     --set authenticate=false
+</screen>
+    </step>
+    <step>
+     <para>
+      Log into your &cap; deployment. Select an organization and space to work with, creating them if needed:
+     </para>
+<screen>&prompt.user;cf api --skip-ssl-validation <replaceable>https://api.example.com</replaceable>
+&prompt.user;cf login -u <replaceable>admin</replaceable> -p <replaceable>password</replaceable>
+&prompt.user;cf create-org <replaceable>org</replaceable>
+&prompt.user;cf create-space <replaceable>space</replaceable>
+&prompt.user;cf target -o <replaceable>org</replaceable> -s <replaceable>space</replaceable>
+</screen>
+    </step>
+    <step>
+     <para>
+      Create a service broker in SCF. Note the name of the service broker should be the same as the one specified for the <literal>--name</literal> flag in the <command>helm install</command> step (e.g. <literal>aws-servicebroker</literal>. Note that the username and password parameters are only used as dummy values to pass to the <command>cf</command> command:
+     </para>
+     <screen>&prompt.user;cf create-service-broker aws-servicebroker <replaceable>username</replaceable> <replaceable>password</replaceable>  https://aws-servicebroker.${BROKER_NAMESPACE}</screen>
+    </step>
+    <step>
+     <para>
+      Verify the service broker has been registered:
+     </para>
+     <screen>&prompt.user;cf service-brokers</screen>
+    </step>
+    <step>
+     <para>
+      List the available service plans:
+     </para>
+     <screen>&prompt.user;cf service-access</screen>
+    </step>
+    <step>
+     <para>
+      Enable access to a service. This example uses the <literal>-p</literal> to enable access to a specific service plan. See <link xlink:href="https://github.com/awslabs/aws-servicebroker/blob/master/templates/rdsmysql/template.yaml"/> for information about all available services and their associated plans:
+     </para>
+     <screen>&prompt.user;cf enable-service-access rdsmysql -p custom</screen>
+    </step>
+    <step>
+     <para>
+      Create a service instance. As an example, a custom MySQL instance can be created as: 
+     </para>
+<screen>&prompt.user;cf create-service rdsmysql custom mysql-instance-name -c '{
+  "AccessCidr": "192.0.2.24/32",
+  "BackupRetentionPeriod": 0,
+  "MasterUsername": "master",
+  "DBInstanceClass": "db.t2.micro",
+  "PubliclyAccessible": "true",
+  "region": "${AWS_REGION}",
+  "StorageEncrypted": "false",
+  "VpcId": "${AWS_VPC}",
+  "target_account_id": "${AWS_TARGET_ACCOUNT_ID}",
+  "target_role_name": "${AWS_TARGET_ROLE_NAME}"
+}'
+     </screen>
+    </step>
+   </procedure>
+  </sect2>
+  <sect2 xml:id="sec.cap.aws-service-broker-cleanup">
+   <title>Cleanup</title>
+   <para>
+    When the AWS Service Broker and its services are no longer required, perform the following steps:
+   </para>
+   <procedure>
+    <step>
+     <para>
+      Unbind any applications using any service instances then delete the service instance:
+     </para>
+<screen>&prompt.user;cf unbind-service my_app mysql-instance-name
+&prompt.user;cf delete-service mysql-instance-name
+</screen>
+    </step>
+    <step>
+     <para>
+      Delete the service broker in SCF:
+     </para>
+     <screen>&prompt.user;cf delete-service-broker aws-servicebroker</screen>
+    </step>
+    <step>
+     <para>
+      Delete the deployed &helm; chart and the namespace:      
+     </para>
+<screen>&prompt.user;helm delete --purge aws-servicebroker
+&prompt.user;kubectl delete namespace ${BROKER_NAMESPACE}
+</screen>
+    </step>
+    <step>
+     <para>
+      The manually created DynamoDB table will need to be deleted as well:
+     </para>
+     <screen>&prompt.user;aws dynamodb delete-table --table-name awssb --region ${AWS_REGION}</screen>
+    </step>
+   </procedure>
+  </sect2>
+ </sect1>
 </chapter>
