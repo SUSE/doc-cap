@@ -87,14 +87,14 @@
 }</screen>
 
   <para>
-   Replace <varname>subscription-id</varname> in the next command with your
+   Replace the example <varname>subscription-id</varname> in the next command with your
    <varname>subscription-id</varname>. Then export it as an environment
    variable and set it as the current subscription:
   </para>
 
-<screen>&prompt.user;export SUBSCRIPTION_ID=<replaceable>"a900cdi2-5983-0376-s7je-d4jdmsif84ca"</replaceable>
+<screen>&prompt.user;export AZURE_SUBSCRIPTION_ID=<replaceable>"a900cdi2-5983-0376-s7je-d4jdmsif84ca"</replaceable>
 
-&prompt.user;az account set --subscription $SUBSCRIPTION_ID</screen>
+&prompt.user;az account set --subscription $AZURE_SUBSCRIPTION_ID</screen>
 
   <para>
    Verify that the <literal>Microsoft.Network</literal>,
@@ -168,7 +168,7 @@ cap-aks</screen>
      Quotas and region availability for Azure Kubernetes Service (AKS)</link>
      for supported locations.)
     </para>
-<screen>&prompt.user;export REGION="<replaceable>eastus</replaceable>"</screen>
+<screen>&prompt.user;export LOCATION="<replaceable>eastus</replaceable>"</screen>
    </step>
    <step>
     <para>
@@ -222,7 +222,7 @@ cap-aks</screen>
    group:
   </para>
 
-<screen>&prompt.user;az group create --name $RGNAME --location $REGION</screen>
+<screen>&prompt.user;az group create --name $RGNAME --location $LOCATION</screen>
 
   <para>
    Now you can create a new AKS managed cluster:
