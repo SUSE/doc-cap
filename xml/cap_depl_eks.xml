@@ -541,7 +541,7 @@ secrets:
     </listitem>
     <listitem>
      <para>
-      Ensure the user or role running the broker has an IAM policy set as specified <link xlink:href="https://github.com/awslabs/aws-servicebroker/blob/master/docs/install_prereqs.md#iam">here</link>
+      Ensure the user or role running the broker has an IAM policy set as specified in the <link xlink:href="https://github.com/awslabs/aws-servicebroker/blob/master/docs/install_prereqs.md#iam">IAM section of the AWS Service Broker</link> documentation on Github
      </para>
     </listitem>
    </itemizedlist>
@@ -585,6 +585,12 @@ secrets:
       Create a server certificate for the service broker:
      </para>
      <substeps>
+      <step>
+       <para>
+        Create and use a separate directory to avoid conflicts with other CA files:
+       </para>
+       <screen>&prompt.user;mkdir /tmp/aws-service-broker-certificates &amp;&amp; cd $_</screen>
+      </step>
       <step>
        <para>
         Get the CA certificate:
