@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha.cap.configuration-changes"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <title>Configuration Changes</title>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+ </info>
+ <para>
+  After the initial deployment of &cap;, any changes made to your &helm; chart
+  values, whether through your <filename>scf-config-values.yaml</filename> file
+  or directly using &helm;'s <command>--set</command> flag, are applied using 
+  the <command>helm upgrade</command> command.
+ </para>
+ <warning>
+  <title>Do not make changes to pod counts during a version upgrade</title>
+  <para>
+   The <command>helm upgrade</command> command can be used to apply
+   configuration changes as well as perform version upgrades to &cap;. A change
+   to the pod count configuration should not be applied simultaneously with a
+   version upgrade. Sizing changes should be made separately, either before or
+   after, from a version upgrade (see <xref linkend="sec.cap.ha-prod"/>).
+  </para>
+ </warning>
+ <sect1 xml:id="sec.cap.configuration-change-example">
+  <title>Configuration Change Example</title>
+
+  <para>
+   Consider an example where more granular log entries are required than those
+   provided by your default deployment of UAA; (default <literal>LOG_LEVEL:
+   "info"</literal>).
+  </para>
+
+  <para>
+   You would then add an entry for <literal>LOG_LEVEL</literal> to the
+   <literal>env</literal> section of your
+   <filename>scf-config-values.yaml</filename> used to deploy UAA:
+  </para>
+
+<screen>env:
+  LOG_LEVEL: "debug2" 
+</screen>
+
+  <para>
+   Then apply the change with the <command>helm upgrade</command> command. This
+   example assumes the <literal>suse/uaa</literal> &helm; chart deployed was
+   named <literal>susecf-uaa</literal>:
+  </para>
+
+<screen>&prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa --values <replaceable>scf-config-values.yaml</replaceable></screen>
+
+  <para>
+   When all pods are in a <literal>READY</literal> state, the configuration
+   change will also be reflected. If the chart was deployed to the
+   <literal>uaa</literal> namespace, progress can be monitored with:
+  </para>
+
+<screen>&prompt.user;watch -c 'kubectl get pods --namespace uaa'</screen>
+ </sect1>
+ <sect1 xml:id="sec.cap.configuration-change-other-examples">
+  <title>Other Examples</title>
+
+  <para>
+   The following are other examples of using <command>helm upgrade</command> to
+   make configuration changes:
+  </para>
+
+  <itemizedlist>
+   <listitem>
+    <para>
+     Cluster sizing changes (see <xref linkend="sec.cap.ha-prod-upgrade"/>)
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Secrets rotation (see <xref linkend="sec.cap.secrets-rotation"/>)
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Enabling additional services (see
+     <xref linkend="sec.cap.enable-app-autoscaler"/>)
+    </para>
+   </listitem>
+  </itemizedlist>
+ </sect1>
+</chapter>
