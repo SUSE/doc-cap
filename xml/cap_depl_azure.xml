@@ -726,12 +726,6 @@ Set up the service broker with your variables:
 <screen>
 &prompt.user;cf login
 
-&prompt.user;cf create-service-broker azure \
-$(kubectl get deployment osba-open-service-broker-azure \
---namespace osba -o jsonpath='{.spec.template.spec.containers[0].env[?(@.name == "BASIC_AUTH_USERNAME")].value}') \
-$(kubectl get secret --namespace osba osba-open-service-broker-azure -o jsonpath='{.data.basic-auth-password}' | \
-base64 -d) http://osba-open-service-broker-azure.osba
-
 &prompt.user;cf service-access -b azure | \
 awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
 </screen>
