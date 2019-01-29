@@ -365,7 +365,8 @@ spec:
   #default in suse.caasp.psp.unprivileged
   #defaultAllowPrivilegeEscalation: false
   # Capabilities
-  allowedCapabilities: []
+  allowedCapabilities:
+  - SYS_RESOURCE
   defaultAddCapabilities: []
   requiredDropCapabilities: []
   # Host namespaces
@@ -434,6 +435,29 @@ clusterrolebinding.rbac.authorization.k8s.io "cap:clusterrole" created</screen>
         <literal>suse.cap.psp</literal>.
     </para>
 </tip>
+   <important>
+    <title>Using Custom PodSecurityPolicies</title>
+    <para>
+     When using a custom PSP, your <filename>scf-config-values.yaml</filename> file will require the <literal>SYS_RESOURCE</literal> capability to be added to some roles as follows:
+    </para>
+    <screen>
+sizing:
+  cc_uploader:
+    capabilities: ["SYS_RESOURCE"]
+  diego_api:
+    capabilities: ["SYS_RESOURCE"]
+  diego_brain:
+    capabilities: ["SYS_RESOURCE"]
+  diego_ssh:
+    capabilities: ["SYS_RESOURCE"]
+  nats:
+    capabilities: ["SYS_RESOURCE"]
+  router:
+    capabilities: ["SYS_RESOURCE"]
+  routing_api:
+    capabilities: ["SYS_RESOURCE"]
+    </screen>
+   </important>
   </sect2>
   
  </sect1>
@@ -562,7 +586,8 @@ persistentvolumeclaim "test-sc-persistent" deleted</screen>
       internal IP addresses of the worker nodes to provide access to services.
   </para>
 
-<screen>env:    
+  <screen>
+env:
   # Enter the domain you created for your CAP cluster
   DOMAIN: <replaceable>&exampledomain;</replaceable>
     
@@ -594,7 +619,24 @@ secrets:
   CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
     
   # Create a password for your UAA client secret
-  UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable></screen>
+  UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
+
+sizing:
+  cc_uploader:
+    capabilities: ["SYS_RESOURCE"]
+  diego_api:
+    capabilities: ["SYS_RESOURCE"]
+  diego_brain:
+    capabilities: ["SYS_RESOURCE"]
+  diego_ssh:
+    capabilities: ["SYS_RESOURCE"]
+  nats:
+    capabilities: ["SYS_RESOURCE"]
+  router:
+    capabilities: ["SYS_RESOURCE"]
+  routing_api:
+    capabilities: ["SYS_RESOURCE"]
+  </screen>
 
   <important>
    <title>Protect UAA_ADMIN_CLIENT_SECRET</title>
