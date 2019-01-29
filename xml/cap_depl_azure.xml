@@ -777,7 +777,7 @@ export BUNDLE_GEMFILE=/home/vcap/app/Gemfile &amp;&amp; cd app &amp;&amp; bundle
     example IP address with your own IP address:
 </para>
 <screen>
-    &prompt.user;curl scf-rails-example.<replaceable>&publicip;</replaceable>
+&prompt.user;curl -k https://scf-rails-example.<replaceable>&publicip;</replaceable>
 </screen>
 <para>
     A successful deployment returns output like this abbreviated example:
