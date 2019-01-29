@@ -87,7 +87,7 @@
 }</screen>
 
   <para>
-   Replace <varname>subscription-id</varname> in the next command with your
+   Replace the example <varname>subscription-id</varname> in the next command with your
    <varname>subscription-id</varname>. Then export it as an environment
    variable and set it as the current subscription:
   </para>
@@ -652,25 +652,25 @@ xip.io:2793/oauth/token"</screen>
   </para>
   <screen>&prompt.user;SBRGNAME=$(tr -dc 'a-zA-Z0-9' &lt; /dev/urandom | head -c 8)-service-broker
       
-&prompt.user;LOCATION=<replaceable>eastus</replaceable>
+&prompt.user;REGION=<replaceable>eastus</replaceable>
 
-&prompt.user;export AZURE_SUBSCRIPTION_ID=$(az account show | jq -r '.id')
+&prompt.user;export SUBSCRIPTION_ID=$(az account show | jq -r '.id')
 
-&prompt.user;az group create --name ${SBRGNAME} --location ${LOCATION}
+&prompt.user;az group create --name ${SBRGNAME} --location ${REGION}
 
 &prompt.user;SERVICE_PRINCIPAL_INFO=$(az ad sp create-for-rbac --name ${SBRGNAME})
 
-&prompt.user;AZURE_TENANT_ID=$(echo ${SERVICE_PRINCIPAL_INFO} | jq -r '.tenant')
+&prompt.user;TENANT_ID=$(echo ${SERVICE_PRINCIPAL_INFO} | jq -r '.tenant')
 
-&prompt.user;AZURE_CLIENT_ID=$(echo ${SERVICE_PRINCIPAL_INFO} | jq -r '.appId')
+&prompt.user;CLIENT_ID=$(echo ${SERVICE_PRINCIPAL_INFO} | jq -r '.appId')
 
-&prompt.user;AZURE_CLIENT_SECRET=$(echo ${SERVICE_PRINCIPAL_INFO} | jq -r '.password')
+&prompt.user;CLIENT_SECRET=$(echo ${SERVICE_PRINCIPAL_INFO} | jq -r '.password')
 
 &prompt.user;echo SBRGNAME=${SBRGNAME}
 
-&prompt.user;echo LOCATION=${LOCATION}
+&prompt.user;echo REGION=${REGION}
 
-&prompt.user;echo AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID} \; AZURE_TENANT_ID=${AZURE_TENANT_ID}\; AZURE_CLIENT_ID=${AZURE_CLIENT_ID}\; AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
+&prompt.user;echo SUBSCRIPTION_ID=${SUBSCRIPTION_ID} \; TENANT_ID=${TENANT_ID}\; CLIENT_ID=${CLIENT_ID}\; CLIENT_SECRET=${CLIENT_SECRET}
 </screen>
     
     <para>
@@ -696,11 +696,11 @@ Set up the service broker with your variables:
 &prompt.user;helm install azure/open-service-broker-azure \
 --name <replaceable>osba</replaceable> \
 --namespace <replaceable>osba</replaceable> \
---set azure.subscriptionId=${AZURE_SUBSCRIPTION_ID} \
---set azure.tenantId=${AZURE_TENANT_ID} \
---set azure.clientId=${AZURE_CLIENT_ID} \
---set azure.clientSecret=${AZURE_CLIENT_SECRET} \
---set azure.defaultLocation=${LOCATION} \
+--set azure.subscriptionId=${SUBSCRIPTION_ID} \
+--set azure.tenantId=${TENANT_ID} \
+--set azure.clientId=${CLIENT_ID} \
+--set azure.clientSecret=${CLIENT_SECRET} \
+--set azure.defaultLocation=${REGION} \
 --set redis.persistence.storageClass=default \
 --set basicAuth.username=$(tr -dc 'a-zA-Z0-9' &lt; /dev/urandom | head -c 16) \
 --set basicAuth.password=$(tr -dc 'a-zA-Z0-9' &lt; /dev/urandom | head -c 16)
@@ -741,7 +741,7 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
 &prompt.user;cf target -o "<replaceable>testorg</replaceable>" -s "<replaceable>scftest</replaceable>"
 
 &prompt.user;cf create-service azure-mysql-5-7 basic <replaceable>scf-rails-example-db</replaceable> \
--c "{ \"location\": \"${LOCATION}\", \"resourceGroup\": \"${RGNAME}\", \"firewallRules\": [{\"name\": \
+-c "{ \"location\": \"${REGION}\", \"resourceGroup\": \"${RGNAME}\", \"firewallRules\": [{\"name\": \
 \"AllowAll\", \"startIPAddress\":\"0.0.0.0\",\"endIPAddress\":\"255.255.255.255\"}]}"
 
 &prompt.user;cf service <replaceable>scf-rails-example-db</replaceable> | grep status
