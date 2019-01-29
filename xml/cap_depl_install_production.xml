@@ -440,7 +440,8 @@ clusterrolebinding.rbac.authorization.k8s.io "cap:clusterrole" created</screen>
     <para>
      When using a custom PSP, your <filename>scf-config-values.yaml</filename> file will require the <literal>SYS_RESOURCE</literal> capability to be added to some roles as follows:
     </para>
-<screen>sizing:
+    <screen>
+sizing:
   cc_uploader:
     capabilities: ["SYS_RESOURCE"]
   diego_api:
@@ -455,7 +456,7 @@ clusterrolebinding.rbac.authorization.k8s.io "cap:clusterrole" created</screen>
     capabilities: ["SYS_RESOURCE"]
   routing_api:
     capabilities: ["SYS_RESOURCE"]
-</screen>
+    </screen>
    </important>
   </sect2>
   
@@ -585,7 +586,8 @@ persistentvolumeclaim "test-sc-persistent" deleted</screen>
       internal IP addresses of the worker nodes to provide access to services.
   </para>
 
-<screen>env:    
+  <screen>
+env:
   # Enter the domain you created for your CAP cluster
   DOMAIN: <replaceable>&exampledomain;</replaceable>
     
@@ -633,7 +635,8 @@ sizing:
   router:
     capabilities: ["SYS_RESOURCE"]
   routing_api:
-    capabilities: ["SYS_RESOURCE"]</screen>
+    capabilities: ["SYS_RESOURCE"]
+  </screen>
 
   <important>
    <title>Protect UAA_ADMIN_CLIENT_SECRET</title>
