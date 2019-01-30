@@ -41,7 +41,43 @@
   &productname; cluster, and not for &caasp; or &ses;. See
   <xref linkend="sec.cap.ha-prod"/>.
  </para>
- <sect1 xml:id="sec.cap.prereqs-prod">
+ 
+<sect1 xml:id="sec.cap.deploy-notes">
+  <title>Deployment and Administration Notes</title>
+  <para>
+      This section lists considerations for deploying and operating
+      &productname;.
+  </para>
+  
+  <variablelist>
+   <varlistentry>
+       <term>Length of release names</term>
+       <listitem>
+           <para>Release names (e.g. when you run 
+               <command>helm install --name</command>) have a maximum length of 
+               36 characters.</para>
+       </listitem>
+  </varlistentry>
+   <varlistentry>
+       <term>Always install to a fresh namespace</term>
+       <listitem>
+       <para>    
+    If you are not creating a fresh &productname; installation, but have deleted 
+    a previous deployment and are starting over, you must create new namespaces
+    with the 
+    <command>kubectl create namespace <replaceable>name</replaceable></command>
+        command. 
+    Do not re-use your old namespaces. The <command>helm delete</command> command 
+    does not remove generated secrets from the SCF and UAA namespaces as it is 
+    not aware of them. These leftover secrets will cause problems. See 
+    <xref linkend="sec.cap.rebuild.depl"/> for more information.
+    </para>
+       </listitem>
+  </varlistentry> 
+  </variablelist>
+</sect1>
+
+  <sect1 xml:id="sec.cap.prereqs-prod">
   <title>Prerequisites</title>
 
   <para>
