@@ -51,7 +51,7 @@
   
   <variablelist>
    <varlistentry>
-       <term>Length of release names limits</term>
+       <term>Length of release names</term>
        <listitem>
            <para>Release names (e.g. when you run 
                <command>helm install --name</command>) have a maximum length of 
