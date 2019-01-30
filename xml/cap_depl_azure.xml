@@ -706,7 +706,8 @@ Set up the service broker with your variables, then create it:
 --set azure.defaultLocation=${REGION} \
 --set redis.persistence.storageClass=default \
 --set basicAuth.username=$(tr -dc 'a-zA-Z0-9' &lt; /dev/urandom | head -c 16) \
---set basicAuth.password=$(tr -dc 'a-zA-Z0-9' &lt; /dev/urandom | head -c 16)
+--set basicAuth.password=$(tr -dc 'a-zA-Z0-9' &lt; /dev/urandom | head -c 16) \
+--set tls.enabled=false
 
 &prompt.user;cf login
 
