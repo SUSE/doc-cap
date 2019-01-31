@@ -95,7 +95,7 @@
 
   <para>
    Run <command>cf curl /v2/info</command> and verify the SCF domain is not
-   <literal>appdomain</literal>:
+   <replaceable>appdomain.com</replaceable>:
   </para>
 
 <screen>&prompt.user;cf api --skip-ssl-validation https://api.example.com
