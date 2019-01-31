@@ -75,6 +75,7 @@ Part: CAP Administration Guide
 <xi:include href="cap_admin_logging.xml"/>
 <xi:include href="cap_admin_certificates.xml"/>
 <xi:include href="cap_admin_credhub.xml"/>
+<xi:include href="cap_admin_offline_buildpacks.xml"/>
 </part>
 
 <!--============================================================================

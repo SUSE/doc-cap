@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha.cap.offline-buildpacks"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <title>Offline Buildpacks</title>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+ </info>
+ <para>
+  <link xlink:href="https://docs.cloudfoundry.org/buildpacks">Buildpacks</link> are used to construct the environment needed to run your applications, including any required runtimes or frameworks as well as other dependencies. When you deploy an application, a buildpack can be specified or automatically detected by cycling through all available buildpacks to find one that is applicable. When there is a suitable buildpack for your application, the buildpack will then download any necessary dependencies during the staging process.
+ </para>
+ <para>
+  An offline, or cached, buildpack packages the runtimes, frameworks, and dependencies needed to run your applications into an archive that is then uploaded to your &cap; deployment. When an application is deployed using an offline buildpack, access to the Internet to download dependencies is no longer required. This has the benefit of providing improved staging performance and allows for staging to take place on air-gapped environments.
+ </para>
+ <sect1 xml:id="sec.cap.create-offline-buildpack">
+  <title>Creating an Offline Buildpack</title>
+  <para>
+   Offline buildpacks can be created using the <link xlink:href="https://github.com/SUSE/cf-buildpack-packager-docker">cf-buildpack-packager-docker</link> tool, which is available as a <link xlink:href="https://www.docker.com/">Docker</link> image. The only requirement to use this tool is a system with Docker support.
+  </para>
+  <important>
+   <title>Disclaimer</title>
+   <para>
+    Some Cloud Foundry buildpacks can reference binaries with proprietary or mutually incompatible open source licenses which cannot be distributed together as offline/cached buildpack archives. Operators who wish to package and maintain offline buildpacks will be responsible for any required licensing or export compliance obligations.
+   </para>
+   <para>
+For automation purposes, you can use the <command>--accept-external-binaries</command> option to accept this disclaimer without the interactive prompt.
+   </para>
+  </important>
+  <para>
+   <link xlink:href="https://github.com/SUSE/cf-buildpack-packager-docker#usage">Usage</link> of the tool is as follows: 
+  </para>
+  <screen>package [--accept-external-binaries] org [all [stack] | language [tag] [stack]]</screen>
+  <para>
+   Where:
+  </para>
+  <itemizedlist>
+   <listitem>
+    <para>
+     <replaceable>org</replaceable> is the Github organization hosting the buildpack repositories, i.e. <link xlink:href="https://github.com/cloudfoundry">"cloudfoundry"</link> or <link xlink:href="https://github.com/SUSE">"SUSE"</link>
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     A <replaceable>tag</replaceable> cannot be specified when using <replaceable>all</replaceable> as the language because the tag is different for each language
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     <replaceable>tag</replaceable> is not optional if a <replaceable>stack</replaceable> is specified. To specify the latest release, use <replaceable>""</replaceable> as the <replaceable>tag</replaceable>
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     A maximum of one stack can be specified
+    </para>
+   </listitem>
+  </itemizedlist>
+  <para>
+   The following example demonstrates packaging an offline Ruby buildpack and uploading it to your &cap; deployment to use. The packaged buildpack will be a Zip file placed in the current working directory, <replaceable>$PWD</replaceable>.
+  </para>
+  <procedure>
+   <step>
+    <para>
+     Build the latest released SUSE Ruby buildpack for the &sle; 12 stack:
+    </para>
+    <screen>&prompt.user;docker run -it --rm -v $PWD:/out splatform/cf-buildpack-packager <replaceable>SUSE</replaceable> <replaceable>ruby</replaceable> <replaceable>""</replaceable> <replaceable>sle12</replaceable></screen>
+   </step>
+   <step>
+    <para>
+     Verify the archive has been created in your current working directory:
+    </para>
+    <screen>&prompt.user;ls
+<replaceable>ruby_buildpack-cached-sle12-v1.7.30.1.zip</replaceable>
+    </screen>
+   </step>
+   <step>
+    <para>
+     Log into your &cap; deployment. Select an organization and space to work with, creating them if needed:
+    </para>
+    <screen>&prompt.user;cf api --skip-ssl-validation <replaceable>https://api.example.com</replaceable>
+&prompt.user;cf login -u <replaceable>admin</replaceable> -p <replaceable>password</replaceable>
+&prompt.user;cf create-org <replaceable>org</replaceable>
+&prompt.user;cf create-space <replaceable>space</replaceable> -o <replaceable>org</replaceable>
+&prompt.user;cf target -o <replaceable>org</replaceable> -s <replaceable>space</replaceable>
+    </screen>
+   </step>
+   <step>
+    <para>
+     List the currently available buildpacks:
+    </para>
+    <screen>&prompt.user;cf buildpacks
+Getting buildpacks...
+
+buildpack               position   enabled   locked   filename
+staticfile_buildpack    1          true      false    staticfile_buildpack-v1.4.34.1-1.1-1dd6386a.zip
+java_buildpack          2          true      false    java-buildpack-v4.16.1-e638145.zip
+ruby_buildpack          3          true      false    ruby_buildpack-v1.7.26.1-1.1-c2218d66.zip
+nodejs_buildpack        4          true      false    nodejs_buildpack-v1.6.34.1-3.1-c794e433.zip
+go_buildpack            5          true      false    go_buildpack-v1.8.28.1-1.1-7508400b.zip
+python_buildpack        6          true      false    python_buildpack-v1.6.23.1-1.1-99388428.zip
+php_buildpack           7          true      false    php_buildpack-v4.3.63.1-1.1-2515c4f4.zip
+binary_buildpack        8          true      false    binary_buildpack-v1.0.27.1-3.1-dc23dfe2.zip
+dotnet-core_buildpack   9          true      false    dotnet-core-buildpack-v2.0.3.zip
+    </screen>
+   </step>
+   <step>
+    <para>
+     Upload your packaged offline buildpack to your &cap; deployment:
+    </para>
+    <screen>&prompt.user;cf create-buildpack <replaceable>ruby_buildpack_cached</replaceable> <replaceable>/tmp/ruby_buildpack-cached-sle12-v1.7.30.1.zip</replaceable> <replaceable>1</replaceable> <replaceable>--enable</replaceable>
+Creating buildpack <replaceable>ruby_buildpack_cached</replaceable>...
+OK
+
+Uploading buildpack <replaceable>ruby_buildpack_cached</replaceable>...
+Done uploading               
+OK    
+    </screen>
+   </step>
+   <step>
+    <para>
+     Verify your buildpack is available:
+    </para>
+    <screen>&prompt.user;cf buildpacks
+Getting buildpacks...
+
+buildpack               position   enabled   locked   filename
+<replaceable>ruby_buildpack_cached</replaceable>   1          true      false    ruby_buildpack-cached-sle12-v1.7.30.1.zip
+staticfile_buildpack    2          true      false    staticfile_buildpack-v1.4.34.1-1.1-1dd6386a.zip
+java_buildpack          3          true      false    java-buildpack-v4.16.1-e638145.zip
+ruby_buildpack          4          true      false    ruby_buildpack-v1.7.26.1-1.1-c2218d66.zip
+nodejs_buildpack        5          true      false    nodejs_buildpack-v1.6.34.1-3.1-c794e433.zip
+go_buildpack            6          true      false    go_buildpack-v1.8.28.1-1.1-7508400b.zip
+python_buildpack        7          true      false    python_buildpack-v1.6.23.1-1.1-99388428.zip
+php_buildpack           8          true      false    php_buildpack-v4.3.63.1-1.1-2515c4f4.zip
+binary_buildpack        9          true      false    binary_buildpack-v1.0.27.1-3.1-dc23dfe2.zip
+dotnet-core_buildpack   10         true      false    dotnet-core-buildpack-v2.0.3.zip
+    </screen>
+   </step>
+   <step>
+    <para>
+     Deploy a sample Rails app using the new buildpack:
+    </para>
+    <screen>&prompt.user;git clone <replaceable>https://github.com/scf-samples/12factor</replaceable>
+&prompt.user;cd <replaceable>12factor</replaceable>
+&prompt.user;cf push <replaceable>12factor</replaceable> -b <replaceable>ruby_buildpack_cached</replaceable>
+    </screen>
+    <note>
+     <title>Specifying a buildpack to use with your application</title>
+     <para>
+      You can specify which buildpack is used to deploy your application through two methods:
+     </para>
+     <itemizedlist>
+      <listitem>
+       <para>
+        Using the <command>-b</command> option during <command>cf push</command>. E.g.
+       </para>
+       <screen>&prompt.user;cf push <replaceable>my_application</replaceable> -b <replaceable>my_buildpack</replaceable></screen>
+      </listitem>
+      <listitem>
+       <para>
+        Using the <literal><link xlink:href="https://docs.cloudfoundry.org/devguide/deploy-apps/manifest.html#buildpack">buildpacks</link></literal> in your application's <filename>manifest.yml</filename>:
+       </para>
+       <screen>---
+applications:
+- name: <replaceable>my_application</replaceable>
+  buildpacks:
+    - <replaceable>my_buildpack</replaceable>
+       </screen>
+      </listitem>
+     </itemizedlist>
+    </note>
+   </step>
+  </procedure>
+ </sect1>
+</chapter>
