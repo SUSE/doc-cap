@@ -22,7 +22,7 @@
   In a standard &scf; deployment, applications will use the same domain as the
   one configured in your <filename>scf-config-values.yaml</filename> for SCF.
   For example, if your &scf; deployment's domain is set as
-  <literal>example.com</literal> then an application's domain will be in the
+  <replaceable>example.com</replaceable> then an application's domain will be in the
   form of <literal>myapp.example.com</literal>.
  </para>
  <para>
@@ -35,7 +35,7 @@
   <para>
    Begin by adding the following to your
    <filename>scf-config-values.yaml</filename>. Replace
-   <literal>APPDOMAIN</literal> with the domain to use with your applications:
+   <replaceable>appdomain.com</replaceable> with the domain to use with your applications:
   </para>
 
 <screen>bosh:
@@ -45,7 +45,7 @@
     - name: cloud_controller_ng
       properties:
         app_domains:
-	- <replaceable>&lt;APPDOMAIN></replaceable>
+	- <replaceable>appdomain.com</replaceable>
 </screen>
 
   <para>
@@ -95,7 +95,7 @@
 
   <para>
    Run <command>cf curl /v2/info</command> and verify the SCF domain is not
-   <literal>APPDOMAIN</literal>:
+   <literal>appdomain</literal>:
   </para>
 
 <screen>&prompt.user;cf api --skip-ssl-validation https://api.example.com
@@ -104,35 +104,35 @@
 
   <para>
    Deploy an application and examine the <literal>routes</literal> field to
-   verify <literal>APPDOMAIN</literal> is being used:
+   verify <replaceable>appdomain.com</replaceable> is being used:
   </para>
 
 <screen>&prompt.user;cf login
-&prompt.user;cf create-org org
-&prompt.user;cf create-space space
-&prompt.user;cf target -o org -s space
-&prompt.user;cf push myapp
+&prompt.user;cf create-org <replaceable>org</replaceable>
+&prompt.user;cf create-space <replaceable>space</replaceable>
+&prompt.user;cf target -o org -s <replaceable>space</replaceable>
+&prompt.user;cf push <replaceable>myapp</replaceable>
 cf push myapp
-Pushing app myapp to org org / space space as admin...
+Pushing app <replaceable>myapp</replaceable> to org <replaceable>org</replaceable> / space <replaceable>space</replaceable> as <replaceable>admin</replaceable>...
 Getting app info...
 Creating app with these attributes...
-  name:       myapp
-  path:       /path/to/myapp
+  name:       <replaceable>myapp</replaceable>
+  path:       <replaceable>/path/to/myapp</replaceable>
   routes:
-+   myapp.APPDOMAIN
++   <replaceable>myapp.appdomain.com</replaceable>
 
-Creating app myapp...
+Creating app <replaceable>myapp...</replaceable>
 Mapping routes...
 
 ...
 
 Waiting for app to start...
 
-name:              myapp
+name:              <replaceable>myapp</replaceable>
 requested state:   started
 instances:         1/1
 usage:             1G x 1 instances
-routes:            myapp.APPDOMAIN
+routes:            <replaceable>myapp.appdomain.com</replaceable>
 last uploaded:     Mon 14 Jan 11:08:02 PST 2019
 stack:             sle12
 buildpack:         ruby
