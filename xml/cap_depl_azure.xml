@@ -680,7 +680,10 @@ xip.io:2793/oauth/token"</screen>
         
 &prompt.user;helm repo update
 
-&prompt.user;helm install svc-cat/catalog --name catalog --namespace catalog --set rbacEnable=false --set controllerManager.healthcheck.enabled=false --set apiserver.storage.etcd.persistence.storageClass=default
+&prompt.user;helm install svc-cat/catalog --name catalog \
+ --namespace catalog \
+ --set controllerManager.healthcheck.enabled=false \
+ --set apiserver.healthcheck.enabled=false
 
 &prompt.user;kubectl get apiservice
 
@@ -690,7 +693,7 @@ xip.io:2793/oauth/token"</screen>
 </screen>
 
 <para>
-Set up the service broker with your variables:
+Set up the service broker with your variables, then create it:
 </para>
 <screen>
 &prompt.user;helm install azure/open-service-broker-azure \
@@ -703,29 +706,20 @@ Set up the service broker with your variables:
 --set azure.defaultLocation=${REGION} \
 --set redis.persistence.storageClass=default \
 --set basicAuth.username=$(tr -dc 'a-zA-Z0-9' &lt; /dev/urandom | head -c 16) \
---set basicAuth.password=$(tr -dc 'a-zA-Z0-9' &lt; /dev/urandom | head -c 16)
+--set basicAuth.password=$(tr -dc 'a-zA-Z0-9' &lt; /dev/urandom | head -c 16) \
+--set tls.enabled=false
+
+&prompt.user;cf login
 
 &prompt.user;cf create-service-broker azure $(kubectl get deployment osba-open-service-broker-azure \
 --namespace osba -o jsonpath='{.spec.template.spec.containers[0].env[?(@.name == "BASIC_AUTH_USERNAME")].value}') $(kubectl get secret --namespace osba osba-open-service-broker-azure -o jsonpath='{.data.basic-auth-password}' | base64 -d) http://osba-open-service-broker-azure.osba
 </screen>
-<para>
-    Modify the database:
-</para>
-<screen>
-&prompt.user;kubectl exec -it mysql-0 --namespace scf -- env TERM=xterm-256color COLUMNS=135 LINES=62 /bin/bash
-  
-# mysql --defaults-file=/var/vcap/jobs/mysql/config/mylogin.cnf ccdb
-    MariaDB [ccdb]> ALTER TABLE ccdb.service_plans MODIFY COLUMN description VARCHAR(1024) COLLATE utf8_bin ;
-    MariaDB [ccdb]> exit
 
-# exit
-</screen>
 <para>
     Register the service broker in &scf;:
 </para>
-<screen>
-&prompt.user;cf login
 
+<screen>
 &prompt.user;cf service-access -b azure | \
 awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
 </screen>
@@ -741,13 +735,16 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
 &prompt.user;cf target -o "<replaceable>testorg</replaceable>" -s "<replaceable>scftest</replaceable>"
 
 &prompt.user;cf create-service azure-mysql-5-7 basic <replaceable>scf-rails-example-db</replaceable> \
--c "{ \"location\": \"${REGION}\", \"resourceGroup\": \"${RGNAME}\", \"firewallRules\": [{\"name\": \
+-c "{ \"location\": \"${REGION}\", \"resourceGroup\": \"${SBRGNAME}\", \"firewallRules\": [{\"name\": \
 \"AllowAll\", \"startIPAddress\":\"0.0.0.0\",\"endIPAddress\":\"255.255.255.255\"}]}"
 
 &prompt.user;cf service <replaceable>scf-rails-example-db</replaceable> | grep status
 </screen>
 <para>
-Find your new service and disable TLS:
+Find your new service and optionally disable TLS. You should not disable 
+TLS on a production deployment, but it simplifies testing. The 
+<literal>mysql2</literal> gem must be configured to use TLS, see
+<link xlink:href="https://github.com/brianmario/mysql2#ssl-options">brianmario/mysql2/SSL options</link> on GitHub:
 </para>
 <screen>
 &prompt.user;az mysql server list --resource-group $SBRGNAME
@@ -755,6 +752,10 @@ Find your new service and disable TLS:
 &prompt.user;az mysql server update --resource-group $SBRGNAME \
 --name <replaceable>scftest</replaceable> --ssl-enforcement Disabled
 </screen>
+
+<para>
+    Look in your Azure portal to find your database <literal>--name</literal>.
+</para>
 
 <para>
     Build and push the test Rails app:
