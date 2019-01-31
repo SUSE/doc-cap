@@ -793,14 +793,5 @@ export BUNDLE_GEMFILE=/home/vcap/app/Gemfile &amp;&amp; cd app &amp;&amp; bundle
   &lt;li>#3: Have some rest&lt;/li>
 &lt;/ul>
 </screen>
-
-<tip>
-    <title>Stale service principals errors</title>
-    <para>
-        The Azure CLI stores configuration information in <filename>~/.azure</filename>, including service principals. If you are seeing odd command failures, try deleting 
-        <filename>~/.azure/aksServicePrincipal.json</filename>.
-    </para>    
-    </tip>
-    
 </sect1>
 </chapter>
