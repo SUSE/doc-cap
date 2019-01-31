@@ -38,24 +38,24 @@ For automation purposes, you can use the <command>--accept-external-binaries</co
   <para>
    <link xlink:href="https://github.com/SUSE/cf-buildpack-packager-docker#usage">Usage</link> of the tool is as follows: 
   </para>
-  <screen>package [--accept-external-binaries] ORG [all [STACK] | LANGUAGE [TAG] [STACK]]</screen>
+  <screen>package [--accept-external-binaries] org [all [stack] | language [tag] [stack]]</screen>
   <para>
    Where:
   </para>
   <itemizedlist>
    <listitem>
     <para>
-     <literal>ORG</literal> is the Github organization hosting the buildpack repositories, i.e. "cloudfoundry" or "SUSE"
+     <replaceable>org</replaceable> is the Github organization hosting the buildpack repositories, i.e. <link xlink:href="https://github.com/cloudfoundry">"cloudfoundry"</link> or <link xlink:href="https://github.com/SUSE">"SUSE"</link>
     </para>
    </listitem>
    <listitem>
     <para>
-     A <literal>TAG</literal> cannot be specified when using language <literal>ALL</literal> because the tag is different for each language
+     A <replaceable>tag</replaceable> cannot be specified when using <replaceable>all</replaceable> as the language because the tag is different for each language
     </para>
    </listitem>
    <listitem>
     <para>
-     <literal>TAG</literal> is not optional if a <literal>STACK</literal> is specified. To specify the latest release, use <literal>""</literal> as the <literal>TAG</literal>
+     <replaceable>tag</replaceable> is not optional if a <replaceable>stack</replaceable> is specified. To specify the latest release, use <replaceable>""</replaceable> as the <replaceable>tag</replaceable>
     </para>
    </listitem>
    <listitem>
@@ -65,28 +65,28 @@ For automation purposes, you can use the <command>--accept-external-binaries</co
    </listitem>
   </itemizedlist>
   <para>
-   The following example demonstrates packaging an offline Ruby buildpack and uploading it to your &cap; deployment to use. The packaged buildpack will be a Zip file placed in the current working directory, <literal>$PWD</literal>.
+   The following example demonstrates packaging an offline Ruby buildpack and uploading it to your &cap; deployment to use. The packaged buildpack will be a Zip file placed in the current working directory, <replaceable>$PWD</replaceable>.
   </para>
   <procedure>
    <step>
     <para>
      Build the latest released SUSE Ruby buildpack for the &sle; 12 stack:
     </para>
-    <screen>&prompt.user;docker run -it --rm -v $PWD:/out splatform/cf-buildpack-packager SUSE ruby "" sle12</screen>
+    <screen>&prompt.user;docker run -it --rm -v $PWD:/out splatform/cf-buildpack-packager <replaceable>SUSE</replaceable> <replaceable>ruby</replaceable> <replaceable>""</replaceable> <replaceable>sle12</replaceable></screen>
    </step>
    <step>
     <para>
      Verify the archive has been created in your current working directory:
     </para>
     <screen>&prompt.user;ls
-ruby_buildpack-cached-sle12-v1.7.30.1.zip
+<replaceable>ruby_buildpack-cached-sle12-v1.7.30.1.zip</replaceable>
     </screen>
    </step>
    <step>
     <para>
      Log into your &cap; deployment. Select an organization and space to work with, creating them if needed:
     </para>
-    <screen>&prompt.user;cf api --skip-ssl-validation https://api.example.com
+    <screen>&prompt.user;cf api --skip-ssl-validation <replaceable>https://api.example.com</replaceable>
 &prompt.user;cf login -u <replaceable>admin</replaceable> -p <replaceable>password</replaceable>
 &prompt.user;cf create-org <replaceable>org</replaceable>
 &prompt.user;cf create-space <replaceable>space</replaceable> -o <replaceable>org</replaceable>
@@ -117,10 +117,10 @@ dotnet-core_buildpack   9          true      false    dotnet-core-buildpack-v2.0
      Upload your packaged offline buildpack to your &cap; deployment:
     </para>
     <screen>&prompt.user;cf create-buildpack <replaceable>ruby_buildpack_cached</replaceable> <replaceable>/tmp/ruby_buildpack-cached-sle12-v1.7.30.1.zip</replaceable> <replaceable>1</replaceable> <replaceable>--enable</replaceable>
-Creating buildpack ruby_buildpack_cached...
+Creating buildpack <replaceable>ruby_buildpack_cached</replaceable>...
 OK
 
-Uploading buildpack ruby_buildpack_cached...
+Uploading buildpack <replaceable>ruby_buildpack_cached</replaceable>...
 Done uploading               
 OK    
     </screen>
@@ -133,7 +133,7 @@ OK
 Getting buildpacks...
 
 buildpack               position   enabled   locked   filename
-ruby_buildpack_cached   1          true      false    ruby_buildpack-cached-sle12-v1.7.30.1.zip
+<replaceable>ruby_buildpack_cached</replaceable>   1          true      false    ruby_buildpack-cached-sle12-v1.7.30.1.zip
 staticfile_buildpack    2          true      false    staticfile_buildpack-v1.4.34.1-1.1-1dd6386a.zip
 java_buildpack          3          true      false    java-buildpack-v4.16.1-e638145.zip
 ruby_buildpack          4          true      false    ruby_buildpack-v1.7.26.1-1.1-c2218d66.zip
@@ -149,9 +149,9 @@ dotnet-core_buildpack   10         true      false    dotnet-core-buildpack-v2.0
     <para>
      Deploy a sample Rails app using the new buildpack:
     </para>
-    <screen>&prompt.user;git clone https://github.com/scf-samples/12factor 
-&prompt.user;cd 12factor
-&prompt.user;cf push 12factor -b ruby_buildpack_cached
+    <screen>&prompt.user;git clone <replaceable>https://github.com/scf-samples/12factor</replaceable>
+&prompt.user;cd <replaceable>12factor</replaceable>
+&prompt.user;cf push <replaceable>12factor</replaceable> -b <replaceable>ruby_buildpack_cached</replaceable>
     </screen>
     <note>
      <title>Specifying a buildpack to use with your application</title>
@@ -163,7 +163,7 @@ dotnet-core_buildpack   10         true      false    dotnet-core-buildpack-v2.0
        <para>
         Using the <command>-b</command> option during <command>cf push</command>. E.g.
        </para>
-       <screen>&prompt.user;cf push my_application -b my_buildpack</screen>
+       <screen>&prompt.user;cf push <replaceable>my_application</replaceable> -b <replaceable>my_buildpack</replaceable></screen>
       </listitem>
       <listitem>
        <para>
@@ -171,9 +171,9 @@ dotnet-core_buildpack   10         true      false    dotnet-core-buildpack-v2.0
        </para>
        <screen>---
 applications:
-- name: my_application
+- name: <replaceable>my_application</replaceable>
   buildpacks:
-    - my_buildpack
+    - <replaceable>my_buildpack</replaceable>
        </screen>
       </listitem>
      </itemizedlist>
