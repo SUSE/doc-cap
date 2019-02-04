@@ -21,9 +21,10 @@
  <para>
   In a standard &scf; deployment, applications will use the same domain as the
   one configured in your <filename>scf-config-values.yaml</filename> for SCF.
-  For example, if your &scf; deployment's domain is set as
-  <replaceable>example.com</replaceable> then an application's domain will be in the
-  form of <literal>myapp.example.com</literal>.
+  For example, if <literal>DOMAIN</literal> is set as <replaceable>example.com</replaceable>
+  in your <filename>scf-config-values.yaml</filename> and you deploy an application called
+  <replaceable>myapp</replaceable> then the application's URL will be 
+  <literal>myapp.example.com</literal>.
  </para>
  <para>
   This chapter describes the changes required to allow applications to use a
@@ -109,8 +110,8 @@
 
 <screen>&prompt.user;cf login
 &prompt.user;cf create-org <replaceable>org</replaceable>
-&prompt.user;cf create-space <replaceable>space</replaceable>
-&prompt.user;cf target -o org -s <replaceable>space</replaceable>
+&prompt.user;cf create-space <replaceable>space</replaceable> -o <replaceable>org</replaceable>
+&prompt.user;cf target -o <replaceable>org</replaceable> -s <replaceable>space</replaceable>
 &prompt.user;cf push <replaceable>myapp</replaceable>
 cf push myapp
 Pushing app <replaceable>myapp</replaceable> to org <replaceable>org</replaceable> / space <replaceable>space</replaceable> as <replaceable>admin</replaceable>...
