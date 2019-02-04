@@ -444,7 +444,13 @@ subjects:
   namespace: scf
 - kind: ServiceAccount
   name: default
-  namespace: stratos</screen>
+  namespace: stratos
+- kind: ServiceAccount
+  name: default-privileged
+  namespace: scf
+- kind: ServiceAccount
+  name: node-reader
+  namespace: scf</screen>
    <para>
     Apply it to your cluster with <command>kubectl</command>:
    </para>
