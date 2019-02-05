@@ -18,8 +18,8 @@
  <sect1 xml:id="sec.cap.backup-restore-with-plugin">
   <title>Backup and restore using cf-plugin-backup</title>
  <para>
-  <literal>cf-plugin-backup</literal> backs up and restores your cloud
-  controller database (CDDB), using the &cf; command line interface (&cfcli;).
+  <literal>cf-plugin-backup</literal> backs up and restores your Cloud
+  Controller Database (CCDB), using the &cf; command line interface (&cfcli;).
   (See <xref linkend="sec.cap.cf-cli"/>.)
  </para>
  <para>
@@ -41,7 +41,7 @@
   <listitem>
    <para>
     User information is managed by the User Account and Authentication (UAA)
-    server, not the cloud controller (CC). As the plugin talks only to the CC
+    server, not the Cloud Controller (CC). As the plugin talks only to the CC
     it cannot save full user information, nor restore users. Saving and
     restoring users must be performed separately, and user restoration must be
     performed before the backup plugin is invoked.
