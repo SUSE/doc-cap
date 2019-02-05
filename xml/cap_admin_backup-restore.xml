@@ -646,7 +646,7 @@
        <para>
         If the output does not contain the <literal>current_key_label</literal> setting, run the following command and save the output for the restoration process:
        </para>
-      <screen>&prompt.user;kubectl exec api-0 --namespace scf -- bash -c 'echo $DB_ENCRYPTION_KEY'</screen>
+      <screen>&prompt.user;kubectl exec api-group-0 --namespace scf -- bash -c 'echo $DB_ENCRYPTION_KEY'</screen>
       </listitem>
      </itemizedlist>
     </step>
