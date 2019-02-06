@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sect2
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<sect2
+ xmlns="http://docbook.org/ns/docbook"
+ xmlns:xi="http://www.w3.org/2001/XInclude"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ version="5.0">
+    
+   <title>&suse; &caasp; 3 PodSecurityPolicy</title>
+
+   <para>
+    Currently, all the pods are created using the default
+    <literal>serviceAccount</literal> in their namespaces in order to apply the
+    <literal>unprivileged</literal> PSP. Consequently, some pods cannot be
+    created because privileged mode and privilege escalation are disabled by
+    default. (error: cannot set allowPrivilegeEscalation to
+    <literal>false</literal> and <literal>privileged</literal> to true).
+   </para>
+   <para>
+    To get around this, create a configuration file called
+    <filename>cap-psp-rbac.yaml</filename>. This enables both privileged mode
+    and privilege escalation. You need a running &caasp; cluster, and
+    <command>kubectl</command> configured and working. You will apply this file
+    before you deploy UAA and SCF.
+   </para>
+   <para>
+    Copy the following example into <filename>cap-psp-rbac.yaml</filename>:
+   </para>
+<screen>---
+apiVersion: extensions/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: suse.cap.psp
+  annotations:
+    seccomp.security.alpha.kubernetes.io/allowedProfileNames: '*'
+spec:
+  # Privileged
+  #default in suse.caasp.psp.unprivileged
+  #privileged: false
+  privileged: true
+  # Volumes and File Systems
+  volumes:
+    # Kubernetes Pseudo Volume Types
+    - configMap
+    - secret
+    - emptyDir
+    - downwardAPI
+    - projected
+    - persistentVolumeClaim
+    # Networked Storage
+    - nfs
+    - rbd
+    - cephFS
+    - glusterfs
+    - fc
+    - iscsi
+    # Cloud Volumes
+    - cinder
+    - gcePersistentDisk
+    - awsElasticBlockStore
+    - azureDisk
+    - azureFile
+    - vsphereVolume
+  allowedFlexVolumes: []
+  # hostPath volumes are not allowed; pathPrefix must still be specified
+  allowedHostPaths:      
+    - pathPrefix: /opt/kubernetes-hostpath-volumes
+  readOnlyRootFilesystem: false
+  # Users and groups
+  runAsUser:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  fsGroup:
+    rule: RunAsAny
+  # Privilege Escalation
+  #default in suse.caasp.psp.unprivileged
+  #allowPrivilegeEscalation: false
+  allowPrivilegeEscalation: true
+  #default in suse.caasp.psp.unprivileged
+  #defaultAllowPrivilegeEscalation: false
+  # Capabilities
+  allowedCapabilities:
+  - SYS_RESOURCE
+  defaultAddCapabilities: []
+  requiredDropCapabilities: []
+  # Host namespaces
+  hostPID: false
+  hostIPC: false
+  hostNetwork: false
+  hostPorts:
+  - min: 0
+    max: 65535
+  # SELinux
+  seLinux:
+    # SELinux is unsed in CaaSP
+    rule: 'RunAsAny'
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: suse:cap:psp
+rules:
+- apiGroups: ['extensions']
+  resources: ['podsecuritypolicies']
+  verbs: ['use']
+  resourceNames: ['suse.cap.psp']
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: cap:clusterrole
+roleRef:
+  kind: ClusterRole
+  name: suse:cap:psp
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: uaa
+- kind: ServiceAccount
+  name: default
+  namespace: scf
+- kind: ServiceAccount
+  name: default
+  namespace: stratos
+- kind: ServiceAccount
+  name: default-privileged
+  namespace: scf
+- kind: ServiceAccount
+  name: node-reader
+  namespace: scf</screen>
+   <para>
+    Apply it to your cluster with <command>kubectl</command>:
+   </para>
+<screen>&prompt.user;kubectl create -f cap-psp-rbac.yaml
+podsecuritypolicy.extensions "suse.cap.psp" created
+clusterrole.rbac.authorization.k8s.io "suse:cap:psp" created
+clusterrolebinding.rbac.authorization.k8s.io "cap:clusterrole" created</screen>
+   <para>
+    Verify that the new PSPs exist by running the <command>kubectl get
+    psp</command> command to list them. Then continue by deploying UAA and SCF.
+    Ensure that your <filename>scf-config-values.yaml</filename> file specifies
+    the name of your PSP in the <literal>kube:</literal> section. These
+    settings will grant only a limited subset of roles to be privileged.
+   </para>
+<screen>kube:
+  psp:
+    privileged: "suse.cap.psp"
+</screen>
+
+<tip>
+    <para>
+        Note that the example <filename>cap-psp-rbac.yaml</filename> file sets
+        the name of the PSPs, which in the previous examples is
+        <literal>suse.cap.psp</literal>.
+    </para>
+</tip>
+   <important>
+    <title>Using Custom PodSecurityPolicies</title>
+    <para>
+     When using a custom PSP, your <filename>scf-config-values.yaml</filename> file will require the <literal>SYS_RESOURCE</literal> capability to be added to some roles as follows:
+    </para>
+    <screen>
+sizing:
+  cc_uploader:
+    capabilities: ["SYS_RESOURCE"]
+  diego_api:
+    capabilities: ["SYS_RESOURCE"]
+  diego_brain:
+    capabilities: ["SYS_RESOURCE"]
+  diego_ssh:
+    capabilities: ["SYS_RESOURCE"]
+  nats:
+    capabilities: ["SYS_RESOURCE"]
+  router:
+    capabilities: ["SYS_RESOURCE"]
+  routing_api:
+    capabilities: ["SYS_RESOURCE"]
+    </screen>
+   </important>
+  </sect2>

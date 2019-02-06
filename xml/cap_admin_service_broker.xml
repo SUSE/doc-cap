@@ -73,14 +73,14 @@
 
   <para>
    If you are deploying &productname; on &caasp; 3, see
-   <xref linkend="sec.cap.caasp-3"/> for important information on applying the
+   <!--TODO fixme--> for important information on applying the
    required PodSecurityPolicy (PSP) to your deployment. You must also apply the
    PSP to your new service brokers.
   </para>
 
   <para>
    Take the example configuration file, <filename>cap-psp-rbac.yaml</filename>,
-   in <xref linkend="sec.cap.caasp-3"/>, and append these lines to the end,
+   in <!--TODO fixme-->, and append these lines to the end,
    using your own namespace name for your new service broker:
   </para>
 

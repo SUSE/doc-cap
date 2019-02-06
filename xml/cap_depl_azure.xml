@@ -355,7 +355,7 @@ subjects:
 
   <para>
    Role-based access control (RBAC) is enabled by default on AKS. Follow the
-   instructions in <xref linkend="sec.cap.caasp-3"/> to apply pod security
+   instructions in <!--TODO fixme--> to apply pod security
    policies (PSPs) to your new AKS cluster.
   </para>
 
