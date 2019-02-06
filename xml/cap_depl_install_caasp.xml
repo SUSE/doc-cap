@@ -289,6 +289,8 @@ Happy Helming!</screen>
      </para>
     </listitem>
    </itemizedlist>
+   
+   <!--TODO add info on custom PSPs -->
    <para>
        &productname; includes the necessary PSP configurations in the &helm; 
        charts to run on &suse; &caasp;,
