@@ -22,9 +22,11 @@
   <para>
    UAA, SCF, and Stratos together make up a &productname; release. Maintenance
    updates are delivered as container images from the &suse; registry and
-   applied with &helm;. (Always review the
-   <link xlink:href="https://www.suse.com/releasenotes/">Release Notes</link>
-   for additional upgrade information.)
+   applied with &helm;.
+  </para>
+  <para>
+   For additional upgrade information, always review the release notes published
+s   at <link xlink:href="https://www.suse.com/releasenotes/SUSE-CAP/1/"/>.
   </para>
   
   <warning>
