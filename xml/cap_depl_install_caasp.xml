@@ -46,9 +46,22 @@
   <title>Prerequisites</title>
   <important>
       <title>README first!</title>
-      <para>Before you start deploying &productname; review the <link xlink:href="https://www.suse.com/releasenotes/">Release Notes</link> and 
-          <xref linkend="cha.cap.depl.notes"/>.
+      <para>
+       Before you start deploying &productname;, review the following documents:
       </para>
+      <itemizedlist>
+       <listitem>
+        <para>
+         Release Notes:
+         <link xlink:href="https://www.suse.com/releasenotes/SUSE-CAP/1/"/>
+        </para>
+       </listitem>
+       <listitem>
+        <para>
+         <xref linkend="cha.cap.depl.notes"/>
+        </para>
+       </listitem>
+      </itemizedlist>
     </important>
   <para>
    Calculating hardware requirements is best done with an analysis of your
