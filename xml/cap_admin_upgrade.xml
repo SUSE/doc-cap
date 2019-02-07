@@ -60,7 +60,12 @@
     <tbody>
      <row>
 <!-- TODO remember to keep this table updated -->
-      <entry>1.3 (current release)</entry>
+      <entry>1.3.1 (current release)</entry>
+      <entry>2.15.1</entry>
+      <entry>2.3.0</entry>
+     </row>
+     <row>
+      <entry>1.3</entry>
       <entry>2.14.5</entry>
       <entry>2.2.0</entry>
      </row>
@@ -146,6 +151,7 @@ suse/uaa                        &latestuaachart;  A Helm chart for SUSE UAA
 
 <screen>&prompt.user;helm search suse/uaa -l
 NAME            VERSION     DESCRIPTION              
+suse/uaa        2.15.1      A Helm chart for SUSE UAA
 suse/uaa        2.14.5      A Helm chart for SUSE UAA
 suse/uaa        2.13.3      A Helm chart for SUSE UAA
 suse/uaa        2.11.0      A Helm chart for SUSE UAA
