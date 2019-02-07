@@ -570,9 +570,15 @@ secrets:
     </step>
     <step>
      <para>
-      Wait for the table to finish creating. The <literal>TableStatus</literal> should be <literal>ACTIVE</literal> when it's ready. Check the status using the <command><link xlink:href="https://docs.aws.amazon.com/cli/latest/reference/dynamodb/describe-table.html">describe-table</link></command> command: 
+      Wait until the table has been created. When it is ready, the
+      <literal>TableStatus</literal> will change to <literal>ACTIVE</literal>.
+      Check the status using the <command>describe-table</command> command:
      </para>
      <screen>aws dynamodb describe-table --table-name <replaceable>awssb</replaceable></screen>
+     <para>
+      (For more information about the <command>describe-table</command> command,
+      see <link xlink:href="https://docs.aws.amazon.com/cli/latest/reference/dynamodb/describe-table.html"/>.)
+     </para>
     </step>
     <step>
      <para>
