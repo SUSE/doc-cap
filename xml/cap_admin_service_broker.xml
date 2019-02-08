@@ -374,9 +374,15 @@ kube:
    </listitem>
    <listitem>
     <para>
-     Remove the services:
+     List the current sidecar deployments and take note of the names:
     </para>
-<screen>&prompt.user;cf usb delete-driver-endpoint "http://cf-usb-sidecar-mysql.mysql-sidecar:8081"</screen>
+<screen>&prompt.user;cf usb-driver-endpoints</screen>
+   </listitem>
+   <listitem>
+    <para>
+     Remove the service by specifying its name:
+    </para>
+<screen>&prompt.user;cf usb-delete-driver-endpoint <replaceable>mysql-service</replaceable></screen>
    </listitem>
    <listitem>
     <para>
