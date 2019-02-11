@@ -354,11 +354,10 @@ subjects:
  <sect1 xml:id="sec.cap.psp">
   <title>Pod Security Policies</title>
   <para>
-   Role-based access control (RBAC) is enabled by default on AKS, and in
-   &productname; 1.3.1, and does not need to be configured
-   manually. See
-       <xref linkend="app.psps"/> for instructions on applying the necessary PSPs
-       manually on older &cap; releases.
+   Role-based access control (RBAC) is enabled by default on AKS.
+   &productname; 1.3.1 and later do not need to be configured
+   manually. Older &cap; releases require manual PSP configuration; see
+       <xref linkend="app.psps"/> for instructions.
   </para>
 
  </sect1>
