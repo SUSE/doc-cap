@@ -53,7 +53,7 @@
        <listitem>
         <para>
          Release Notes:
-         <link xlink:href="https://www.suse.com/documentation/cloud-application-platform-1/index.html"/>
+         <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/1/"/>
         </para>
        </listitem>
        <listitem>
@@ -425,7 +425,7 @@ persistentvolumeclaim "test-sc-persistent" deleted</screen>
   <para>
    Create a configuration file on your workstation for &helm; to use. In this
    example it is called <filename>scf-config-values.yaml</filename>. (See the
-   <link xlink:href="https://www.suse.com/releasenotes/">Release Notes</link>
+   <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/1/">Release Notes</link>
    for information on configuration changes.)
   </para>
   <para>
