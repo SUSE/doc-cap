@@ -53,7 +53,7 @@
        <listitem>
         <para>
          Release Notes:
-         <link xlink:href="https://www.suse.com/releasenotes/SUSE-CAP/1/"/>
+         <link xlink:href="https://www.suse.com/documentation/cloud-application-platform-1/index.html"/>
         </para>
        </listitem>
        <listitem>
@@ -279,16 +279,16 @@ Happy Helming!</screen>
 </sect1>
 
 <sect1 xml:id="sec.cap.psps">
-  <title>PodSecurityPolicy</title>
+  <title>Pod Security Policy</title>
   <para>
-    &suse; &caasp; 3 includes PodSecurityPolicy (PSP) support. This change
+    &suse; &caasp; 3 includes Pod Security Policy (PSP) support. This change
     adds two new PSPs to &caasp; 3:
    </para>
    <itemizedlist>
     <listitem>
      <para>
       <literal>unprivileged</literal>, which is the default assigned to all
-      users. The unprivileged PodSecurityPolicy is intended as a reasonable
+      users. The unprivileged Pod Security Policy is intended as a reasonable
       compromise between the reality of &kube; workloads, and the
       <literal>suse:caasp:psp:privileged</literal> role. By default, this PSP
       is granted to all users and service accounts.
@@ -307,16 +307,9 @@ Happy Helming!</screen>
    <para>
        &productname; &productnumber; includes the necessary PSP configurations in the &helm; 
        charts to run on &suse; &caasp;,
-       and are set up automatically without requiring manual configuration.
-   </para>
-   <para>
-    See
-    <link xlink:href="https://kubernetes.io/docs/concepts/policy/pod-security-policy/">
-    Pod Security Policies</link>,
-    <link xlink:href="https://docs.cloudfoundry.org/concepts/roles.html"> Orgs,
-    Spaces, Roles, and Permissions</link>, and
-    <link xlink:href="https://docs.cloudfoundry.org/uaa/identity-providers.html#id-flow">
-    Identity Provider Workflow</link> for more information.
+       and are set up automatically without requiring manual configuration. See
+       <xref linkend="app.psps"/> for instructions on applying the necessary PSPs
+       manually on older &cap; releases.
    </para>
 </sect1>
 

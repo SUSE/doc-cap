@@ -57,7 +57,7 @@ perl -ne '/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail|scal
 218:    count: 1</screen>
    <para>
     The default <filename>values.yaml</filename> files are also included in
-    this guide at <xref linkend="app.configuration.files"/>.
+    this guide at <!--TODO update with new appendix link-->.
    </para>
   </sect2>
 
