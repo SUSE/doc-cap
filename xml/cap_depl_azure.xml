@@ -350,13 +350,15 @@ subjects:
 <screen>&prompt.user;kubectl create -f rbac-config.yaml
 &prompt.user;helm init --service-account tiller</screen>
  </sect1>
+ 
  <sect1 xml:id="sec.cap.psp">
   <title>Pod Security Policies</title>
-  <!--TODO add PSP instructions for older versions-->
   <para>
    Role-based access control (RBAC) is enabled by default on AKS, and in
-   &productname; &productnumber;, and does not need to be configured
-   manually.
+   &productname; 1.3.1, and does not need to be configured
+   manually. See
+       <xref linkend="app.psps"/> for instructions on applying the necessary PSPs
+       manually on older &cap; releases.
   </para>
 
  </sect1>

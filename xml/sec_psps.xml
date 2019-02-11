@@ -1,33 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE sect2
+<!DOCTYPE sect1
 [
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<sect2
+<sect1
+ xml:id="app.psps" 
  xmlns="http://docbook.org/ns/docbook"
  xmlns:xi="http://www.w3.org/2001/XInclude"
  xmlns:xlink="http://www.w3.org/1999/xlink"
  version="5.0">
     
-   <title>&suse; &caasp; 3 PodSecurityPolicy</title>
+   <title>Pod Security Policies for &productname; 1.3 and Older</title>
 
    <para>
-    Currently, all the pods are created using the default
-    <literal>serviceAccount</literal> in their namespaces in order to apply the
-    <literal>unprivileged</literal> PSP. Consequently, some pods cannot be
-    created because privileged mode and privilege escalation are disabled by
-    default. (error: cannot set allowPrivilegeEscalation to
-    <literal>false</literal> and <literal>privileged</literal> to true).
+    &productname; 1.3.1 introduces built-in support for Pod Security
+    Policies (PSPs), which are provided via &helm; charts and are set up automatically
+    without requiring manual configuration. &suse; &caasp;, Microsoft Azure 
+    Kubernetes Service (AKS), and Amazon Elastic Container Service for Kubernetes 
+    (Amazon EKS) all enable role-based access controls (RBAC) by default, and the
+    built-in PSPs are required for &cap; to operate.
+</para>
+<para>
+    Older &cap; releases require manual configuration of PSPs for &cap; to operate
+    on platforms with RBACs. This section provides instructions for configuring
+    and applying the appropriate PSPs to older &cap; releases.
    </para>
    <para>
-    To get around this, create a configuration file called
-    <filename>cap-psp-rbac.yaml</filename>. This enables both privileged mode
-    and privilege escalation. You need a running &caasp; cluster, and
-    <command>kubectl</command> configured and working. You will apply this file
-    before you deploy UAA and SCF.
+    See the upstream documentation at
+    <link xlink:href="https://kubernetes.io/docs/concepts/policy/pod-security-policy/">
+    Pod Security Policies</link>,
+    <link xlink:href="https://docs.cloudfoundry.org/concepts/roles.html"> Orgs,
+    Spaces, Roles, and Permissions</link>, and
+    <link xlink:href="https://docs.cloudfoundry.org/uaa/identity-providers.html#id-flow">
+    Identity Provider Workflow</link> for more information on understanding and 
+    using PSPs.
    </para>
-   <para>
+
+    <para>
     Copy the following example into <filename>cap-psp-rbac.yaml</filename>:
    </para>
 <screen>---
@@ -161,9 +171,9 @@ clusterrolebinding.rbac.authorization.k8s.io "cap:clusterrole" created</screen>
     </para>
 </tip>
    <important>
-    <title>Using Custom PodSecurityPolicies</title>
+    <title>Using Custom Pod Security Policies</title>
     <para>
-     When using a custom PSP, your <filename>scf-config-values.yaml</filename> file will require the <literal>SYS_RESOURCE</literal> capability to be added to some roles as follows:
+     When using a custom PSP, your <filename>scf-config-values.yaml</filename> file requires the <literal>SYS_RESOURCE</literal> capability to be added to the following roles:
     </para>
     <screen>
 sizing:
@@ -183,4 +193,4 @@ sizing:
     capabilities: ["SYS_RESOURCE"]
     </screen>
    </important>
-  </sect2>
+  </sect1>
