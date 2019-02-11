@@ -351,22 +351,14 @@ subjects:
 &prompt.user;helm init --service-account tiller</screen>
  </sect1>
  <sect1 xml:id="sec.cap.psp">
-  <title>Apply Pod Security Policies</title>
-
+  <title>Pod Security Policies</title>
+  <!--TODO add PSP instructions for older versions-->
   <para>
-   Role-based access control (RBAC) is enabled by default on AKS. Follow the
-   instructions in <!--TODO fixme--> to apply pod security
-   policies (PSPs) to your new AKS cluster.
+   Role-based access control (RBAC) is enabled by default on AKS, and in
+   &productname; &productnumber;, and does not need to be configured
+   manually.
   </para>
 
-  <para>
-   You may disable RBAC during cluster creation with the
-   <command>--disable-rbac</command> option, and then set <literal>auth:
-   none</literal> in the <literal>kube</literal> section of your
-   <filename>scf-config-values.yaml</filename> (see
-   <xref linkend="sec.cap.cap-on-azure"/> for an example configuration file).
-   Do not apply the PSPs. This is less secure, but may be useful for testing.
-  </para>
  </sect1>
  <sect1 xml:id="sec.cap.swap-accounting">
   <title>Enable Swap Accounting</title>
@@ -614,9 +606,6 @@ kube:
     username: ""
     password: ""
   organization: "cap"
-  psp:
-    nonprivileged: "suse.cap.psp"
-    privileged: "suse.cap.psp"
 </screen>
 
   <para>

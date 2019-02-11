@@ -26,12 +26,11 @@
    <link xlink:href="https://www.suse.com/documentation/cloud-application-platform-1/index.html">Release
    Notes</link> for a list of changes, upgrade instructions, and known issues.
   </para>
-
   <tip>
       <title>Read the Release Notes</title>
    <para>
     Make sure to review the release notes for &productname; published at
-    <link xlink:href="https://www.suse.com/releasenotes/SUSE-CAP/1/"/>.
+    <link xlink:href="https://www.suse.com/documentation/cloud-application-platform-1/index.html"/>.
    </para>
   </tip>
  </sect1>

@@ -305,7 +305,7 @@ Happy Helming!</screen>
    
    <!--TODO add info on custom PSPs -->
    <para>
-       &productname; includes the necessary PSP configurations in the &helm; 
+       &productname; &productnumber; includes the necessary PSP configurations in the &helm; 
        charts to run on &suse; &caasp;,
        and are set up automatically without requiring manual configuration.
    </para>
@@ -469,9 +469,6 @@ kube:
     username: ""
     password: ""
   organization: "cap"
-
-  psp:
-    privileged: "suse.cap.psp"
 
 secrets:
   # Create a password for your CAP cluster
