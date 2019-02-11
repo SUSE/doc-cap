@@ -14,12 +14,12 @@
    <title>Pod Security Policies for &productname; 1.3 and Older</title>
 
    <para>
-    &productname; 1.3.1 introduces inbuilt support for Pod Security
+    &productname; 1.3.1 introduces built-in support for Pod Security
     Policies (PSPs), which are provided via &helm; charts and are set up automatically
     without requiring manual configuration. &suse; &caasp;, Microsoft Azure 
     Kubernetes Service (AKS), and Amazon Elastic Container Service for Kubernetes 
     (Amazon EKS) all enable role-based access controls (RBAC) by default, and the
-    inbuilt PSPs are required for &cap; to operate.
+    built-in PSPs are required for &cap; to operate.
 </para>
 <para>
     Older &cap; releases require manual configuration of PSPs for &cap; to operate
