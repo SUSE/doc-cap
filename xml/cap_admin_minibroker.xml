@@ -56,18 +56,7 @@ suse/minibroker             	0.2.0  	A minibroker for your minikube
     <para>
      Use &helm; to deploy Minibroker:
     </para>
-<screen>&prompt.user;helm install suse/minibroker --name minibroker --namespace minibroker \
-        --set "helmRepoUrl=https://minibroker-helm-charts.s3.amazonaws.com/kubernetes-charts/" \
-        --set "deployServiceCatalog=false" \
-        --set "defaultNamespace=minibroker" \
-        --set "image=splatform/minibroker:latest"
-</screen>
-    <para>
-     The <literal>helmRepoUrl</literal> parameter points to a &helm; repository
-     containing
-     <link xlink:href="https://minibroker-helm-charts.s3.amazonaws.com/kubernetes-charts/index.yaml">charts
-     for the available services</link>.
-    </para>
+    <screen>&prompt.user;helm install suse/minibroker --namespace minibroker --name minibroker</screen>
     <para>
      The repository currently contains charts for the following services:
     </para>
@@ -80,6 +69,11 @@ suse/minibroker             	0.2.0  	A minibroker for your minikube
      <listitem>
       <para>
        <link xlink:href="https://www.mongodb.com/">MongoDB</link>
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       <link xlink:href="https://www.mysql.com/">MySQL</link>
       </para>
      </listitem>
      <listitem>
@@ -115,7 +109,7 @@ suse/minibroker             	0.2.0  	A minibroker for your minikube
 <screen>&prompt.user;cf api --skip-ssl-validation <replaceable>https://api.example.com</replaceable>
 &prompt.user;cf login -u <replaceable>admin</replaceable> -p <replaceable>password</replaceable>
 &prompt.user;cf create-org <replaceable>org</replaceable>
-&prompt.user;cf create-space <replaceable>space</replaceable>
+&prompt.user;cf create-space <replaceable>space</replaceable> -o <replaceable>org</replaceable>
 &prompt.user;cf target -o <replaceable>org</replaceable> -s <replaceable>space</replaceable>
 </screen>
    </step>
@@ -137,6 +131,12 @@ Getting service brokers as admin...
 name               url
 minibroker         http://minibroker-minibroker.minibroker.svc.cluster.local
 </screen>
+   </step>
+   <step>
+    <para>
+     List the services and their associated plans the Minibroker has access to:
+    </para>
+    <screen>&prompt.user;cf service-access -b <replaceable>minibroker</replaceable></screen>
    </step>
    <step>
     <para>
