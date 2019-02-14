@@ -1,25 +1,27 @@
 <!--...........................................................................
 Repeated content entities, for re-printing content in multiple locations
-rather than using xrefs, so that users do not have to skip around so much
+rather than using xrefs, so that users do not have to skip around so much.
 This works just like copy-paste, so be mindful of sections, titles, and
 paragraphs
+
+Use xmlns="http://docbook.org/ns/docbook" on the first occurrence of every
+parent formatting tag in each entity, to avoid "Namespace default prefix was not 
+found" errors
 ............................................................................-->
 
-<!-- Use xmlns="http://docbook.org/ns/docbook" on the first occurrence of every
-formatting tag in each entity, to avoid "Namespace default prefix was not found" 
-errors -->
+
 
 <!ENTITY namespaces 
 '<formalpara xmlns="http://docbook.org/ns/docbook">
 <title>Length of release names</title> 
-<para xmlns="http://docbook.org/ns/docbook">
-Release names (e.g. when you run <command>helm install --name</command>) 
+<para>
+Release names (for example, when you run <command>helm install --name</command>) 
 have a maximum length of 36 characters.
 </para>
 </formalpara>
 <formalpara xmlns="http://docbook.org/ns/docbook">
 <title>Always install to a fresh namespace</title>
-<para xmlns="http://docbook.org/ns/docbook">
+<para>
     If you are not creating a fresh &productname; installation, but have deleted 
     a previous deployment and are starting over, you must create new namespaces
     with the 
@@ -33,16 +35,16 @@ have a maximum length of 36 characters.
     </formalpara>'>
     
 <!ENTITY readmefirst
-  '<important xmlns="http://docbook.org/ns/docbook">
-      <title xmlns="http://docbook.org/ns/docbook">README first!</title>
-      <para xmlns="http://docbook.org/ns/docbook">
+  '<important xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" >
+      <title>README first!</title>
+      <para>
        Before you start deploying &productname;, review the following documents:
       </para>
-      <itemizedlist xmlns="http://docbook.org/ns/docbook">
+      <itemizedlist>
        <listitem>
         <para>
          Release Notes:
-         <link xmlns:xlink="http://www.w3.org/1999/xlink" 
+         <link 
          xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/1/"/>
         </para>
        </listitem>
@@ -65,14 +67,14 @@ domains and subdomains for &productname; and your applications.
 '<!-- TODO remember to keep this table updated -->
     <informaltable xmlns="http://docbook.org/ns/docbook" >
    <tgroup cols="3">
-    <thead xmlns="http://docbook.org/ns/docbook">
-     <row xmlns="http://docbook.org/ns/docbook">
-      <entry xmlns="http://docbook.org/ns/docbook" >CAP Release</entry>
+    <thead>
+     <row>
+      <entry>CAP Release</entry>
       <entry>SCF and UAA &helm; Chart Version</entry>
       <entry>Stratos &helm; Chart Version</entry>
      </row>
     </thead>
-    <tbody xmlns="http://docbook.org/ns/docbook">
+    <tbody>
      <row>
       <entry>1.3.1 (current release)</entry>
       <entry>2.15.1</entry>
