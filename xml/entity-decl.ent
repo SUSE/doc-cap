@@ -276,8 +276,30 @@
 <!-- Do not change                                                 -->
 <!-- ============================================================= -->
 
+<!--<!ENTITY fresh_namespace 
+'<para>
+Always install to a fresh namespace.
+</para>
+<para>
+    If you are not creating a fresh &productname; installation, but have deleted 
+    a previous deployment and are starting over, you must create new namespaces
+    with the 
+    <command>kubectl create namespace <replaceable>name</replaceable></command>
+        command. 
+    Do not re-use your old namespaces. The <command>helm delete</command> command 
+    does not remove generated secrets from the SCF and UAA namespaces as it is 
+    not aware of them. These leftover secrets will cause problems. See 
+    <xref linkend="sec.cap.rebuild.depl"/> for more information.
+</para>'> -->
+
 <!ENTITY % network-entities SYSTEM "network-decl.ent">
 %network-entities;
+
+<!ENTITY % repeat-entities SYSTEM "repeated-content-decl.ent">
+%repeat-entities;
+
+
+
 
 <!ENTITY % sgml.features "IGNORE">
 <!ENTITY % xml.features "INCLUDE">

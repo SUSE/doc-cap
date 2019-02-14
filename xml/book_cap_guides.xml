@@ -102,6 +102,6 @@ Part: Troubleshooting
 <!--============================================================================
 Appendices                                                            
 ==============================================================================-->
-<xi:include href="appendix_values_yaml.xml"/> 
+<xi:include href="appendix.xml"/> 
 <xi:include href="common_legal.xml"/>
 </book>

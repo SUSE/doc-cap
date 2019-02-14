@@ -14,9 +14,38 @@
    <dm:bugtracker></dm:bugtracker>
    <dm:translation>yes</dm:translation>
   </dm:docmanager>
- </info>  
-  <para>
-      Some tips, tricks, and traps.</para>     
-<xi:include href="sec_cap_depl_admin_notes.xml"/>
-  </chapter>
+ </info>
+
+ <!-- Content entities are in repeated-content-decl.ent. Paragraph breaks and
+      othe formatting are in the entities -->
+ <para>
+      Important things to know before deploying &productname;. 
+      </para>
+
+  <sect1>
+      <title>README first</title>
+&readmefirst;
+</sect1>
+
+<sect1>
+   <title>Namespaces</title> 
+&namespaces;
+</sect1>
+
+<sect1>
+   <title>DNS management</title> 
+&dns-management;
+</sect1>
+
+<sect1>
+    <title>Releases and &helm; chart versions</title>
+        <para>
+      The supported upgrade method is to install all upgrades, in order. Skipping 
+      releases is not supported. This table matches the &helm; chart versions to 
+      each release: 
+  </para>
+    &releases-table;
+</sect1>
+
+</chapter>
 
