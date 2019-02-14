@@ -17,14 +17,14 @@
  </info>
  <para>
   You may set up a minimal deployment on four &kube; nodes for testing. This is
-  not sufficient for a production deployment. A basic &productname; production 
-  deployment requires at least eight hosts plus a storage backend: one &suse; 
-  &caasp; admin server, three &kube; masters, three &kube; workers, a 
-  DNS/DHCP server, and a storage backend such as &ses; or NFS. This is a bare 
-  minimum, and actual requirements are likely to be much larger, depending on your 
-  workloads. You also need an external workstation for administering your cluster. 
-  (See <xref linkend="sec.cap.requirements"/>.) You may optionally make your
-  &productname; instance highly-available. 
+  not sufficient for a production deployment. A basic &productname; production
+  deployment requires at least eight hosts plus a storage backend: one &suse;
+  &caasp; admin server, three &kube; masters, three &kube; workers, a DNS/DHCP
+  server, and a storage backend such as &ses; or NFS. This is a bare minimum,
+  and actual requirements are likely to be much larger, depending on your
+  workloads. You also need an external workstation for administering your
+  cluster. (See <xref linkend="sec.cap.requirements"/>.) You may optionally
+  make your &productname; instance highly-available.
  </para>
  <note>
   <title>Remote Administration</title>
@@ -41,8 +41,7 @@
   &productname; cluster, and not for &caasp; or &ses;. See
   <xref linkend="sec.cap.ha-prod"/>.
  </para>
- 
-   <sect1 xml:id="sec.cap.prereqs-prod">
+ <sect1 xml:id="sec.cap.prereqs-prod">
   <title>Prerequisites</title>
 
   <para>
@@ -258,44 +257,45 @@ Happy Helming!</screen>
     </listitem>
    </varlistentry>
   </variablelist>
-</sect1>
-
-<sect1 xml:id="sec.cap.psps">
+ </sect1>
+ <sect1 xml:id="sec.cap.psps">
   <title>Pod Security Policy</title>
-  <para>
-    &suse; &caasp; 3 includes Pod Security Policy (PSP) support. This change
-    adds two new PSPs to &caasp; 3:
-   </para>
-   <itemizedlist>
-    <listitem>
-     <para>
-      <literal>unprivileged</literal>, which is the default assigned to all
-      users. The unprivileged Pod Security Policy is intended as a reasonable
-      compromise between the reality of &kube; workloads, and the
-      <literal>suse:caasp:psp:privileged</literal> role. By default, this PSP
-      is granted to all users and service accounts.
-     </para>
-    </listitem>
-    <listitem>
-     <para>
-      <literal>privileged</literal>, which is intended to be assigned only to
-      trusted workloads. It applies few restrictions, and should only be
-      assigned to highly trusted users.
-     </para>
-    </listitem>
-   </itemizedlist>
-   
-   <!--TODO add info on custom PSPs -->
-   <para>
-       &productname; &productnumber; includes the necessary PSP configurations in the &helm; 
-       charts to run on &suse; &caasp;,
-       and are set up automatically without requiring manual configuration. See
-       <xref linkend="app.psps"/> for instructions on applying the necessary PSPs
-       manually on older &cap; releases.
-   </para>
-</sect1>
 
-<sect1 xml:id="sec.cap.storageclass-prod">
+  <para>
+   &suse; &caasp; 3 includes Pod Security Policy (PSP) support. This change
+   adds two new PSPs to &caasp; 3:
+  </para>
+
+  <itemizedlist>
+   <listitem>
+    <para>
+     <literal>unprivileged</literal>, which is the default assigned to all
+     users. The unprivileged Pod Security Policy is intended as a reasonable
+     compromise between the reality of &kube; workloads, and the
+     <literal>suse:caasp:psp:privileged</literal> role. By default, this PSP is
+     granted to all users and service accounts.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     <literal>privileged</literal>, which is intended to be assigned only to
+     trusted workloads. It applies few restrictions, and should only be
+     assigned to highly trusted users.
+    </para>
+   </listitem>
+  </itemizedlist>
+
+<!--TODO add info on custom PSPs -->
+
+  <para>
+   &productname; &productnumber; includes the necessary PSP configurations in
+   the &helm; charts to run on &suse; &caasp;, and are set up automatically
+   without requiring manual configuration. See <xref linkend="app.psps"/> for
+   instructions on applying the necessary PSPs manually on older &cap;
+   releases.
+  </para>
+ </sect1>
+ <sect1 xml:id="sec.cap.storageclass-prod">
   <title>Choose Storage Class</title>
 
   <para>
@@ -304,7 +304,7 @@ Happy Helming!</screen>
    storage cluster you are using (&ses; users, see
    <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_admin/data/cha_admin_integration.html">&suse;
    &caasp; Integration with SES</link>). After connecting your storage backend
-   use <command>kubectl</command> to see your available storage classes. This 
+   use <command>kubectl</command> to see your available storage classes. This
    example is for an NFS storage class:
   </para>
 
@@ -313,12 +313,13 @@ NAME         PROVISIONER   AGE
 persistent   nfs           10d    
     </screen>
 
-    <para>
-        Creating a default storage class is useful for a number of scenarios,
-        such as using MiniBroker. When your storage class is already created, run
-        the following command (substituting the name of your storage class) 
-        to make it the default:
-    </para>
+  <para>
+   Creating a default storage class is useful for a number of scenarios, such
+   as using MiniBroker. When your storage class is already created, run the
+   following command (substituting the name of your storage class) to make it
+   the default:
+  </para>
+
 <screen>&prompt.user;kubectl patch storageclass <replaceable>persistent</replaceable> \
  -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
     
@@ -407,20 +408,21 @@ persistentvolumeclaim "test-sc-persistent" deleted</screen>
   <para>
    Create a configuration file on your workstation for &helm; to use. In this
    example it is called <filename>scf-config-values.yaml</filename>. (See the
-   <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/1/">Release Notes</link>
-   for information on configuration changes.)
-  </para>
-  <para>
-      The example <filename>scf-config-values.yaml</filename> file is for a
-      simple deployment without an ingress controller or load balancer. Instead,
-      one worker node is assigned an external IP address, and this is mapped to 
-      the domain name, providing external access to the cluster. In this case the
-      <literal>external_ips</literal> needs this address to provide access to the
-      Stratos Web interface. <literal>external_ips</literal> also needs the
-      internal IP addresses of the worker nodes to provide access to services.
+   <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/1/">Release
+   Notes</link> for information on configuration changes.)
   </para>
 
-  <screen>
+  <para>
+   The example <filename>scf-config-values.yaml</filename> file is for a simple
+   deployment without an ingress controller or load balancer. Instead, one
+   worker node is assigned an external IP address, and this is mapped to the
+   domain name, providing external access to the cluster. In this case the
+   <literal>external_ips</literal> needs this address to provide access to the
+   Stratos Web interface. <literal>external_ips</literal> also needs the
+   internal IP addresses of the worker nodes to provide access to services.
+  </para>
+
+<screen>
 env:
   # Enter the domain you created for your CAP cluster
   DOMAIN: <replaceable>&exampledomain;</replaceable>
@@ -550,7 +552,6 @@ suse/nginx-ingress          	0.28.3 	An nginx Ingress controller that uses Confi
 suse/uaa                    	&latestuaachart;  A Helm chart for SUSE UAA
 </screen>
  </sect1>
-
  <sect1 xml:id="sec.cap.copy-secret-prod">
   <title>Copy &ses; Secret</title>
 
@@ -567,6 +568,7 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -</screen>
  </sect1>
  <sect1 xml:id="sec.cap.install-uaa-prod">
   <title>Deploy UAA</title>
+
   <para>
    Use &helm; to deploy the UAA (User Account and Authentication) server. You
    may create your own release <literal>--name</literal>:

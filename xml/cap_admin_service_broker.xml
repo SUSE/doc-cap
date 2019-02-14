@@ -73,15 +73,17 @@
 
   <para>
    If you are deploying &productname; on &caasp; 3, see
-   <!--TODO fixme--> for important information on applying the
-   required Pod Security Policy (PSP) to your deployment. You must also apply the
-   PSP to your new service brokers.
+<!--TODO fixme-->
+   for important information on applying the required Pod Security Policy (PSP)
+   to your deployment. You must also apply the PSP to your new service brokers.
   </para>
 
   <para>
    Take the example configuration file, <filename>cap-psp-rbac.yaml</filename>,
-   in <!--TODO fixme-->, and append these lines to the end,
-   using your own namespace name for your new service broker:
+   in
+<!--TODO fixme-->
+   , and append these lines to the end, using your own namespace name for your
+   new service broker:
   </para>
 
 <screen>- kind: ServiceAccount
@@ -183,8 +185,8 @@ kube:
   <title>Deploying the MySQL Chart</title>
 
   <para>
-   &productname; includes charts for MySQL and PostgreSQL
-   (see <xref linkend="sec.cap.addrepo-prod"/> for information on managing your
+   &productname; includes charts for MySQL and PostgreSQL (see
+   <xref linkend="sec.cap.addrepo-prod"/> for information on managing your
    &helm; repository):
   </para>
 
@@ -233,20 +235,19 @@ suse/uaa                        &latestuaachart;  A Helm chart for SUSE UAA
 
 <screen>&prompt.user;cf marketplace</screen>
 
- <warning>
-     <title>MySQL Requires <literal>mysql_native_password</literal></title>
-         <para>
-             The MySQL sidecar works only with deployments that use 
-             <literal>mysql_native_password</literal> as their authentication 
-             plugin. This is the default for MySQL versions 8.0.3 and earlier, 
-             but later versions must be started with 
-             <literal>--default-auth=mysql_native_password</literal> before any 
-             user creation. (See 
-             <link xlink:href="https://github.com/go-sql-driver/mysql/issues/785"></link>
-             </para>
-         </warning>
+  <warning>
+   <title>MySQL Requires <literal>mysql_native_password</literal></title>
+   <para>
+    The MySQL sidecar works only with deployments that use
+    <literal>mysql_native_password</literal> as their authentication plugin.
+    This is the default for MySQL versions 8.0.3 and earlier, but later
+    versions must be started with
+    <literal>--default-auth=mysql_native_password</literal> before any user
+    creation. (See
+    <link xlink:href="https://github.com/go-sql-driver/mysql/issues/785"></link>
+   </para>
+  </warning>
  </sect1>
-  
  <sect1 xml:id="sec.cap.deploy-mysql">
   <title>Create and Bind a MySQL Service</title>
 
@@ -402,8 +403,8 @@ mysql-service  1        Mon May 21 11:40:11 2018  DEPLOYED  cf-usb-sidecar-mysql
  <sect1 xml:id="sec.cap.service-broker-upgrades">
   <title>Upgrade Notes</title>
 
-  <!-- Internal cf-usb broker broker endpoint URL change involving 1.3 -->
-  <xi:include href="sec_cf_usb_url.xml"/>
+<!-- Internal cf-usb broker broker endpoint URL change involving 1.3 -->
 
+  <xi:include href="sec_cf_usb_url.xml"/>
  </sect1>
 </chapter>

@@ -13,9 +13,7 @@
    <dm:bugtracker></dm:bugtracker>
   </dm:docmanager>
  </info>
- 
  <xi:include href="app_psps.xml"/>
  <xi:include href="app_uaa_values_yaml.xml"/>
-<xi:include href="app_scf_values_yaml.xml"/>
-
- </appendix>
+ <xi:include href="app_scf_values_yaml.xml"/>
+</appendix>

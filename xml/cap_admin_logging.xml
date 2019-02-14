@@ -212,12 +212,13 @@ output {
    section. The <literal>LOG_LEVEL</literal> property is mapped to
    component-specific levels. Components have differing technology compositions
    (e.g. languages, frameworks) and results in each component determining for
-   itself what content to provide at each level, which may vary between components.
+   itself what content to provide at each level, which may vary between
+   components.
   </para>
 
   <para>
-   The following are the log levels available along with examples of
-   log entries at the given level.
+   The following are the log levels available along with examples of log
+   entries at the given level.
   </para>
 
   <itemizedlist>

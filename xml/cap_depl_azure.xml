@@ -87,9 +87,9 @@
 }</screen>
 
   <para>
-   Replace the example <varname>subscription-id</varname> in the next command with your
-   <varname>subscription-id</varname>. Then export it as an environment
-   variable and set it as the current subscription:
+   Replace the example <varname>subscription-id</varname> in the next command
+   with your <varname>subscription-id</varname>. Then export it as an
+   environment variable and set it as the current subscription:
   </para>
 
 <screen>&prompt.user;export SUBSCRIPTION_ID=<replaceable>"a900cdi2-5983-0376-s7je-d4jdmsif84ca"</replaceable>
@@ -134,9 +134,9 @@ cap-aks</screen>
     Ensure each of your AKS clusters use unique resource group and managed
     cluster names, and not copy the examples, especially when your Azure
     subscription supports multiple users. Azure has no tools for sorting
-    resources by user, so creating unique names and putting everything in
-    your deployment in a single resource group helps you keep track, and
-    you can delete the whole deployment by deleting the resource group.
+    resources by user, so creating unique names and putting everything in your
+    deployment in a single resource group helps you keep track, and you can
+    delete the whole deployment by deleting the resource group.
    </para>
   </note>
 
@@ -180,13 +180,13 @@ cap-aks</screen>
     <para>
      Set the virtual machine size (see
      <link xlink:href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-general">
-     General purpose virtual machine sizes</link>). A virtual machine size
-     of at least <literal>Standard_DS3_v2</literal> using premium
-     storage (see <link xlink:href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/premium-storage">High-performance Premium Storage and
-     managed disks for VMs</link>) is recommended. Note
+     General purpose virtual machine sizes</link>). A virtual machine size of
+     at least <literal>Standard_DS3_v2</literal> using premium storage (see
+     <link xlink:href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/premium-storage">High-performance
+     Premium Storage and managed disks for VMs</link>) is recommended. Note
      <literal>managed-premium</literal> has been specified in the example
-     <filename>scf-azure-values.yaml</filename> used
-     (see <xref linkend="sec.cap.cap-on-azure"/>):
+     <filename>scf-azure-values.yaml</filename> used (see
+     <xref linkend="sec.cap.cap-on-azure"/>):
     </para>
 <screen>&prompt.user;export NODEVMSIZE="<replaceable>Standard_DS3_v2</replaceable>"</screen>
    </step>
@@ -350,16 +350,15 @@ subjects:
 <screen>&prompt.user;kubectl create -f rbac-config.yaml
 &prompt.user;helm init --service-account tiller</screen>
  </sect1>
- 
  <sect1 xml:id="sec.cap.psp">
   <title>Pod Security Policies</title>
-  <para>
-   Role-based access control (RBAC) is enabled by default on AKS.
-   &productname; 1.3.1 and later do not need to be configured
-   manually. Older &cap; releases require manual PSP configuration; see
-       <xref linkend="app.psps"/> for instructions.
-  </para>
 
+  <para>
+   Role-based access control (RBAC) is enabled by default on AKS. &productname;
+   1.3.1 and later do not need to be configured manually. Older &cap; releases
+   require manual PSP configuration; see <xref linkend="app.psps"/> for
+   instructions.
+  </para>
  </sect1>
  <sect1 xml:id="sec.cap.swap-accounting">
   <title>Enable Swap Accounting</title>
@@ -630,17 +629,19 @@ xip.io:2793/oauth/token"</screen>
    Now you can complete your deployment by deploying UAA, SCF, and so on.
   </para>
  </sect1>
- 
-<sect1 xml:id="sec.cap.azure-service-broker">
+ <sect1 xml:id="sec.cap.azure-service-broker">
   <title>Configuring and Testing the Native &aks; Service Broker</title>
+
   <para>
-      &ms; &azureks; provides a service broker. This section describes
-      how to use it with your &productname; deployment.
+   &ms; &azureks; provides a service broker. This section describes how to use
+   it with your &productname; deployment.
   </para>
+
   <para>
-      Start by extracting and setting a batch of environment variables:
+   Start by extracting and setting a batch of environment variables:
   </para>
-  <screen>&prompt.user;SBRGNAME=$(tr -dc 'a-zA-Z0-9' &lt; /dev/urandom | head -c 8)-service-broker
+
+<screen>&prompt.user;SBRGNAME=$(tr -dc 'a-zA-Z0-9' &lt; /dev/urandom | head -c 8)-service-broker
       
 &prompt.user;REGION=<replaceable>eastus</replaceable>
 
@@ -662,11 +663,12 @@ xip.io:2793/oauth/token"</screen>
 
 &prompt.user;echo SUBSCRIPTION_ID=${SUBSCRIPTION_ID} \; TENANT_ID=${TENANT_ID}\; CLIENT_ID=${CLIENT_ID}\; CLIENT_SECRET=${CLIENT_SECRET}
 </screen>
-    
-    <para>
-        Add the necessary &helm; repositories and download the charts:
-    </para>
-    <screen>&prompt.user;helm repo add svc-cat https://svc-catalog-charts.storage.googleapis.com
+
+  <para>
+   Add the necessary &helm; repositories and download the charts:
+  </para>
+
+<screen>&prompt.user;helm repo add svc-cat https://svc-catalog-charts.storage.googleapis.com
         
 &prompt.user;helm repo update
 
@@ -682,9 +684,10 @@ xip.io:2793/oauth/token"</screen>
 &prompt.user;helm repo update
 </screen>
 
-<para>
-Set up the service broker with your variables, then create it:
-</para>
+  <para>
+   Set up the service broker with your variables, then create it:
+  </para>
+
 <screen>
 &prompt.user;helm install azure/open-service-broker-azure \
 --name <replaceable>osba</replaceable> \
@@ -705,18 +708,20 @@ Set up the service broker with your variables, then create it:
 --namespace osba -o jsonpath='{.spec.template.spec.containers[0].env[?(@.name == "BASIC_AUTH_USERNAME")].value}') $(kubectl get secret --namespace osba osba-open-service-broker-azure -o jsonpath='{.data.basic-auth-password}' | base64 -d) http://osba-open-service-broker-azure.osba
 </screen>
 
-<para>
-    Register the service broker in &scf;:
-</para>
+  <para>
+   Register the service broker in &scf;:
+  </para>
 
 <screen>
 &prompt.user;cf service-access -b azure | \
 awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
 </screen>
-<para>
-    Test your new service broker with an example Rails app. First create a space
-    and org for your test app:
-</para>
+
+  <para>
+   Test your new service broker with an example Rails app. First create a space
+   and org for your test app:
+  </para>
+
 <screen>
 &prompt.user;cf create-org <replaceable>testorg</replaceable>
 
@@ -730,12 +735,15 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
 
 &prompt.user;cf service <replaceable>scf-rails-example-db</replaceable> | grep status
 </screen>
-<para>
-Find your new service and optionally disable TLS. You should not disable 
-TLS on a production deployment, but it simplifies testing. The 
-<literal>mysql2</literal> gem must be configured to use TLS, see
-<link xlink:href="https://github.com/brianmario/mysql2#ssl-options">brianmario/mysql2/SSL options</link> on GitHub:
-</para>
+
+  <para>
+   Find your new service and optionally disable TLS. You should not disable TLS
+   on a production deployment, but it simplifies testing. The
+   <literal>mysql2</literal> gem must be configured to use TLS, see
+   <link xlink:href="https://github.com/brianmario/mysql2#ssl-options">brianmario/mysql2/SSL
+   options</link> on GitHub:
+  </para>
+
 <screen>
 &prompt.user;az mysql server list --resource-group $SBRGNAME
 
@@ -743,13 +751,14 @@ TLS on a production deployment, but it simplifies testing. The
 --name <replaceable>scftest</replaceable> --ssl-enforcement Disabled
 </screen>
 
-<para>
-    Look in your Azure portal to find your database <literal>--name</literal>.
-</para>
+  <para>
+   Look in your Azure portal to find your database <literal>--name</literal>.
+  </para>
 
-<para>
-    Build and push the test Rails app:
-</para>
+  <para>
+   Build and push the test Rails app:
+  </para>
+
 <screen>
 &prompt.user;git clone https://github.com/scf-samples/rails-example
 
@@ -763,16 +772,20 @@ export BUNDLE_GEMFILE=/home/vcap/app/Gemfile &amp;&amp; cd app &amp;&amp; bundle
 
 &prompt.user;cf service scf-rails-example-db # => bound apps
 </screen>
-<para>
-    Test your new service deployment with <command>curl</command>, replacing the
-    example IP address with your own IP address:
-</para>
+
+  <para>
+   Test your new service deployment with <command>curl</command>, replacing the
+   example IP address with your own IP address:
+  </para>
+
 <screen>
 &prompt.user;curl -k https://scf-rails-example.<replaceable>&publicip;</replaceable>
 </screen>
-<para>
-    A successful deployment returns output like this abbreviated example:
-</para>
+
+  <para>
+   A successful deployment returns output like this abbreviated example:
+  </para>
+
 <screen>
  &lt;h1>Hello from Rails on SCF!&lt;/h1>
 2018-12-19T12:53:30+00:00
@@ -783,5 +796,5 @@ export BUNDLE_GEMFILE=/home/vcap/app/Gemfile &amp;&amp; cd app &amp;&amp; bundle
   &lt;li>#3: Have some rest&lt;/li>
 &lt;/ul>
 </screen>
-</sect1>
+ </sect1>
 </chapter>

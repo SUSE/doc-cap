@@ -21,9 +21,10 @@
  <para>
   In a standard &scf; deployment, applications will use the same domain as the
   one configured in your <filename>scf-config-values.yaml</filename> for SCF.
-  For example, if <literal>DOMAIN</literal> is set as <replaceable>example.com</replaceable>
-  in your <filename>scf-config-values.yaml</filename> and you deploy an application called
-  <replaceable>myapp</replaceable> then the application's URL will be 
+  For example, if <literal>DOMAIN</literal> is set as
+  <replaceable>example.com</replaceable> in your
+  <filename>scf-config-values.yaml</filename> and you deploy an application
+  called <replaceable>myapp</replaceable> then the application's URL will be
   <literal>myapp.example.com</literal>.
  </para>
  <para>
@@ -36,7 +37,8 @@
   <para>
    Begin by adding the following to your
    <filename>scf-config-values.yaml</filename>. Replace
-   <replaceable>appdomain.com</replaceable> with the domain to use with your applications:
+   <replaceable>appdomain.com</replaceable> with the domain to use with your
+   applications:
   </para>
 
 <screen>bosh:

@@ -10,31 +10,32 @@
  xmlns:xi="http://www.w3.org/2001/XInclude"
  xmlns:xlink="http://www.w3.org/1999/xlink"
  version="5.0">
-    
-   <title>Manual Configuration of Pod Security Policies</title>
+ <title>Manual Configuration of Pod Security Policies</title>
 
-   <para>
-    &productname; 1.3.1 introduces built-in support for Pod Security
-    Policies (PSPs), which are provided via &helm; charts and are set up 
-    automatically, unlike older releases which require manual PSP setup.
-    &suse; &caasp; and Microsoft AKS both require PSPs for &cap; to operate
-    correctly. This section provides instructions for configuring
-    and applying the appropriate PSPs to older &cap; releases.
-   </para>
-   <para>
-    See the upstream documentation at
-    <link xlink:href="https://kubernetes.io/docs/concepts/policy/pod-security-policy/">
-    Pod Security Policies</link>,
-    <link xlink:href="https://docs.cloudfoundry.org/concepts/roles.html"> Orgs,
-    Spaces, Roles, and Permissions</link>, and
-    <link xlink:href="https://docs.cloudfoundry.org/uaa/identity-providers.html#id-flow">
-    Identity Provider Workflow</link> for more information on understanding and 
-    using PSPs.
-   </para>
+ <para>
+  &productname; 1.3.1 introduces built-in support for Pod Security Policies
+  (PSPs), which are provided via &helm; charts and are set up automatically,
+  unlike older releases which require manual PSP setup. &suse; &caasp; and
+  Microsoft AKS both require PSPs for &cap; to operate correctly. This section
+  provides instructions for configuring and applying the appropriate PSPs to
+  older &cap; releases.
+ </para>
 
-    <para>
-    Copy the following example into <filename>cap-psp-rbac.yaml</filename>:
-   </para>
+ <para>
+  See the upstream documentation at
+  <link xlink:href="https://kubernetes.io/docs/concepts/policy/pod-security-policy/">
+  Pod Security Policies</link>,
+  <link xlink:href="https://docs.cloudfoundry.org/concepts/roles.html"> Orgs,
+  Spaces, Roles, and Permissions</link>, and
+  <link xlink:href="https://docs.cloudfoundry.org/uaa/identity-providers.html#id-flow">
+  Identity Provider Workflow</link> for more information on understanding and
+  using PSPs.
+ </para>
+
+ <para>
+  Copy the following example into <filename>cap-psp-rbac.yaml</filename>:
+ </para>
+
 <screen>---
 apiVersion: extensions/v1beta1
 kind: PodSecurityPolicy
@@ -139,38 +140,45 @@ subjects:
 - kind: ServiceAccount
   name: node-reader
   namespace: scf</screen>
-   <para>
-    Apply it to your cluster with <command>kubectl</command>:
-   </para>
+
+ <para>
+  Apply it to your cluster with <command>kubectl</command>:
+ </para>
+
 <screen>&prompt.user;kubectl create -f cap-psp-rbac.yaml
 podsecuritypolicy.extensions "suse.cap.psp" created
 clusterrole.rbac.authorization.k8s.io "suse:cap:psp" created
 clusterrolebinding.rbac.authorization.k8s.io "cap:clusterrole" created</screen>
-   <para>
-    Verify that the new PSPs exist by running the <command>kubectl get
-    psp</command> command to list them. Then continue by deploying UAA and SCF.
-    Ensure that your <filename>scf-config-values.yaml</filename> file specifies
-    the name of your PSP in the <literal>kube:</literal> section. These
-    settings will grant only a limited subset of roles to be privileged.
-   </para>
+
+ <para>
+  Verify that the new PSPs exist by running the <command>kubectl get
+  psp</command> command to list them. Then continue by deploying UAA and SCF.
+  Ensure that your <filename>scf-config-values.yaml</filename> file specifies
+  the name of your PSP in the <literal>kube:</literal> section. These settings
+  will grant only a limited subset of roles to be privileged.
+ </para>
+
 <screen>kube:
   psp:
     privileged: "suse.cap.psp"
 </screen>
 
-<tip>
-    <para>
-        Note that the example <filename>cap-psp-rbac.yaml</filename> file sets
-        the name of the PSPs, which in the previous examples is
-        <literal>suse.cap.psp</literal>.
-    </para>
-</tip>
-   <sect2>
-    <title>Using Custom Pod Security Policies</title>
-    <para>
-     When using a custom PSP, your <filename>scf-config-values.yaml</filename> file requires the <literal>SYS_RESOURCE</literal> capability to be added to the following roles:
-    </para>
-    <screen>
+ <tip>
+  <para>
+   Note that the example <filename>cap-psp-rbac.yaml</filename> file sets the
+   name of the PSPs, which in the previous examples is
+   <literal>suse.cap.psp</literal>.
+  </para>
+ </tip>
+
+ <sect2>
+  <title>Using Custom Pod Security Policies</title>
+  <para>
+   When using a custom PSP, your <filename>scf-config-values.yaml</filename>
+   file requires the <literal>SYS_RESOURCE</literal> capability to be added to
+   the following roles:
+  </para>
+<screen>
 sizing:
   cc_uploader:
     capabilities: ["SYS_RESOURCE"]
@@ -187,5 +195,5 @@ sizing:
   routing_api:
     capabilities: ["SYS_RESOURCE"]
     </screen>
-   </sect2>
-  </sect1>
+ </sect2>
+</sect1>

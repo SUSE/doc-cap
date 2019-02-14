@@ -23,10 +23,12 @@
 
   <para>
    See all product manuals for &productname; 1.x at
-   <link xlink:href="https://www.suse.com/documentation/cloud-application-platform-1/index.html">SUSE Cloud Application Platform 1</link>.
+   <link xlink:href="https://www.suse.com/documentation/cloud-application-platform-1/index.html">SUSE
+   Cloud Application Platform 1</link>.
   </para>
+
   <tip>
-      <title>Read the Release Notes</title>
+   <title>Read the Release Notes</title>
    <para>
     Make sure to review the release notes for &productname; published at
     <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/1/"/>.
@@ -212,10 +214,13 @@
   </important>
 
   <para>
-   You may create a minimal deployment on four &kube; nodes for testing. However,
-   this is insufficient for a production deployment. A supported deployment 
-   includes &scf; installed on &suse; &caasp;, Amazon EKS, or Azure AKS. You also need a storage backend such as &ses; or NFS, a DNS/DHCP server, and an Internet connection to download additional packages during installation and ~10GB of &docker; images on each &kube; worker after installation. 
-   (See <xref linkend="cha.cap.install-production"/>.)   
+   You may create a minimal deployment on four &kube; nodes for testing.
+   However, this is insufficient for a production deployment. A supported
+   deployment includes &scf; installed on &suse; &caasp;, Amazon EKS, or Azure
+   AKS. You also need a storage backend such as &ses; or NFS, a DNS/DHCP
+   server, and an Internet connection to download additional packages during
+   installation and ~10GB of &docker; images on each &kube; worker after
+   installation. (See <xref linkend="cha.cap.install-production"/>.)
   </para>
 
   <para>

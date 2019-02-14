@@ -57,7 +57,9 @@ perl -ne '/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail|scal
 218:    count: 1</screen>
    <para>
     The default <filename>values.yaml</filename> files are also included in
-    this guide at <!--TODO update with new appendix link-->.
+    this guide at
+<!--TODO update with new appendix link-->
+    .
    </para>
   </sect2>
 
@@ -308,7 +310,9 @@ sizing:
   AZ_LABEL_NAME: <replaceable>"zone-label"</replaceable>
 </screen>
    <para>
-    If UAA is deployed, pass your UAA secret and certificate to SCF. Otherwise deploy UAA first (See <xref linkend="sec.cap.install-uaa-prod"/>), then proceed with this step:
+    If UAA is deployed, pass your UAA secret and certificate to SCF. Otherwise
+    deploy UAA first (See <xref linkend="sec.cap.install-uaa-prod"/>), then
+    proceed with this step:
    </para>
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
 -o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
@@ -316,26 +320,31 @@ sizing:
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
 -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 </screen>
-  <para>
-   If this is an initial deployment, use <command>helm install</command> to deploy SCF:
-  </para>
+   <para>
+    If this is an initial deployment, use <command>helm install</command> to
+    deploy SCF:
+   </para>
 <screen>&prompt.user;helm install suse/cf \
 --name susecf-scf \
 --namespace scf \
 --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
-  <para>
-   If this is an existing deployment, use <command>helm upgrade</command> to apply the change:
-  </para>
+   <para>
+    If this is an existing deployment, use <command>helm upgrade</command> to
+    apply the change:
+   </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
    <para>
-    Enabling this feature requires that the node-reader service account has sufficient permissions. This can be provided through a configuration file and <command>kubectl</command>.
+    Enabling this feature requires that the node-reader service account has
+    sufficient permissions. This can be provided through a configuration file
+    and <command>kubectl</command>.
    </para>
    <para>
-    Create the configuration file, which in this example will be <filename>node-reader.yaml</filename>:
+    Create the configuration file, which in this example will be
+    <filename>node-reader.yaml</filename>:
    </para>
 <screen>kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
@@ -365,7 +374,7 @@ subjects:
    <para>
     Apply it to your cluster:
    </para>
-   <screen>&prompt.user;kubectl create -f node-reader.yaml</screen>
+<screen>&prompt.user;kubectl create -f node-reader.yaml</screen>
    <para>
     Next, get the names of the nodes in your cluster:
    </para>

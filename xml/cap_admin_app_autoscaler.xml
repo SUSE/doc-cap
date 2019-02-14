@@ -16,23 +16,29 @@
   </dm:docmanager>
  </info>
  <para>
-  The App-AutoScaler service is used for automatically managing an application's instance count when deployed on &scf;. The scaling behavior is determined by a set of criteria defined in a policy (See <xref linkend="sec.cap.app-autoscaler-policies"/>).
+  The App-AutoScaler service is used for automatically managing an
+  application's instance count when deployed on &scf;. The scaling behavior is
+  determined by a set of criteria defined in a policy (See
+  <xref linkend="sec.cap.app-autoscaler-policies"/>).
  </para>
-
  <sect1 xml:id="sec.cap.app-autoscaler-prereqs">
   <title>Prerequisites</title>
+
   <para>
    Using the App-AutoScaler service requires:
   </para>
+
   <itemizedlist>
    <listitem>
     <para>
-     <link xlink:href="https://docs.cloudfoundry.org/cf-cli/">The &cf; command line interface (&cfcli;)</link>
+     <link xlink:href="https://docs.cloudfoundry.org/cf-cli/">The &cf; command
+     line interface (&cfcli;)</link>
     </para>
    </listitem>
    <listitem>
     <para>
-     <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler-cli-plugin">The App-AutoScaler &cfcli; Plugin</link>
+     <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler-cli-plugin">The
+     App-AutoScaler &cfcli; Plugin</link>
     </para>
     <para>
      The plugin can be installed by running the following command:
@@ -41,17 +47,22 @@
    </listitem>
    <listitem>
     <para>
-     Review of the <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/tree/master/docs#things-you-need-to-know-before-auto-scale-an-application">considerations and guidelines</link>.
+     Review of the
+     <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/tree/master/docs#things-you-need-to-know-before-auto-scale-an-application">considerations
+     and guidelines</link>.
     </para>
    </listitem>
   </itemizedlist>
  </sect1>
-
  <sect1 xml:id="sec.cap.enable-app-autoscaler">
   <title>Enabling the App-AutoScaler Service</title>
+
   <para>
-   By default, the App-AutoScaler service is not enabled as part of a &scf; deployment. To enable it, add the following values to your <filename>scf-config-values.yaml</filename> file and deploy SCF:
+   By default, the App-AutoScaler service is not enabled as part of a &scf;
+   deployment. To enable it, add the following values to your
+   <filename>scf-config-values.yaml</filename> file and deploy SCF:
   </para>
+
 <screen>
 sizing:
   autoscaler_actors:
@@ -63,54 +74,75 @@ sizing:
   autoscaler_postgres:
     count: 1
 </screen>
+
   <para>
-   See <command>helm inspect suse/cf</command> for the full list of available values that can be used to configure the App-AutoScaler.
+   See <command>helm inspect suse/cf</command> for the full list of available
+   values that can be used to configure the App-AutoScaler.
   </para>
+
   <para>
-   If UAA is deployed, pass your UAA secret and certificate to SCF. Otherwise deploy UAA first (See <xref linkend="sec.cap.install-uaa-prod"/>), then proceed with this step:
+   If UAA is deployed, pass your UAA secret and certificate to SCF. Otherwise
+   deploy UAA first (See <xref linkend="sec.cap.install-uaa-prod"/>), then
+   proceed with this step:
   </para>
+
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
 -o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
 -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 </screen>
+
   <para>
-   If this is an initial deployment, use <command>helm install</command> to deploy SCF:
+   If this is an initial deployment, use <command>helm install</command> to
+   deploy SCF:
   </para>
+
 <screen>&prompt.user;helm install suse/cf \
 --name susecf-scf \
 --namespace scf \
 --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
-  <para> 
-   If this is an existing deployment, use <command>helm upgrade</command> to apply the change:
+
+  <para>
+   If this is an existing deployment, use <command>helm upgrade</command> to
+   apply the change:
   </para>
+
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
  </sect1>
-
  <sect1 xml:id="sec.cap.app-autoscaler-usage">
   <title>Using the App-AutoScaler Service</title>
+
   <para>
    Create a new instance of the App-AutoScaler service:
   </para>
-  <screen>&prompt.user;cf create-service autoscaler autoscaler-free-plan <replaceable>service_instance_name</replaceable></screen>
+
+<screen>&prompt.user;cf create-service autoscaler autoscaler-free-plan <replaceable>service_instance_name</replaceable></screen>
+
   <para>
-   A name of your choice may be used to replace <literal>service_instance_name</literal>.
+   A name of your choice may be used to replace
+   <literal>service_instance_name</literal>.
   </para>
+
   <para>
-   Bind the service instance to an application and attach a policy (See <xref linkend="sec.cap.app-autoscaler-policies"/>):
+   Bind the service instance to an application and attach a policy (See
+   <xref linkend="sec.cap.app-autoscaler-policies"/>):
   </para>
+
 <screen>&prompt.user;cf bind-service <replaceable>my_application</replaceable> <replaceable>service_instance_name</replaceable>
 &prompt.user;cf attach-autoscaling-policy <replaceable>my_application</replaceable> <replaceable>my-policy.json</replaceable>  
 </screen>
+
   <para>
-   If a policy has already been defined and is available for use, you can attach the policy as part of the binding process instead:
+   If a policy has already been defined and is available for use, you can
+   attach the policy as part of the binding process instead:
   </para>
-  <screen>&prompt.user;cf bind-service <replaceable>my_application</replaceable> <replaceable>service_instance_name</replaceable> -c <replaceable>'{
+
+<screen>&prompt.user;cf bind-service <replaceable>my_application</replaceable> <replaceable>service_instance_name</replaceable> -c <replaceable>'{
     "instance_min_count": 1,
     "instance_max_count": 4,
     "scaling_rules": [{
@@ -123,17 +155,26 @@ sizing:
         "adjustment": "+1"
     }]
 }'</replaceable></screen>
+
   <para>
-   Note that attaching a policy in this manner requires passing the policy directly rather than specifying the path to the policy file.
+   Note that attaching a policy in this manner requires passing the policy
+   directly rather than specifying the path to the policy file.
   </para>
+
   <para>
-   Once an instance of the App-AutoScaler service has been created and bound to an app, it can be managed using the &cfcli; with the App-AutoScaler plugin (See <xref linkend="sec.cap.app-autoscaler-cli"/>) or using the App-AutoScaler API (See <xref linkend="sec.cap.app-autoscaler-api"/>).
+   Once an instance of the App-AutoScaler service has been created and bound to
+   an app, it can be managed using the &cfcli; with the App-AutoScaler plugin
+   (See <xref linkend="sec.cap.app-autoscaler-cli"/>) or using the
+   App-AutoScaler API (See <xref linkend="sec.cap.app-autoscaler-api"/>).
   </para>
 
   <sect2 xml:id="sec.cap.app-autoscaler-cli">
    <title>The App-AutoScaler &cfcli; Plugin</title>
    <para>
-    The App-AutoScaler plugin is used for managing the service with your applications and provides the following commands. Refer to the <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler-cli-plugin#command-list">command list</link> for details about each command:
+    The App-AutoScaler plugin is used for managing the service with your
+    applications and provides the following commands. Refer to the
+    <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler-cli-plugin#command-list">command
+    list</link> for details about each command:
    </para>
    <variablelist>
     <varlistentry>
@@ -190,54 +231,75 @@ sizing:
   <sect2 xml:id="sec.cap.app-autoscaler-api">
    <title>App-AutoScaler API</title>
    <para>
-    The App-AutoScaler service provides a <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/docs/Public_API.rst">Public API</link> with detailed usage information. It includes requests to:
+    The App-AutoScaler service provides a
+    <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/docs/Public_API.rst">Public
+    API</link> with detailed usage information. It includes requests to:
    </para>
    <itemizedlist>
     <listitem>
      <para>
-      <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/docs/Public_API.rst#list-scaling-history-of-an-application">List scaling history of an application</link>
+      <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/docs/Public_API.rst#list-scaling-history-of-an-application">List
+      scaling history of an application</link>
      </para>
     </listitem>
     <listitem>
      <para>
-      <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/docs/Public_API.rst#list-instance-metrics-of-an-application">List instance metrics of an application</link>
+      <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/docs/Public_API.rst#list-instance-metrics-of-an-application">List
+      instance metrics of an application</link>
      </para>
     </listitem>
     <listitem>
      <para>
-      <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/docs/Public_API.rst#list-aggregated-metrics-of-an-application">List aggregated metrics of an application</link>
+      <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/docs/Public_API.rst#list-aggregated-metrics-of-an-application">List
+      aggregated metrics of an application</link>
      </para>
     </listitem>
     <listitem>
      <para>
-      <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/docs/Public_API.rst#policy-api">Set a policy</link>
+      <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/docs/Public_API.rst#policy-api">Set
+      a policy</link>
      </para>
     </listitem>
     <listitem>
      <para>
-      <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/docs/Public_API.rst#delete-policy">Delete a policy</link>
+      <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/docs/Public_API.rst#delete-policy">Delete
+      a policy</link>
      </para>
     </listitem>
     <listitem>
      <para>
-      <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/docs/Public_API.rst#get-policy">Get a policy</link>
+      <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/docs/Public_API.rst#get-policy">Get
+      a policy</link>
      </para>
     </listitem>
    </itemizedlist>
   </sect2>
  </sect1>
-
  <sect1 xml:id="sec.cap.app-autoscaler-policies">
   <title>Policies</title>
+
   <para>
-   A policy identifies characteristics including minimum instance count, maximum instance count, and the rules used to determine when the number of application instances is scaled up or down. These rules are categorized into two types, scheduled scaling and dynamic scaling. (See <xref linkend="sec.cap.app-autoscaler-scaling-types"/>). Multiple scaling rules can be specified in a policy, but App-AutoScaler does not detect or handle conflicts that may occur. Ensure there are no conflicting rules to avoid unintended scaling behavior. 
+   A policy identifies characteristics including minimum instance count,
+   maximum instance count, and the rules used to determine when the number of
+   application instances is scaled up or down. These rules are categorized into
+   two types, scheduled scaling and dynamic scaling. (See
+   <xref linkend="sec.cap.app-autoscaler-scaling-types"/>). Multiple scaling
+   rules can be specified in a policy, but App-AutoScaler does not detect or
+   handle conflicts that may occur. Ensure there are no conflicting rules to
+   avoid unintended scaling behavior.
   </para>
+
   <para>
-   Policies are defined using the JSON format and can be attached to an application either by passing the path to the policy file or directly as a parameter.
+   Policies are defined using the JSON format and can be attached to an
+   application either by passing the path to the policy file or directly as a
+   parameter.
   </para>
+
   <para>
-   The following is an example of a policy file, called <filename>my-policy.json</filename>.
+   The following is an example of a policy file, called
+   <filename>my-policy.json</filename>.
   </para>
+
 <screen>{
     "instance_min_count": 1,
     "instance_max_count": 4,
@@ -252,9 +314,17 @@ sizing:
     }
 }
 </screen>
+
   <para>
-   For an example that demonstrates defining multiple scaling rules in a single policy, refer to this <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/src/integration/fakePolicyWithSchedule.json">sample policy</link> file. The complete list of configurable policy values can be found at <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/master/docs/Policy_definition.rst">App-AutoScaler Policy Definition</link>.
+   For an example that demonstrates defining multiple scaling rules in a single
+   policy, refer to this
+   <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/src/integration/fakePolicyWithSchedule.json">sample
+   policy</link> file. The complete list of configurable policy values can be
+   found at
+   <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/master/docs/Policy_definition.rst">App-AutoScaler
+   Policy Definition</link>.
   </para>
+
   <sect2 xml:id="sec.cap.app-autoscaler-scaling-types">
    <title>Scaling Types</title>
    <variablelist>
@@ -262,7 +332,8 @@ sizing:
      <term>Scheduled Scaling</term>
      <listitem>
       <para>
-       Modifies an application's instance count at a predetermined time. This option is suitable for workloads with predictable resource usage.
+       Modifies an application's instance count at a predetermined time. This
+       option is suitable for workloads with predictable resource usage.
       </para>
      </listitem>
     </varlistentry>
@@ -270,7 +341,9 @@ sizing:
      <term>Dynamic Scaling</term>
      <listitem>
       <para>
-       Modifies an application's instance count based on metrics criteria. This option is suitable for workloads with dynamic resource usage. The following metrics are available: 	    
+       Modifies an application's instance count based on metrics criteria. This
+       option is suitable for workloads with dynamic resource usage. The
+       following metrics are available:
       </para>
       <itemizedlist>
        <listitem>
@@ -280,7 +353,7 @@ sizing:
        </listitem>
        <listitem>
         <para>
-	 memoryutil
+         memoryutil
         </para>
        </listitem>
        <listitem>
@@ -290,7 +363,7 @@ sizing:
        </listitem>
        <listitem>
         <para>
-	 throughput
+         throughput
         </para>
        </listitem>
       </itemizedlist>
@@ -298,7 +371,9 @@ sizing:
     </varlistentry>
    </variablelist>
    <para>
-    See <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/tree/develop/docs#scaling-type">Scaling type</link> for additional details.
+    See
+    <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/tree/develop/docs#scaling-type">Scaling
+    type</link> for additional details.
    </para>
   </sect2>
  </sect1>

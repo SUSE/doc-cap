@@ -25,8 +25,9 @@
  <warning>
   <title>Do not use Minibroker on production systems</title>
   <para>
-   Minibroker is a technology preview that is useful for development and testing purposes. It
-   is currently not production-ready and not recommended for use with production systems.
+   Minibroker is a technology preview that is useful for development and
+   testing purposes. It is currently not production-ready and not recommended
+   for use with production systems.
   </para>
  </warning>
  <sect1 xml:id="sec.cap.minibroker-deployment">
@@ -56,7 +57,7 @@ suse/minibroker             	0.2.0  	A minibroker for your minikube
     <para>
      Use &helm; to deploy Minibroker:
     </para>
-    <screen>&prompt.user;helm install suse/minibroker --namespace minibroker --name minibroker</screen>
+<screen>&prompt.user;helm install suse/minibroker --namespace minibroker --name minibroker</screen>
     <para>
      The repository currently contains charts for the following services:
     </para>
@@ -136,7 +137,7 @@ minibroker         http://minibroker-minibroker.minibroker.svc.cluster.local
     <para>
      List the services and their associated plans the Minibroker has access to:
     </para>
-    <screen>&prompt.user;cf service-access -b <replaceable>minibroker</replaceable></screen>
+<screen>&prompt.user;cf service-access -b <replaceable>minibroker</replaceable></screen>
    </step>
    <step>
     <para>
@@ -237,9 +238,9 @@ minibroker-minibroker-5865f66bb8-6dxm7          2/2       Running            0  
   <procedure>
    <step>
     <para>
-     Obtain the demo application from Github and use <command>cf push</command> with the
-     <literal>--no-start</literal> flag to deploy the application without
-     starting it:
+     Obtain the demo application from Github and use <command>cf push</command>
+     with the <literal>--no-start</literal> flag to deploy the application
+     without starting it:
     </para>
 <screen>&prompt.user;git clone https://github.com/scf-samples/cf-redis-example-app
 &prompt.user;cd cf-redis-example-app

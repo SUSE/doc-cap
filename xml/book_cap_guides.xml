@@ -19,7 +19,7 @@
   <xi:include href="authors.xml"/>
   <abstract>
    <para>
-    Introducing &productname;, a software platform for cloud-native application 
+    Introducing &productname;, a software platform for cloud-native application
     deployment based on &scf; and &kube;.
    </para>
   </abstract>
@@ -27,81 +27,73 @@
    <dm:translation>no</dm:translation>
   </dm:docmanager>
  </info>
- 
 <!--============================================================================
 About this guide
-=============================================================================--> 
+=============================================================================-->
  <xi:include href="cap_intro.xml"/>
-
 <!--============================================================================
 Part: Overview of SUSE CAP
 =============================================================================-->
  <part xml:id="part.cap.overview">
   <title>Overview of &productname;</title>
   <info/>
-<xi:include href="cap_overview.xml"/>
-<xi:include href="cap_kube_requirements.xml"/>
-</part>
-
+  <xi:include href="cap_overview.xml"/>
+  <xi:include href="cap_kube_requirements.xml"/>
+ </part>
 <!--============================================================================
 Part: CAP Deployment Guide
 =============================================================================-->
  <part xml:id="part.cap.deployment">
   <title>Deploying &productname;</title>
   <info/>
-<xi:include href="cap_depl_admin_notes.xml"/> 
-<xi:include href="cap_depl_install_caasp.xml"/>
-<xi:include href="cap_depl_stratos.xml"/>
-<xi:include href="cap_depl_ha.xml"/>
-<xi:include href="cap_depl_ldap.xml"/>
-<xi:include href="cap_depl_azure.xml"/>
-<xi:include href="cap_depl_eks.xml"/>
-<xi:include href="cap_depl_openstack.xml"/>
-</part>
-
+  <xi:include href="cap_depl_admin_notes.xml"/>
+  <xi:include href="cap_depl_install_caasp.xml"/>
+  <xi:include href="cap_depl_stratos.xml"/>
+  <xi:include href="cap_depl_ha.xml"/>
+  <xi:include href="cap_depl_ldap.xml"/>
+  <xi:include href="cap_depl_azure.xml"/>
+  <xi:include href="cap_depl_eks.xml"/>
+  <xi:include href="cap_depl_openstack.xml"/>
+ </part>
 <!--============================================================================
 Part: CAP Administration Guide
 =============================================================================-->
-
  <part xml:id="part.cap.administration">
   <title>&productname; Administration</title>
   <info/>
-<xi:include href="cap_admin_upgrade.xml"/>
-<xi:include href="cap_admin_configuration_changes.xml"/>
-<xi:include href="cap_admin_passwords.xml"/>
-<xi:include href="cap_admin_ccdb_key_rotation.xml"/>
-<xi:include href="cap_admin_backup-restore.xml"/>
-<xi:include href="cap_admin_minibroker.xml"/>
-<xi:include href="cap_admin_service_broker.xml"/>
-<xi:include href="cap_admin_app_autoscaler.xml"/>
-<xi:include href="cap_admin_logging.xml"/>
-<xi:include href="cap_admin_certificates.xml"/>
-<xi:include href="cap_admin_credhub.xml"/>
-<xi:include href="cap_admin_offline_buildpacks.xml"/>
-<xi:include href="cap_admin_app_domains.xml"/>
-</part>
-
+  <xi:include href="cap_admin_upgrade.xml"/>
+  <xi:include href="cap_admin_configuration_changes.xml"/>
+  <xi:include href="cap_admin_passwords.xml"/>
+  <xi:include href="cap_admin_ccdb_key_rotation.xml"/>
+  <xi:include href="cap_admin_backup-restore.xml"/>
+  <xi:include href="cap_admin_minibroker.xml"/>
+  <xi:include href="cap_admin_service_broker.xml"/>
+  <xi:include href="cap_admin_app_autoscaler.xml"/>
+  <xi:include href="cap_admin_logging.xml"/>
+  <xi:include href="cap_admin_certificates.xml"/>
+  <xi:include href="cap_admin_credhub.xml"/>
+  <xi:include href="cap_admin_offline_buildpacks.xml"/>
+  <xi:include href="cap_admin_app_domains.xml"/>
+ </part>
 <!--============================================================================
 Part: CAP User Guide
 =============================================================================-->
  <part xml:id="part.cap.user-guide">
   <title>&productname; User Guide</title>
   <info/>
-<xi:include href="cap_user_cf_cli.xml"/>  
-  </part>
-  
+  <xi:include href="cap_user_cf_cli.xml"/>
+ </part>
 <!--============================================================================
 Part: Troubleshooting
 =============================================================================-->
  <part xml:id="part.cap.troubleshooting">
   <title>Troubleshooting</title>
   <info/>
-<xi:include href="cap_troubleshooting.xml"/>
-</part>
-
+  <xi:include href="cap_troubleshooting.xml"/>
+ </part>
 <!--============================================================================
 Appendices                                                            
 ==============================================================================-->
-<xi:include href="appendix.xml"/> 
-<xi:include href="common_legal.xml"/>
+ <xi:include href="appendix.xml"/>
+ <xi:include href="common_legal.xml"/>
 </book>

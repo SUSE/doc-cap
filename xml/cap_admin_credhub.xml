@@ -15,50 +15,48 @@
    <dm:translation>yes</dm:translation>
   </dm:docmanager>
  </info>
- 
-  <para>
-     &productname; supports CredHub integration. You should already have
-     a working CredHub instance, a CredHub service on your cluster, then apply 
-     the steps in this chapter to connect &productname;.
- </para>
-
- <sect1 xml:id="sec.cap.credhub">
-     <title>Installing the CredHub Client</title>
-
  <para>
-     Start by creating a new directory for the CredHub client on your local 
-     workstation, then download and unpack the CredHub client. The following
-     example is for the 2.2.0 Linux release; see 
-     <link xlink:href="https://github.com/cloudfoundry-incubator/credhub-cli/releases">
-cloudfoundry-incubator/credhub-cli
-</link> 
-     for other platforms and current releases:
+  &productname; supports CredHub integration. You should already have a working
+  CredHub instance, a CredHub service on your cluster, then apply the steps in
+  this chapter to connect &productname;.
  </para>
- <screen>&prompt.user;mkdir <replaceable>chclient</replaceable>
+ <sect1 xml:id="sec.cap.credhub">
+  <title>Installing the CredHub Client</title>
+
+  <para>
+   Start by creating a new directory for the CredHub client on your local
+   workstation, then download and unpack the CredHub client. The following
+   example is for the 2.2.0 Linux release; see
+   <link xlink:href="https://github.com/cloudfoundry-incubator/credhub-cli/releases">
+   cloudfoundry-incubator/credhub-cli </link> for other platforms and current
+   releases:
+  </para>
+
+<screen>&prompt.user;mkdir <replaceable>chclient</replaceable>
 &prompt.user;cd <replaceable>chclient</replaceable>
 &prompt.user;wget https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/2.2.0/credhub-linux-2.2.0.tgz
 &prompt.user;tar zxf credhub-linux-2.2.0.tgz
 </screen>
-</sect1>
+ </sect1>
+ <sect1 xml:id="sec.cap.credhub-sizing">
+  <title>Enabling Credhub</title>
 
-<sect1 xml:id="sec.cap.credhub-sizing">
-    <title>Enabling Credhub</title>
-    <para>
-        Enable <literal>credhub</literal> for your deployment
-        in the <literal>sizing</literal> section of your deployment configuration 
-        file, which in this guide is <filename>scf-config-values.yaml</filename>:
-    </para>
-    
-    <screen>
+  <para>
+   Enable <literal>credhub</literal> for your deployment in the
+   <literal>sizing</literal> section of your deployment configuration file,
+   which in this guide is <filename>scf-config-values.yaml</filename>:
+  </para>
+
+<screen>
 sizing:   
   credhub_user:
     count: 1
 </screen>
 
-<para>
-    Then apply the change with <command>helm</command>. First fetch the 
-    <literal>uaa</literal> credentials, them apply the updated configuration:
-</para>
+  <para>
+   Then apply the change with <command>helm</command>. First fetch the
+   <literal>uaa</literal> credentials, them apply the updated configuration:
+  </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
 -o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
@@ -71,23 +69,24 @@ sizing:
 --namespace scf \
 --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"</screen>
-</sect1>
+ </sect1>
+ <sect1 xml:id="sec.cap.credhub-connect">
+  <title>Connecting to the CredHub Service</title>
 
-<sect1 xml:id="sec.cap.credhub-connect">
-     <title>Connecting to the CredHub Service</title>
-<para>
-Set environment variables for the CredHub client, your CredHub service location, 
-and &cap; namespace. In these guides the example namespace is <literal>scf</literal>:
-</para>
+  <para>
+   Set environment variables for the CredHub client, your CredHub service
+   location, and &cap; namespace. In these guides the example namespace is
+   <literal>scf</literal>:
+  </para>
 
 <screen>&prompt.user;CH_CLI=~/.chclient/credhub
 &prompt.user;CH_SERVICE=<replaceable>https://credhub.example.com</replaceable>    
 &prompt.user;NAMESPACE=<replaceable>scf</replaceable>
 </screen>
 
-<para>
-    Set up the CredHub service location:
-</para>
+  <para>
+   Set up the CredHub service location:
+  </para>
 
 <screen>
 &prompt.user;SECRET="$(kubectl get secrets --namespace "${NAMESPACE}" | awk '/^secrets-/ { print $1 }')"
@@ -97,18 +96,18 @@ and &cap; namespace. In these guides the example namespace is <literal>scf</lite
 &prompt.user;echo CH cli Secret @ $CH_SECRET
 </screen>
 
-<para>
-    Set the CredHub target through its &kube; service, then log into CredHub:
-</para>
+  <para>
+   Set the CredHub target through its &kube; service, then log into CredHub:
+  </para>
 
 <screen>
 &prompt.user;"${CH_CLI}" api --skip-tls-validation --server "${CH_SERVICE}"
 &prompt.user;"${CH_CLI}" login --client-name="${CH_CLIENT}" --client-secret="${CH_SECRET}"
 </screen>
 
-<para>
-    Test your new connection by inserting and retrieving some fake credentials:
-</para>
+  <para>
+   Test your new connection by inserting and retrieving some fake credentials:
+  </para>
 
 <screen>
 &prompt.user;"${CH_CLI}" set -n FOX -t value -v 'fox over lazy dog'   
@@ -116,6 +115,5 @@ and &cap; namespace. In these guides the example namespace is <literal>scf</lite
 &prompt.user;"${CH_CLI}" get -n FOX
 &prompt.user;"${CH_CLI}" get -n DOG
 </screen>
-</sect1>
+ </sect1>
 </chapter>
-

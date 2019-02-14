@@ -23,7 +23,8 @@
    It provides a graphical management console for both developers and system
    administrators. Install Stratos with &helm; after all of the UAA and SCF
    pods are running.
-   </para>
+  </para>
+
   <para>
    If you are using &ses; as your storage backend, copy the secret into the
    Stratos namespace:
@@ -75,7 +76,8 @@ console-mariadb-3697248891-5drf5   1/1       Running   0          30m</screen>
 
   <para>
    When all statuses show Ready, press <keycombo> <keycap function="control"/>
-   <keycap>C</keycap> </keycombo> to exit. Query with &helm; to view your release information:
+   <keycap>C</keycap> </keycombo> to exit. Query with &helm; to view your
+   release information:
   </para>
 
 <screen>&prompt.user;helm status susecf-console
@@ -114,14 +116,13 @@ console-mariadb-66fc57b5b5-fzq7w  1/1    Running  0         1h
 console-0                         3/3    Running  0         1h
 </screen>
 
-
   <para>
-   Point your web browser to https://example.com:8443, or https://10.86.1.15:8443
-   (from the <command>helm list</command> output)
-   to see the Stratos console. Wade through the nag screens about the self-signed certificates
-   and log in as <literal>admin</literal> with the password you created in
-   <filename>scf-config-values.yaml</filename>. If you see an upgrade message,
-   wait a few minutes and try again.
+   Point your web browser to https://example.com:8443, or
+   https://10.86.1.15:8443 (from the <command>helm list</command> output) to
+   see the Stratos console. Wade through the nag screens about the self-signed
+   certificates and log in as <literal>admin</literal> with the password you
+   created in <filename>scf-config-values.yaml</filename>. If you see an
+   upgrade message, wait a few minutes and try again.
   </para>
 
   <figure xml:id="fig.cap.stratos-prod">
@@ -132,8 +133,7 @@ console-0                         3/3    Running  0         1h
     </imageobject>
    </mediaobject>
   </figure>
-</sect1>
- 
+ </sect1>
  <sect1 xml:id="sec.cap.stratos-prod-kube">
   <title>Connecting Kubernetes</title>
 
