@@ -65,6 +65,9 @@ perl -ne '/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail|scal
 
   <sect2 xml:id="sec.cap.ha-simple">
    <title>Simple &ha; Configuration</title>
+   <important>
+       &fresh-namespace;
+   </important>
    <para>
     The simplest way to make your &productname; deployment highly available is
     to set <literal>HA</literal> to <literal>true</literal> in your deployment
@@ -75,20 +78,10 @@ config:
   # Flag to activate high-availability mode
   HA: true
 </screen>
-   <para>
+<para>
     Or, you may pass it as a command-line option when you are deploying with
     &helm;, for example:
    </para>
-   <important>
-    <title>Always install to a fresh namespace</title>
-    <para>
-     During a <command>helm delete</command>, &helm; will not remove generated
-     secrets from the SCF and UAA namespaces as it is not aware of them. This
-     leaves behind secrets from previous deployments, which when used can cause
-     issues. See <xref linkend="sec.cap.rebuild.depl"/> for steps to ensure a
-     fresh namespace is used to avoid this.
-    </para>
-   </important>
 <screen>
 &prompt.user;helm install suse/uaa \
  --name susecf-uaa \
@@ -173,14 +166,7 @@ sizing:
     count: 2
 </screen>
    <important>
-    <title>Always install to a fresh namespace</title>
-    <para>
-     During a <command>helm delete</command>, &helm; will not remove generated
-     secrets from the SCF and UAA namespaces as it is not aware of them. This
-     leaves behind secrets from previous deployments, which when used can cause
-     issues. See <xref linkend="sec.cap.rebuild.depl"/> for steps to ensure a
-     fresh namespace is used to avoid this.
-    </para>
+       &fresh-namespace;
    </important>
    <para>
     After creating your configuration files, follow the steps in
@@ -195,16 +181,6 @@ sizing:
 --values scf-config-values.yaml \
 --values uaa-sizing.yaml
 </screen>
-   <important>
-    <title>Always install to a fresh namespace</title>
-    <para>
-     During a <command>helm delete</command>, &helm; will not remove generated
-     secrets from the SCF and UAA namespaces as it is not aware of them. This
-     leaves behind secrets from previous deployments, which when used can cause
-     issues. See <xref linkend="sec.cap.rebuild.depl"/> for steps to ensure a
-     fresh namespace is used to avoid this.
-    </para>
-   </important>
    <para>
     When the status shows RUNNING for all of the UAA nodes, deploy SCF with
     these commands:
