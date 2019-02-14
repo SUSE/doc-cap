@@ -44,25 +44,7 @@
  
    <sect1 xml:id="sec.cap.prereqs-prod">
   <title>Prerequisites</title>
-  <important>
-      <title>README first!</title>
-      <para>
-       Before you start deploying &productname;, review the following documents:
-      </para>
-      <itemizedlist>
-       <listitem>
-        <para>
-         Release Notes:
-         <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/1/"/>
-        </para>
-       </listitem>
-       <listitem>
-        <para>
-         <xref linkend="cha.cap.depl.notes"/>
-        </para>
-       </listitem>
-      </itemizedlist>
-    </important>
+
   <para>
    Calculating hardware requirements is best done with an analysis of your
    expected workloads, traffic patterns, storage needs, and application
