@@ -65,9 +65,9 @@ perl -ne '/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail|scal
 
   <sect2 xml:id="sec.cap.ha-simple">
    <title>Simple &ha; Configuration</title>
-   <important>
-       &fresh-namespace;
-   </important>
+   <important>   
+&fresh-namespace;
+</important>
    <para>
     The simplest way to make your &productname; deployment highly available is
     to set <literal>HA</literal> to <literal>true</literal> in your deployment
@@ -165,9 +165,9 @@ sizing:
   tcp_router:
     count: 2
 </screen>
-   <important>
-       &fresh-namespace;
-   </important>
+<important>
+&fresh-namespace;
+</important>
    <para>
     After creating your configuration files, follow the steps in
     <xref linkend="sec.cap.configure-prod"/> until you get to

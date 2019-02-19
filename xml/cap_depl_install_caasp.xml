@@ -15,6 +15,9 @@
    <dm:translation>yes</dm:translation>
   </dm:docmanager>
  </info>
+ <important>
+&readmefirst;
+</important>
  <para>
   You may set up a minimal deployment on four &kube; nodes for testing. This is
   not sufficient for a production deployment. A basic &productname; production

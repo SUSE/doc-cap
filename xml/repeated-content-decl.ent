@@ -10,48 +10,55 @@ found" errors
 ............................................................................-->
 
 <!ENTITY namespace-length 
-'<formalpara xmlns="http://docbook.org/ns/docbook">
-<title>Length of release names</title> 
-<para>
-Release names (for example, when you run <command>helm install --name</command>) 
+'<variablelist xmlns="http://docbook.org/ns/docbook">
+<varlistentry>
+     <term>Length of release names</term>
+     <listitem>
+      <para>
+       Release names (for example, when you run <command>helm install --name</command>) 
 have a maximum length of 36 characters.
-</para>
-</formalpara>'>
+      </para>
+     </listitem>
+    </varlistentry>
+</variablelist>'>
 
 <!ENTITY fresh-namespace
-'<formalpara xmlns="http://docbook.org/ns/docbook">
-<title>Always install to a fresh namespace</title> 
-<para>
+'<variablelist xmlns="http://docbook.org/ns/docbook">
+<varlistentry>
+     <term>Always install to a fresh namespace</term>
+     <listitem>
+      <para>
     If you are not creating a fresh &productname; installation, but have deleted 
     a previous deployment and are starting over, you must create new namespaces. 
     Do not re-use your old namespaces. The <command>helm delete</command> command 
     does not remove generated secrets from the SCF and UAA namespaces as it is 
     not aware of them. These leftover secrets may cause deployment failures. See 
     <xref linkend="sec.cap.rebuild.depl"/> for more information.
-    </para>
-    </formalpara>'>
+      </para>
+     </listitem>
+    </varlistentry>
+</variablelist>'>    
 
 <!ENTITY readmefirst
-  '<important xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" >
-      <title>README first!</title>
+'<variablelist xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+<varlistentry>
+     <term>README first!</term>
+     <listitem>
       <para>
-       Before you start deploying &productname;, review the following documents:
+Before you start deploying &productname;, review the following documents:
       </para>
-      <itemizedlist>
-       <listitem>
-        <para>
-         Release Notes:
-         <link 
-         xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/1/"/>
+              <para>
+         Read the Release Notes:
+         <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/1/"/>
         </para>
-       </listitem>
-       <listitem>
-        <para>
+                <para>
+            Read
          <xref linkend="cha.cap.depl.notes"/>
         </para>
-       </listitem>
-      </itemizedlist>
-    </important>'>    
+     </listitem>
+     </varlistentry>
+     </variablelist>'>    
+    
 
 <!ENTITY dns-management
 '<para xmlns="http://docbook.org/ns/docbook">
