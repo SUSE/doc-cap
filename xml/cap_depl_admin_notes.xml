@@ -25,11 +25,8 @@
 &readmefirst;
 </sect1>
  <sect1>
-  <title>Namespace Length</title> 
+  <title>Namespaces</title> 
 &namespace-length;
-</sect1>
- <sect1>
-  <title>Install to Fresh Namespaces</title> 
 &fresh-namespace;
 </sect1>
  <sect1>

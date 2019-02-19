@@ -23,6 +23,9 @@
   deployment. This does not create a production deployment, which should be
   deployed on bare metal for best performance.
  </para>
+  <important>
+     &readmefirst;
+ </important>
  <sect1 xml:id="sec.cap.prereqs-openstack">
   <title>Prerequisites</title>
 

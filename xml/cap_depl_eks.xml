@@ -15,6 +15,9 @@
    <dm:translation>yes</dm:translation>
   </dm:docmanager>
  </info>
+  <important>
+     &readmefirst;
+ </important>
  <para>
   Starting with the 1.2 release, &productname; supports deployment on
   <link xlink:href="https://aws.amazon.com/eks/">Amazon EKS</link>, Amazon's
