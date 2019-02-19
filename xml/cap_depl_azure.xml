@@ -225,13 +225,24 @@ cap-aks</screen>
 <screen>&prompt.user;az group create --name $RGNAME --location $REGION</screen>
 
   <para>
+   List the &kube; versions currently supported by AKS (see
+   <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/supported-kubernetes-versions"/>
+   for more information on the AKS version support policy). When creating your cluster
+   in the next step, specify a &kube; version for consistent deployments:
+  </para>
+
+<screen>&prompt.user;az aks get-versions --location $REGION --output table</screen>
+
+  <para>
    Now you can create a new AKS managed cluster:
   </para>
 
 <screen>&prompt.user;az aks create --resource-group $RGNAME --name $AKSNAME \
  --node-count $NODECOUNT --admin-username $ADMINUSERNAME \
  --ssh-key-value $SSHKEYVALUE --node-vm-size $NODEVMSIZE \
- --node-osdisk-size=60 --nodepool-name $NODEPOOLNAME</screen>
+ --node-osdisk-size=60 --nodepool-name $NODEPOOLNAME \
+ --kubernetes-version <replaceable>1.11.6</replaceable>
+</screen>
 
   <note>
    <para>
@@ -259,9 +270,9 @@ cap-aks</screen>
 
 <screen>&prompt.user;kubectl get nodes
 NAME                    STATUS    ROLES     AGE       VERSION
-aks-mypool-47788232-0   Ready     agent     5m        v1.9.6
-aks-mypool-47788232-1   Ready     agent     6m        v1.9.6
-aks-mypool-47788232-2   Ready     agent     6m        v1.9.6
+aks-mypool-47788232-0   Ready     agent     5m        v1.11.6
+aks-mypool-47788232-1   Ready     agent     6m        v1.11.6
+aks-mypool-47788232-2   Ready     agent     6m        v1.11.6
 
 &prompt.user;kubectl get pods --all-namespaces
 NAMESPACE     NAME                                READY  STATUS    RESTARTS   AGE
@@ -373,7 +384,8 @@ subjects:
 
   <procedure xml:id="pro.swap-account">
    <step>
-<screen>&prompt.user;export MCRGNAME=$(az group list -o table | grep MC_"$RGNAME"_ | awk '{print $1}')</screen>
+<!--<screen>&prompt.user;export MCRGNAME=$(az group list -o table | grep MC_"$RGNAME"_ | awk '{print $1}')</screen>-->
+<screen>&prompt.user;export MCRGNAME=$(az aks show --resource-group $RGNAME --name $AKSNAME --query nodeResourceGroup -o json | jq -r '.')</screen>
    </step>
    <step>
 <screen>&prompt.user;export VMNODES=$(az vm list --resource-group $MCRGNAME -o json | jq -r '.[] | select (.tags.poolName | contains("'$NODEPOOLNAME'")) | .name')</screen>
@@ -395,239 +407,251 @@ done</screen>
    </step>
   </procedure>
  </sect1>
- <sect1 xml:id="sec.cap.loadbalancer-azure">
-  <title>Create a Basic Load Balancer and Public IP Address</title>
-
-  <para>
-   Azure offers two load balancers, Basic and Standard. Currently Basic is
-   free, while you have to pay for Standard. (See
-   <link xlink:href="https://azure.microsoft.com/en-us/services/load-balancer/">
-   Load Balancer</link>.) The following steps create a Basic load balancer
-   (Basic is the default.) Look for <literal>"provisioningState":
-   "Succeeded"</literal> messages in the command output to verify that the
-   commands succeeded.
-  </para>
-
-  <procedure xml:id="pro.loadbalancer">
-   <step>
-    <para>
-     Create a static public IPv4 address:
-    </para>
-<screen>&prompt.user;az network public-ip create \
- --resource-group $MCRGNAME \
- --name $AKSNAME-public-ip \
- --allocation-method Static</screen>
-   </step>
-   <step>
-    <para>
-     Create the load balancer:
-    </para>
-<screen>&prompt.user;az network lb create \
- --resource-group $MCRGNAME \
- --name $AKSNAME-lb \
- --public-ip-address $AKSNAME-public-ip \
- --frontend-ip-name $AKSNAME-lb-front \
- --backend-pool-name $AKSNAME-lb-back</screen>
-   </step>
-   <step>
-    <para>
-     Set the virtual machine network interfaces, then add them to the load
-     balancer:
-    </para>
-<screen>&prompt.user;export NICNAMES=$(az network nic list --resource-group $MCRGNAME -o json | jq -r '.[].name')
-
-&prompt.user;for i in $NICNAMES
-do
-    az network nic ip-config address-pool add \
-    --resource-group $MCRGNAME \
-    --nic-name $i \
-    --ip-config-name ipconfig1 \
-    --lb-name $AKSNAME-lb \
-    --address-pool $AKSNAME-lb-back
-done</screen>
-   </step>
-  </procedure>
- </sect1>
- <sect1 xml:id="sec.cap.security-rules">
-  <title>Configure Load Balancing and Network Security Rules</title>
-
-  <procedure xml:id="pro.netsec-rules">
-   <step>
-    <para>
-     Set the required ports to allow access to &productname;. Port 8443 is
-     optional for the Stratos Web Console.
-    </para>
-<screen>&prompt.user;export CAPPORTS="80 443 4443 2222 2793 8443"</screen>
-   </step>
-   <step>
-    <para>
-     Create network and load balancer rules:
-    </para>
-<screen>&prompt.user;for i in $CAPPORTS
-do
-    az network lb probe create \
-    --resource-group $MCRGNAME \
-    --lb-name $AKSNAME-lb \
-    --name probe-$i \
-    --protocol tcp \
-    --port $i 
-    
-    az network lb rule create \
-    --resource-group $MCRGNAME \
-    --lb-name $AKSNAME-lb \
-    --name rule-$i \
-    --protocol Tcp \
-    --frontend-ip-name $AKSNAME-lb-front \
-    --backend-pool-name $AKSNAME-lb-back \
-    --frontend-port $i \
-    --backend-port $i \
-    --probe probe-$i 
-done</screen>
-   </step>
-   <step>
-    <para>
-     Verify port setup:
-    </para>
-<screen>&prompt.user;az network lb rule list --resource-group $MCRGNAME --lb-name $AKSNAME-lb|grep -i port
-    
-    "backendPort": 8443,
-    "frontendPort": 8443,
-    "backendPort": 80,
-    "frontendPort": 80,
-    "backendPort": 443,
-    "frontendPort": 443,
-    "backendPort": 4443,
-    "frontendPort": 4443,
-    "backendPort": 2222,
-    "frontendPort": 2222,
-    "backendPort": 2793,
-    "frontendPort": 2793,</screen>
-   </step>
-   <step>
-    <para>
-     Set the network security group name and priority level. The priority
-     levels range from 100-4096, with 100 the highest priority. Each rule must
-     have a unique priority level:
-    </para>
-<screen>&prompt.user;export AZNSG=$(az network nsg list --resource-group=$MCRGNAME -o json | jq -r '.[].name')
-&prompt.user;export NSGPRI=200</screen>
-   </step>
-   <step>
-    <para>
-     Create the network security rule:
-    </para>
-<screen>&prompt.user;for i in $CAPPORTS
-do
-    az network nsg rule create \
-    --resource-group $MCRGNAME \
-    --priority $NSGPRI \
-    --nsg-name $AZNSG \
-    --name $AKSNAME-$i \
-    --direction Inbound \
-    --destination-port-ranges $i \
-    --access Allow
-    export NSGPRI=$(expr $NSGPRI + 10)
-done</screen>
-   </step>
-   <step>
-    <para>
-     Print the public and private IP addresses for later use:
-    </para>
-<screen>&prompt.user;echo -e "\n Resource Group:\t$RGNAME\n \
-Public IP:\t\t$(az network public-ip show --resource-group $MCRGNAME --name $AKSNAME-public-ip --query ipAddress)\n \
-Private IPs:\t\t\"$(az network nic list --resource-group $MCRGNAME -o json | jq -r '.[].ipConfigurations[].privateIpAddress' | paste -s -d " " | sed -e 's/ /", "/g')\"\n"
-
- Resource Group:        cap-aks
- Public IP:             "&publicip;"
- Private IPs:           "10.240.0.4", "10.240.0.6", "10.240.0.5"</screen>
-   </step>
-  </procedure>
- </sect1>
  <sect1 xml:id="sec.cap.cap-on-azure">
-  <title>Deploy &productname;</title>
-
+  <title>Deploy &productname; with a Load Balancer</title>
   <para>
-   Now Azure is ready, and you can deploy &productname; on it. After reviewing
-   the rest of this section proceed to
-   <xref linkend="sec.cap.helm-deploy-prod"/>. (Note that you will not install
-   &suse; &caasp;, which provides a &kube; cluster, because AKS provides a
-   managed &kube; cluster.)
+   In &productname;, load balancing is enabled by setting the <literal>services.loadbalanced</literal>
+   parameter to <literal>true</literal> and specifying a fully qualified domain name (FQDN)
+   for the <literal>DOMAIN</literal> parameter in your configuration file. When
+   <literal>services.loadbalanced</literal> is set to <literal>true</literal>, the
+   <link xlink:href="https://kubernetes.io/docs/concepts/services-networking/#publishing-services-service-types">ServiceType</link>
+   of public-facing services will change to
+   <link xlink:href="https://kubernetes.io/docs/concepts/services-networking/#loadbalancer">Type LoadBalancer</link>
+   and a load balancer will be provisioned for the service. In &azureks;, this provisions a
+   <link xlink:href="https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-overview#skus">Basic Load Balancer</link>.
   </para>
 
   <para>
-   The following example <filename>scf-azure-values.yaml</filename> contains
-   parameters particular to running &productname; on Azure Kubernetes Service.
-   You need the IP addresses from the last command in
-   <xref linkend="sec.cap.security-rules"/>. This is a simplified example that
-   does not use Azure's DNS services. For quick testing and proof of concept,
-   you can use the free wildcard DNS services,
-   <link xlink:href="http://xip.io/">xip.io</link> or
-   <link xlink:href="http://nip.io/">nip.io</link>. See
-   <link xlink:href="https://docs.microsoft.com/en-us/azure/dns/"> Azure DNS
-   Documentation</link> to learn more about Azure's name services.
+   The following is an example configuration file, called <filename>scf-azure-values.yaml</filename>,
+   used to deploy &cap; on Azure Kubernetes Service:
   </para>
 
-  <warning>
-   <title>Do not use xip.io or nip.io on production systems</title>
-   <para>
-    Never use xip.io or nip.io on production systems! You must provide proper
-    DNS and DHCP services on production clusters.
-   </para>
-  </warning>
+<screen>env:
+  # Use a FQDN
+  DOMAIN: <replaceable>autolb.example.com</replaceable>
 
-<screen>secrets:
+  # uaa prefix is required
+  UAA_HOST: uaa.<replaceable>autolb.example.com</replaceable>
+  UAA_PORT: 2793
+
+  #Azure deployment requires overlay
+  GARDEN_ROOTFS_DRIVER: "overlay-xfs"
+
+kube:
+  storage_class:
+    # Azure supports only "default" or "managed-premium"
+    persistent: "managed-premium"
+    shared: "shared"
+
+  registry:
+    hostname: "registry.suse.com"
+    username: ""
+    password: ""
+  organization: "cap"
+
+secrets:
   # Password for user 'admin' in the cluster
   CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
 
   # Password for SCF to authenticate with UAA
   UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
 
-env:
-  # Use the public IP address
-  DOMAIN: <replaceable>&publicip;.xip.io</replaceable>
-            
-  # uaa prefix is required
-  UAA_HOST: uaa.<replaceable>&publicip;.xip.io</replaceable>
-  UAA_PORT: 2793
-    
-  #Azure deployment requires overlay
-  GARDEN_ROOTFS_DRIVER: "overlay-xfs"
-    
-kube:
-  # List the private IP addresses
-  external_ips: ["<replaceable>10.240.0.5", "10.240.0.6", "10.240.0.4</replaceable>"]
-  storage_class:
-    # Azure supports only "default" or "managed-premium"
-    persistent: "managed-premium"
-    shared: "shared"
-    
-  registry:
-    hostname: "registry.suse.com"
-    username: ""
-    password: ""
-  organization: "cap"
+services:
+  loadbalanced: true
 </screen>
 
-  <para>
-   When your UAA deployment has completed, test that it is operating correctly
-   by running <command>curl</command> on the DNS name that you configured for
-   your UAA_HOST:
-  </para>
+  <sect2 xml:id="sec.cap.loadbalancer-azure-uaa">
+   <title>Deploy UAA</title>
+   <para>
+    Use &helm; to deploy the UAA server:
+   </para>
+<screen>&prompt.user;helm install suse/uaa \
+--name <replaceable>susecf-uaa</replaceable> \
+--namespace <replaceable>uaa</replaceable> \
+--values <replaceable>scf-azure-values.yaml</replaceable>
+</screen>
+   <para>
+    Wait until you have a successful UAA deployment before going to the next steps. Monitor
+    the progress using the <command>watch</command> command: 
+   </para>
+<screen>&prompt.user;watch -c 'kubectl get pods --namespace uaa'</screen>
+   <para>
+    Once the deployment completes, a &kube; service for UAA will be exposed on an Azure load
+    balancer that is automatically set up by AKS (named <literal>kubernetes</literal>
+    in the resource group that hosts the worker node VMs).
+   </para>
+   <para>
+    List the services that have been exposed on the load balancer public
+    IP. The name of these services end in <literal>-public</literal>. For example, 
+    the <literal>uaa</literal> service is exposed on 
+    <replaceable>40.85.188.67</replaceable> and port 2793.
+   </para>
+<screen>&prompt.user;kubectl get services --namespace uaa | grep public
+uaa-uaa-public    LoadBalancer   10.0.67.56     40.85.188.67   2793:32034/TCP
+</screen>
+   <para>
+    Use the DNS service of your choice to set up DNS A records for the service from 
+    the previous step. Use the public load balancer IP associated with the service
+    to create domain mappings:
+   </para>
+   <itemizedlist>
+    <listitem>
+     <para>
+      For the <literal>uaa</literal> service, map the following domains:
+     </para>
+     <variablelist>
+      <varlistentry>
+       <term>uaa.DOMAIN</term>
+       <listitem>
+        <para>
+         Using the example values, an A record for <literal>uaa.autolb.example.com</literal> that points to <replaceable>40.85.188.67</replaceable>
+        </para>    
+       </listitem>
+      </varlistentry>
+      <varlistentry>
+       <term>*.uaa.DOMAIN</term>
+       <listitem>
+        <para>
+         Using the example values, an A record for <literal>*.uaa.autolb.example.com</literal> that points to <replaceable>40.85.188.67</replaceable>
+        </para>
+       </listitem>
+      </varlistentry>
+     </variablelist>
+    </listitem>
+   </itemizedlist>
+   <para>
+    If you wish to use the DNS service provided by Azure, see the
+    <link xlink:href="https://docs.microsoft.com/en-us/azure/dns/"> Azure DNS
+    Documentation</link> to learn more.
+   </para>
+   <para>
+    Use <command>curl</command> to verify you are able to connect to the UAA OAuth server
+    on the DNS name configured:
+   </para>
+<screen>&prompt.user;curl -k https://uaa.autolb.example.com:2793/.well-known/openid-configuration</screen>
+   <para>
+    This should return a JSON object, as this abbreviated example shows:
+   </para>
 
-<screen>&prompt.user;curl -k https://uaa.&publicip;.xip.io:2793/.well-known/openid-configuration</screen>
+<screen>{"issuer":"https://uaa.autolb.example.com:2793/oauth/token",
+"authorization_endpoint":"https://uaa.autolb.example.com:2793
+/oauth/authorize","token_endpoint":"https://uaa.autolb.example.com:2793/oauth/token"
+</screen>
 
-  <para>
-   This should return a JSON object, as this abbreviated example shows:
-  </para>
+  </sect2>
+  <sect2 xml:id="sec.cap.loadbalancer-azure-scf">
+   <title>Deploy SCF</title>
+   <para>
+    Before deploying SCF, ensure the DNS records for the UAA domains have been
+    set up as specified in the previous section. Next, pass your UAA secret and
+    certificate to SCF, then use &helm; to deploy SCF:
+   </para>
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+-o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
-<screen>{"issuer":"https://uaa.&publicip;.xip.io:2793/oauth/token",
-"authorization_endpoint":"https://uaa.&publicip;.xip.io:2793
-/oauth/authorize","token_endpoint":"https://uaa.&publicip;.
-xip.io:2793/oauth/token"</screen>
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+-o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
-  <para>
-   Now you can complete your deployment by deploying UAA, SCF, and so on.
-  </para>
+&prompt.user;helm install suse/cf \
+--name <replaceable>susecf-scf</replaceable> \
+--namespace scf \
+--values scf-azure-values.yaml \
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
+</screen>
+   <para>
+    Monitor the deployment progress using the <command>watch</command> command:
+   </para>
+<screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
+   <para>
+    Once the deployment completes, a number of public services will be setup using
+    a load balancer that has been configured with corresponding load balancing rules
+    and probes as well as having the correct ports opened in Network Security Group.
+   </para>
+   <para>
+    List the services that have been exposed on the load balancer public
+    IP. The name of these services end in <literal>-public</literal>. For example,
+    the <literal>gorouter</literal> service is exposed on
+    <replaceable>23.96.32.205</replaceable>: 
+   </para>
+<screen>&prompt.user;kubectl get services --namespace scf | grep public
+diego-ssh-ssh-proxy-public                  LoadBalancer   10.0.44.118    40.71.187.83   2222:32412/TCP                                                                                                                                    1d
+router-gorouter-public                      LoadBalancer   10.0.116.78    23.96.32.205   80:32136/TCP,443:32527/TCP,4443:31541/TCP                                                                                                         1d
+tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.46.98    20000:30337/TCP,20001:31530/TCP,20002:32118/TCP,20003:30750/TCP,20004:31014/TCP,20005:32678/TCP,20006:31528/TCP,20007:31325/TCP,20008:30060/TCP   1d
+</screen>
+   <para>
+    Use the DNS service of your choice to set up DNS A records for the services from 
+    the previous step. Use the public load balancer IP associated with the service
+    to create domain mappings:
+   </para>
+   <itemizedlist>
+    <listitem>
+     <para>
+      For the <literal>gorouter</literal> service, map the following domains:
+     </para>
+     <variablelist>
+      <varlistentry>
+       <term>DOMAIN</term>
+       <listitem>
+        <para>
+         Using the example values, an A record for <replaceable>autolb.example.com</replaceable>
+         that points to <replaceable>23.96.32.205</replaceable> would be created.
+        </para>   
+       </listitem>
+      </varlistentry>
+      <varlistentry>
+       <term>*.DOMAIN</term>
+       <listitem>
+        <para>
+         Using the example values, an A record for <replaceable>*.autolb.example.com</replaceable>
+         that points to <replaceable>23.96.32.205</replaceable> would be created.
+        </para>
+       </listitem>
+      </varlistentry>
+     </variablelist>
+    </listitem>
+    <listitem>
+     <para>
+      For the <literal>diego-ssh</literal> service, map the following domain:
+     </para>
+     <variablelist>
+      <varlistentry>
+       <term>ssh.DOMAIN</term>
+       <listitem>
+        <para>
+         Using the example values, an A record for <replaceable>ssh.autolb.example.com</replaceable>
+         that points to <replaceable>40.71.187.83</replaceable> would be created.
+        </para>
+       </listitem>
+       </varlistentry>
+     </variablelist>
+    </listitem>
+    <listitem>
+     <para>
+      For the <literal>tcp-router</literal> service, map the following domain:
+     </para>
+     <variablelist>
+      <varlistentry>
+       <term>tcp.DOMAIN</term>
+       <listitem>
+        <para>
+         Using the example values, an A record for <replaceable>tcp.autolb.example.com</replaceable>
+         that points to <replaceable>23.96.46.98</replaceable> would be created.
+        </para>
+       </listitem>
+      </varlistentry>
+     </variablelist>
+    </listitem>
+   </itemizedlist>
+   <para>
+    If you wish to use the DNS service provided by Azure, see the
+    <link xlink:href="https://docs.microsoft.com/en-us/azure/dns/"> Azure DNS
+    Documentation</link> to learn more.
+   </para>
+   <para>
+    Your load balanced deployment of &cap; is now complete. Verify you can access the API endpoint:
+   </para>
+   <screen>&prompt.user;cf api --skip-ssl-validation https://api.autolb.example.com</screen>
+  </sect2>
  </sect1>
  <sect1 xml:id="sec.cap.azure-service-broker">
   <title>Configuring and Testing the Native &aks; Service Broker</title>
