@@ -248,7 +248,7 @@ cf login</screen>
    file. If rotation of the secrets is required, increment the value of
    <literal>secrets_generation_counter</literal> in the
    <literal>kube:</literal> section of the <filename>values.yaml</filename>
-   configuration file (e.g. the example
+   configuration file (for example the example
    <filename>scf-config-values.yaml</filename> used in this guide) then run
    <command>helm upgrade</command>.
   </para>

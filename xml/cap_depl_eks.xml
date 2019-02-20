@@ -661,7 +661,7 @@ secrets:
       the AWS Service Broker, make sure to update the &helm; chart version (the
       version as of this writing is <literal>1.0.0-beta.3</literal>). For the
       broker install, pass in a value indicating the Cluster Service Broker
-      should not be installed (e.g. <command>--set
+      should not be installed (for example <command>--set
       deployClusterServiceBroker=false</command>). Ensure an account and role
       with adequate IAM rights is chosen (see
       <xref linkend="sec.cap.aws-service-broker-prereqs"/>:
@@ -699,7 +699,7 @@ secrets:
      <para>
       Create a service broker in SCF. Note the name of the service broker
       should be the same as the one specified for the <literal>--name</literal>
-      flag in the <command>helm install</command> step (e.g.
+      flag in the <command>helm install</command> step (for example
       <literal>aws-servicebroker</literal>. Note that the username and password
       parameters are only used as dummy values to pass to the
       <command>cf</command> command:

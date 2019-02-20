@@ -22,13 +22,13 @@
  <procedure>
   <step>
    <para>
-    Get the name of the secret (e.g. <literal>secrets-2.14.5-1</literal>):
+    Get the name of the secret (for example <literal>secrets-2.14.5-1</literal>):
    </para>
 <screen>&prompt.user;kubectl get secret --namespace scf</screen>
   </step>
   <step>
    <para>
-    Get the URL of the <literal>cf-usb</literal> host (e.g.
+    Get the URL of the <literal>cf-usb</literal> host (for example
     <literal>https://cf-usb.scf.svc.cluster.local:24054</literal>):
    </para>
 <screen>&prompt.user;cf service-brokers</screen>
@@ -56,13 +56,13 @@
  <procedure>
   <step>
    <para>
-    Get the name of the secret (e.g. <literal>secrets-2.15.1-1</literal>):
+    Get the name of the secret (for example <literal>secrets-2.15.1-1</literal>):
    </para>
 <screen>&prompt.user;kubectl get secret --namespace scf</screen>
   </step>
   <step>
    <para>
-    Get the URL of the <literal>cf-usb</literal> host (e.g.
+    Get the URL of the <literal>cf-usb</literal> host (for example
     <literal>https://cf-usb-cf-usb.scf.svc.cluster.local:24054</literal>):
    </para>
 <screen>&prompt.user;cf service-brokers</screen>

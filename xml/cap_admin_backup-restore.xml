@@ -511,7 +511,7 @@
   <para>
    A backup and restore of an existing SCF deployment's raw data can be used to
    migrate all data to a new SCF deployment. This procedure is applicable to
-   deployments running on any &kube; cluster (e.g. &suse; &caasp;, Amazon EKS,
+   deployments running on any &kube; cluster (for example &suse; &caasp;, Amazon EKS,
    and Azure AKS described in this guide) and can included in your disaster
    recovery solution.
   </para>
