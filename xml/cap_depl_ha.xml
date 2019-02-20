@@ -71,7 +71,7 @@ perl -ne '/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail|scal
    <para>
     The simplest way to make your &productname; deployment highly available is
     to set <literal>HA</literal> to <literal>true</literal> in your deployment
-    configuration file, e.g. <filename>scf-config-values.yaml</filename>:
+    configuration file, for example <filename>scf-config-values.yaml</filename>:
    </para>
 <screen>
 config:
@@ -108,7 +108,7 @@ config:
    <para>
     The first example is for the UAA namespace,
     <filename>uaa-sizing.yaml</filename>. The values specified are the minimum
-    required for a &ha; deployment (i.e. equivalent to setting
+    required for a &ha; deployment (that is equivalent to setting
     <literal>config.HA</literal> to true):
    </para>
 <screen>
@@ -120,7 +120,7 @@ sizing:
 </screen>
    <para>
     The second example is for SCF, <filename>scf-sizing.yaml</filename>. The
-    values specified are the minimum required for a &ha; deployment (i.e.
+    values specified are the minimum required for a &ha; deployment (that is
     equivalent to setting <literal>config.HA</literal> to true), except for
     <literal>diego-cell</literal> which includes additional instances:
    </para>

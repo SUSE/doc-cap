@@ -154,7 +154,7 @@ cap-aks</screen>
     <para>
      Create the AKS managed cluster name. Azure's default is to use the
      resource group name, then prepend it with <literal>MC</literal> and append
-     the location, e.g. <literal>MC_cap-aks_cap-aks_eastus</literal>. This
+     the location, for example <literal>MC_cap-aks_cap-aks_eastus</literal>. This
      example uses the creator's initials for the <literal>AKSNAME</literal>
      environment variable, which will be mapped to the <command>az</command>
      command's <command>--name</command> option. The <command>--name</command>
@@ -208,7 +208,7 @@ cap-aks</screen>
    <step>
     <para>
      Create a unique nodepool name. The default is
-     <literal>aks-nodepool</literal> followed by an auto-generated number, e.g.
+     <literal>aks-nodepool</literal> followed by an auto-generated number, for example
      <literal>aks-nodepool1-39318075-2</literal>. You have the option to change
      <literal>nodepool1</literal> and create your own unique identifier, for
      example, <literal>mypool</literal>:

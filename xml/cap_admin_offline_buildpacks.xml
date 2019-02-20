@@ -75,7 +75,7 @@
    <listitem>
     <para>
      <replaceable>org</replaceable> is the Github organization hosting the
-     buildpack repositories, i.e.
+     buildpack repositories, such as
      <link xlink:href="https://github.com/cloudfoundry">"cloudfoundry"</link>
      or <link xlink:href="https://github.com/SUSE">"SUSE"</link>
     </para>
@@ -206,7 +206,7 @@ dotnet-core_buildpack   10         true      false    dotnet-core-buildpack-v2.0
       <listitem>
        <para>
         Using the <command>-b</command> option during <command>cf
-        push</command>. E.g.
+        push</command>, for example:
        </para>
 <screen>&prompt.user;cf push <replaceable>my_application</replaceable> -b <replaceable>my_buildpack</replaceable></screen>
       </listitem>

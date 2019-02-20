@@ -86,7 +86,7 @@
   <para>
    Create an OpenStack network plus a subnet for &caasp; (for example,
    <replaceable>caasp-net</replaceable>), and add a router to the external
-   (e.g. floating) network:
+   (floating) network:
   </para>
 
 <screen>&prompt.user;openstack network create <replaceable>caasp-net</replaceable>

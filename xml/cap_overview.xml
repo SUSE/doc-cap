@@ -204,7 +204,7 @@
    <title>Required Knowledge</title>
    <para>
     Installing and administering &productname; requires knowledge of Linux,
-    &docker;, &kube;, and your &kube; platform (e.g. &suse; &caasp;, AKS, EKS,
+    &docker;, &kube;, and your &kube; platform (for example &suse; &caasp;, AKS, EKS,
     OpenStack). You must plan resource allocation and network architecture by
     taking into account the requirements of your &kube; platform in addition to
     &scf; requirements. &scf; is a discrete component in your cloud stack, but
@@ -725,7 +725,7 @@
        <entry>&cap; components</entry>
        <entry>JSON object and HTTP Status code</entry>
        <entry>TLS certificate on external endpoint</entry>
-       <entry>&cap; Clients interact with the &scf; API (e.g. users deploying apps)</entry>
+       <entry>&cap; Clients interact with the &scf; API (for example users deploying apps)</entry>
       </row>
       <row>
        <entry>5</entry>
@@ -738,7 +738,7 @@
        <entry>&cap; components</entry>
        <entry>A stream of &scf; logs</entry>
        <entry>TLS certificate on external endpoint</entry>
-       <entry>&scf; clients ask for logs (e.g. user looking at application logs or administrator viewing system logs)</entry>
+       <entry>&scf; clients ask for logs (for example user looking at application logs or administrator viewing system logs)</entry>
       </row>
       <row>
        <entry>6</entry>
@@ -751,7 +751,7 @@
        <entry>&cap; components</entry>
        <entry>A duplex connection is created allowing the user to interact with a shell</entry>
        <entry>RSA SSH Key on external endpoint</entry>
-       <entry>&scf; Clients open an SSH connection to an application's container (e.g. users debugging their applications)</entry>
+       <entry>&scf; Clients open an SSH connection to an application's container (for example users debugging their applications)</entry>
       </row>
       <row>
        <entry>7</entry>
