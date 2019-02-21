@@ -630,7 +630,6 @@ a3872f427e6s490cb0a14c38ad8e-9362763047.us-west-2.elb.amazonaws.com
     with the load balancer IP address.
 </para>
  </sect1>
-
  <sect1 xml:id="sec.cap.aws-service-broker">
   <title>Deploying and Using the AWS Service Broker</title>
 
