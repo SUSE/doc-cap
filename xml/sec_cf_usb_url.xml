@@ -56,7 +56,7 @@
  <procedure>
   <step>
    <para>
-    Get the name of the secret (for example <literal>secrets-2.15.1-1</literal>):
+    Get the name of the secret (for example <literal>secrets-2.15.2-1</literal>):
    </para>
 <screen>&prompt.user;kubectl get secret --namespace scf</screen>
   </step>
@@ -72,7 +72,7 @@
     Get the current <literal>cf-usb</literal> password. Use the name of the
     secret obtained in the first step:
    </para>
-<screen>&prompt.user;kubectl get secret --namespace scf <replaceable>secrets-2.15.1-1</replaceable> -o yaml | grep \\scf-usb-password: | cut -d: -f2 | base64 -id</screen>
+<screen>&prompt.user;kubectl get secret --namespace scf <replaceable>secrets-2.15.2-1</replaceable> -o yaml | grep \\scf-usb-password: | cut -d: -f2 | base64 -id</screen>
   </step>
   <step>
    <para>
