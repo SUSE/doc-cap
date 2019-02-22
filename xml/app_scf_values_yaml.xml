@@ -18,7 +18,7 @@
  </para>
 
 <screen>apiVersion: 2.15.2+cf3.6.0.0.gde1bd02f
-appVersion: 1.13.1
+appVersion: 1.3.1
 description: A Helm chart for SUSE Cloud Foundry
 name: cf
 version: 2.15.2

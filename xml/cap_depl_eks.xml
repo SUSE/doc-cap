@@ -18,9 +18,13 @@
   <important>
      &readmefirst;
  </important>
+ <para>
+     This chapter describes how to deploy &productname; on Amazon EKS, using
+     Amazon's Elastic Load Balancer to provide fault-tolerant access to your 
+     cluster.
+ </para>
  <sect1 xml:id="sec.cap.eks-prereqs">
   <title>Prerequisites</title>
-
   <para>
    You need an <link xlink:href="https://aws.amazon.com/">Amazon EKS
    account</link>. See
@@ -28,24 +32,15 @@
    Started with Amazon EKS</link> for instructions on creating a &kube; cluster
    for your &productname; deployment.
   </para>
-
   <para>
    When you create your cluster, use node sizes that are at least a
-   <literal>DS4_v2</literal>. The <literal>NodeVolumeSize</literal> must be a
+   <literal>t2.large</literal>. The <literal>NodeVolumeSize</literal> must be a
    minimum of 60GB.
   </para>
   <para>
       Take note of special configurations that are required to successfully
-      deploy &productname; on AKS in <xref linkend="sec.cap.install-scf-eks"/>.
+      deploy &productname; on EKS in <xref linkend="sec.cap.install-scf-eks"/>.
   </para>
-  <para>
-      The instructions in this chapter provide general DNS requirements, and 
-      instructions for using the EKS load balancer to provide fault-tolerant 
-      access to your cluster. Your initial DNS configuration will map your
-      cluster domain to a single worker node, and then after the load balancer
-      is running your domain mappings must be changed to the load balancer.
-  </para>
-  
   <para>
   <xref linkend="sec.cap.eks-iam"/> provides guidance on configuring Identity
    and Access Management (IAM) for your users.
@@ -289,63 +284,20 @@ Custom TCP Rule    TCP          443             0.0.0.0/0       CAP HTTPS
 Custom TCP Rule    TCP          20000-20009     0.0.0.0/0       TCP Routing</screen>
  </sect1>
  
- <sect1 xml:id="sec.cap.eks.dns-first">
+ <sect1 xml:id="sec.cap.eks.elb">
      <title>DNS Configuration</title>
      <para>
-         Creation of the EKS load balancer is triggered by a setting in the &cap; 
-         deployment configuration file. This requires first mapping your cluster
-         domain to a worker node. If you are using the Amazon Route53 service 
-         for DNS, your domain and sub-domains are all CNAMEs.
-     </para>
-       <para>
-   For this first pre-deployment DNS configuration, look up the public and 
-   private IP addresses of one of the nodes in your virtual machine list. This 
-   node provides the initial access to your cluster, before the load balancer is
-   available. This private IP address is the <literal>external_ips:</literal> 
-   value in your deployment configuration file, which is called 
-   <filename>scf-config-values.yaml</filename> in this chapter (an example 
-   configuration file is provided in <xref linkend="sec.cap.eks-configuration"/>). 
-   Map the public IP address to your domain name.
+         Creation of the Elastic Load Balancer is triggered by a setting in the &cap; 
+         deployment configuration file. Create CNAMEs for your domain and 
+         subdomains (see the table below) that are not yet mapped to any hosts. 
+         Then deploy <literal>uaa</literal> and 
+         <literal>scf</literal>. After they have deployed successfully and the 
+         load balancer is available, the public services receive their 
+         own hostnames. Then edit your CNAMEs to map these hostnames to your 
+         domain and subdomains. 
   </para>
-     
-       <para>
-      A &productname; cluster exposes these four services:
-  </para>
-  <informaltable>
-      <tgroup cols="2">
-          <thead>
-              <row>
-                  <entry>&kube; service descriptions</entry>
-                  <entry>&kube; service names</entry>
-              </row>
-          </thead>
-          <tbody>
-              <row>
-                  <entry>User Account and Authentication (UAA)</entry>
-                  <entry>uaa-uaa-public</entry>
-               </row>
-               <row>
-                  <entry>Cloud Foundry (CF) TCP routing service</entry>
-                  <entry>tcp-router-tcp-router-public</entry>
-               </row>
-              <row>
-                  <entry>CF application SSH access</entry>
-                  <entry>diego-ssh-ssh-proxy-public</entry>
-               </row>
-               <row>
-                  <entry>CF router</entry>
-                  <entry>router-gorouter-public</entry>
-               </row>
-           </tbody>
-       </tgroup>
-   </informaltable>
-   <para>
-       <literal>uaa-uaa-public</literal> is in the <literal>uaa</literal> 
-       namespace, and the rest are in the <literal>scf</literal> namespace.
-   </para>
-         <para>
-         After deployment your domain must be changed to the load 
-         balancer IP address. The following table lists the required domain and 
+  <para>
+  The following table lists the required domain and 
          sub-domains, using <literal>example.com</literal> as the example domain:
      </para>
   <informaltable>
@@ -383,7 +335,43 @@ Custom TCP Rule    TCP          20000-20009     0.0.0.0/0       TCP Routing</scr
                </row>
            </tbody>
        </tgroup>
+</informaltable>
+     
+       <para>
+      A &productname; cluster exposes these four services:
+  </para>
+  <informaltable>
+      <tgroup cols="2">
+          <thead>
+              <row>
+                  <entry>&kube; service descriptions</entry>
+                  <entry>&kube; service names</entry>
+              </row>
+          </thead>
+          <tbody>
+              <row>
+                  <entry>User Account and Authentication (UAA)</entry>
+                  <entry>uaa-uaa-public</entry>
+               </row>
+               <row>
+                  <entry>Cloud Foundry (CF) TCP routing service</entry>
+                  <entry>tcp-router-tcp-router-public</entry>
+               </row>
+              <row>
+                  <entry>CF application SSH access</entry>
+                  <entry>diego-ssh-ssh-proxy-public</entry>
+               </row>
+               <row>
+                  <entry>CF router</entry>
+                  <entry>router-gorouter-public</entry>
+               </row>
+           </tbody>
+       </tgroup>
    </informaltable>
+   <para>
+       <literal>uaa-uaa-public</literal> is in the <literal>uaa</literal> 
+       namespace, and the rest are in the <literal>scf</literal> namespace.
+   </para>
 </sect1>
  
 <sect1 xml:id="sec.cap.eks-configuration">
@@ -394,10 +382,10 @@ Custom TCP Rule    TCP          20000-20009     0.0.0.0/0       TCP Routing</scr
   </para>
 
 <screen>env:
-  DOMAIN: <replaceable>public_ip_of_node-VM.example.com</replaceable>
-  UAA_HOST: uaa.<replaceable>public_ip_of_node-VM.example.com</replaceable>
+  DOMAIN: <replaceable>example.com</replaceable>
+  UAA_HOST: uaa.<replaceable>example.com</replaceable>
   UAA_PORT: 2793
- 
+  
   GARDEN_ROOTFS_DRIVER: overlay-xfs
   GARDEN_APPARMOR_PROFILE: ""
   
@@ -405,9 +393,6 @@ services:
   loadbalanced: true
   
 kube:
-  external_ips:
-  - <replaceable>private_ip_of_node-VM</replaceable>
-
   storage_class:
     # Change the value to the storage class you use
     persistent: "<replaceable>gp2</replaceable>"
@@ -430,7 +415,7 @@ secrets:
   </sect1>
   
   <sect1 xml:id="sec.cap.eks-deploy">
-      <!-- maybe change the content in this section to an entity (cjs, feb
+      <!-- maybe change some of the content in this section to an entity (cjs, feb
       12 2019_-->
      <title>Deploying &cap;</title>  
 <para>
@@ -443,23 +428,24 @@ secrets:
     <para>
      Download the &suse; &kube; charts repository
      (<xref
-     linkend="sec.cap.addrepo-eks" />)
+     linkend="sec.cap.addrepo-eks"/>)
     </para>
    </step>
    <step>
     <para>
-     Deploy UAA (<xref linkend="sec.cap.install-uaa-eks" />)
+     Deploy UAA (<xref linkend="sec.cap.install-uaa-eks"/>)
     </para>
    </step>
    <step>
     <para>
      Copy the UAA secret and certificate to the SCF namespace, deploy SCF
-     (<xref linkend="sec.cap.install-scf-eks" />)
+     (<xref linkend="sec.cap.install-scf-eks"/>)
     </para>
    </step>
       <step>
     <para>
-    Re-configure your DNS to use the load balancer
+    Verify that all services are running and the load balancer is available. Then
+    map the service hostnames to your CNAMEs. (<xref linkend="sec.cap.install-scf-eks"/>)
     </para>
    </step>
   </procedure>
@@ -551,7 +537,7 @@ post-deployment-setup-1-hnpln   0/1       Completed</screen>
       Because of the way EKS runs health checks, &cap; requires an edit to 
       one of the <literal>scf</literal> &helm; charts, and 
       then after a successful <literal>scf</literal> deployment remove a 
-      listening port from the EKS load balancer's listeners list.  
+      listening port from the Elastic Load Balancer's listeners list.  
   </para>
   <para>
       On your remote admin machine, look in
@@ -614,7 +600,7 @@ post-deployment-setup-1-hnpln   0/1       Completed</screen>
   </para>
   <screen>
 &prompt.user;kubectl get service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
-a3872f427e6s490cb0a14c38ad8e-9362763047.us-west-2.elb.amazonaws.com
+eb2f427e6s490cb0a14c38ad8e-0386047.us-west-2.elb.amazonaws.com
 </screen>
 <para>
     Remove port 8080 from the load balancer's listeners list:
@@ -624,10 +610,11 @@ a3872f427e6s490cb0a14c38ad8e-9362763047.us-west-2.elb.amazonaws.com
 --load-balancer-ports 8080
 </screen>
 <para>
-    Now health checks should operate correctly. The final step is to re-configure
-    your DNS to use the load balancer, which means changing the CNAMEs for your 
-    domain and sub-domains, replacing the pre-deployment worker node IP address
-    with the load balancer IP address.
+    Now health checks should operate correctly. The final step is to edit the 
+    CNAMEs for your domain and sub-domains, mapping them to the new public 
+    DNS hostnames for your services, which you will find in your EC2 Dashboard. 
+    These are long names with an <literal>elb</literal> subdomain, that look like
+    <replaceable>af83eda20cbb18e-542361233.us-west-2.elb.amazonaws.com</replaceable>
 </para>
  </sect1>
  <sect1 xml:id="sec.cap.aws-service-broker">
