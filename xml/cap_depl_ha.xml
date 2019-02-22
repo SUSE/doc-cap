@@ -71,14 +71,15 @@ perl -ne '/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail|scal
    <para>
     The simplest way to make your &productname; deployment highly available is
     to set <literal>HA</literal> to <literal>true</literal> in your deployment
-    configuration file, for example <filename>scf-config-values.yaml</filename>:
+    configuration file, for example
+    <filename>scf-config-values.yaml</filename>:
    </para>
 <screen>
 config:
   # Flag to activate high-availability mode
   HA: true
 </screen>
-<para>
+   <para>
     Or, you may pass it as a command-line option when you are deploying with
     &helm;, for example:
    </para>
@@ -165,7 +166,7 @@ sizing:
   tcp_router:
     count: 2
 </screen>
-<important>
+   <important>
 &fresh-namespace;
 </important>
    <para>

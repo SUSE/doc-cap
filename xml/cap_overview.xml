@@ -204,12 +204,12 @@
    <title>Required Knowledge</title>
    <para>
     Installing and administering &productname; requires knowledge of Linux,
-    &docker;, &kube;, and your &kube; platform (for example &suse; &caasp;, AKS, EKS,
-    OpenStack). You must plan resource allocation and network architecture by
-    taking into account the requirements of your &kube; platform in addition to
-    &scf; requirements. &scf; is a discrete component in your cloud stack, but
-    it still requires knowledge of administering and troubleshooting the
-    underlying stack.
+    &docker;, &kube;, and your &kube; platform (for example &suse; &caasp;,
+    AKS, EKS, OpenStack). You must plan resource allocation and network
+    architecture by taking into account the requirements of your &kube;
+    platform in addition to &scf; requirements. &scf; is a discrete component
+    in your cloud stack, but it still requires knowledge of administering and
+    troubleshooting the underlying stack.
    </para>
   </important>
 
