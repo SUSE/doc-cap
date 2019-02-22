@@ -82,10 +82,10 @@
       provides external access to the cluster. Another option is to use DNS
       round-robin to the &kube; workers to provide external access. It is also
       a common practice to create a wildcard DNS entry pointing to the domain,
-      for example *.&exampledomain;, so that applications can be deployed without
-      creating DNS entries for each application. This guide does not describe
-      how to set up a load balancer or name services, as these depend on
-      customer requirements and existing network architectures.
+      for example *.&exampledomain;, so that applications can be deployed
+      without creating DNS entries for each application. This guide does not
+      describe how to set up a load balancer or name services, as these depend
+      on customer requirements and existing network architectures.
      </para>
      <para>
       <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_deployment/data/sec_deploy_requirements_system.html#sec_deploy_requirements_network">

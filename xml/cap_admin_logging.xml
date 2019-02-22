@@ -211,9 +211,9 @@ output {
    <literal>LOG_LEVEL</literal> property found in the <literal>env:</literal>
    section. The <literal>LOG_LEVEL</literal> property is mapped to
    component-specific levels. Components have differing technology compositions
-   (for example languages, frameworks) and results in each component determining for
-   itself what content to provide at each level, which may vary between
-   components.
+   (for example languages, frameworks) and results in each component
+   determining for itself what content to provide at each level, which may vary
+   between components.
   </para>
 
   <para>

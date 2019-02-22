@@ -125,8 +125,9 @@ suse/uaa        2.7.0       A Helm chart for SUSE UAA
   <para>
    Just like your initial installation, wait for each command to complete
    before running the next command. Monitor progress with the
-   <command>watch</command> command for each namespace, for example <command>watch -c
-   'kubectl get pods --namespace uaa'</command>. First upgrade UAA:
+   <command>watch</command> command for each namespace, for example
+   <command>watch -c 'kubectl get pods --namespace uaa'</command>. First
+   upgrade UAA:
   </para>
 
 <screen>&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-uaa</replaceable> suse/uaa \

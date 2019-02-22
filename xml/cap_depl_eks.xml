@@ -15,16 +15,17 @@
    <dm:translation>yes</dm:translation>
   </dm:docmanager>
  </info>
-  <important>
+ <important>
      &readmefirst;
  </important>
  <para>
-     This chapter describes how to deploy &productname; on Amazon EKS, using
-     Amazon's Elastic Load Balancer to provide fault-tolerant access to your 
-     cluster.
+  This chapter describes how to deploy &productname; on Amazon EKS, using
+  Amazon's Elastic Load Balancer to provide fault-tolerant access to your
+  cluster.
  </para>
  <sect1 xml:id="sec.cap.eks-prereqs">
   <title>Prerequisites</title>
+
   <para>
    You need an <link xlink:href="https://aws.amazon.com/">Amazon EKS
    account</link>. See
@@ -32,17 +33,20 @@
    Started with Amazon EKS</link> for instructions on creating a &kube; cluster
    for your &productname; deployment.
   </para>
+
   <para>
-   When you create your cluster, use node sizes that are at least a
+   When you create your cluster, use node sizes that are at least
    <literal>t2.large</literal>. The <literal>NodeVolumeSize</literal> must be a
    minimum of 60GB.
   </para>
+
   <para>
-      Take note of special configurations that are required to successfully
-      deploy &productname; on EKS in <xref linkend="sec.cap.install-scf-eks"/>.
+   Take note of special configurations that are required to successfully deploy
+   &productname; on EKS in <xref linkend="sec.cap.install-scf-eks"/>.
   </para>
+
   <para>
-  <xref linkend="sec.cap.eks-iam"/> provides guidance on configuring Identity
+   <xref linkend="sec.cap.eks-iam"/> provides guidance on configuring Identity
    and Access Management (IAM) for your users.
   </para>
  </sect1>
@@ -203,16 +207,16 @@
 }</screen>
   </sect2>
  </sect1>
- 
  <sect1 xml:id="sec.cap.eks-helm">
   <title>The &helm; CLI and &tiller;</title>
 
   <para>
    Get the latest version of &helm;, and installation instructions, from the
-   <link xlink:href="https://docs.helm.sh/using_helm/#quickstart">&helm; 
-   Quickstart Guide</link>. Then create a &tiller; service account to give &tiller; 
-   sufficient permissions to make changes on your cluster. Create a configuration
-   file, which in this example is <filename>rbac-config.yaml</filename>:
+   <link xlink:href="https://docs.helm.sh/using_helm/#quickstart">&helm;
+   Quickstart Guide</link>. Then create a &tiller; service account to give
+   &tiller; sufficient permissions to make changes on your cluster. Create a
+   configuration file, which in this example is
+   <filename>rbac-config.yaml</filename>:
   </para>
 
 <screen>apiVersion: v1
@@ -283,99 +287,101 @@ Custom TCP Rule    TCP          4443            0.0.0.0/0       CAP WSS
 Custom TCP Rule    TCP          443             0.0.0.0/0       CAP HTTPS
 Custom TCP Rule    TCP          20000-20009     0.0.0.0/0       TCP Routing</screen>
  </sect1>
- 
- <sect1 xml:id="sec.cap.eks.elb">
-     <title>DNS Configuration</title>
-     <para>
-         Creation of the Elastic Load Balancer is triggered by a setting in the &cap; 
-         deployment configuration file. Create CNAMEs for your domain and 
-         subdomains (see the table below) that are not yet mapped to any hosts. 
-         Then deploy <literal>uaa</literal> and 
-         <literal>scf</literal>. After they have deployed successfully and the 
-         load balancer is available, the public services receive their 
-         own hostnames. Then edit your CNAMEs to map these hostnames to your 
-         domain and subdomains. 
-  </para>
+ <sect1 xml:id="sec.cap.eks.dns">
+  <title>DNS Configuration</title>
+
   <para>
-  The following table lists the required domain and 
-         sub-domains, using <literal>example.com</literal> as the example domain:
-     </para>
-  <informaltable>
-      <tgroup cols="2">
-          <thead>
-              <row>
-                  <entry>Domains</entry>
-                  <entry>Services</entry>
-              </row>
-          </thead>
-          <tbody>
-              <row>
-                  <entry>example.com</entry>
-                  <entry>scf/router-public</entry>
-               </row>
-               <row>
-                  <entry>*.example.com</entry>
-                  <entry>scf/router-public</entry>
-               </row>
-               <row>
-                  <entry>uaa.example.com</entry>
-                  <entry>uaa/uaa-public</entry>
-               </row>
-               <row>
-                  <entry>*.uaa.example.com</entry>
-                  <entry>uaa/uaa-public</entry>
-               </row>                
-              <row>
-                  <entry>tcp.example.com</entry>
-                  <entry>scf/tcp-router-public</entry>
-               </row>
-               <row>
-                  <entry>ssh.example.com</entry>
-                  <entry>scf/diego-access-public</entry>
-               </row>
-           </tbody>
-       </tgroup>
-</informaltable>
-     
-       <para>
-      A &productname; cluster exposes these four services:
+   Creation of the Elastic Load Balancer is triggered by a setting in the &cap;
+   deployment configuration file. First deploy <literal>uaa</literal>, then
+   create CNAMEs for your domain and <literal>uaa</literal> subdomains (see the
+   table below). Then deploy <literal>scf</literal>, and create the appropriate
+   <literal>scf</literal> CNAMEs. This is described in more detail in the
+   deployment sections.
   </para>
+
+  <para>
+   The following table lists the required domain and sub-domains, using
+   <literal>example.com</literal> as the example domain:
+  </para>
+
   <informaltable>
-      <tgroup cols="2">
-          <thead>
-              <row>
-                  <entry>&kube; service descriptions</entry>
-                  <entry>&kube; service names</entry>
-              </row>
-          </thead>
-          <tbody>
-              <row>
-                  <entry>User Account and Authentication (UAA)</entry>
-                  <entry>uaa-uaa-public</entry>
-               </row>
-               <row>
-                  <entry>Cloud Foundry (CF) TCP routing service</entry>
-                  <entry>tcp-router-tcp-router-public</entry>
-               </row>
-              <row>
-                  <entry>CF application SSH access</entry>
-                  <entry>diego-ssh-ssh-proxy-public</entry>
-               </row>
-               <row>
-                  <entry>CF router</entry>
-                  <entry>router-gorouter-public</entry>
-               </row>
-           </tbody>
-       </tgroup>
-   </informaltable>
-   <para>
-       <literal>uaa-uaa-public</literal> is in the <literal>uaa</literal> 
-       namespace, and the rest are in the <literal>scf</literal> namespace.
-   </para>
-</sect1>
- 
-<sect1 xml:id="sec.cap.eks-configuration">
-    <title>Deployment Configuration</title>
+   <tgroup cols="2">
+    <thead>
+     <row>
+      <entry>Domains</entry>
+      <entry>Services</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>uaa.example.com</entry>
+      <entry>uaa/uaa-public</entry>
+     </row>
+     <row>
+      <entry>*.uaa.example.com</entry>
+      <entry>uaa/uaa-public</entry>
+     </row>
+     <row>
+      <entry>example.com</entry>
+      <entry>scf/router-public</entry>
+     </row>
+     <row>
+      <entry>*.example.com</entry>
+      <entry>scf/router-public</entry>
+     </row>
+     <row>
+      <entry>tcp.example.com</entry>
+      <entry>scf/tcp-router-public</entry>
+     </row>
+     <row>
+      <entry>ssh.example.com</entry>
+      <entry>scf/diego-access-public</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+
+  <para>
+   A &productname; cluster exposes these four services:
+  </para>
+
+  <informaltable>
+   <tgroup cols="2">
+    <thead>
+     <row>
+      <entry>&kube; service descriptions</entry>
+      <entry>&kube; service names</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>User Account and Authentication (<literal>uaa</literal>)</entry>
+      <entry>uaa-uaa-public</entry>
+     </row>
+     <row>
+      <entry>Cloud Foundry (CF) TCP routing service</entry>
+      <entry>tcp-router-tcp-router-public</entry>
+     </row>
+     <row>
+      <entry>CF application SSH access</entry>
+      <entry>diego-ssh-ssh-proxy-public</entry>
+     </row>
+     <row>
+      <entry>CF router</entry>
+      <entry>router-gorouter-public</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+
+  <para>
+   <literal>uaa-uaa-public</literal> is in the <literal>uaa</literal>
+   namespace, and the rest are in the <literal>scf</literal> namespace.
+  </para>
+ </sect1>
+ <sect1 xml:id="sec.cap.eks-configuration">
+  <title>Deployment Configuration</title>
+
   <para>
    Use this example <filename>scf-config-values.yaml</filename> as a template
    for your configuration.
@@ -412,13 +418,14 @@ secrets:
   # Create a very strong password, and protect it because it
   # provides root access to everything
   UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable></screen>
-  </sect1>
-  
-  <sect1 xml:id="sec.cap.eks-deploy">
-      <!-- maybe change some of the content in this section to an entity (cjs, feb
+ </sect1>
+ <sect1 xml:id="sec.cap.eks-deploy">
+<!-- maybe change some of the content in this section to an entity (cjs, feb
       12 2019_-->
-     <title>Deploying &cap;</title>  
-<para>
+
+  <title>Deploying &cap;</title>
+
+  <para>
    The following list provides an overview of &helm; commands to complete the
    deployment. Included are links to detailed descriptions.
   </para>
@@ -433,19 +440,15 @@ secrets:
    </step>
    <step>
     <para>
-     Deploy UAA (<xref linkend="sec.cap.install-uaa-eks"/>)
+     Deploy <literal>uaa</literal>, then create appropriate CNAMEs
+     (<xref linkend="sec.cap.install-uaa-eks"/>)
     </para>
    </step>
    <step>
     <para>
-     Copy the UAA secret and certificate to the SCF namespace, deploy SCF
-     (<xref linkend="sec.cap.install-scf-eks"/>)
-    </para>
-   </step>
-      <step>
-    <para>
-    Verify that all services are running and the load balancer is available. Then
-    map the service hostnames to your CNAMEs. (<xref linkend="sec.cap.install-scf-eks"/>)
+     Copy the <literal>uaa</literal> secret and certificate to the
+     <literal>scf</literal> namespace, deploy <literal>scf</literal>, create
+     CNAMES (<xref linkend="sec.cap.install-scf-eks"/>)
     </para>
    </step>
   </procedure>
@@ -487,13 +490,13 @@ suse/nginx-ingress          	0.28.3 	An nginx Ingress controller that uses Confi
 suse/uaa                    	&latestuaachart;  A Helm chart for SUSE UAA
 </screen>
  </sect1>
-
  <sect1 xml:id="sec.cap.install-uaa-eks">
-  <title>Deploy UAA</title>
+  <title>Deploy <literal>uaa</literal></title>
 
   <para>
-   Use &helm; to deploy the UAA (User Account and Authentication) server. You
-   may create your own release <literal>--name</literal>:
+   Use &helm; to deploy the <literal>uaa</literal> (User Account and
+   Authentication) server. You may create your own release
+   <literal>--name</literal>:
   </para>
 
 <screen>&prompt.user;helm install suse/uaa \
@@ -502,24 +505,28 @@ suse/uaa                    	&latestuaachart;  A Helm chart for SUSE UAA
 --values scf-config-values.yaml</screen>
 
   <para>
-   Wait until you have a successful UAA deployment before going to the next
-   steps, which you can monitor with the <command>watch</command> command:
+   Wait until you have a successful <literal>uaa</literal> deployment before
+   going to the next steps, which you can monitor with the
+   <command>watch</command> command:
   </para>
 
 <screen>&prompt.user;watch -c 'kubectl get pods --namespace uaa'</screen>
 
   <para>
-   When the status shows RUNNING for all of the UAA nodes, proceed to deploying
-   &suse; &cf;. Pressing <keycombo> <keycap function="control"/>
-   <keycap>C</keycap> </keycombo> stops the <command>watch</command> command.
+   When the status shows RUNNING for all of the <literal>uaa</literal> pods,
+   create CNAMEs for the required domains. (See
+   <xref linkend="sec.cap.eks.dns"/>) Look in your EC2 Dashboard to find the
+   DNS Hostnames. These are long names with an <literal>elb</literal>
+   subdomain, for example
+   <replaceable>af83eda20cbb18e-542361233.us-west-2.elb.amazonaws.com</replaceable>
   </para>
 
   <important>
    <title>Some Pods Show Not Running</title>
    <para>
-    Some UAA and SCF pods perform only deployment tasks, and it is normal for
-    them to show as unready after they have completed their tasks, as these
-    examples show:
+    Some <literal>uaa</literal> and <literal>scf</literal> pods perform only
+    deployment tasks, and it is normal for them to show as unready after they
+    have completed their tasks, as these examples show:
    </para>
 <screen>
 &prompt.user;kubectl get pods --namespace uaa
@@ -530,31 +537,35 @@ secret-generation-1-m6k2h       0/1       Completed
 post-deployment-setup-1-hnpln   0/1       Completed</screen>
   </important>
  </sect1>
- 
  <sect1 xml:id="sec.cap.install-scf-eks">
-  <title>Deploy SCF</title>
-    <para>
-      Because of the way EKS runs health checks, &cap; requires an edit to 
-      one of the <literal>scf</literal> &helm; charts, and 
-      then after a successful <literal>scf</literal> deployment remove a 
-      listening port from the Elastic Load Balancer's listeners list.  
-  </para>
+  <title>Deploy <literal>scf</literal></title>
+
   <para>
-      On your remote admin machine, look in
-      <filename>~.helm/cache/archive/cf-2.15.2.tgz</filename>. Extract the
-      <filename>cf-2.15.2.tgz</filename>archive, and add this to the 
-      <literal>ports</literal> section of
-      <filename>templates/tcp-router.yaml</filename>:
+   Because of the way EKS runs health checks, &cap; requires an edit to one of
+   the <literal>scf</literal> &helm; charts, and then after a successful
+   <literal>scf</literal> deployment remove a listening port from the Elastic
+   Load Balancer's listeners list.
   </para>
-  <screen>
+
+  <para>
+   On your remote admin machine, look in
+   <filename>~.helm/cache/archive/cf-2.15.2.tgz</filename>. Extract the
+   <filename>cf-2.15.2.tgz</filename>archive, and add this to the
+   <literal>ports</literal> section of
+   <filename>templates/tcp-router.yaml</filename>:
+  </para>
+
+<screen>
 - name: "healthcheck"
   port: 8080
   protocol: "TCP"
   targetPort: "healthcheck"
 </screen>
-<para>
-    The section should look like this:
-</para>
+
+  <para>
+   The section should look like this:
+  </para>
+
 <screen>
     ports:
     - name: "healthcheck"
@@ -570,10 +581,10 @@ post-deployment-setup-1-hnpln   0/1       Completed</screen>
     selector:
       app.kubernetes.io/component: "tcp-router" 
       </screen>
-      
+
   <para>
-   Now pass your UAA secret and certificate to SCF, then use &helm; to
-   install &suse; &cf;:
+   Now pass your <literal>uaa</literal> secret and certificate to
+   <literal>scf</literal>, then use &helm; to install &suse; &cf;:
   </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
@@ -595,27 +606,22 @@ post-deployment-setup-1-hnpln   0/1       Completed</screen>
 <screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
 
   <para>
-   When all services are running, verify that the load balancer has been created
-   by viewing it in your EC2 Dashboard, or by fetching its hostname: 
+   Remove port 8080 from the load balancer's listeners list:
   </para>
-  <screen>
-&prompt.user;kubectl get service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
-eb2f427e6s490cb0a14c38ad8e-0386047.us-west-2.elb.amazonaws.com
-</screen>
-<para>
-    Remove port 8080 from the load balancer's listeners list:
-</para>
+
 <screen>&prompt.user;aws elb delete-load-balancer-listeners \
 --load-balancer-name  healthcheck   \
 --load-balancer-ports 8080
 </screen>
-<para>
-    Now health checks should operate correctly. The final step is to edit the 
-    CNAMEs for your domain and sub-domains, mapping them to the new public 
-    DNS hostnames for your services, which you will find in your EC2 Dashboard. 
-    These are long names with an <literal>elb</literal> subdomain, that look like
-    <replaceable>af83eda20cbb18e-542361233.us-west-2.elb.amazonaws.com</replaceable>
-</para>
+
+  <para>
+   Now health checks should operate correctly. When the status shows RUNNING
+   for all of the <literal>scf</literal> pods, create CNAMEs for the required
+   domains. (See <xref linkend="sec.cap.eks.dns"/>) Look in your EC2 Dashboard
+   to find the DNS Hostnames. These are long names with an
+   <literal>elb</literal> subdomain, for example
+   <replaceable>af83eda20cbb18e-542361233.us-west-2.elb.amazonaws.com</replaceable>
+  </para>
  </sect1>
  <sect1 xml:id="sec.cap.aws-service-broker">
   <title>Deploying and Using the AWS Service Broker</title>
@@ -624,7 +630,7 @@ eb2f427e6s490cb0a14c38ad8e-0386047.us-west-2.elb.amazonaws.com
    The <link xlink:href="https://aws.amazon.com/partners/servicebroker/">AWS
    Service Broker</link> provides integration of native AWS services with
    &suse; &cap;.
-     </para> 
+  </para>
 
   <sect2 xml:id="sec.cap.aws-service-broker-prereqs">
    <title>Prerequisites</title>
@@ -798,12 +804,12 @@ eb2f427e6s490cb0a14c38ad8e-0386047.us-west-2.elb.amazonaws.com
     </step>
     <step>
      <para>
-      Create a service broker in SCF. Note the name of the service broker
-      should be the same as the one specified for the <literal>--name</literal>
-      flag in the <command>helm install</command> step (for example
-      <literal>aws-servicebroker</literal>. Note that the username and password
-      parameters are only used as dummy values to pass to the
-      <command>cf</command> command:
+      Create a service broker in <literal>scf</literal>. Note the name of the
+      service broker should be the same as the one specified for the
+      <literal>--name</literal> flag in the <command>helm install</command>
+      step (for example <literal>aws-servicebroker</literal>. Note that the
+      username and password parameters are only used as dummy values to pass to
+      the <command>cf</command> command:
      </para>
 <screen>&prompt.user;cf create-service-broker aws-servicebroker <replaceable>username</replaceable> <replaceable>password</replaceable>  https://aws-servicebroker.${BROKER_NAMESPACE}</screen>
     </step>
@@ -868,7 +874,7 @@ eb2f427e6s490cb0a14c38ad8e-0386047.us-west-2.elb.amazonaws.com
     </step>
     <step>
      <para>
-      Delete the service broker in SCF:
+      Delete the service broker in <literal>scf</literal>:
      </para>
 <screen>&prompt.user;cf delete-service-broker aws-servicebroker</screen>
     </step>
