@@ -515,11 +515,11 @@ suse/uaa                    	&latestuaachart;  A Helm chart for SUSE UAA
   <para>
    When the status shows RUNNING for all of the <literal>uaa</literal> pods,
    create CNAMEs for the required domains. (See
-   <xref linkend="sec.cap.eks.dns"/>) Look in your EC2 Dashboard to find the
-   DNS Hostnames. These are long names with an <literal>elb</literal>
-   subdomain, for example
-   <replaceable>af83eda20cbb18e-542361233.us-west-2.elb.amazonaws.com</replaceable>
-  </para>
+   <xref linkend="sec.cap.eks.dns"/>.) Use <command>kubectl</command> to find
+   the service hostnames. These hostnames include the 
+   <literal>elb</literal> sub-domain, so use this to get the correct results:
+   </para>
+   <screen>&prompt.user;kubectl get services --namespace uaa | grep elb</screen>
 
   <important>
    <title>Some Pods Show Not Running</title>
@@ -537,6 +537,7 @@ secret-generation-1-m6k2h       0/1       Completed
 post-deployment-setup-1-hnpln   0/1       Completed</screen>
   </important>
  </sect1>
+ 
  <sect1 xml:id="sec.cap.install-scf-eks">
   <title>Deploy <literal>scf</literal></title>
 
@@ -617,12 +618,13 @@ post-deployment-setup-1-hnpln   0/1       Completed</screen>
   <para>
    Now health checks should operate correctly. When the status shows RUNNING
    for all of the <literal>scf</literal> pods, create CNAMEs for the required
-   domains. (See <xref linkend="sec.cap.eks.dns"/>) Look in your EC2 Dashboard
-   to find the DNS Hostnames. These are long names with an
-   <literal>elb</literal> subdomain, for example
-   <replaceable>af83eda20cbb18e-542361233.us-west-2.elb.amazonaws.com</replaceable>
-  </para>
+   domains. (See <xref linkend="sec.cap.eks.dns"/>) Use <command>kubectl</command> 
+   to find the service hostnames. These hostnames include the 
+   <literal>elb</literal> sub-domain, so use this to get the correct results:
+   </para>
+   <screen>&prompt.user;kubectl get services --namespace scf | grep elb</screen>
  </sect1>
+ 
  <sect1 xml:id="sec.cap.aws-service-broker">
   <title>Deploying and Using the AWS Service Broker</title>
 
