@@ -288,8 +288,6 @@ Happy Helming!</screen>
    </listitem>
   </itemizedlist>
 
-<!--TODO add info on custom PSPs -->
-
   <para>
    &productname; &productnumber; includes the necessary PSP configurations in
    the &helm; charts to run on &suse; &caasp;, and are set up automatically
@@ -410,19 +408,19 @@ persistentvolumeclaim "test-sc-persistent" deleted</screen>
 
   <para>
    Create a configuration file on your workstation for &helm; to use. In this
-   example it is called <filename>scf-config-values.yaml</filename>. (See the
-   <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/1/">Release
-   Notes</link> for information on configuration changes.)
+   example it is called <filename>scf-config-values.yaml</filename>. (See
+   <xref linkend="app.psps"/> for configuration instructions for releases older
+   than 1.3.1.)
   </para>
 
   <para>
    The example <filename>scf-config-values.yaml</filename> file is for a simple
-   deployment without an ingress controller or load balancer. Instead, one
-   worker node is assigned an external IP address, and this is mapped to the
-   domain name, providing external access to the cluster. In this case the
-   <literal>external_ips</literal> needs this address to provide access to the
-   Stratos Web interface. <literal>external_ips</literal> also needs the
-   internal IP addresses of the worker nodes to provide access to services.
+   deployment without an ingress controller or load balancer. Instead, assign
+   one worker node an external IP address, and map this to the domain name to
+   provide external access to the cluster. The <literal>external_ips</literal>
+   needs this address to provide access to the Stratos Web interface.
+   <literal>external_ips</literal> also needs the internal IP addresses of the
+   worker nodes to provide access to services.
   </para>
 
 <screen>
@@ -430,7 +428,7 @@ env:
   # Enter the domain you created for your CAP cluster
   DOMAIN: <replaceable>&exampledomain;</replaceable>
     
-  # UAA host and port
+  # <literal>uaa</literal> host and port
   UAA_HOST: uaa.<replaceable>&exampledomain;</replaceable>
   UAA_PORT: 2793
 
@@ -454,24 +452,8 @@ secrets:
   # Create a password for your CAP cluster
   CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
     
-  # Create a password for your UAA client secret
+  # Create a password for your uaa client secret
   UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
-
-sizing:
-  cc_uploader:
-    capabilities: ["SYS_RESOURCE"]
-  diego_api:
-    capabilities: ["SYS_RESOURCE"]
-  diego_brain:
-    capabilities: ["SYS_RESOURCE"]
-  diego_ssh:
-    capabilities: ["SYS_RESOURCE"]
-  nats:
-    capabilities: ["SYS_RESOURCE"]
-  router:
-    capabilities: ["SYS_RESOURCE"]
-  routing_api:
-    capabilities: ["SYS_RESOURCE"]
   </screen>
 
   <important>
@@ -501,18 +483,21 @@ sizing:
    </step>
    <step>
     <para>
-     Copy the storage secret of your storage cluster to the UAA and SCF
-     namespaces (<xref linkend="sec.cap.copy-secret-prod" />)
+     Copy the storage secret of your storage cluster to the
+     <literal>uaa</literal> and <literal>scf</literal> namespaces
+     (<xref linkend="sec.cap.copy-secret-prod" />)
     </para>
    </step>
    <step>
     <para>
-     Deploy UAA (<xref linkend="sec.cap.install-uaa-prod" />)
+     Deploy <literal>uaa</literal>
+     (<xref linkend="sec.cap.install-uaa-prod" />)
     </para>
    </step>
    <step>
     <para>
-     Copy the UAA secret and certificate to the SCF namespace, deploy SCF
+     Copy the <literal>uaa</literal> secret and certificate to the
+     <literal>scf</literal> namespace, deploy <literal>scf</literal>
      (<xref linkend="sec.cap.install-scf-prod" />)
     </para>
    </step>
@@ -552,15 +537,15 @@ suse/cf-usb-sidecar-postgres	1.0.1  	A Helm chart for SUSE Universal Service Bro
 suse/console                	&lateststratoschart;   A Helm chart for deploying Stratos UI Console
 suse/metrics                	1.0.0  	A Helm chart for Stratos Metrics
 suse/nginx-ingress          	0.28.3 	An nginx Ingress controller that uses ConfigMap...
-suse/uaa                    	&latestuaachart;  A Helm chart for SUSE UAA
+suse/uaa                    	&latestuaachart;  A Helm chart for SUSE <literal>uaa</literal>
 </screen>
  </sect1>
  <sect1 xml:id="sec.cap.copy-secret-prod">
   <title>Copy &ses; Secret</title>
 
   <para>
-   If you are using &ses; you must copy the Ceph admin secret to the UAA and
-   SCF namespaces:
+   If you are using &ses; you must copy the Ceph admin secret to the
+   <literal>uaa</literal> and <literal>scf</literal> namespaces:
   </para>
 
 <screen>&prompt.user;kubectl get secret ceph-secret-admin -o json --namespace default | \
@@ -570,11 +555,12 @@ sed 's/"namespace": "default"/"namespace": "uaa"/' | kubectl create -f -
 sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -</screen>
  </sect1>
  <sect1 xml:id="sec.cap.install-uaa-prod">
-  <title>Deploy UAA</title>
+  <title>Deploy <literal>uaa</literal></title>
 
   <para>
-   Use &helm; to deploy the UAA (User Account and Authentication) server. You
-   may create your own release <literal>--name</literal>:
+   Use &helm; to deploy the <literal>uaa</literal> (User Account and
+   Authentication) server. You may create your own release
+   <literal>--name</literal>:
   </para>
 
 <screen>&prompt.user;helm install suse/uaa \
@@ -583,40 +569,30 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -</screen>
 --values scf-config-values.yaml</screen>
 
   <para>
-   Wait until you have a successful UAA deployment before going to the next
-   steps, which you can monitor with the <command>watch</command> command:
+   Wait until you have a successful <literal>uaa</literal> deployment before
+   going to the next steps, which you can monitor with the
+   <command>watch</command> command:
   </para>
 
 <screen>&prompt.user;watch -c 'kubectl get pods --namespace uaa'</screen>
 
   <para>
-   When the status shows RUNNING for all of the UAA nodes, proceed to deploying
-   &suse; &cf;. Pressing <keycombo> <keycap function="control"/>
-   <keycap>C</keycap> </keycombo> stops the <command>watch</command> command.
+   When the status shows RUNNING for all of the <literal>uaa</literal> nodes,
+   proceed to deploying &suse; &cf;. Pressing <keycombo>
+   <keycap function="control"/> <keycap>C</keycap> </keycombo> stops the
+   <command>watch</command> command.
   </para>
 
   <important>
-   <title>Some Pods Show Not Running</title>
-   <para>
-    Some UAA and SCF pods perform only deployment tasks, and it is normal for
-    them to show as unready after they have completed their tasks, as these
-    examples show:
-   </para>
-<screen>
-&prompt.user;kubectl get pods --namespace uaa
-secret-generation-1-z4nlz   0/1       Completed
-          
-&prompt.user;kubectl get pods --namespace scf
-secret-generation-1-m6k2h       0/1       Completed
-post-deployment-setup-1-hnpln   0/1       Completed</screen>
+&completed-pods;
   </important>
  </sect1>
  <sect1 xml:id="sec.cap.install-scf-prod">
-  <title>Deploy SCF</title>
+  <title>Deploy <literal>scf</literal></title>
 
   <para>
-   First pass your UAA secret and certificate to SCF, then use &helm; to
-   install &suse; &cf;:
+   First pass your <literal>uaa</literal> secret and certificate to
+   <literal>scf</literal>, then use &helm; to install &suse; &cf;:
   </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \

@@ -16,13 +16,17 @@
   </dm:docmanager>
  </info>
 <!-- Content entities are in repeated-content-decl.ent. Paragraph breaks and
-      other formatting are in the entities -->
+      other formatting are in the entities, so beware of tag conflicts -->
  <para>
   Important things to know before deploying &productname;.
  </para>
  <sect1>
   <title>README first</title>
 &readmefirst;
+</sect1>
+ <sect1>
+  <title>Not running/Completed Pods</title>
+&completed-pods;
 </sect1>
  <sect1>
   <title>Namespaces</title> 

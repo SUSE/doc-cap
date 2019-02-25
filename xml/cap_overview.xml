@@ -49,9 +49,10 @@
   </para>
 
   <para>
-   &productname; is comprised of the &sle; builds of the UAA (User Account and
-   Authentication) server, &scf;, the Stratos Web user interface, and Stratos
-   Metrics (scheduled for the &productname; 1.3 release).
+   &productname; is comprised of the &sle; builds of the <literal>uaa</literal>
+   (User Account and Authentication) server, &scf;, the Stratos Web user
+   interface, and Stratos Metrics (scheduled for the &productname; 1.3
+   release).
   </para>
 
   <para>
@@ -411,7 +412,8 @@
     </listitem>
     <listitem>
      <para>
-      UAA, a &cap; service for authentication and authorization.
+      <literal>uaa</literal>, a &cap; service for authentication and
+      authorization.
      </para>
     </listitem>
     <listitem>
@@ -560,7 +562,7 @@
      <listitem>
       <para>
        A MariaDB server and component to route requests to replicas. (A
-       separate copy is deployed for UAA.)
+       separate copy is deployed for <literal>uaa</literal>.)
       </para>
      </listitem>
     </varlistentry>
@@ -709,10 +711,11 @@
        <entry>Get tokens</entry>
        <entry>OAuth2 client secret</entry>
        <entry>Varies, based on configured OAuth2 client scopes</entry>
-       <entry>UAA</entry>
+       <entry><literal>uaa</literal>
+       </entry>
        <entry>An OAuth2 refresh token used to interact with other service</entry>
        <entry>TLS certificate</entry>
-       <entry>&scf; components ask UAA for tokens so they can talk to each other</entry>
+       <entry>&scf; components ask <literal>uaa</literal> for tokens so they can talk to each other</entry>
       </row>
       <row>
        <entry>4</entry>

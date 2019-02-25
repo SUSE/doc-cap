@@ -31,7 +31,7 @@
   <itemizedlist>
    <listitem>
     <para>
-     Certificates for the SCF router should include:
+     Certificates for the <literal>scf</literal> router should include:
     </para>
     <itemizedlist>
      <listitem>
@@ -45,7 +45,7 @@
    </listitem>
    <listitem>
     <para>
-     Certificates for the UAA server should include:
+     Certificates for the <literal>uaa</literal> server should include:
     </para>
     <itemizedlist>
      <listitem>
@@ -72,17 +72,18 @@
 
   <para>
    Certificates used in &cap; are configurable through the
-   <filename>values.yaml</filename> files for the deployment of SCF and UAA
-   respectively. To specify a certificate, set the value for the certificate
-   and its corresponding private key under the <literal>secrets:</literal>
-   section using the following properties.
+   <filename>values.yaml</filename> files for the deployment of
+   <literal>scf</literal> and <literal>uaa</literal> respectively. To specify a
+   certificate, set the value for the certificate and its corresponding private
+   key under the <literal>secrets:</literal> section using the following
+   properties.
   </para>
 
   <itemizedlist>
    <listitem>
     <para>
-     In the <literal>values.yaml</literal> for SCF specify the
-     <literal>ROUTER_SSL_CERT</literal> property and the corresponding
+     In the <literal>values.yaml</literal> for <literal>scf</literal> specify
+     the <literal>ROUTER_SSL_CERT</literal> property and the corresponding
      <literal>ROUTER_SSL_KEY</literal>.
     </para>
     <note>
@@ -120,11 +121,12 @@
     <para>
      The <literal>--skip-ssl-validation</literal> option will not be used when
      setting a target API endpoint or logging in with the &cfcli;. As a result,
-     a certificate will need to be specified for the UAA component as well. In
-     the <literal>values.yaml</literal> for UAA, specify the
-     <literal>UAA_SERVER_CERT</literal> property and the corresponding
-     <literal>UAA_SERVER_KEY</literal>. If a self-signed certificate is used,
-     then the <literal>INTERNAL_CA_CERT</literal> property and its associated
+     a certificate will need to be specified for the <literal>uaa</literal>
+     component as well. In the <literal>values.yaml</literal> for
+     <literal>uaa</literal>, specify the <literal>UAA_SERVER_CERT</literal>
+     property and the corresponding <literal>UAA_SERVER_KEY</literal>. If a
+     self-signed certificate is used, then the
+     <literal>INTERNAL_CA_CERT</literal> property and its associated
      <literal>INTERNAL_CA_KEY</literal> will need to be set as well.
     </para>
 <screen>secrets:
@@ -254,7 +256,8 @@ cf login</screen>
   </para>
 
   <para>
-   This example demonstrates rotating the secrets of the scf deployment.
+   This example demonstrates rotating the secrets of the <literal>scf</literal>
+   deployment.
   </para>
 
   <para>

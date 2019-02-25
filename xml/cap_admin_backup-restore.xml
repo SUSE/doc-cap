@@ -43,11 +43,12 @@
    </listitem>
    <listitem>
     <para>
-     User information is managed by the User Account and Authentication (UAA)
-     server, not the Cloud Controller (CC). As the plugin talks only to the CC
-     it cannot save full user information, nor restore users. Saving and
-     restoring users must be performed separately, and user restoration must be
-     performed before the backup plugin is invoked.
+     User information is managed by the User Account and Authentication
+     (<literal>uaa</literal>) server, not the Cloud Controller (CC). As the
+     plugin talks only to the CC it cannot save full user information, nor
+     restore users. Saving and restoring users must be performed separately,
+     and user restoration must be performed before the backup plugin is
+     invoked.
     </para>
    </listitem>
    <listitem>
@@ -172,9 +173,10 @@
    <para>
     The following table lists the scope of the
     <literal>cf-plugin-backup</literal> backup. Organization and space users
-    are backed up at the &productname; level. The user account in UAA/LDAP, the
-    service instances and their application bindings, and buildpacks are not
-    backed up. The sections following the table goes into more detail.
+    are backed up at the &productname; level. The user account in
+    <literal>uaa</literal>/LDAP, the service instances and their application
+    bindings, and buildpacks are not backed up. The sections following the
+    table goes into more detail.
    </para>
    <informaltable>
     <tgroup cols="2">
@@ -269,9 +271,9 @@
     <command>cf backup-snapshot</command> extracts and saves the following
     information from the CC into a <filename>cf-backup.json</filename> snapshot
     file. Note that it does not save user information, but only the references
-    needed for the roles. The full user information is handled by the UAA
-    server, and the plugin talks only to the CC. The following list provides a
-    summary of what each plugin command does.
+    needed for the roles. The full user information is handled by the
+    <literal>uaa</literal> server, and the plugin talks only to the CC. The
+    following list provides a summary of what each plugin command does.
    </para>
    <itemizedlist>
     <listitem>
@@ -506,14 +508,15 @@
   </sect2>
  </sect1>
  <sect1 xml:id="sec.cap.backup-restore-of-raw-data">
-  <title>Disaster recovery in SCF through raw data backup and restore</title>
+  <title>Disaster recovery in <literal>scf</literal> through raw data backup and restore</title>
 
   <para>
-   A backup and restore of an existing SCF deployment's raw data can be used to
-   migrate all data to a new SCF deployment. This procedure is applicable to
-   deployments running on any &kube; cluster (for example &suse; &caasp;,
-   Amazon EKS, and Azure AKS described in this guide) and can included in your
-   disaster recovery solution.
+   A backup and restore of an existing <literal>scf</literal> deployment's raw
+   data can be used to migrate all data to a new <literal>scf</literal>
+   deployment. This procedure is applicable to deployments running on any
+   &kube; cluster (for example &suse; &caasp;, Amazon EKS, and Azure AKS
+   described in this guide) and can included in your disaster recovery
+   solution.
   </para>
 
   <para>
@@ -523,12 +526,13 @@
   <itemizedlist>
    <listitem>
     <para>
-     Access to a running deployment of SCF to create a backup with
+     Access to a running deployment of <literal>scf</literal> to create a
+     backup with
     </para>
    </listitem>
    <listitem>
     <para>
-     Access to a new deployment of SCF (deployed with a
+     Access to a new deployment of <literal>scf</literal> (deployed with a
      <filename>scf-config-values.yaml</filename> configured according to
      <xref linkend="prepare-config-for-new-cluster"/> of
      <xref linkend="sec.cap.raw-data-restore-procedure"/>) to perform the
@@ -599,8 +603,8 @@
   <sect2 xml:id="sec.cap.raw-data-backup-procedure">
    <title>Performing a raw data backup</title>
    <para>
-    Perform the following steps to create a backup of your source SCF
-    deployment.
+    Perform the following steps to create a backup of your source
+    <literal>scf</literal> deployment.
    </para>
    <procedure>
     <step>
@@ -672,10 +676,10 @@
    <title>Performing a raw data restore</title>
    <para>
     Perform the following steps to restore your backed up data to the target
-    SCF deployment.
+    <literal>scf</literal> deployment.
    </para>
    <important>
-    <title>Ensure access to the correct SCF deployment</title>
+    <title>Ensure access to the correct <literal>scf</literal> deployment</title>
     <para>
      Working with multiple &kube; clusters simultaneously can be confusing.
      Ensure you are communicating with the desired cluster
@@ -686,11 +690,12 @@
    <procedure>
     <step xml:id="prepare-config-for-new-cluster">
      <para>
-      The target SCF cluster needs to be deployed with the correct database
-      encryption key(s) set in your <filename>scf-config-values.yaml</filename>
-      before data can be restored. How the encryption key(s) will be prepared
-      in your <filename>scf-config-values.yaml</filename> depends on the result
-      of <xref linkend="get-encryption-key"/> in
+      The target <literal>scf</literal> cluster needs to be deployed with the
+      correct database encryption key(s) set in your
+      <filename>scf-config-values.yaml</filename> before data can be restored.
+      How the encryption key(s) will be prepared in your
+      <filename>scf-config-values.yaml</filename> depends on the result of
+      <xref linkend="get-encryption-key"/> in
       <xref linkend="sec.cap.raw-data-backup-procedure"/>
      </para>
      <itemizedlist>
@@ -732,9 +737,9 @@ secrets:
     </step>
     <step>
      <para>
-      Deploy a non-high-availability configuration of SCF (see
-      <xref linkend="sec.cap.install-scf-prod"/>) and wait until all pods are
-      ready before proceeding.
+      Deploy a non-high-availability configuration of <literal>scf</literal>
+      (see <xref linkend="sec.cap.install-scf-prod"/>) and wait until all pods
+      are ready before proceeding.
      </para>
     </step>
     <step>

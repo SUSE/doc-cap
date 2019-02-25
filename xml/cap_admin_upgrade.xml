@@ -19,9 +19,9 @@
   <title>Upgrading &productname;</title>
 
   <para>
-   UAA, SCF, and Stratos together make up a &productname; release. Maintenance
-   updates are delivered as container images from the &suse; registry and
-   applied with &helm;.
+   <literal>uaa</literal>, <literal>scf</literal>, and Stratos together make up
+   a &productname; release. Maintenance updates are delivered as container
+   images from the &suse; registry and applied with &helm;.
   </para>
 
   <para>
@@ -127,14 +127,15 @@ suse/uaa        2.7.0       A Helm chart for SUSE UAA
    before running the next command. Monitor progress with the
    <command>watch</command> command for each namespace, for example
    <command>watch -c 'kubectl get pods --namespace uaa'</command>. First
-   upgrade UAA:
+   upgrade <literal>uaa</literal>:
   </para>
 
 <screen>&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-uaa</replaceable> suse/uaa \
     --values scf-config-values.yaml</screen>
 
   <para>
-   Then extract the UAA secret for SCF to use:
+   Then extract the <literal>uaa</literal> secret for <literal>scf</literal> to
+   use:
   </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
@@ -144,10 +145,10 @@ suse/uaa        2.7.0       A Helm chart for SUSE UAA
 -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"</screen>
 
   <para>
-   Upgrade SCF, and note that if you see an error message like <literal>lost
-   connection to pod Error: UPGRADE FAILED: transport is closing</literal>,
-   this is normal. If you can run <command>watch -c 'kubectl get pods
-   --namespace scf'</command> then everything is all right.
+   Upgrade <literal>scf</literal>, and note that if you see an error message
+   like <literal>lost connection to pod Error: UPGRADE FAILED: transport is
+   closing</literal>, this is normal. If you can run <command>watch -c 'kubectl
+   get pods --namespace scf'</command> then everything is all right.
   </para>
 
 <screen>&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-scf</replaceable> suse/cf \
@@ -176,18 +177,20 @@ suse/uaa        2.7.0       A Helm chart for SUSE UAA
    By default, &helm; always installs the latest release. What if you
    accidentally skipped a release, and need to apply it before upgrading to the
    current release? Install the missing release by specifying the &helm; chart
-   version number. For example, your current UAA and SCF versions are 2.10.1.
-   Consult the table at the beginning of this chapter to see which releases you
-   have missed. In this example, the missing &helm; chart version for UAA and
-   SCF is 2.11.0. Use the <command>--version</command> option to install a
-   specific version:
+   version number. For example, your current <literal>uaa</literal> and
+   <literal>scf</literal> versions are 2.10.1. Consult the table at the
+   beginning of this chapter to see which releases you have missed. In this
+   example, the missing &helm; chart version for <literal>uaa</literal> and
+   <literal>scf</literal> is 2.11.0. Use the <command>--version</command>
+   option to install a specific version:
   </para>
 
 <screen>&prompt.user;helm upgrade --recreate-pods --version 2.11.0 <replaceable>susecf-uaa</replaceable> suse/uaa \
 --values scf-config-values.yaml</screen>
 
   <para>
-   Be sure to install the corresponding versions for SCF and Stratos.
+   Be sure to install the corresponding versions for <literal>scf</literal> and
+   Stratos.
   </para>
  </sect1>
 </chapter>

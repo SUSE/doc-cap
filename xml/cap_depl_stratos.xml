@@ -21,8 +21,8 @@
   <para>
    Stratos UI is a modern web-based management application for Cloud Foundry.
    It provides a graphical management console for both developers and system
-   administrators. Install Stratos with &helm; after all of the UAA and SCF
-   pods are running.
+   administrators. Install Stratos with &helm; after all of the
+   <literal>uaa</literal> and <literal>scf</literal> pods are running.
   </para>
 
   <para>
@@ -259,7 +259,7 @@ console-0                         3/3    Running  0         1h
    <para>
     As with deploying Stratos, you should deploy the metrics &helm; chart using
     the same <filename>scf-config-values.yaml</filename> file that was used for
-    deploying SCF and UAA.
+    deploying <literal>scf</literal> and <literal>uaa</literal>.
    </para>
    <para>
     Create a new yaml file named

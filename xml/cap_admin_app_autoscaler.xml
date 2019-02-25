@@ -60,7 +60,8 @@
   <para>
    By default, the App-AutoScaler service is not enabled as part of a &scf;
    deployment. To enable it, add the following values to your
-   <filename>scf-config-values.yaml</filename> file and deploy SCF:
+   <filename>scf-config-values.yaml</filename> file and deploy
+   <literal>scf</literal>:
   </para>
 
 <screen>
@@ -81,9 +82,10 @@ sizing:
   </para>
 
   <para>
-   If UAA is deployed, pass your UAA secret and certificate to SCF. Otherwise
-   deploy UAA first (See <xref linkend="sec.cap.install-uaa-prod"/>), then
-   proceed with this step:
+   If <literal>uaa</literal> is deployed, pass your <literal>uaa</literal>
+   secret and certificate to <literal>scf</literal>. Otherwise deploy
+   <literal>uaa</literal> first (See
+   <xref linkend="sec.cap.install-uaa-prod"/>), then proceed with this step:
   </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
@@ -95,7 +97,7 @@ sizing:
 
   <para>
    If this is an initial deployment, use <command>helm install</command> to
-   deploy SCF:
+   deploy <literal>scf</literal>:
   </para>
 
 <screen>&prompt.user;helm install suse/cf \

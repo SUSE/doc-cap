@@ -9,6 +9,29 @@ parent formatting tag in each entity, to avoid "Namespace default prefix was not
 found" errors
 ............................................................................-->
 
+<!ENTITY completed-pods 
+'<variablelist xmlns="http://docbook.org/ns/docbook">
+<varlistentry>
+     <term>Some pods show not running</term>
+     <listitem>
+      <para>
+       Some <literal>uaa</literal> and <literal>scf</literal> pods perform only 
+       deployment tasks, and it is normal for them to show as unready and 
+       <literal>Completed</literal> after they have completed their tasks, as 
+       these examples show: 
+      </para>
+<screen>
+&prompt.user;kubectl get pods --namespace uaa
+secret-generation-1-z4nlz   0/1       Completed
+          
+&prompt.user;kubectl get pods --namespace scf
+secret-generation-1-m6k2h       0/1       Completed
+post-deployment-setup-1-hnpln   0/1       Completed</screen>      
+     </listitem>
+    </varlistentry>
+</variablelist>'>
+
+
 <!ENTITY namespace-length 
 '<variablelist xmlns="http://docbook.org/ns/docbook">
 <varlistentry>
@@ -31,7 +54,8 @@ have a maximum length of 36 characters.
     If you are not creating a fresh &productname; installation, but have deleted 
     a previous deployment and are starting over, you must create new namespaces. 
     Do not re-use your old namespaces. The <command>helm delete</command> command 
-    does not remove generated secrets from the SCF and UAA namespaces as it is 
+    does not remove generated secrets from the <literal>scf</literal> and 
+    <literal>uaa</literal> namespaces as it is 
     not aware of them. These leftover secrets may cause deployment failures. See 
     <xref linkend="sec.cap.rebuild.depl"/> for more information.
       </para>
