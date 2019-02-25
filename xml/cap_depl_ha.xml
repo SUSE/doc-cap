@@ -41,7 +41,7 @@
    <para>
     Another way is to use Perl to extract the information for each role from
     the <literal>sizing:</literal> section. The following example is for the
-    UAA namespace.
+    <literal>uaa</literal> namespace.
    </para>
 <screen>
 &prompt.user;helm inspect values suse/uaa | \
@@ -57,9 +57,8 @@ perl -ne '/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail|scal
 218:    count: 1</screen>
    <para>
     The default <filename>values.yaml</filename> files are also included in
-    this guide at
-<!--TODO update with new appendix link-->
-    .
+    this guide at <xref linkend="app.uaa.values.yaml"/> and
+    <xref linkend="app.scf.values.yaml"/>. .
    </para>
   </sect2>
 
@@ -100,14 +99,14 @@ config:
   <sect2 xml:id="sec.cap.ha-custom">
    <title>Example Custom &ha; Configurations</title>
    <para>
-    The following two example &ha; configuration files are for the UAA and SCF
-    namespaces. The example values are not meant to be copied, as these depend
-    on your particular deployment and requirements. Do not change the
-    <literal>config.HA</literal> flag to <literal>true</literal> (see
-    <xref linkend="sec.cap.ha-simple"/>.)
+    The following two example &ha; configuration files are for the
+    <literal>uaa</literal> and <literal>scf</literal> namespaces. The example
+    values are not meant to be copied, as these depend on your particular
+    deployment and requirements. Do not change the <literal>config.HA</literal>
+    flag to <literal>true</literal> (see <xref linkend="sec.cap.ha-simple"/>.)
    </para>
    <para>
-    The first example is for the UAA namespace,
+    The first example is for the <literal>uaa</literal> namespace,
     <filename>uaa-sizing.yaml</filename>. The values specified are the minimum
     required for a &ha; deployment (that is equivalent to setting
     <literal>config.HA</literal> to true):
@@ -120,9 +119,10 @@ sizing:
     count: 2
 </screen>
    <para>
-    The second example is for SCF, <filename>scf-sizing.yaml</filename>. The
-    values specified are the minimum required for a &ha; deployment (that is
-    equivalent to setting <literal>config.HA</literal> to true), except for
+    The second example is for <literal>scf</literal>,
+    <filename>scf-sizing.yaml</filename>. The values specified are the minimum
+    required for a &ha; deployment (that is equivalent to setting
+    <literal>config.HA</literal> to true), except for
     <literal>diego-cell</literal> which includes additional instances:
    </para>
 <screen>
@@ -172,8 +172,8 @@ sizing:
    <para>
     After creating your configuration files, follow the steps in
     <xref linkend="sec.cap.configure-prod"/> until you get to
-    <xref linkend="sec.cap.install-uaa-prod"/>. Then deploy UAA with this
-    command:
+    <xref linkend="sec.cap.install-uaa-prod"/>. Then deploy
+    <literal>uaa</literal> with this command:
    </para>
 <screen>    
 &prompt.user;helm install suse/uaa \
@@ -183,8 +183,8 @@ sizing:
 --values uaa-sizing.yaml
 </screen>
    <para>
-    When the status shows RUNNING for all of the UAA nodes, deploy SCF with
-    these commands:
+    When the status shows RUNNING for all of the <literal>uaa</literal> nodes,
+    deploy SCF with these commands:
    </para>
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
 -o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
@@ -287,9 +287,10 @@ sizing:
   AZ_LABEL_NAME: <replaceable>"zone-label"</replaceable>
 </screen>
    <para>
-    If UAA is deployed, pass your UAA secret and certificate to SCF. Otherwise
-    deploy UAA first (See <xref linkend="sec.cap.install-uaa-prod"/>), then
-    proceed with this step:
+    If <literal>uaa</literal> is deployed, pass your <literal>uaa</literal>
+    secret and certificate to <literal>scf</literal>. Otherwise deploy
+    <literal>uaa</literal> first (See
+    <xref linkend="sec.cap.install-uaa-prod"/>), then proceed with this step:
    </para>
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
 -o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
@@ -299,7 +300,7 @@ sizing:
 </screen>
    <para>
     If this is an initial deployment, use <command>helm install</command> to
-    deploy SCF:
+    deploy <literal>scf</literal>:
    </para>
 <screen>&prompt.user;helm install suse/cf \
 --name susecf-scf \

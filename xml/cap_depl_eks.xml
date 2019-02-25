@@ -516,28 +516,16 @@ suse/uaa                    	&latestuaachart;  A Helm chart for SUSE UAA
    When the status shows RUNNING for all of the <literal>uaa</literal> pods,
    create CNAMEs for the required domains. (See
    <xref linkend="sec.cap.eks.dns"/>.) Use <command>kubectl</command> to find
-   the service hostnames. These hostnames include the 
-   <literal>elb</literal> sub-domain, so use this to get the correct results:
-   </para>
-   <screen>&prompt.user;kubectl get services --namespace uaa | grep elb</screen>
+   the service hostnames. These hostnames include the <literal>elb</literal>
+   sub-domain, so use this to get the correct results:
+  </para>
+
+<screen>&prompt.user;kubectl get services --namespace uaa | grep elb</screen>
 
   <important>
-   <title>Some Pods Show Not Running</title>
-   <para>
-    Some <literal>uaa</literal> and <literal>scf</literal> pods perform only
-    deployment tasks, and it is normal for them to show as unready after they
-    have completed their tasks, as these examples show:
-   </para>
-<screen>
-&prompt.user;kubectl get pods --namespace uaa
-secret-generation-1-z4nlz   0/1       Completed
-          
-&prompt.user;kubectl get pods --namespace scf
-secret-generation-1-m6k2h       0/1       Completed
-post-deployment-setup-1-hnpln   0/1       Completed</screen>
+&completed-pods;
   </important>
  </sect1>
- 
  <sect1 xml:id="sec.cap.install-scf-eks">
   <title>Deploy <literal>scf</literal></title>
 
@@ -618,13 +606,14 @@ post-deployment-setup-1-hnpln   0/1       Completed</screen>
   <para>
    Now health checks should operate correctly. When the status shows RUNNING
    for all of the <literal>scf</literal> pods, create CNAMEs for the required
-   domains. (See <xref linkend="sec.cap.eks.dns"/>) Use <command>kubectl</command> 
-   to find the service hostnames. These hostnames include the 
-   <literal>elb</literal> sub-domain, so use this to get the correct results:
-   </para>
-   <screen>&prompt.user;kubectl get services --namespace scf | grep elb</screen>
+   domains. (See <xref linkend="sec.cap.eks.dns"/>) Use
+   <command>kubectl</command> to find the service hostnames. These hostnames
+   include the <literal>elb</literal> sub-domain, so use this to get the
+   correct results:
+  </para>
+
+<screen>&prompt.user;kubectl get services --namespace scf | grep elb</screen>
  </sect1>
- 
  <sect1 xml:id="sec.cap.aws-service-broker">
   <title>Deploying and Using the AWS Service Broker</title>
 

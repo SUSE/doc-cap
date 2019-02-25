@@ -463,7 +463,7 @@ secrets:
   # Password for user 'admin' in the cluster
   CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
 
-  # Password for SCF to authenticate with UAA
+  # Password for scf to authenticate with uaa
   UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
 
 services:
@@ -471,9 +471,9 @@ services:
 </screen>
 
   <sect2 xml:id="sec.cap.loadbalancer-azure-uaa">
-   <title>Deploy UAA</title>
+   <title>Deploy <literal>uaa</literal></title>
    <para>
-    Use &helm; to deploy the UAA server:
+    Use &helm; to deploy the <literal>uaa</literal> server:
    </para>
 <screen>&prompt.user;helm install suse/uaa \
 --name <replaceable>susecf-uaa</replaceable> \
@@ -481,15 +481,16 @@ services:
 --values <replaceable>scf-azure-values.yaml</replaceable>
 </screen>
    <para>
-    Wait until you have a successful UAA deployment before going to the next
-    steps. Monitor the progress using the <command>watch</command> command:
+    Wait until you have a successful <literal>uaa</literal> deployment before
+    going to the next steps. Monitor the progress using the
+    <command>watch</command> command:
    </para>
 <screen>&prompt.user;watch -c 'kubectl get pods --namespace uaa'</screen>
    <para>
-    Once the deployment completes, a &kube; service for UAA will be exposed on
-    an Azure load balancer that is automatically set up by AKS (named
-    <literal>kubernetes</literal> in the resource group that hosts the worker
-    node VMs).
+    Once the deployment completes, a &kube; service for <literal>uaa</literal>
+    will be exposed on an Azure load balancer that is automatically set up by
+    AKS (named <literal>kubernetes</literal> in the resource group that hosts
+    the worker node VMs).
    </para>
    <para>
     List the services that have been exposed on the load balancer public IP.
@@ -540,8 +541,8 @@ uaa-uaa-public    LoadBalancer   10.0.67.56     40.85.188.67   2793:32034/TCP
     Documentation</link> to learn more.
    </para>
    <para>
-    Use <command>curl</command> to verify you are able to connect to the UAA
-    OAuth server on the DNS name configured:
+    Use <command>curl</command> to verify you are able to connect to the
+    <literal>uaa</literal> OAuth server on the DNS name configured:
    </para>
 <screen>&prompt.user;curl -k https://uaa.autolb.example.com:2793/.well-known/openid-configuration</screen>
    <para>
@@ -554,11 +555,13 @@ uaa-uaa-public    LoadBalancer   10.0.67.56     40.85.188.67   2793:32034/TCP
   </sect2>
 
   <sect2 xml:id="sec.cap.loadbalancer-azure-scf">
-   <title>Deploy SCF</title>
+   <title>Deploy <literal>scf</literal></title>
    <para>
-    Before deploying SCF, ensure the DNS records for the UAA domains have been
-    set up as specified in the previous section. Next, pass your UAA secret and
-    certificate to SCF, then use &helm; to deploy SCF:
+    Before deploying <literal>scf</literal>, ensure the DNS records for the
+    <literal>uaa</literal> domains have been set up as specified in the
+    previous section. Next, pass your <literal>uaa</literal> secret and
+    certificate to <literal>scf</literal>, then use &helm; to deploy
+    <literal>scf</literal>:
    </para>
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
 -o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')

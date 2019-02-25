@@ -45,7 +45,8 @@ secrets:
   </step>
   <step>
    <para>
-    Pass your UAA secret and certificate to SCF:
+    Pass your <literal>uaa</literal> secret and certificate to
+    <literal>scf</literal>:
    </para>
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
 -o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')

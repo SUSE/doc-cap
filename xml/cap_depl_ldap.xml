@@ -43,7 +43,7 @@
    <listitem>
     <para>
      <link xlink:href="https://docs.cloudfoundry.org/uaa/uaa-user-management.html">The
-     Cloud Foundry UAA command line interface (UAAC)</link>.
+     Cloud Foundry <literal>uaa</literal> command line interface (UAAC)</link>.
     </para>
    </listitem>
    <listitem>
@@ -65,13 +65,14 @@
   <itemizedlist>
    <listitem>
     <para>
-     Use UAAC to target your UAA server.
+     Use UAAC to target your <literal>uaa</literal> server.
     </para>
 <screen>&prompt.user;uaac target <replaceable>https://uaa.example.com:2793</replaceable></screen>
    </listitem>
    <listitem>
     <para>
-     Authenticate to the UAA server as <literal>admin</literal> using the
+     Authenticate to the <literal>uaa</literal> server as
+     <literal>admin</literal> using the
      <literal>UAA_ADMIN_CLIENT_SECRET</literal> set in your
      <filename>scf-config-values.yaml</filename> file.
     </para>
