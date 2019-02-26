@@ -128,6 +128,24 @@ sizing:
   <title>Using the App-AutoScaler Service</title>
 
   <para>
+   Create the Service Broker for App-AutoScaler:
+  </para>
+
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+-o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;AS_PASSWORD="$(kubectl get secret $SECRET --namespace scf -o jsonpath="{.data['autoscaler-service-broker-password']}" | base64 --decode)"
+
+&prompt.user;cf create-service-broker <replaceable>autoscaler</replaceable> <replaceable>username</replaceable> $AS_PASSWORD https://autoscalerservicebroker.<replaceable>example.com</replaceable>
+</screen>
+
+  <para>
+   Enable access to the service:
+  </para>
+
+<screen>&prompt.user;cf enable-service-access autoscaler -p autoscaler-free-plan</screen>
+
+  <para>
    Create a new instance of the App-AutoScaler service:
   </para>
 
