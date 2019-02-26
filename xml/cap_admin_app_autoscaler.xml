@@ -313,7 +313,7 @@ sizing:
         "operator": ">=",
         "cool_down_secs": 300,
         "adjustment": "+1"
-    }
+    }]
 }
 </screen>
 
