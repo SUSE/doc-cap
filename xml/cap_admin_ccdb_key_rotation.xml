@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha.cap.ccdb-secret-rotation"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <title>Cloud Controller Database Secret Rotation</title>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+ </info>
+ <para>
+  The Cloud Controller Database (CCDB) encrypts sensitive information like
+  passwords. By default, the encryption key is
+  <link xlink:href="https://github.com/SUSE/scf/blob/2d095a71008c33a23ca39d2ab9664e5602f8707e/container-host-files/etc/scf/config/role-manifest.yml#L1656-L1662">generated
+  by SCF</link>. If it is compromised and needs to be rotated, new keys can be
+  added. Note that existing encrypted information will not be updated. The
+  encrypted information must be set again to have them re-encrypted with the
+  new key. The old key cannot be dropped until all references to it are removed
+  from the database.
+ </para>
+ <para>
+  Updating these secrets is a manual process. The following procedure outlines
+  how this is done.
+ </para>
+ <procedure>
+  <step>
+   <para>
+    Create a file called <filename>new-key-values.yaml</filename> with content
+    of the form:
+   </para>
+<screen>env:
+  CC_DB_CURRENT_KEY_LABEL: <replaceable>new_key</replaceable>
+
+secrets:
+  CC_DB_ENCRYPTION_KEYS:
+    <replaceable>new_key</replaceable>: "<replaceable>new_key_value</replaceable>"
+   </screen>
+  </step>
+  <step>
+   <para>
+    Pass your <literal>uaa</literal> secret and certificate to
+    <literal>scf</literal>:
+   </para>
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+-o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+-o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+   </screen>
+  </step>
+  <step>
+   <para>
+    Use the <command>helm upgrade</command> command to import the above data
+    into the cluster. This restarts relevant pods with the new information from
+    the previous step:
+   </para>
+  </step>
+  <step>
+<screen>&prompt.user;helm upgrade susecf-scf suse/cf \
+--values scf-config-values.yaml \
+--values <replaceable>new-key-values.yaml</replaceable> \
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
+   </screen>
+  </step>
+  <step>
+   <para>
+    Perform the rotation:
+   </para>
+   <substeps>
+    <step>
+     <para>
+      Change the encryption key in the config file. No output should be
+      produced:
+     </para>
+<screen>&prompt.user;kubectl exec --namespace scf api-group-0 -- bash -c 'sed -i "/db_encryption_key:/c\\db_encryption_key: \"$(echo $CC_DB_ENCRYPTION_KEYS | jq -r .new_key)\"" /var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml'
+     </screen>
+    </step>
+    <step>
+     <para>
+      Run the rotation for the encryption keys. A series of JSON-formatted log
+      entries describing the key rotation progress for various Cloud Controller
+      models will be displayed:
+     </para>
+<screen>&prompt.user;kubectl exec --namespace scf api-group-0 -- bash -c 'export PATH=/var/vcap/packages/ruby-2.4/bin:$PATH ; export CLOUD_CONTROLLER_NG_CONFIG=/var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml ; cd /var/vcap/packages/cloud_controller_ng/cloud_controller_ng ; /var/vcap/packages/ruby-2.4/bin/bundle exec rake rotate_cc_database_key:perform'
+     </screen>
+    </step>
+   </substeps>
+   <para>
+    Note that keys should be appended to the existing secret to ensure existing
+    environment variables can be decoded. Any operator can check which keys are
+    in use by accessing the CCDB. If the
+    <literal>encryption_key_label</literal> is empty, the default generated key
+    is still being used
+   </para>
+<screen>&prompt.user;kubectl exec -it mysql-0 --namespace scf -- /bin/bash -c 'mysql -p${MYSQL_ADMIN_PASSWORD}'
+MariaDB [(none)]> select name, encrypted_environment_variables, encryption_key_label from ccdb.apps;
++--------+--------------------------------------------------------------------------------------------------------------+----------------------+
+| name   | encrypted_environment_variables                                                                              | encryption_key_label |
++--------+--------------------------------------------------------------------------------------------------------------+----------------------+
+| go-env | XF08q9HFfDkfxTvzgRoAGp+oci2l4xDeosSlfHJUkZzn5yvr0U/+s5LrbQ2qKtET0ssbMm3L3OuSkBnudZLlaCpFWtEe5MhUe2kUn3A6rUY= | key0                 |
++--------+--------------------------------------------------------------------------------------------------------------+----------------------+
+1 row in set (0.00 sec)
+   </screen>
+   <para>
+    For example, if keys were being rotated again, the secret would become:
+   </para>
+<screen>SECRET_DATA=$(echo "{key0: abc-123, key1: def-456}" | base64)</screen>
+   <para>
+    and the <literal>CC_DB_CURRENT_KEY_LABEL</literal> would be updated to
+    match the new key.
+   </para>
+  </step>
+ </procedure>
+ <sect1 xml:id="sec.cap.ccdb-tables">
+  <title>Tables with Encrypted Information</title>
+
+  <para>
+   The CCDB contains several tables with encrypted information as follows:
+  </para>
+
+  <variablelist>
+   <varlistentry>
+    <term>apps</term>
+    <listitem>
+     <para>
+      Environment variables
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>buildpack_lifecycle_buildpacks</term>
+    <listitem>
+     <para>
+      Buildpack URLs may contain passwords
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>buildpack_lifecycle_data</term>
+    <listitem>
+     <para>
+      Buildpack URLs may contain passwords
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>droplets</term>
+    <listitem>
+     <para>
+      May contain Docker registry passwords
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>env_groups</term>
+    <listitem>
+     <para>
+      Environment variables
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>packages</term>
+    <listitem>
+     <para>
+      May contain Docker registry passwords
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>service_bindings</term>
+    <listitem>
+     <para>
+      Contains service credentials
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>service_brokers</term>
+    <listitem>
+     <para>
+      Contains service credentials
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>service_instances</term>
+    <listitem>
+     <para>
+      Contains service credentials
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>service_keys</term>
+    <listitem>
+     <para>
+      Contains service credentials
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>tasks</term>
+    <listitem>
+     <para>
+      Environment variables
+     </para>
+    </listitem>
+   </varlistentry>
+  </variablelist>
+
+  <sect2 xml:id="sec.cap.ccdb-update-existing-table-data">
+   <title>Update existing data with new encryption key</title>
+   <para>
+    To ensure the encryption key is updated for existing data, the command (or
+    its <command>update-</command> equivalent) can be run again with the same
+    parameters. Some commands need to be deleted/recreated to update the label.
+   </para>
+   <variablelist>
+    <varlistentry>
+     <term>apps</term>
+     <listitem>
+      <para>
+       Run <command>cf set-env</command> again
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>buildpack_lifecycle_buildpacks, buildpack_lifecycle_data, droplets</term>
+     <listitem>
+      <para>
+       <command>cf restage</command> the app
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>packages</term>
+     <listitem>
+      <para>
+       <command>cf delete</command>, then <command>cf push</command> the app
+       (Docker apps with registry password)
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>env_groups</term>
+     <listitem>
+      <para>
+       Run <command>cf set-staging-environment-variable-group</command> or
+       <command>cf set-running-environment-variable-group</command> again
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>service_bindings</term>
+     <listitem>
+      <para>
+       Run <command>cf unbind-service</command> and <command>cf
+       bind-service</command> again
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>service_brokers</term>
+     <listitem>
+      <para>
+       Run <command>cf update-service-broker</command> with the appropriate
+       credentials
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>service_instances</term>
+     <listitem>
+      <para>
+       Run <command>cf update-service</command> with the appropriate
+       credentials
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>service_keys</term>
+     <listitem>
+      <para>
+       Run <command>cf delete-service-key</command> and <command>cf
+       create-service-key</command> again
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>tasks</term>
+     <listitem>
+      <para>
+       While tasks have an encryption key label, they are generally meant to be
+       a one-off event, and left to run to completion. If there is a task still
+       running, it could be stopped with <command>cf terminate-task</command>,
+       then run again with <command>cf run-task</command>.
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </sect2>
+ </sect1>
+</chapter>

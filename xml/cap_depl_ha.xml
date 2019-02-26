@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha.cap.ha"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <title>&productname; &ha;</title>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+ </info>
+ <sect1 xml:id="sec.cap.ha-prod">
+  <title>Example &ha; Configuration</title>
+
+  <para>
+   There are two ways to make your &productname; deployment highly available.
+   The simplest method is to set the <literal>HA</literal> parameter in your
+   deployment configuration file to <literal>true</literal>. The second method
+   is to create custom configuration files with your own custom values.
+  </para>
+
+  <sect2 xml:id="sec.cap.ha-defaults">
+   <title>Finding Default and Allowable Sizing Values</title>
+   <para>
+    The <literal>sizing:</literal> section in the &helm;
+    <filename>values.yaml</filename> files for each namespace describes which
+    roles can be scaled, and the scaling options for each role. You may use
+    <command>helm inspect</command> to read the <literal>sizing:</literal>
+    section in the &helm; charts:
+   </para>
+<screen>
+&prompt.user;helm inspect suse/uaa | less +/sizing:
+&prompt.user;helm inspect suse/cf | less +/sizing:
+</screen>
+   <para>
+    Another way is to use Perl to extract the information for each role from
+    the <literal>sizing:</literal> section. The following example is for the
+    <literal>uaa</literal> namespace.
+   </para>
+<screen>
+&prompt.user;helm inspect values suse/uaa | \
+perl -ne '/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail|scale|count/ }'
+151:    # The mysql instance group can scale between 1 and 3 instances.
+152:    # For high availability it needs at least 2 instances.
+153:    count: 1
+178:    # The secret-generation instance group cannot be scaled.
+179:    count: 1
+207:  #   for managing user accounts and for registering OAuth2 clients, as well as
+216:    # The uaa instance group can scale between 1 and 65535 instances.
+217:    # For high availability it needs at least 2 instances.
+218:    count: 1</screen>
+   <para>
+    The default <filename>values.yaml</filename> files are also included in
+    this guide at <xref linkend="app.uaa.values.yaml"/> and
+    <xref linkend="app.scf.values.yaml"/>. .
+   </para>
+  </sect2>
+
+  <sect2 xml:id="sec.cap.ha-simple">
+   <title>Simple &ha; Configuration</title>
+   <important>   
+&fresh-namespace;
+</important>
+   <para>
+    The simplest way to make your &productname; deployment highly available is
+    to set <literal>HA</literal> to <literal>true</literal> in your deployment
+    configuration file, for example
+    <filename>scf-config-values.yaml</filename>:
+   </para>
+<screen>
+config:
+  # Flag to activate high-availability mode
+  HA: true
+</screen>
+   <para>
+    Or, you may pass it as a command-line option when you are deploying with
+    &helm;, for example:
+   </para>
+<screen>
+&prompt.user;helm install suse/uaa \
+ --name susecf-uaa \
+ --namespace uaa \ 
+ --values scf-config-values.yaml \
+ --set config.HA=true
+</screen>
+   <para>
+    This changes all roles with a default size of 1 to the minimum required for
+    a &ha; deployment. It is not possible to customize any of the sizing
+    values.
+   </para>
+  </sect2>
+
+  <sect2 xml:id="sec.cap.ha-custom">
+   <title>Example Custom &ha; Configurations</title>
+   <para>
+    The following two example &ha; configuration files are for the
+    <literal>uaa</literal> and <literal>scf</literal> namespaces. The example
+    values are not meant to be copied, as these depend on your particular
+    deployment and requirements. Do not change the <literal>config.HA</literal>
+    flag to <literal>true</literal> (see <xref linkend="sec.cap.ha-simple"/>.)
+   </para>
+   <para>
+    The first example is for the <literal>uaa</literal> namespace,
+    <filename>uaa-sizing.yaml</filename>. The values specified are the minimum
+    required for a &ha; deployment (that is equivalent to setting
+    <literal>config.HA</literal> to true):
+   </para>
+<screen>
+sizing:
+  mysql:
+    count: 2
+  uaa:
+    count: 2
+</screen>
+   <para>
+    The second example is for <literal>scf</literal>,
+    <filename>scf-sizing.yaml</filename>. The values specified are the minimum
+    required for a &ha; deployment (that is equivalent to setting
+    <literal>config.HA</literal> to true), except for
+    <literal>diego-cell</literal> which includes additional instances:
+   </para>
+<screen>
+sizing:
+  adapter:
+    count: 2
+  api_group:
+    count: 2
+  cc_clock:
+    count: 2
+  cc_uploader:
+    count: 2
+  cc_worker:
+    count: 2
+  cf_usb:
+    count: 2
+  diego_api:
+    count: 2
+  diego_brain:
+    count: 2
+  diego_cell:
+    count: 6
+  diego_ssh:
+    count: 2
+  doppler:
+    count: 2
+  log-api:
+    count: 2
+  mysql:
+    count: 2
+  nats:
+    count: 2
+  nfs_broker:
+    count: 2
+  router:
+    count: 2
+  routing_api:
+    count: 2
+  syslog_scheduler:
+    count: 2
+  tcp_router:
+    count: 2
+</screen>
+   <important>
+&fresh-namespace;
+</important>
+   <para>
+    After creating your configuration files, follow the steps in
+    <xref linkend="sec.cap.configure-prod"/> until you get to
+    <xref linkend="sec.cap.install-uaa-prod"/>. Then deploy
+    <literal>uaa</literal> with this command:
+   </para>
+<screen>    
+&prompt.user;helm install suse/uaa \
+--name <replaceable>susecf-uaa</replaceable> \
+--namespace uaa \ 
+--values scf-config-values.yaml \
+--values uaa-sizing.yaml
+</screen>
+   <para>
+    When the status shows RUNNING for all of the <literal>uaa</literal> nodes,
+    deploy SCF with these commands:
+   </para>
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+-o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+ -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"    
+
+&prompt.user;helm install suse/cf \
+--name <replaceable>susecf-scf</replaceable> \
+--namespace scf \
+--values scf-config-values.yaml \
+--values scf-sizing.yaml \
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
+</screen>
+   <para>
+    The HA pods with the following roles will enter in both passive and ready
+    states; there should always be at least one pod in each role that is ready.
+   </para>
+   <itemizedlist>
+    <listitem>
+     <para>
+      diego-brain
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      diego-database
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      routing-api
+     </para>
+    </listitem>
+   </itemizedlist>
+   <para>
+    You can confirm this by looking at the logs inside the container. Look for
+    <literal>.consul-lock.acquiring-lock</literal>.
+   </para>
+   <para>
+    Some roles follow an active/passive scaling model, meaning all pods except
+    the active one will be shown as NOT READY by &kube;. This is appropriate
+    and expected behavior.
+   </para>
+  </sect2>
+
+  <sect2 xml:id="sec.cap.ha-prod-upgrade">
+   <title>Upgrading a non-&ha; Deployment to &ha;</title>
+   <para>
+    You may make a non-&ha; deployment highly available by upgrading with
+    &helm;:
+   </para>
+<screen>
+&prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa \
+--values scf-config-values.yaml \
+--values uaa-sizing.yaml 
+
+&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+-o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+ -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"    
+
+&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
+--values scf-config-values.yaml \
+--values scf-sizing.yaml \
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
+</screen>
+   <para>
+    This may take a long time, and your cluster will be unavailable until the
+    upgrade is complete.
+   </para>
+  </sect2>
+ </sect1>
+ <sect1 xml:id="sec.cap.ha-custom-availability-zone-handling">
+  <title>Handling Custom Availability Zone Information</title>
+
+  <sect2 xml:id="sec.cap.availability-zones">
+   <title>Availability Zones</title>
+   <para>
+    Availability Zones (AZ) are logical arrangements of compute nodes within a
+    region that provide isolation from each other. A deployment that is
+    distributed across multiple AZs can use this separation to increase
+    resiliency against downtime in the event a given zone experiences issues.
+    See
+    <link xlink:href="https://docs.cloudfoundry.org/concepts/high-availability.html#azs">
+    Availability Zones</link> for more information.
+   </para>
+  </sect2>
+
+  <sect2 xml:id="sec.cap.enable-custom-availability-zone-handling">
+   <title>Enable Custom Availability Zone Information Handling</title>
+   <para>
+    By default, handling of custom AZ information is disabled. To enable it,
+    provide a label name as a string to the <literal>AZ_LABEL_NAME</literal>
+    field in the <literal>env:</literal> section of your
+    <filename>scf-config-values.yaml</filename>:
+   </para>
+<screen>env:
+  AZ_LABEL_NAME: <replaceable>"zone-label"</replaceable>
+</screen>
+   <para>
+    If <literal>uaa</literal> is deployed, pass your <literal>uaa</literal>
+    secret and certificate to <literal>scf</literal>. Otherwise deploy
+    <literal>uaa</literal> first (See
+    <xref linkend="sec.cap.install-uaa-prod"/>), then proceed with this step:
+   </para>
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+-o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+-o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+</screen>
+   <para>
+    If this is an initial deployment, use <command>helm install</command> to
+    deploy <literal>scf</literal>:
+   </para>
+<screen>&prompt.user;helm install suse/cf \
+--name susecf-scf \
+--namespace scf \
+--values scf-config-values.yaml \
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
+</screen>
+   <para>
+    If this is an existing deployment, use <command>helm upgrade</command> to
+    apply the change:
+   </para>
+<screen>&prompt.user;helm upgrade susecf-scf suse/cf \
+--values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}"
+</screen>
+   <para>
+    Enabling this feature requires that the node-reader service account has
+    sufficient permissions. This can be provided through a configuration file
+    and <command>kubectl</command>.
+   </para>
+   <para>
+    Create the configuration file, which in this example will be
+    <filename>node-reader.yaml</filename>:
+   </para>
+<screen>kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: node-reader-clusterrole
+  labels:
+    rbac.authorization.k8s.io/aggregate-to-view: "true"
+rules:
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs: ["get", "list", "watch"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: node-reader-node-reader-clusterrole-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: node-reader-clusterrole
+subjects:
+  - kind: ServiceAccount
+    name: node-reader
+    namespace: scf
+</screen>
+   <para>
+    Apply it to your cluster:
+   </para>
+<screen>&prompt.user;kubectl create -f node-reader.yaml</screen>
+   <para>
+    Next, get the names of the nodes in your cluster:
+   </para>
+<screen>&prompt.user;kubectl get nodes
+NAME                         STATUS  ROLES     AGE  VERSION
+4a10db2c.infra.caasp.local   Ready   Master    4h   v1.9.8
+87c9e8ff.infra.caasp.local   Ready   &lt;none>    4h   v1.9.8
+34ce7eb0.infra.caasp.local   Ready   &lt;none>    4h   v1.9.8
+</screen>
+   <para>
+    Set your chosen label on the worker nodes and specify an AZ:
+   </para>
+<screen>&prompt.user;kubectl label nodes <replaceable>34ce7eb0.infra.caasp.local</replaceable> <replaceable>zone-label</replaceable>=<replaceable>availability-zone-1</replaceable></screen>
+   <para>
+    Restart all <literal>diego-cell</literal> pods:
+   </para>
+<screen>&prompt.user;kubectl delete pod diego-cell-0 --namespace scf</screen>
+   <para>
+    Run the following and verify that similar output is received:
+   </para>
+<screen>&prompt.user;kubectl logs diego-cell-0 --namespace scf | grep ^AZ
+AZ: Configured <replaceable>zone-label</replaceable>
+AZ: Node...... <replaceable>34ce7eb0.infra.caasp.local</replaceable>
+AZ: Found..... <replaceable>availability-zone-1</replaceable>
+</screen>
+  </sect2>
+ </sect1>
+</chapter>

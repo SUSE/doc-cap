@@ -1,0 +1,835 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha.cap.backup-restore"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+  <title>Backup and Restore</title>
+ </info>
+ <sect1 xml:id="sec.cap.backup-restore-with-plugin">
+  <title>Backup and restore using cf-plugin-backup</title>
+
+  <para>
+   <literal>cf-plugin-backup</literal> backs up and restores your Cloud
+   Controller Database (CCDB), using the &cf; command line interface (&cfcli;).
+   (See <xref linkend="sec.cap.cf-cli"/>.)
+  </para>
+
+  <para>
+   <literal>cf-plugin-backup</literal> is not a general-purpose backup and
+   restore plugin. It is designed to save the state of a &scf; instance before
+   making changes to it. If the changes cause problems, use
+   <literal>cf-plugin-backup</literal> to restore the instance from scratch. Do
+   not use it to restore to a non-pristine &scf; instance. Some of the
+   limitations for applying the backup to a non-pristine &scf; instance are:
+  </para>
+
+  <itemizedlist>
+   <listitem>
+    <para>
+     Application configuration is not restored to running applications, as the
+     plugin does not have the ability to determine which applications should be
+     restarted to load the restored configurations.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     User information is managed by the User Account and Authentication
+     (<literal>uaa</literal>) server, not the Cloud Controller (CC). As the
+     plugin talks only to the CC it cannot save full user information, nor
+     restore users. Saving and restoring users must be performed separately,
+     and user restoration must be performed before the backup plugin is
+     invoked.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     The set of available stacks is part of the &scf; instance setup, and is
+     not part of the CC configuration. Trying to restore applications using
+     stacks not available on the target &scf; instance will fail. Setting up
+     the necessary stacks must be performed separately before the backup plugin
+     is invoked.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Buildpacks are not saved. Applications using custom buildpacks not
+     available on the target SUSE Cloud Foundry instance will not be restored.
+     Custom buildpacks must be managed separately, and relevant buildpacks must
+     be in place before the affected applications are restored.
+    </para>
+   </listitem>
+  </itemizedlist>
+
+  <sect2 xml:id="sec.cap.install-backup-restore-plugin">
+   <title>Installing the cf-plugin-backup</title>
+   <para>
+    Download the plugin from
+    <link xlink:href="https://github.com/SUSE/cf-plugin-backup/releases">
+    cf-plugin-backup/releases</link>.
+   </para>
+   <para>
+    Then install it with <command>cf</command>, using the name of the plugin
+    binary that you downloaded:
+   </para>
+<screen>&prompt.user;cf install-plugin <replaceable>cf-plugin-backup-1.0.8.0.g9e8438e.linux-amd64</replaceable>
+ Attention: Plugins are binaries written by potentially untrusted authors.
+ Install and use plugins at your own risk.
+ Do you want to install the plugin 
+ backup-plugin/cf-plugin-backup-1.0.8.0.g9e8438e.linux-amd64? [yN]: y
+ Installing plugin backup...
+ OK
+ Plugin backup 1.0.8 successfully installed.</screen>
+   <para>
+    Verify installation by listing installed plugins:
+   </para>
+<screen>&prompt.user;cf plugins
+ Listing installed plugins...
+
+ plugin   version   command name      command help
+ backup   1.0.8     backup-info       Show information about the current snapshot
+ backup   1.0.8     backup-restore    Restore the CloudFoundry state from a 
+  backup created with the snapshot command
+ backup   1.0.8     backup-snapshot   Create a new CloudFoundry backup snapshot 
+  to a local file
+
+ Use 'cf repo-plugins' to list plugins in registered repos available to install.</screen>
+  </sect2>
+
+  <sect2 xml:id="sec.cap.using-backup-restore-plugin">
+   <title>Using cf-plugin-backup</title>
+   <para>
+    The plugin has three commands:
+   </para>
+   <itemizedlist>
+    <listitem>
+     <para>
+      backup-info
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      backup-snapshot
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      backup-restore
+     </para>
+    </listitem>
+   </itemizedlist>
+   <para>
+    View the online help for any command, like this example:
+   </para>
+<screen>&prompt.user; cf backup-info --help
+ NAME:
+   backup-info - Show information about the current snapshot
+
+ USAGE:
+   cf backup-info</screen>
+   <para>
+    Create a backup of your &productname; data and applications. The command
+    outputs progress messages until it is completed:
+   </para>
+<screen>&prompt.user;cf backup-snapshot   
+ 2018/08/18 12:48:27 Retrieving resource /v2/quota_definitions
+ 2018/08/18 12:48:30 org quota definitions done
+ 2018/08/18 12:48:30 Retrieving resource /v2/space_quota_definitions
+ 2018/08/18 12:48:32 space quota definitions done
+ 2018/08/18 12:48:32 Retrieving resource /v2/organizations
+ [...]</screen>
+   <para>
+    Your &cap; data is saved in the current directory in
+    <filename>cf-backup.json</filename>, and application data in the
+    <filename>app-bits/</filename> directory.
+   </para>
+   <para>
+    View the current backup:
+   </para>
+<screen>&prompt.user;cf backup-info
+ - Org  system</screen>
+   <para>
+    Restore from backup:
+   </para>
+<screen>&prompt.user;cf backup-restore</screen>
+   <para>
+    There are two additional restore options:
+    <command>--include-security-groups</command> and
+    <command>--include-quota-definitions</command>.
+   </para>
+  </sect2>
+
+  <sect2 xml:id="sec.cap.backup-restore-plugin-scope">
+   <title>Scope of Backup</title>
+   <para>
+    The following table lists the scope of the
+    <literal>cf-plugin-backup</literal> backup. Organization and space users
+    are backed up at the &productname; level. The user account in
+    <literal>uaa</literal>/LDAP, the service instances and their application
+    bindings, and buildpacks are not backed up. The sections following the
+    table goes into more detail.
+   </para>
+   <informaltable>
+    <tgroup cols="2">
+     <thead>
+      <row>
+       <entry>Scope</entry>
+       <entry>Restore</entry>
+      </row>
+     </thead>
+     <tbody>
+      <row>
+       <entry>Orgs</entry>
+       <entry>Yes</entry>
+      </row>
+      <row>
+       <entry>Org auditors</entry>
+       <entry>Yes</entry>
+      </row>
+      <row>
+       <entry>Org billing-manager</entry>
+       <entry>Yes</entry>
+      </row>
+      <row>
+       <entry>Quota definitions</entry>
+       <entry>Optional</entry>
+      </row>
+      <row>
+       <entry>Spaces</entry>
+       <entry>Yes</entry>
+      </row>
+      <row>
+       <entry>Space developers</entry>
+       <entry>Yes</entry>
+      </row>
+      <row>
+       <entry>Space auditors</entry>
+       <entry>Yes</entry>
+      </row>
+      <row>
+       <entry>Space managers</entry>
+       <entry>Yes</entry>
+      </row>
+      <row>
+       <entry>Apps</entry>
+       <entry>Yes</entry>
+      </row>
+      <row>
+       <entry>App binaries</entry>
+       <entry>Yes</entry>
+      </row>
+      <row>
+       <entry>Routes</entry>
+       <entry>Yes</entry>
+      </row>
+      <row>
+       <entry>Route mappings</entry>
+       <entry>Yes</entry>
+      </row>
+      <row>
+       <entry>Domains</entry>
+       <entry>Yes</entry>
+      </row>
+      <row>
+       <entry>Private domains</entry>
+       <entry>Yes</entry>
+      </row>
+      <row>
+       <entry>Stacks</entry>
+       <entry>not available</entry>
+      </row>
+      <row>
+       <entry>Feature flags</entry>
+       <entry>Yes</entry>
+      </row>
+      <row>
+       <entry>Security groups</entry>
+       <entry>Optional</entry>
+      </row>
+      <row>
+       <entry>Custom buildpacks</entry>
+       <entry>No</entry>
+      </row>
+     </tbody>
+    </tgroup>
+   </informaltable>
+   <para>
+    <command>cf backup-info</command> reads the
+    <filename>cf-backup.json</filename> snapshot file found in the current
+    working directory, and reports summary statistics on the content.
+   </para>
+   <para>
+    <command>cf backup-snapshot</command> extracts and saves the following
+    information from the CC into a <filename>cf-backup.json</filename> snapshot
+    file. Note that it does not save user information, but only the references
+    needed for the roles. The full user information is handled by the
+    <literal>uaa</literal> server, and the plugin talks only to the CC. The
+    following list provides a summary of what each plugin command does.
+   </para>
+   <itemizedlist>
+    <listitem>
+     <para>
+      Org Quota Definitions
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      Space Quota Definitions
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      Shared Domains
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      Security Groups
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      Feature Flags
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      Application droplets (zip files holding the staged app)
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      Orgs
+     </para>
+     <itemizedlist>
+      <listitem>
+       <para>
+        Spaces
+       </para>
+       <itemizedlist>
+        <listitem>
+         <para>
+          Applications
+         </para>
+        </listitem>
+        <listitem>
+         <para>
+          Users' references (role in the space)
+         </para>
+        </listitem>
+       </itemizedlist>
+      </listitem>
+     </itemizedlist>
+    </listitem>
+   </itemizedlist>
+   <para>
+    <command>cf backup-restore</command> reads the
+    <filename>cf-backup.json</filename> snapshot file found in the current
+    working directory, and then talks to the targeted &scf; instance to upload
+    the following information, in the specified order:
+   </para>
+   <itemizedlist>
+    <listitem>
+     <para>
+      Shared domains
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      Feature flags
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      Quota Definitions (iff --include-quota-definitions)
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      Orgs
+     </para>
+     <itemizedlist>
+      <listitem>
+       <para>
+        Space Quotas (iff --include-quota-definitions)
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        UserRoles
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        (private) Domains
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        Spaces
+       </para>
+       <itemizedlist>
+        <listitem>
+         <para>
+          UserRoles
+         </para>
+        </listitem>
+        <listitem>
+         <para>
+          Applications (+ droplet)
+         </para>
+         <itemizedlist>
+          <listitem>
+           <para>
+            Bound Routes
+           </para>
+          </listitem>
+         </itemizedlist>
+        </listitem>
+        <listitem>
+         <para>
+          Security Groups (iff --include-security-groups)
+         </para>
+        </listitem>
+       </itemizedlist>
+      </listitem>
+     </itemizedlist>
+    </listitem>
+   </itemizedlist>
+   <para>
+    The following list provides more details of each action.
+   </para>
+   <variablelist>
+    <varlistentry>
+     <term>Shared Domains</term>
+     <listitem>
+      <para>
+       Attempts to create domains from the backup. Existing domains are
+       retained, and not overwritten.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>Feature Flags</term>
+     <listitem>
+      <para>
+       Attempts to update flags from the backup.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>Quota Definitions</term>
+     <listitem>
+      <para>
+       Existing quotas are overwritten from the backup (deleted, re-created).
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>Orgs</term>
+     <listitem>
+      <para>
+       Attempts to create orgs from the backup. Attempts to update existing
+       orgs from the backup.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>Space Quota Definitions</term>
+     <listitem>
+      <para>
+       Existing quotas are overwritten from the backup (deleted, re-created).
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>User roles</term>
+     <listitem>
+      <para>
+       Expect the referenced user to exist. Will fail when the user is already
+       associated with the space, in the given role.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>(private) Domains</term>
+     <listitem>
+      <para>
+       Attempts to create domains from the backup. Existing domains are
+       retained, and not overwritten.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>Spaces</term>
+     <listitem>
+      <para>
+       Attempts to create spaces from the backup. Attempts to update existing
+       spaces from the backup.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>User roles</term>
+     <listitem>
+      <para>
+       Expect the referenced user to exist. Will fail when the user is already
+       associated with the space, in the given role.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>Apps</term>
+     <listitem>
+      <para>
+       Attempts to create apps from the backup. Attempts to update existing
+       apps from the backup (memory, instances, buildpack, state, ...)
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>Security groups</term>
+     <listitem>
+      <para>
+       Existing groups are overwritten from the backup
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </sect2>
+ </sect1>
+ <sect1 xml:id="sec.cap.backup-restore-of-raw-data">
+  <title>Disaster recovery in <literal>scf</literal> through raw data backup and restore</title>
+
+  <para>
+   A backup and restore of an existing <literal>scf</literal> deployment's raw
+   data can be used to migrate all data to a new <literal>scf</literal>
+   deployment. This procedure is applicable to deployments running on any
+   &kube; cluster (for example &suse; &caasp;, Amazon EKS, and Azure AKS
+   described in this guide) and can included in your disaster recovery
+   solution.
+  </para>
+
+  <para>
+   In order to complete a raw data backup and restore it is required to have:
+  </para>
+
+  <itemizedlist>
+   <listitem>
+    <para>
+     Access to a running deployment of <literal>scf</literal> to create a
+     backup with
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Access to a new deployment of <literal>scf</literal> (deployed with a
+     <filename>scf-config-values.yaml</filename> configured according to
+     <xref linkend="prepare-config-for-new-cluster"/> of
+     <xref linkend="sec.cap.raw-data-restore-procedure"/>) to perform the
+     restore to
+    </para>
+   </listitem>
+  </itemizedlist>
+
+  <para>
+   The following lists the data that is included as part of the backup (and
+   restore) procedure:
+  </para>
+
+  <itemizedlist>
+   <listitem>
+    <para>
+     The Cloud Controller Database (CCDB). In addition to what is encompassed
+     by the CCDB listed in
+     <xref linkend="sec.cap.backup-restore-plugin-scope"/>, this will include
+     service data as well.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     The Cloud Controller Blobstore, which includes the types of binary large
+     object (blob) files listed below. (See
+     <link xlink:href="https://docs.cloudfoundry.org/concepts/architecture/cloud-controller.html#blob-store">Blobstore</link>
+     to learn more about each blob type.)
+    </para>
+    <itemizedlist xml:id="blobstore-contents">
+     <listitem>
+      <para>
+       App Packages
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       Buildpacks
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       Resource Cache
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       Buildpack Cache
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       Droplets
+      </para>
+     </listitem>
+    </itemizedlist>
+   </listitem>
+  </itemizedlist>
+
+  <note>
+   <title>Restore to the same version</title>
+   <para>
+    This process is intended for backing up and restoring to a target
+    deployment with the same version as the source deployment.
+   </para>
+  </note>
+
+  <sect2 xml:id="sec.cap.raw-data-backup-procedure">
+   <title>Performing a raw data backup</title>
+   <para>
+    Perform the following steps to create a backup of your source
+    <literal>scf</literal> deployment.
+   </para>
+   <procedure>
+    <step>
+     <para>
+      Connect to the <literal>blobstore</literal> pod:
+     </para>
+<screen>&prompt.user;kubectl exec -it blobstore-0 --namespace scf -- env /bin/bash</screen>
+    </step>
+    <step>
+     <para>
+      Create an archive of the blobstore directory to preserve all needed files
+      (see <xref linkend="blobstore-contents"/>) then disconnect from the pod:
+     </para>
+<screen>&prompt.user;tar cfvz <replaceable>blobstore-src.tgz</replaceable> /var/vcap/store/shared</screen>
+<screen>&prompt.user;exit</screen>
+    </step>
+    <step>
+     <para>
+      Copy the archive to a location outside of the pod:
+     </para>
+<screen>&prompt.user;kubectl cp scf/blobstore-0:blobstore-src.tar.gz <replaceable>/tmp/blobstore-src.tgz</replaceable></screen>
+    </step>
+    <step>
+     <para>
+      Export the Cloud Controller Database (CCDB) into a file:
+     </para>
+<screen>&prompt.user;kubectl exec mysql-0 --namespace scf -- bash -c \
+  '/var/vcap/packages/mariadb/bin/mysqldump \
+  --defaults-file=/var/vcap/jobs/mysql/config/mylogin.cnf \
+  ccdb' > <replaceable>/tmp/ccdb-src.sql</replaceable>
+</screen>
+    </step>
+    <step xml:id="get-encryption-key">
+     <para>
+      Next, obtain the CCDB encryption key(s). The method used to capture the
+      key will depend on whether <literal>current_key_label</literal> has been
+      defined on the source cluster. This value is defined in
+      <filename>/var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml</filename>
+      of the <literal>api-group-0</literal> pod and also found in various
+      tables of the MySQL database.
+     </para>
+     <para>
+      Begin by examining the configuration file for
+      the<literal>current_key_label</literal> setting:
+     </para>
+<screen>&prompt.user;kubectl exec -it --namespace scf api-group-0 -- bash -c "cat /var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml | grep -A 3 database_encryption"</screen>
+     <itemizedlist>
+      <listitem>
+       <para>
+        If the output contains the <literal>current_key_label</literal>
+        setting, save the output for the restoration process. Adjust the
+        <command>-A</command> flag as needed to include all keys.
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        If the output does not contain the <literal>current_key_label</literal>
+        setting, run the following command and save the output for the
+        restoration process:
+       </para>
+<screen>&prompt.user;kubectl exec api-group-0 --namespace scf -- bash -c 'echo $DB_ENCRYPTION_KEY'</screen>
+      </listitem>
+     </itemizedlist>
+    </step>
+   </procedure>
+  </sect2>
+
+  <sect2 xml:id="sec.cap.raw-data-restore-procedure">
+   <title>Performing a raw data restore</title>
+   <para>
+    Perform the following steps to restore your backed up data to the target
+    <literal>scf</literal> deployment.
+   </para>
+   <important>
+    <title>Ensure access to the correct <literal>scf</literal> deployment</title>
+    <para>
+     Working with multiple &kube; clusters simultaneously can be confusing.
+     Ensure you are communicating with the desired cluster
+     <link xlink:href="https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/#set-the-kubeconfig-environment-variable">by
+     setting <literal>$KUBECONFIG</literal> correctly</link>.
+    </para>
+   </important>
+   <procedure>
+    <step xml:id="prepare-config-for-new-cluster">
+     <para>
+      The target <literal>scf</literal> cluster needs to be deployed with the
+      correct database encryption key(s) set in your
+      <filename>scf-config-values.yaml</filename> before data can be restored.
+      How the encryption key(s) will be prepared in your
+      <filename>scf-config-values.yaml</filename> depends on the result of
+      <xref linkend="get-encryption-key"/> in
+      <xref linkend="sec.cap.raw-data-backup-procedure"/>
+     </para>
+     <itemizedlist>
+      <listitem>
+       <para>
+        If <literal>current_key_label</literal> was set, use the
+        <literal>current_key_label</literal> obtained as the value of
+        <literal>CC_DB_CURRENT_KEY_LABEL</literal> and all the keys under the
+        <literal>keys</literal> are defined under
+        <literal>CC_DB_ENCRYPTION_KEYS</literal>. See the following example
+        <filename>scf-config-values.yaml</filename>:
+       </para>
+<screen>env:
+  CC_DB_CURRENT_KEY_LABEL: <replaceable>migrated_key_1</replaceable>
+
+secrets:
+  CC_DB_ENCRYPTION_KEYS:
+    <replaceable>migrated_key_1</replaceable>: "<replaceable>&lt;key_goes_here></replaceable>"
+    <replaceable>migrated_key_2</replaceable>: "<replaceable>&lt;key_goes_here></replaceable>"
+</screen>
+      </listitem>
+      <listitem>
+       <para>
+        If <literal>current_key_label</literal> was not set, create one for the
+        new cluster through <filename>scf-config-values.yaml</filename> and set
+        it to the <literal>$DB_ENCRYPTION_KEY</literal> value from the old
+        cluster.In this example, <literal>migrated_key</literal> is the new
+        <literal>current_key_label</literal> created:
+       </para>
+<screen>env:
+  CC_DB_CURRENT_KEY_LABEL: <replaceable>migrated_key</replaceable>
+
+secrets:
+  CC_DB_ENCRYPTION_KEYS:
+    <replaceable>migrated_key</replaceable>: "<replaceable>OLD_CLUSTER_DB_ENCRYPTION_KEY</replaceable>"
+</screen>
+      </listitem>
+     </itemizedlist>
+    </step>
+    <step>
+     <para>
+      Deploy a non-high-availability configuration of <literal>scf</literal>
+      (see <xref linkend="sec.cap.install-scf-prod"/>) and wait until all pods
+      are ready before proceeding.
+     </para>
+    </step>
+    <step>
+     <para>
+      In the <filename>ccdb-src.sql</filename> file created earlier, replace
+      the domain name of the source deployment with the domain name of the
+      target deployment.
+     </para>
+<screen>&prompt.user;sed -i 's/old-example.com/new-example.com/g' /tmp/ccdb-src.sql</screen>
+    </step>
+    <step>
+     <para>
+      Stop the monit services on the <literal>api-group-0</literal>,
+      <literal>cc-worker-0</literal>, and <literal>cc-clock-0</literal> pods:
+     </para>
+<screen>&prompt.user;for n in api-group-0 cc-worker-0 cc-clock-0; do
+  kubectl exec -it --namespace scf $n -- bash -l -c 'monit stop all'
+done
+</screen>
+    </step>
+    <step>
+     <para>
+      Copy the <filename>blobstore-src.tgz</filename> archive to the
+      <literal>blobstore</literal> pod:
+     </para>
+<screen>&prompt.user;kubectl cp <replaceable>/tmp/blobstore-src.tgz</replaceable> scf/blobstore-0:/</screen>
+    </step>
+    <step>
+     <para>
+      Restore the contents of the archive created during the backup process to
+      the <literal>blobstore</literal> pod:
+     </para>
+<screen>&prompt.user;kubectl exec -it --namespace scf blobstore-0 -- bash -l -c 'monit stop all &amp; sleep 10 &amp; rm -rf /var/vcap/store/shared/* &amp; tar xvf blobstore-src.tgz &amp; monit start all &amp; rm blobstore-src.tgz'</screen>
+    </step>
+    <step>
+     <para>
+      Recreate the CCDB on the <literal>mysql</literal> pod:
+     </para>
+<screen>&prompt.user;kubectl exec mysql-0 --namespace scf -- bash -c \
+    "/var/vcap/packages/mariadb/bin/mysql \
+    --defaults-file=/var/vcap/jobs/mysql/config/mylogin.cnf \
+    -e 'drop database ccdb; create database ccdb;'"</screen>
+    </step>
+    <step>
+     <para>
+      Restore the CCDB on the <literal>mysql</literal> pod:
+     </para>
+<screen>&prompt.user;kubectl exec -i mysql-0 --namespace scf -- bash -c '/var/vcap/packages/mariadb/bin/mysql --defaults-file=/var/vcap/jobs/mysql/config/mylogin.cnf ccdb' &lt; /tmp/ccdb-src.sql</screen>
+    </step>
+    <step>
+     <para>
+      Start the monit services on the <literal>api-group-0</literal>,
+      <literal>cc-worker-0</literal>, and <literal>cc-clock-0</literal> pods
+     </para>
+<screen>&prompt.user;for n in api-group-0 cc-worker-0 cc-clock-0; do
+  kubectl exec -it --namespace scf $n -- bash -l -c 'monit start all'
+done
+</screen>
+    </step>
+    <step>
+     <para>
+      If your old cluster did not have <literal>current_key_label</literal>
+      defined, perform a key rotation. Otherwise, a key rotation is not
+      necessary.
+     </para>
+     <substeps>
+      <step>
+       <para>
+        Change the encryption key in the config file:
+       </para>
+<screen>&prompt.user;kubectl exec --namespace scf api-group-0 -- bash -c 'sed -i "/db_encryption_key:/c\\db_encryption_key: \"$(echo $CC_DB_ENCRYPTION_KEYS | jq -r .migrated_key)\"" /var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml'
+</screen>
+      </step>
+      <step>
+       <para>
+        Run the rotation for the encryption keys:
+       </para>
+<screen>&prompt.user;kubectl exec --namespace scf api-group-0 -- bash -c 'export PATH=/var/vcap/packages/ruby-2.4/bin:$PATH ; export CLOUD_CONTROLLER_NG_CONFIG=/var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml ; cd /var/vcap/packages/cloud_controller_ng/cloud_controller_ng ; /var/vcap/packages/ruby-2.4/bin/bundle exec rake rotate_cc_database_key:perform'</screen>
+      </step>
+     </substeps>
+    </step>
+    <step>
+     <para>
+      The data restore is now complete. Run some <command>cf</command>
+      commands, such as <command>cf apps</command>, <command>cf
+      marketplace</command>, or <command>cf services</command>, and verify data
+      from the old cluster is returned.
+     </para>
+    </step>
+   </procedure>
+  </sect2>
+ </sect1>
+</chapter>

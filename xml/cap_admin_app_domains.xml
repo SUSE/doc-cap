@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha.cap.custom-app-domains"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+<!-- TODO review if chapter is still required. See:
+  https://github.com/SUSE/doc-cap/issues/283
+  -->
+  <title>Custom Application Domains</title>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+ </info>
+ <para>
+  In a standard &scf; deployment, applications will use the same domain as the
+  one configured in your <filename>scf-config-values.yaml</filename> for SCF.
+  For example, if <literal>DOMAIN</literal> is set as
+  <replaceable>example.com</replaceable> in your
+  <filename>scf-config-values.yaml</filename> and you deploy an application
+  called <replaceable>myapp</replaceable> then the application's URL will be
+  <literal>myapp.example.com</literal>.
+ </para>
+ <para>
+  This chapter describes the changes required to allow applications to use a
+  separate domain.
+ </para>
+ <sect1 xml:id="sec.cap.customizing-app-domains">
+  <title>Customizing Application Domains</title>
+
+  <para>
+   Begin by adding the following to your
+   <filename>scf-config-values.yaml</filename>. Replace
+   <replaceable>appdomain.com</replaceable> with the domain to use with your
+   applications:
+  </para>
+
+<screen>bosh:
+  instance_groups:
+  - name: api-group
+    jobs:
+    - name: cloud_controller_ng
+      properties:
+        app_domains:
+	- <replaceable>appdomain.com</replaceable>
+</screen>
+
+  <para>
+   If <literal>uaa</literal> is deployed, pass your <literal>uaa</literal>
+   secret and certificate to <literal>scf</literal>. Otherwise deploy
+   <literal>uaa</literal> first (See
+   <xref linkend="sec.cap.install-uaa-prod"/>), then proceed with this step:
+  </para>
+
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+-o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+-o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+</screen>
+
+  <para>
+   If this is an initial deployment, use <command>helm install</command> to
+   deploy <literal>scf</literal>:
+  </para>
+
+<screen>&prompt.user;helm install suse/cf \
+--name susecf-scf \
+--namespace scf \
+--values scf-config-values.yaml \
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
+</screen>
+
+  <para>
+   If this is an existing deployment, use <command>helm upgrade</command> to
+   apply the change:
+  </para>
+
+<screen>&prompt.user;helm upgrade susecf-scf suse/cf \
+--values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}"
+</screen>
+
+  <para>
+   Monitor the progess of the deployment:
+  </para>
+
+<screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
+
+  <para>
+   When all pods are in a ready state, do the following to confirm custom
+   application domains have been configured correctly.
+  </para>
+
+  <para>
+   Run <command>cf curl /v2/info</command> and verify the SCF domain is not
+   <replaceable>appdomain.com</replaceable>:
+  </para>
+
+<screen>&prompt.user;cf api --skip-ssl-validation https://api.example.com
+&prompt.user;cf curl /v2/info | grep endpoint
+</screen>
+
+  <para>
+   Deploy an application and examine the <literal>routes</literal> field to
+   verify <replaceable>appdomain.com</replaceable> is being used:
+  </para>
+
+<screen>&prompt.user;cf login
+&prompt.user;cf create-org <replaceable>org</replaceable>
+&prompt.user;cf create-space <replaceable>space</replaceable> -o <replaceable>org</replaceable>
+&prompt.user;cf target -o <replaceable>org</replaceable> -s <replaceable>space</replaceable>
+&prompt.user;cf push <replaceable>myapp</replaceable>
+cf push myapp
+Pushing app <replaceable>myapp</replaceable> to org <replaceable>org</replaceable> / space <replaceable>space</replaceable> as <replaceable>admin</replaceable>...
+Getting app info...
+Creating app with these attributes...
+  name:       <replaceable>myapp</replaceable>
+  path:       <replaceable>/path/to/myapp</replaceable>
+  routes:
++   <replaceable>myapp.appdomain.com</replaceable>
+
+Creating app <replaceable>myapp...</replaceable>
+Mapping routes...
+
+...
+
+Waiting for app to start...
+
+name:              <replaceable>myapp</replaceable>
+requested state:   started
+instances:         1/1
+usage:             1G x 1 instances
+routes:            <replaceable>myapp.appdomain.com</replaceable>
+last uploaded:     Mon 14 Jan 11:08:02 PST 2019
+stack:             sle12
+buildpack:         ruby
+start command:     bundle exec rackup config.ru -p $PORT
+
+     state     since                  cpu    memory       disk          details
+#0   running   2019-01-14T19:09:42Z   0.0%   2.7M of 1G   80.6M of 1G
+</screen>
+ </sect1>
+</chapter>

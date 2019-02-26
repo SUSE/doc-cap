@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha.cap.install-openstack"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <title>Installing &productname; on OpenStack</title>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+ </info>
+ <para>
+  You can deploy a &productname; on &caasp; stack on OpenStack. This chapter
+  describes how to deploy a small testing and development instance with one
+  &kube; master and two worker nodes, using
+  <link xlink:href="https://www.terraform.io/">Terraform</link> to automate the
+  deployment. This does not create a production deployment, which should be
+  deployed on bare metal for best performance.
+ </para>
+ <important>
+     &readmefirst;
+ </important>
+ <sect1 xml:id="sec.cap.prereqs-openstack">
+  <title>Prerequisites</title>
+
+  <para>
+   The following prerequisites should be met before attempting to deploy
+   &productname; on OpenStack. The memory and disk space requirements are
+   minimums, and may need to be larger according to your workloads.
+  </para>
+
+  <itemizedlist>
+   <listitem>
+    <para>
+     8GB of memory per &caasp; dashboard and &kube; master nodes
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     16GB of memory per &kube; worker
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     40GB disk space per &caasp; dashboard and &kube; master nodes
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     60GB disk space per &kube; worker
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     A <link xlink:href="https://scc.suse.com/login"> &suse; Customer Center
+     account</link> for downloading &caasp;. Get
+     <filename>SUSE-CaaS-Platform-2.0-KVM-and-Xen.x86_64-1.0.0-GM.qcow2</filename>,
+     which has been tested on OpenStack.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Download the <filename>openrc.sh</filename> file for your OpenStack
+     account
+    </para>
+   </listitem>
+  </itemizedlist>
+ </sect1>
+ <sect1 xml:id="sec.cap.setup-openstack">
+  <title>Create a New OpenStack Project</title>
+
+  <para>
+   You may use an existing OpenStack project, or run the following commands to
+   create a new project with the necessary configuration for &productname;.
+  </para>
+
+<screen>&prompt.user;openstack project create --domain default --description "<replaceable>CaaS Platform Project</replaceable>" <replaceable>caasp</replaceable>
+&prompt.user;openstack role add --project <replaceable>caasp</replaceable> --user admin admin</screen>
+
+  <para>
+   Create an OpenStack network plus a subnet for &caasp; (for example,
+   <replaceable>caasp-net</replaceable>), and add a router to the external
+   (floating) network:
+  </para>
+
+<screen>&prompt.user;openstack network create <replaceable>caasp-net</replaceable>
+&prompt.user;openstack subnet create <replaceable>caasp_subnet</replaceable> --network <replaceable>caasp-net</replaceable> \
+--subnet-range <replaceable>10.0.2.0/24</replaceable>
+&prompt.user;openstack router create <replaceable>caasp-net-router</replaceable>
+&prompt.user;openstack router set <replaceable>caasp-net-router</replaceable> --external-gateway floating
+&prompt.user;openstack router add subnet <replaceable>caasp-net-router</replaceable> <replaceable>caasp_subnet</replaceable></screen>
+
+  <para>
+   Upload your &caasp; image to your OpenStack account:
+  </para>
+
+<screen>&prompt.user;
+$ openstack image create \
+  --file SUSE-CaaS-Platform-2.0-KVM-and-Xen.x86_64-1.0.0-GM.qcow2</screen>
+
+  <para>
+   Create a security group with the rules needed for &caasp;:
+  </para>
+
+<screen>&prompt.user;openstack security group create cap --description "Allow CAP traffic"
+&prompt.user;openstack security group rule create cap --protocol any --dst-port any --ethertype IPv4 --egress
+&prompt.user;openstack security group rule create cap --protocol any --dst-port any --ethertype IPv6 --egress
+&prompt.user;openstack security group rule create cap --protocol tcp --dst-port 20000:20008 --remote-ip 0.0.0.0/0
+&prompt.user;openstack security group rule create cap --protocol tcp --dst-port 443:443 --remote-ip 0.0.0.0/0
+&prompt.user;openstack security group rule create cap --protocol tcp --dst-port 2793:2793 --remote-ip 0.0.0.0/0
+&prompt.user;openstack security group rule create cap --protocol tcp --dst-port 4443:4443 --remote-ip 0.0.0.0/0
+&prompt.user;openstack security group rule create cap --protocol tcp --dst-port 80:80 --remote-ip 0.0.0.0/0
+&prompt.user;openstack security group rule create cap --protocol tcp --dst-port 2222:2222 --remote-ip 0.0.0.0/0</screen>
+
+  <para>
+   Clone the Terraform script from GitHub:
+  </para>
+
+<screen>&prompt.user;git clone git@github.com:kubic-project/automation.git
+&prompt.user;cd automation/caasp-openstack-terraform</screen>
+
+  <para>
+   Edit the <filename>openstack.tfvars</filename> file. Use the names of your
+   OpenStack objects, for example:
+  </para>
+
+<screen>image_name = "SUSE-CaaS-Platform-2.0"
+internal_net = "caasp-net"
+external_net = "floating"
+admin_size = "m1.large"
+master_size = "m1.large"
+masters = 1
+worker_size = "m1.xlarge"
+workers = 2</screen>
+
+  <para>
+   Initialize Terraform:
+  </para>
+
+<screen>&prompt.user;terraform init</screen>
+ </sect1>
+ <sect1 xml:id="sec.cap.deploy-caasp">
+  <title>Deploy &productname;</title>
+
+  <para>
+   Source your <filename>openrc.sh</filename> file, set the project, and deploy
+   &caasp;:
+  </para>
+
+<screen>&prompt.user;. openrc.sh
+&prompt.user;export OS_PROJECT_NAME='<replaceable>caasp</replaceable>'
+&prompt.user;./caasp-openstack apply</screen>
+
+  <para>
+   Wait for a few minutes until all systems are up and running, then view your
+   installation:
+  </para>
+
+<screen>&prompt.user;openstack server list</screen>
+
+  <para>
+   Add your cap security group to all &caasp; workers:
+  </para>
+
+<screen>&prompt.user;openstack server add security group <replaceable>caasp-worker0</replaceable> cap
+&prompt.user;openstack server add security group <replaceable>caasp-worker1</replaceable> cap</screen>
+
+  <para>
+   If you need to log into your new nodes, log in as root using the SSH key in
+   the <filename>automation/caasp-openstack-terraform/ssh</filename> directory.
+  </para>
+ </sect1>
+ <sect1 xml:id="sec.cap.bootstrap-caasp">
+  <title>Bootstrap &productname;</title>
+
+  <para>
+   The following examples use the <literal>xip.io</literal> wildcard DNS
+   service. You may use your own DNS/DHCP services that you have set up in
+   OpenStack in place of <literal>xip.io</literal>.
+  </para>
+
+  <itemizedlist>
+   <listitem>
+    <para>
+     Point your browser to the IP address of the &caasp; admin node, and create
+     a new admin user login
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Replace the default IP address or domain name of the <guimenu>Internal
+     Dashboard FQDN/IP</guimenu> on the <guimenu>Initial &caasp;
+     configuration</guimenu> screen with the internal IP address of the &caasp;
+     admin node
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Check the <guimenu>Install Tiller</guimenu> checkbox, then click the
+     <guimenu>Next</guimenu> button
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Terraform automatically creates all of your worker nodes, according to the
+     number you configured in <filename>openstack.tfvars</filename>, so click
+     <guimenu>Next</guimenu> to skip <guimenu>Bootstrap your CaaS
+     Platform</guimenu>
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     On the <guimenu>Select nodes and roles</guimenu> screen click
+     <guimenu>Accept all nodes</guimenu>, click to define your master and
+     worker nodes, then click <guimenu>Next</guimenu>
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     For the <guimenu>External Kubernetes API FQDN</guimenu>, use the public
+     (floating) IP address of the &caasp; master and append the
+     <literal>.xip.io</literal> domain suffix
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     For the <guimenu>External Dashboard FQDN</guimenu> use the public
+     (floating) IP address of the &caasp; admin node, and append the
+     <literal>.xip.io</literal> domain suffix
+    </para>
+   </listitem>
+  </itemizedlist>
+
+  <para></para>
+ </sect1>
+ <sect1 xml:id="sec.cap.grow-rootfs">
+  <title>Growing the Root Filesystem</title>
+
+  <para>
+   If the root filesystem on your worker nodes is smaller than the OpenStack
+   virtual disk, use these commands on the worker nodes to grow the filesystems
+   to match:
+  </para>
+
+<screen>&prompt.user;growpart /dev/vda 3
+&prompt.user;btrfs filesystem resize max /.snapshots</screen>
+ </sect1>
+</chapter>

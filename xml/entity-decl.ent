@@ -4,10 +4,14 @@
 
 <!ENTITY productname    "&suse; Cloud Application Platform">
 <!ENTITY productnamereg "&suse;&reg; Cloud Application Platform">
-<!ENTITY productnumber  "1.1">
+<!ENTITY productnumber  "1.3.1">
 <!ENTITY github.url     "https://github.com/SUSE/doc-cap">
-<!ENTITY cap            "CAP">
-
+<!ENTITY cap            "Cloud Application Platform">
+<!ENTITY latestuaachart "2.15.2">
+<!ENTITY latestscfchart "2.15.2">
+<!ENTITY lateststratoschart "2.3.0">
+<!ENTITY cfcli        "cf CLI">
+<!ENTITY guide         "<citetitle xmlns='http://docbook.org/ns/docbook'>Deployment, Administration, and User Guide</citetitle>">
 <!-- ====================================================================== -->
 <!-- Company and Products                                                   -->
 <!-- ====================================================================== -->
@@ -153,7 +157,14 @@
 <!ENTITY kube          "Kubernetes">
 <!ENTITY helm          "Helm">
 
+<!-- ============================================================= -->
+<!-- Cloud Platforms                                               -->
+<!-- ============================================================= -->
 
+<!ENTITY ms             "Microsoft">
+<!ENTITY azureks        "Azure Kubernetes Service">
+<!ENTITY msaks            "&ms; &azureks;">
+<!ENTITY aks             "Microsoft AKS">
 <!-- ============================================================= -->
 <!-- Virtualization                                                -->
 <!-- ============================================================= -->
@@ -191,6 +202,7 @@
 <!-- ============================================================= -->
 <!--                    Books                                      -->
 <!-- ============================================================= -->
+
 
 <!ENTITY deploy         "<citetitle xmlns='http://docbook.org/ns/docbook'>Deployment Guide</citetitle>">
 <!ENTITY instquick      "<citetitle xmlns='http://docbook.org/ns/docbook'>Installation Quick Start</citetitle>">
@@ -264,8 +276,30 @@
 <!-- Do not change                                                 -->
 <!-- ============================================================= -->
 
+<!--<!ENTITY fresh_namespace 
+'<para>
+Always install to a fresh namespace.
+</para>
+<para>
+    If you are not creating a fresh &productname; installation, but have deleted 
+    a previous deployment and are starting over, you must create new namespaces
+    with the 
+    <command>kubectl create namespace <replaceable>name</replaceable></command>
+        command. 
+    Do not re-use your old namespaces. The <command>helm delete</command> command 
+    does not remove generated secrets from the SCF and UAA namespaces as it is 
+    not aware of them. These leftover secrets will cause problems. See 
+    <xref linkend="sec.cap.rebuild.depl"/> for more information.
+</para>'> -->
+
 <!ENTITY % network-entities SYSTEM "network-decl.ent">
 %network-entities;
+
+<!ENTITY % repeat-entities SYSTEM "repeated-content-decl.ent">
+%repeat-entities;
+
+
+
 
 <!ENTITY % sgml.features "IGNORE">
 <!ENTITY % xml.features "INCLUDE">

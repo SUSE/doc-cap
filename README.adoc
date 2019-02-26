@@ -1,5 +1,7 @@
 = SUSE Cloud Application Platform (CAP) Documentation
 
+image:https://travis-ci.org/SUSE/doc-cap.svg?branch=develop["Build Status", link="https://travis-ci.org/SUSE/doc-cap"]
+
 This is the source for the official SUSE Cloud Application Platform (CAP) Documentation
 
 Released versions of the documentation will be published at

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha.cap.ldap"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+  <title>LDAP Integration</title>
+ </info>
+ <para>
+  &productname; can be integrated with
+  <link xlink:href="https://docs.cloudfoundry.org/uaa/identity-providers.html">identity
+  providers</link> to help manage authentication of users. The Lightweight
+  Directory Access Protocol (LDAP) is an example of an identity provider that
+  &cap; integrates with. This section describes the necessary components and
+  steps in order to configure the integration. See
+  <link xlink:href="https://docs.cloudfoundry.org/uaa/uaa-user-management.html">User
+  Account and Authentication LDAP Integration</link> for more information.
+ </para>
+ <sect1 xml:id="sec.cap.ldap-prereqs">
+  <title>Prerequisites</title>
+
+  <para>
+   The following prerequisites are required in order to complete an LDAP
+   integration with &productname;.
+  </para>
+
+  <itemizedlist>
+   <listitem>
+    <para>
+     The Cloud Foundry command line interface (&cfcli;). (See
+     <xref linkend="sec.cap.cf-cli"/>.)
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     <link xlink:href="https://docs.cloudfoundry.org/uaa/uaa-user-management.html">The
+     Cloud Foundry <literal>uaa</literal> command line interface (UAAC)</link>.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     An LDAP server and the credentials for a user/service account with
+     permissions to search the directory.
+    </para>
+   </listitem>
+  </itemizedlist>
+ </sect1>
+ <sect1 xml:id="sec.cap.ldap-integration">
+  <title>Example LDAP Integration</title>
+
+  <para>
+   Run the following commands to complete the integration of your &cap;
+   deployment and LDAP server.
+  </para>
+
+  <itemizedlist>
+   <listitem>
+    <para>
+     Use UAAC to target your <literal>uaa</literal> server.
+    </para>
+<screen>&prompt.user;uaac target <replaceable>https://uaa.example.com:2793</replaceable></screen>
+   </listitem>
+   <listitem>
+    <para>
+     Authenticate to the <literal>uaa</literal> server as
+     <literal>admin</literal> using the
+     <literal>UAA_ADMIN_CLIENT_SECRET</literal> set in your
+     <filename>scf-config-values.yaml</filename> file.
+    </para>
+<screen>&prompt.user;uaac token client get admin -s <replaceable>password</replaceable></screen>
+   </listitem>
+   <listitem>
+    <para>
+     Create the LDAP identity provider. A 201 response will be returned when
+     the identity provider is successfully created. See the
+     <link xlink:href="http://docs.cloudfoundry.org/api/uaa/version/4.21.0/index.html#ldap">UAA
+     API Reference</link> and
+     <link xlink:href="https://github.com/cloudfoundry/uaa/blob/4.21.0/docs/UAA-LDAP.md">&cf;
+     UAA-LDAP Documentation</link>for information regarding the request
+     parameters and additional options available to configure your identity
+     provider.
+    </para>
+    <para>
+     The following is an example of a <literal>uaac curl</literal> command and
+     its request parameters used to create an identity provider. Specify the
+     parameters according to your LDAP server's credentials and directory
+     structure. Ensure the user specifed in the <literal>bindUserDn</literal>
+     has permissions to search the directory.
+    </para>
+<screen>&prompt.user;uaac curl /identity-providers?rawConfig=true -X POST \
+    -k \
+    -H 'Content-Type: application/json' \
+    -H 'X-Identity-Zone-Subdomain: scf' \
+    -d '{
+  "type" : "ldap",
+  "config" : {
+    "ldapProfileFile" : "ldap/ldap-search-and-bind.xml",
+    "baseUrl" : "<replaceable>ldap://ldap.example.com:389</replaceable>",
+    "bindUserDn" : "<replaceable>cn=admin,dc=example,dc=com</replaceable>",
+    "bindPassword" : "<replaceable>password</replaceable>",
+    "userSearchBase" : "<replaceable>dc=example,dc=com</replaceable>",
+    "userSearchFilter" : "<replaceable>uid</replaceable>={0}",
+    "ldapGroupFile" : "ldap/ldap-groups-map-to-scopes.xml",
+    "groupSearchBase" : "<replaceable>dc=example,dc=com</replaceable>",
+    "groupSearchFilter" : "<replaceable>member</replaceable>={0}"
+  },
+  "originKey" : "ldap",
+  "name" : "<replaceable>My LDAP Server</replaceable>",
+  "active" : true
+  }'
+</screen>
+   </listitem>
+   <listitem>
+    <para>
+     Verify the LDAP identify provider has been created in the
+     <literal>scf</literal> zone. The output should now contain an entry for
+     the <literal>ldap</literal> type.
+    </para>
+<screen>&prompt.user;uaac curl /identity-providers -k -H "X-Identity-Zone-Id: scf"</screen>
+   </listitem>
+   <listitem>
+    <para>
+     Use the &cfcli; to target your &productname; deployment.
+    </para>
+<screen>&prompt.user;cf api --skip-ssl-validation https://api.example.com</screen>
+   </listitem>
+   <listitem>
+    <para>
+     Login as an administrator.
+    </para>
+<screen>&prompt.user;cf login
+API endpoint: https://api.example.com
+
+Email> admin
+
+Password>
+Authenticating...
+OK
+</screen>
+   </listitem>
+   <listitem>
+    <para>
+     Create users associated with your LDAP identity provider.
+    </para>
+<screen>&prompt.user;cf create-user <replaceable>username</replaceable> --origin ldap
+Creating user username...
+OK
+
+TIP: Assign roles with 'cf set-org-role' and 'cf set-space-role'.
+</screen>
+   </listitem>
+   <listitem>
+    <para>
+     Assign the user a role. Roles define the permissions a user has for a
+     given org or space and a user can be assigned multiple roles. See
+     <link xlink:href="https://docs.cloudfoundry.org/concepts/roles.html">Orgs,
+     Spaces, Roles, and Permissions</link> for available roles and their
+     corresponding permissions. The following example assumes that an org named
+     <replaceable>Org</replaceable> and a space named
+     <replaceable>Space</replaceable> have already been created.
+    </para>
+<screen>&prompt.user;cf set-space-role <replaceable>username</replaceable> <replaceable>Org</replaceable> <replaceable>Space</replaceable> <replaceable>SpaceDeveloper</replaceable>
+Assigning role RoleSpaceDeveloper to user username in org Org / space Space as admin...
+OK
+&prompt.user;cf set-org-role <replaceable>username</replaceable> Org OrgManager
+Assigning role OrgManager to user username in org Org as admin...
+OK
+</screen>
+   </listitem>
+   <listitem>
+    <para>
+     Verify the user can log into your &productname; deployment using their
+     associated LDAP server credentials.
+    </para>
+<screen>&prompt.user;cf login
+API endpoint: https://api.example.com
+
+Email> username
+
+Password>
+Authenticating...
+OK
+
+
+
+API endpoint:   https://api.example.com (API version: 2.115.0)
+User:           username@ldap.example.com
+</screen>
+   </listitem>
+  </itemizedlist>
+ </sect1>
+</chapter>

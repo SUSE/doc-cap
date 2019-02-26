@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha.cap.depl-kube-requirements"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <title>Running &productname; on non-&suse; &caasp; &kube; Systems</title>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+ </info>
+ <sect1 xml:id="sec.cap.changes.kube-reqs">
+  <title>&kube; Requirements</title>
+
+  <para>
+   &productname; is designed to run on any &kube; system that meets the
+   following requirements:
+  </para>
+
+  <itemizedlist>
+   <listitem>
+    <para>
+     Kubernetes API version 1.8+
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Kernel parameter <literal>swapaccount=1</literal>
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     <command>docker info</command> must not show <literal>aufs</literal> as
+     the storage driver
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     The &kube; cluster must have a storage class for &productname; to use. The
+     default storage class is <literal>persistent</literal>. You may specify a
+     different storage class in your deployment's
+     <filename>values.yaml</filename> file (which is called
+     <filename>scf-config-values.yaml</filename> in the examples in this
+     guide), or as a <command>helm</command> command option, for example
+     <command>--set kube.storage_class.persistent=my_storage_class</command>.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     <literal>kube-dns</literal> must be be running
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Either <command>ntp</command> or <command>systemd-timesyncd</command> must
+     be installed and active
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Docker must be configured to allow privileged containers
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Privileged container must be enabled in <literal>kube-apiserver</literal>.
+     See <link xlink:href="https://kubernetes.io/docs/admin/kube-apiserver">
+     kube-apiserver</link>.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Privileged must be enabled in <literal>kubelet</literal>
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     The <literal>TasksMax</literal> property of the
+     <literal>containerd</literal> service definition must be set to infinity
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Helm's Tiller has to be installed and active, with Tiller on the &kube;
+     cluster and Helm on your remote administration machine
+    </para>
+   </listitem>
+  </itemizedlist>
+ </sect1>
+</chapter>
