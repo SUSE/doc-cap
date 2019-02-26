@@ -66,13 +66,21 @@
 
 <screen>
 sizing:
-  autoscaler_actors:
-    count: 1
   autoscaler_api:
+    count: 1
+  autoscaler_eventgenerator:
     count: 1
   autoscaler_metrics:
     count: 1
+  autoscaler_operator:
+    count: 1
   autoscaler_postgres:
+    count: 1
+  autoscaler_scalingengine:
+    count: 1
+  autoscaler_scheduler:
+    count: 1
+  autoscaler_servicebroker:
     count: 1
 </screen>
 
