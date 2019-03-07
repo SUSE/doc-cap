@@ -128,7 +128,9 @@ sizing:
   <title>Using the App-AutoScaler Service</title>
 
   <para>
-   Create the Service Broker for App-AutoScaler:
+   Create the Service Broker for App-AutoScaler, replacing
+   <replaceable>example.com</replaceable> with the <literal>DOMAIN</literal>
+   set in your <filename>scf-config-values.yaml</filename> file:
   </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace scf \
@@ -136,7 +138,7 @@ sizing:
 
 &prompt.user;AS_PASSWORD="$(kubectl get secret $SECRET --namespace scf -o jsonpath="{.data['autoscaler-service-broker-password']}" | base64 --decode)"
 
-&prompt.user;cf create-service-broker <replaceable>autoscaler</replaceable> <replaceable>username</replaceable> $AS_PASSWORD https://autoscalerservicebroker.<replaceable>example.com</replaceable>
+&prompt.user;cf create-service-broker <replaceable>autoscaler</replaceable> username $AS_PASSWORD https://autoscalerservicebroker.<replaceable>example.com</replaceable>
 </screen>
 
   <para>
