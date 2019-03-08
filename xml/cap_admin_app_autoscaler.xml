@@ -66,13 +66,21 @@
 
 <screen>
 sizing:
-  autoscaler_actors:
-    count: 1
   autoscaler_api:
+    count: 1
+  autoscaler_eventgenerator:
     count: 1
   autoscaler_metrics:
     count: 1
+  autoscaler_operator:
+    count: 1
   autoscaler_postgres:
+    count: 1
+  autoscaler_scalingengine:
+    count: 1
+  autoscaler_scheduler:
+    count: 1
+  autoscaler_servicebroker:
     count: 1
 </screen>
 
@@ -118,6 +126,26 @@ sizing:
  </sect1>
  <sect1 xml:id="sec.cap.app-autoscaler-usage">
   <title>Using the App-AutoScaler Service</title>
+
+  <para>
+   Create the Service Broker for App-AutoScaler, replacing
+   <replaceable>example.com</replaceable> with the <literal>DOMAIN</literal>
+   set in your <filename>scf-config-values.yaml</filename> file:
+  </para>
+
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace scf \
+-o jsonpath='{.items[?(.metadata.name=="api-group-0")].spec.containers[?(.name=="api-group")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;AS_PASSWORD="$(kubectl get secret $SECRET --namespace scf -o jsonpath="{.data['autoscaler-service-broker-password']}" | base64 --decode)"
+
+&prompt.user;cf create-service-broker <replaceable>autoscaler</replaceable> username $AS_PASSWORD https://autoscalerservicebroker.<replaceable>example.com</replaceable>
+</screen>
+
+  <para>
+   Enable access to the service:
+  </para>
+
+<screen>&prompt.user;cf enable-service-access autoscaler -p autoscaler-free-plan</screen>
 
   <para>
    Create a new instance of the App-AutoScaler service:
@@ -313,7 +341,7 @@ sizing:
         "operator": ">=",
         "cool_down_secs": 300,
         "adjustment": "+1"
-    }
+    }]
 }
 </screen>
 

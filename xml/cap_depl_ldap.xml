@@ -45,6 +45,11 @@
      <link xlink:href="https://docs.cloudfoundry.org/uaa/uaa-user-management.html">The
      Cloud Foundry <literal>uaa</literal> command line interface (UAAC)</link>.
     </para>
+    <para>
+     On &sle; systems, ensure the <literal>ruby-devel</literal> and <literal>gcc-c++</literal>
+     packages have been installed before installing the <literal>cf-uaac</literal> gem.
+    </para>
+    <screen>&prompt.user;sudo zypper install ruby-devel gcc-c++</screen>
    </listitem>
    <listitem>
     <para>

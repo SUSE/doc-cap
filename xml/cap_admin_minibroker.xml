@@ -57,7 +57,7 @@ suse/minibroker             	0.2.0  	A minibroker for your minikube
     <para>
      Use &helm; to deploy Minibroker:
     </para>
-<screen>&prompt.user;helm install suse/minibroker --namespace minibroker --name minibroker</screen>
+<screen>&prompt.user;helm install suse/minibroker --namespace minibroker --name minibroker --set "defaultNamespace=minibroker"</screen>
     <para>
      The repository currently contains charts for the following services:
     </para>
