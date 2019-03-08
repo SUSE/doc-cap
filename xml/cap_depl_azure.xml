@@ -184,14 +184,14 @@ cap-aks</screen>
      Set the virtual machine size (see
      <link xlink:href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-general">
      General purpose virtual machine sizes</link>). A virtual machine size of
-     at least <literal>Standard_DS3_v2</literal> using premium storage (see
+     at least <literal>Standard_DS4_v2</literal> using premium storage (see
      <link xlink:href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/premium-storage">High-performance
      Premium Storage and managed disks for VMs</link>) is recommended. Note
      <literal>managed-premium</literal> has been specified in the example
      <filename>scf-azure-values.yaml</filename> used (see
      <xref linkend="sec.cap.cap-on-azure"/>):
     </para>
-<screen>&prompt.user;export NODEVMSIZE="<replaceable>Standard_DS3_v2</replaceable>"</screen>
+<screen>&prompt.user;export NODEVMSIZE="<replaceable>Standard_DS4_v2</replaceable>"</screen>
    </step>
    <step>
     <para>
@@ -245,7 +245,7 @@ cap-aks</screen>
  --node-count $NODECOUNT --admin-username $ADMINUSERNAME \
  --ssh-key-value $SSHKEYVALUE --node-vm-size $NODEVMSIZE \
  --node-osdisk-size=60 --nodepool-name $NODEPOOLNAME \
- --kubernetes-version <replaceable>1.11.6</replaceable>
+ --kubernetes-version <replaceable>1.11.8</replaceable>
 </screen>
 
   <note>
