@@ -273,7 +273,8 @@ prometheus:
     enabled: true
 nginx:
   username: <replaceable>username</replaceable>
-  password: <replaceable>password</replaceable></screen>
+  password: <replaceable>password</replaceable>
+useLb: true</screen>
    <para>
     where:
    </para>
@@ -297,6 +298,13 @@ nginx:
       you will use when connecting to Stratos Metrics
      </para>
     </listitem>
+    <listitem>
+     <para>
+      <literal>useLb</literal> is set to <literal>true</literal> if your &kube;
+      deployment supports automatic configuration of a load balancer (for example,
+      AKS and EKS)
+     </para>
+    </listitem>
    </itemizedlist>
    <para>
     Install Metrics with:
@@ -315,16 +323,6 @@ nginx:
     <keycap function="control"/> <keycap>C</keycap> </keycombo> to exit and to
     view your release information.
    </para>
-   <para>
-    You can locate the IP and port that Stratos Metrics is running on with:
-   </para>
-<screen>kubectl get service susecf-metrics-metrics-nginx --namespace=metrics</screen>
-   <para>
-    This will give output similar to:
-   </para>
-<screen>
-NAME                         TYPE     CLUSTER-IP     EXTERNAL-IP PORT(S)       AGE
-susecf-metrics-metrics-nginx NodePort 172.24.218.219 10.17.3.1   443:31173/TCP 13s</screen>
   </sect2>
 
   <sect2 xml:id="sec.cap.stratos-metrics-connect">
@@ -353,6 +351,20 @@ susecf-metrics-metrics-nginx NodePort 172.24.218.219 10.17.3.1   443:31173/TCP 1
      <para>
       Enter a memorable name for your environment in the
       <guimenu>Name</guimenu> field
+     </para>
+    </step>
+    <step>
+     <para>
+      Find the external endpoint Stratos Metrics is running on:
+     </para>
+<screen>&prompt.user;kubectl get service susecf-metrics-metrics-nginx --namespace metrics
+NAME                           TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)         AGE
+susecf-metrics-metrics-nginx   LoadBalancer   10.0.202.180   52.170.253.229   443:30263/TCP   21h
+</screen>
+     <para>
+      Enter the endpoint of your Stratos Metrics deployment in the
+      <guimenu>Endpoint Address</guimenu> field. In this example,
+      the endpoint will be <literal>https://52.170.253.229</literal>.
      </para>
     </step>
     <step>
