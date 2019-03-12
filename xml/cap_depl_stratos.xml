@@ -295,7 +295,8 @@ useLb: true</screen>
     <listitem>
      <para>
       <literal>password</literal> should be chosen by you as the password that
-      you will use when connecting to Stratos Metrics
+      you will use when connecting to Stratos Metrics. Ensure to choose a secure
+      password
      </para>
     </listitem>
     <listitem>
@@ -395,12 +396,16 @@ susecf-metrics-metrics-nginx   LoadBalancer   10.0.202.180   52.170.253.229   44
     </step>
     <step>
      <para>
-      Enter the username for your Stratos Metrics instance
+      Enter the username for your Stratos Metrics instance. This will be the
+      <literal>nginx.username</literal> defined in your
+      <filename>stratos-metrics-values.yaml</filename> file
      </para>
     </step>
     <step>
      <para>
-      Enter the password for your Stratos Metrics instance
+      Enter the password for your Stratos Metrics instance. This will be the
+      <literal>nginx.password</literal> defined in your 
+      <filename>stratos-metrics-values.yaml</filename> file
      </para>
     </step>
     <step>
