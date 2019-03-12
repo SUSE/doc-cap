@@ -303,10 +303,7 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
 
   <para>
    You must create a &tiller; service account in order to give &tiller;
-   sufficient permissions to make changes on your cluster. There are two ways
-   to create a service account: from the command line with
-   <command>kubectl</command>, or applying a configuration file with
-   <command>kubectl</command> and <command>helm</command>.
+   sufficient permissions to make changes on your cluster.
   </para>
 
   <para>
@@ -328,42 +325,6 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
  Tiller (the Helm server-side component) has been installed into your Kubernetes Cluster.
  Happy Helming!</screen>
 
-  <para>
-   Creating your &tiller; service account with a configuration file requires
-   &helm; version 2.9 or newer (see
-   <link xlink:href="https://github.com/helm/helm/releases"/>
-  </para>
-
-  <para>
-   First create the configuration file, which this example is
-   <filename>rbac-config.yaml</filename>:
-  </para>
-
-<screen>apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: tiller
-  namespace: kube-system
----
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
-metadata:
-  name: tiller
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-  - kind: ServiceAccount
-    name: tiller
-    namespace: kube-system</screen>
-
-  <para>
-   Apply it to your cluster with these commands:
-  </para>
-
-<screen>&prompt.user;kubectl create -f rbac-config.yaml
-&prompt.user;helm init --service-account tiller</screen>
  </sect1>
  <sect1 xml:id="sec.cap.psp">
   <title>Pod Security Policies</title>
