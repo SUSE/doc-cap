@@ -363,9 +363,10 @@ NAME                           TYPE           CLUSTER-IP     EXTERNAL-IP      PO
 susecf-metrics-metrics-nginx   LoadBalancer   10.0.202.180   52.170.253.229   443:30263/TCP   21h
 </screen>
      <para>
-      Enter the endpoint of your Stratos Metrics deployment in the
+      Prepend <literal>https://</literal> to the endpoint of your
+      Stratos Metrics deployment and enter it into the
       <guimenu>Endpoint Address</guimenu> field. In this example,
-      the endpoint will be <literal>https://52.170.253.229</literal>.
+      <literal>https://52.170.253.229</literal> will be used.
      </para>
     </step>
     <step>
