@@ -110,7 +110,7 @@ NAME            REVISION  UPDATED                  STATUS    CHART           NAM
 
   <para>
    This example deletes the <literal>susecf-uaa</literal> release and
-   namespace:
+   <literal>uaa</literal> namespace:
   </para>
 
 <screen>&prompt.user;kubectl delete statefulsets --all --namespace uaa
@@ -122,6 +122,21 @@ release "susecf-uaa" deleted
 
 &prompt.user;kubectl delete namespace uaa
 namespace "uaa" deleted</screen>
+
+  <para>
+   Repeat the same process for the <literal>susecf-scf</literal> release
+   and <literal>scf</literal> namespace:
+  </para>
+<screen>&prompt.user;kubectl delete statefulsets --all --namespace scf
+statefulset "adapter" deleted
+statefulset "api-group" deleted
+...
+
+&prompt.user;helm delete --purge susecf-scf
+release "susecf-scf" deleted
+
+&prompt.user;kubectl delete namespace scf
+namespace "scf" deleted</screen>
 
   <para>
    Then you can start over.
