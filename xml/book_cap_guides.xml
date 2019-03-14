@@ -63,6 +63,7 @@ Part: CAP Administration Guide
   <info/>
   <xi:include href="cap_admin_upgrade.xml"/>
   <xi:include href="cap_admin_configuration_changes.xml"/>
+  <xi:include href="cap_admin_create_admin.xml"/>
   <xi:include href="cap_admin_passwords.xml"/>
   <xi:include href="cap_admin_ccdb_key_rotation.xml"/>
   <xi:include href="cap_admin_backup-restore.xml"/>
