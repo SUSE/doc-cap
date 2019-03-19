@@ -185,8 +185,8 @@ cap-aks</screen>
      <link xlink:href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-general">
      General purpose virtual machine sizes</link>). A virtual machine size of
      at least <literal>Standard_DS4_v2</literal> using premium storage (see
-     <link xlink:href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/premium-storage">High-performance
-     Premium Storage and managed disks for VMs</link>) is recommended. Note
+     <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/azure-disks-dynamic-pv">Built in
+     storage classes</link>) is recommended. Note
      <literal>managed-premium</literal> has been specified in the example
      <filename>scf-azure-values.yaml</filename> used (see
      <xref linkend="sec.cap.cap-on-azure"/>):
@@ -326,6 +326,27 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
  Happy Helming!</screen>
 
  </sect1>
+ <sect1 xml:id="sec.cap.aks-storage-class">
+  <title>Storage Class</title>
+
+  <para>
+   AKS clusters contain two built-in storage classes (see
+   <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/azure-disks-dynamic-pv"/>,
+   the <literal>default</literal> storage class and the <literal>managed-premium</literal>
+   storage class. Deploying &cap; on AKS requires provisioning an Azure disk with the
+   <literal>managed-premium</literal> storage class. In your configuration file, called
+   <filename>scf-azure-values.yaml</filename> in this example, ensure that
+   <literal>managed-premium</literal> has been specified as the value for
+   <literal>kube.storage_class.persistent</literal>:
+  </para>
+
+<screen>kube:
+  storage_class:
+    # Azure supports only "default" or "managed-premium"
+    persistent: "managed-premium"
+    shared: "shared"
+</screen>
+ </sect1>
  <sect1 xml:id="sec.cap.psp">
   <title>Pod Security Policies</title>
 
@@ -371,6 +392,43 @@ done</screen>
 <screen>&prompt.user;kubectl get nodes</screen>
    </step>
   </procedure>
+ </sect1>
+ <sect1 xml:id="sec.cap.addrepo-aks">
+  <title>Add the &kube; charts repository</title>
+
+  <para>
+   Download the &suse; &kube; charts repository with &helm;:
+  </para>
+
+<screen>&prompt.user;helm repo add <replaceable>suse</replaceable> https://kubernetes-charts.suse.com/</screen>
+
+  <para>
+   You may replace the example <replaceable>suse</replaceable> name with any
+   name. Verify with <command>helm</command>:
+  </para>
+
+<screen>&prompt.user;helm repo list
+NAME            URL
+stable          https://kubernetes-charts.storage.googleapis.com
+local           http://127.0.0.1:8879/charts
+suse            https://kubernetes-charts.suse.com/</screen>
+
+  <para>
+   List your chart names, as you will need these for some operations:
+  </para>
+
+<screen>&prompt.user;helm search suse
+NAME                            VERSION DESCRIPTION
+suse/cf-opensuse                &latestscfchart;  A Helm chart for SUSE Cloud Foundry
+suse/uaa-opensuse               &latestuaachart;  A Helm chart for SUSE UAA
+suse/cf                         &latestscfchart;  A Helm chart for SUSE Cloud Foundry
+suse/cf-usb-sidecar-mysql       1.0.1   A Helm chart for SUSE Universal Service Broker ...
+suse/cf-usb-sidecar-postgres    1.0.1   A Helm chart for SUSE Universal Service Broker ...
+suse/console                    &lateststratoschart;   A Helm chart for deploying Stratos UI Console
+suse/metrics                    1.0.0   A Helm chart for Stratos Metrics
+suse/nginx-ingress              0.28.3  An nginx Ingress controller that uses ConfigMap...
+suse/uaa                        &latestuaachart;  A Helm chart for SUSE UAA
+</screen>
  </sect1>
  <sect1 xml:id="sec.cap.cap-on-azure">
   <title>Deploy &productname; with a Load Balancer</title>
