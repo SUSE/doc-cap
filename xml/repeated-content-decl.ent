@@ -162,3 +162,35 @@ domains and subdomains for &productname; and your applications.
      </listitem>
     </varlistentry>
 </variablelist>'>
+
+<!ENTITY uaac-prereq
+'<listitem xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+<para>
+ <link xlink:href="https://docs.cloudfoundry.org/uaa/uaa-user-management.html">The
+ Cloud Foundry <literal>uaa</literal> command line interface (UAAC)</link>.
+</para>
+<para>
+ On &sle; systems, ensure the <literal>ruby-devel</literal> and <literal>gcc-c++</literal>
+ packages have been installed before installing the <literal>cf-uaac</literal> gem.
+</para>
+<screen>&prompt.user;sudo zypper install ruby-devel gcc-c++</screen>
+</listitem>'>
+
+<!ENTITY uaac-target
+'<step xmlns="http://docbook.org/ns/docbook">
+<para>
+ Use UAAC to target your <literal>uaa</literal> server:
+</para>
+<screen>&prompt.user;uaac target --skip-ssl-validation <replaceable>https://uaa.example.com:2793</replaceable></screen>
+</step>'>
+
+<!ENTITY uaac-authenticate
+'<step xmlns="http://docbook.org/ns/docbook">
+<para>
+ Authenticate to the <literal>uaa</literal> server as
+ <literal>admin</literal> using the
+ <literal>UAA_ADMIN_CLIENT_SECRET</literal> set in your
+ <filename>scf-config-values.yaml</filename> file:
+</para>
+<screen>&prompt.user;uaac token client get admin -s <replaceable>password</replaceable></screen>
+</step>'>

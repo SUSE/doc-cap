@@ -67,23 +67,10 @@
    deployment and LDAP server.
   </para>
 
-  <itemizedlist>
-   <listitem>
-    <para>
-     Use UAAC to target your <literal>uaa</literal> server.
-    </para>
-<screen>&prompt.user;uaac target <replaceable>https://uaa.example.com:2793</replaceable></screen>
-   </listitem>
-   <listitem>
-    <para>
-     Authenticate to the <literal>uaa</literal> server as
-     <literal>admin</literal> using the
-     <literal>UAA_ADMIN_CLIENT_SECRET</literal> set in your
-     <filename>scf-config-values.yaml</filename> file.
-    </para>
-<screen>&prompt.user;uaac token client get admin -s <replaceable>password</replaceable></screen>
-   </listitem>
-   <listitem>
+  <procedure>
+   &uaac-target;
+   &uaac-authenticate;
+   <step>
     <para>
      Create the LDAP identity provider. A 201 response will be returned when
      the identity provider is successfully created. See the
@@ -123,24 +110,24 @@
   "active" : true
   }'
 </screen>
-   </listitem>
-   <listitem>
+   </step>
+   <step>
     <para>
      Verify the LDAP identify provider has been created in the
      <literal>scf</literal> zone. The output should now contain an entry for
      the <literal>ldap</literal> type.
     </para>
 <screen>&prompt.user;uaac curl /identity-providers -k -H "X-Identity-Zone-Id: scf"</screen>
-   </listitem>
-   <listitem>
+   </step>
+   <step>
     <para>
      Use the &cfcli; to target your &productname; deployment.
     </para>
 <screen>&prompt.user;cf api --skip-ssl-validation https://api.example.com</screen>
-   </listitem>
-   <listitem>
+   </step>
+   <step>
     <para>
-     Login as an administrator.
+     Log in as an administrator.
     </para>
 <screen>&prompt.user;cf login
 API endpoint: https://api.example.com
@@ -151,8 +138,8 @@ Password>
 Authenticating...
 OK
 </screen>
-   </listitem>
-   <listitem>
+   </step>
+   <step>
     <para>
      Create users associated with your LDAP identity provider.
     </para>
@@ -162,8 +149,8 @@ OK
 
 TIP: Assign roles with 'cf set-org-role' and 'cf set-space-role'.
 </screen>
-   </listitem>
-   <listitem>
+   </step>
+   <step>
     <para>
      Assign the user a role. Roles define the permissions a user has for a
      given org or space and a user can be assigned multiple roles. See
@@ -180,8 +167,8 @@ OK
 Assigning role OrgManager to user username in org Org as admin...
 OK
 </screen>
-   </listitem>
-   <listitem>
+   </step>
+   <step>
     <para>
      Verify the user can log into your &productname; deployment using their
      associated LDAP server credentials.
@@ -200,7 +187,7 @@ OK
 API endpoint:   https://api.example.com (API version: 2.115.0)
 User:           username@ldap.example.com
 </screen>
-   </listitem>
-  </itemizedlist>
+   </step>
+  </procedure>
  </sect1>
 </chapter>
