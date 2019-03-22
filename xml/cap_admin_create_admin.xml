@@ -42,7 +42,7 @@
   <title>Creating an example &cap; cluster administrator</title>
   <para>
    The following example demonstrates the steps required to create a new
-   administrator user for you &cap; cluster. Note that creating administrator
+   administrator user for your &cap; cluster. Note that creating administrator
    accounts must be done using the UAAC and cannot be done using the &cfcli;.
   </para>
   <procedure>
