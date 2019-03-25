@@ -51,8 +51,7 @@
   <para>
    &productname; is comprised of the &sle; builds of the <literal>uaa</literal>
    (User Account and Authentication) server, &scf;, the Stratos Web user
-   interface, and Stratos Metrics (scheduled for the &productname; 1.3
-   release).
+   interface, and Stratos Metrics.
   </para>
 
   <para>
