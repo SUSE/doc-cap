@@ -298,87 +298,9 @@ Custom TCP Rule    TCP          20000-20009     0.0.0.0/0       TCP Routing</scr
    <literal>scf</literal> CNAMEs. This is described in more detail in the
    deployment sections.
   </para>
-
-  <para>
-   The following table lists the required domain and sub-domains, using
-   <literal>example.com</literal> as the example domain:
-  </para>
-
-  <informaltable>
-   <tgroup cols="2">
-    <thead>
-     <row>
-      <entry>Domains</entry>
-      <entry>Services</entry>
-     </row>
-    </thead>
-    <tbody>
-     <row>
-      <entry>uaa.example.com</entry>
-      <entry>uaa/uaa-public</entry>
-     </row>
-     <row>
-      <entry>*.uaa.example.com</entry>
-      <entry>uaa/uaa-public</entry>
-     </row>
-     <row>
-      <entry>example.com</entry>
-      <entry>scf/router-public</entry>
-     </row>
-     <row>
-      <entry>*.example.com</entry>
-      <entry>scf/router-public</entry>
-     </row>
-     <row>
-      <entry>tcp.example.com</entry>
-      <entry>scf/tcp-router-public</entry>
-     </row>
-     <row>
-      <entry>ssh.example.com</entry>
-      <entry>scf/diego-access-public</entry>
-     </row>
-    </tbody>
-   </tgroup>
-  </informaltable>
-
-  <para>
-   A &productname; cluster exposes these four services:
-  </para>
-
-  <informaltable>
-   <tgroup cols="2">
-    <thead>
-     <row>
-      <entry>&kube; service descriptions</entry>
-      <entry>&kube; service names</entry>
-     </row>
-    </thead>
-    <tbody>
-     <row>
-      <entry>User Account and Authentication (<literal>uaa</literal>)</entry>
-      <entry>uaa-uaa-public</entry>
-     </row>
-     <row>
-      <entry>Cloud Foundry (CF) TCP routing service</entry>
-      <entry>tcp-router-tcp-router-public</entry>
-     </row>
-     <row>
-      <entry>CF application SSH access</entry>
-      <entry>diego-ssh-ssh-proxy-public</entry>
-     </row>
-     <row>
-      <entry>CF router</entry>
-      <entry>router-gorouter-public</entry>
-     </row>
-    </tbody>
-   </tgroup>
-  </informaltable>
-
-  <para>
-   <literal>uaa-uaa-public</literal> is in the <literal>uaa</literal>
-   namespace, and the rest are in the <literal>scf</literal> namespace.
-  </para>
+&dns-management;  
  </sect1>
+ 
  <sect1 xml:id="sec.cap.eks-configuration">
   <title>Deployment Configuration</title>
 

@@ -34,7 +34,11 @@
 &fresh-namespace;
 </sect1>
  <sect1>
-  <title>DNS management</title> 
+  <title>DNS management</title>
+  <para>
+ You must have control of your own DNS management, and set up all the necessary 
+domains and subdomains for &productname; and your applications.
+</para>
 &dns-management;
 </sect1>
  <sect1>

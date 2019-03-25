@@ -9,6 +9,9 @@ parent formatting tag in each entity, to avoid "Namespace default prefix was not
 found" errors
 ............................................................................-->
 
+
+<!--ENTITY completed-pods...................................................-->
+
 <!ENTITY completed-pods 
 '<variablelist xmlns="http://docbook.org/ns/docbook">
 <varlistentry>
@@ -23,13 +26,15 @@ found" errors
 <screen>
 &prompt.user;kubectl get pods --namespace uaa
 secret-generation-1-z4nlz   0/1       Completed
-          
+
 &prompt.user;kubectl get pods --namespace scf
 secret-generation-1-m6k2h       0/1       Completed
 post-deployment-setup-1-hnpln   0/1       Completed</screen>      
      </listitem>
     </varlistentry>
 </variablelist>'>
+
+<!--ENTITY namespace-length ................................................-->
 
 <!ENTITY namespace-length 
 '<variablelist xmlns="http://docbook.org/ns/docbook">
@@ -43,6 +48,8 @@ have a maximum length of 36 characters.
      </listitem>
     </varlistentry>
 </variablelist>'>
+
+<!--ENTITY fresh-namespace..................................................-->
 
 <!ENTITY fresh-namespace
 '<variablelist xmlns="http://docbook.org/ns/docbook">
@@ -62,6 +69,8 @@ have a maximum length of 36 characters.
     </varlistentry>
 </variablelist>'>    
 
+<!--ENTITY readmefirst......................................................-->
+
 <!ENTITY readmefirst
 '<variablelist xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
 <varlistentry>
@@ -80,18 +89,97 @@ Before you start deploying &productname;, review the following documents:
         </para>
      </listitem>
      </varlistentry>
-     </variablelist>'>    
+     </variablelist>'>
+     
+<!--ENTITY dns-management...................................................-->     
 
 <!ENTITY dns-management
 '<para xmlns="http://docbook.org/ns/docbook">
-<!--TODO link to DNS requirements section, when it exists -->
-You must have control of your own DNS management, and set up all the necessary 
-domains and subdomains for &productname; and your applications.
-</para>'>
+The following tables
+list the minimum DNS requirements to run &productname;, using
+   <literal>example.com</literal> as the example domain:
+</para>
+
+  <informaltable xmlns="http://docbook.org/ns/docbook">
+   <tgroup cols="2">
+    <thead>
+     <row>
+      <entry>Domains</entry>
+      <entry>Services</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>uaa.example.com</entry>
+      <entry>uaa/uaa-public</entry>
+     </row>
+     <row>
+      <entry>*.uaa.example.com</entry>
+      <entry>uaa/uaa-public</entry>
+     </row>
+     <row>
+      <entry>example.com</entry>
+      <entry>scf/router-public</entry>
+     </row>
+     <row>
+      <entry>*.example.com</entry>
+      <entry>scf/router-public</entry>
+     </row>
+     <row>
+      <entry>tcp.example.com</entry>
+      <entry>scf/tcp-router-public</entry>
+     </row>
+     <row>
+      <entry>ssh.example.com</entry>
+      <entry>scf/diego-access-public</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+
+  <para xmlns="http://docbook.org/ns/docbook">
+   A &productname; cluster exposes these four services:
+  </para>
+
+  <informaltable xmlns="http://docbook.org/ns/docbook">
+   <tgroup cols="2">
+    <thead>
+     <row>
+      <entry>&kube; service descriptions</entry>
+      <entry>&kube; service names</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>User Account and Authentication (<literal>uaa</literal>)</entry>
+      <entry>uaa-uaa-public</entry>
+     </row>
+     <row>
+      <entry>Cloud Foundry (CF) TCP routing service</entry>
+      <entry>tcp-router-tcp-router-public</entry>
+     </row>
+     <row>
+      <entry>CF application SSH access</entry>
+      <entry>diego-ssh-ssh-proxy-public</entry>
+     </row>
+     <row>
+      <entry>CF router</entry>
+      <entry>router-gorouter-public</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+  
+  <para xmlns="http://docbook.org/ns/docbook">
+   <literal>uaa-uaa-public</literal> is in the <literal>uaa</literal>
+   namespace, and the rest are in the <literal>scf</literal> namespace.
+  </para>'>
+
+<!--ENTITY releases-table...................................................-->
 
 <!ENTITY releases-table    
 '<!-- TODO remember to keep this table updated -->
-    <informaltable xmlns="http://docbook.org/ns/docbook" >
+    <informaltable xmlns="http://docbook.org/ns/docbook">
    <tgroup cols="3">
     <thead>
      <row>
@@ -143,7 +231,9 @@ domains and subdomains for &productname; and your applications.
      </row>
     </tbody>
    </tgroup>
-   </informaltable>'>    
+   </informaltable>'> 
+   
+<!--ENTITY recreate-pods...................................................-->   
 
 <!ENTITY recreate-pods
 '<variablelist xmlns="http://docbook.org/ns/docbook">
@@ -163,6 +253,8 @@ domains and subdomains for &productname; and your applications.
     </varlistentry>
 </variablelist>'>
 
+<!--ENTITY uaac-prereq......................................................-->
+
 <!ENTITY uaac-prereq
 '<listitem xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
 <para>
@@ -176,6 +268,8 @@ domains and subdomains for &productname; and your applications.
 <screen>&prompt.user;sudo zypper install ruby-devel gcc-c++</screen>
 </listitem>'>
 
+<!--ENTITY uaac-target......................................................-->
+
 <!ENTITY uaac-target
 '<step xmlns="http://docbook.org/ns/docbook">
 <para>
@@ -183,6 +277,8 @@ domains and subdomains for &productname; and your applications.
 </para>
 <screen>&prompt.user;uaac target --skip-ssl-validation <replaceable>https://uaa.example.com:2793</replaceable></screen>
 </step>'>
+
+<!--ENTITY uaac-authenticate................................................-->
 
 <!ENTITY uaac-authenticate
 '<step xmlns="http://docbook.org/ns/docbook">
