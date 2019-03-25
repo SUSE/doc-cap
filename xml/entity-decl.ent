@@ -161,10 +161,11 @@
 <!-- Cloud Platforms                                               -->
 <!-- ============================================================= -->
 
-<!ENTITY ms             "Microsoft">
-<!ENTITY azureks        "Azure Kubernetes Service">
-<!ENTITY msaks            "&ms; &azureks;">
-<!ENTITY aks             "Microsoft AKS">
+<!ENTITY ms            "Microsoft">
+<!ENTITY azureks       "Azure Kubernetes Service">
+<!ENTITY msaks         "&ms; &azureks;">
+<!ENTITY aks           "Microsoft AKS">
+<!ENTITY eks           "Amazon EKS">
 <!-- ============================================================= -->
 <!-- Virtualization                                                -->
 <!-- ============================================================= -->
