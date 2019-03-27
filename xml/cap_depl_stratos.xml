@@ -220,11 +220,11 @@ gp2scoped       kubernetes.io/aws-ebs   1d
 <screen>$ watch -c 'kubectl get pods --namespace stratos'</screen>
 
   <para>
-   Obtain the IP of the service exposed through the public load balancer:
+   Obtain the IP address of the service exposed through the public load balancer:
   </para>
 <screen>&prompt.user;kubectl get service susecf-console-ui-ext --namespace stratos</screen>
   <para>
-   Use this IP to create an A record.
+   Use this IP address to create an A record.
   </para>
  </sect1>
  <sect1 xml:id="sec.cap.stratos-prod-kube">
