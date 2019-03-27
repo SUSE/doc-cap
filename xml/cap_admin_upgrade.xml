@@ -75,19 +75,8 @@ NAME            REVISION  UPDATED                  STATUS    CHART           NAM
 <replaceable>susecf-console</replaceable>  1         Tue Aug 14 11:53:28 2018 DEPLOYED  console-2.0.0   stratos  
 <replaceable>susecf-scf</replaceable>      1         Tue Aug 14 10:58:16 2018 DEPLOYED  cf-2.11.0       scf      
 <replaceable>susecf-uaa</replaceable>      1         Tue Aug 14 10:49:30 2018 DEPLOYED  uaa-2.11.0      uaa
-
-&prompt.user;helm search suse
-NAME                            VERSION DESCRIPTION
-suse/cf-opensuse                &latestscfchart;  A Helm chart for SUSE Cloud Foundry
-suse/uaa-opensuse               &latestuaachart;  A Helm chart for SUSE UAA
-suse/cf                         &latestscfchart;  A Helm chart for SUSE Cloud Foundry
-suse/cf-usb-sidecar-mysql       1.0.1   A Helm chart for SUSE Universal Service Broker ...
-suse/cf-usb-sidecar-postgres    1.0.1   A Helm chart for SUSE Universal Service Broker ...
-suse/console                    &lateststratoschart;   A Helm chart for deploying Stratos UI Console
-suse/metrics                    1.0.0   A Helm chart for Stratos Metrics
-suse/nginx-ingress              0.28.3  An nginx Ingress controller that uses ConfigMap...
-suse/uaa                        &latestuaachart;  A Helm chart for SUSE UAA
 </screen>
+&helm-search-suse;
 
   <para>
    View all charts in a release, and their versions:
