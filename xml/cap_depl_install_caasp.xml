@@ -526,20 +526,10 @@ suse            https://kubernetes-charts.suse.com/</screen>
   <para>
    List your chart names, as you will need these for some operations:
   </para>
-
-<screen>&prompt.user;helm search suse
-NAME                        	VERSION	DESCRIPTION
-suse/cf-opensuse            	&latestscfchart;  A Helm chart for SUSE Cloud Foundry
-suse/uaa-opensuse           	&latestuaachart;  A Helm chart for SUSE UAA
-suse/cf                     	&latestscfchart;  A Helm chart for SUSE Cloud Foundry
-suse/cf-usb-sidecar-mysql   	1.0.1  	A Helm chart for SUSE Universal Service Broker ...
-suse/cf-usb-sidecar-postgres	1.0.1  	A Helm chart for SUSE Universal Service Broker ...
-suse/console                	&lateststratoschart;   A Helm chart for deploying Stratos UI Console
-suse/metrics                	1.0.0  	A Helm chart for Stratos Metrics
-suse/nginx-ingress          	0.28.3 	An nginx Ingress controller that uses ConfigMap...
-suse/uaa                    	&latestuaachart;  A Helm chart for SUSE <literal>uaa</literal>
-</screen>
- </sect1>
+  
+&helm-search-suse;
+ 
+</sect1>
  <sect1 xml:id="sec.cap.copy-secret-prod">
   <title>Copy &ses; Secret</title>
 
