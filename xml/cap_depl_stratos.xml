@@ -123,6 +123,99 @@ console-0                         3/3    Running  0         1h
    </mediaobject>
   </figure>
  </sect1>
+ <sect1 xml:id="sec.cap.stratos-eks">
+  <title>Deploy Stratos on &eks;</title>
+
+  <para>
+   Before deploying Stratos, ensure <literal>uaa</literal> and <literal>scf</literal>
+   have been successfully deployed on &eks; (see <xref linkend="cha.cap.eks"/>).
+  </para>
+  <para>
+   Configure a scoped storage class for your Stratos deployment. Create a configuration
+   file, called <filename>scoped-storage-class.yaml</filename> in this example,
+   using the following as a template. Specify the region you are using as the
+   <literal>zone</literal> and be sure to include the letter (for example, the
+   letter <literal>a</literal> in <literal>us-west-2a</literal>) identifier to indicate
+   the Availability Zone used:
+  </para>
+<screen>kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: <replaceable>gp2scoped</replaceable>
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp2
+  zone: <replaceable>"us-west-2a"</replaceable>
+reclaimPolicy: Retain
+mountOptions:
+  - debug
+</screen>
+  <para>
+   Create the storage class using the <filename>scoped-storage-class.yaml</filename>
+   configuration file:
+  </para>
+<screen>&prompt.user;kubectl create --filename <replaceable>scoped-storage-class.yaml</replaceable></screen>
+  <para>
+   Verify the storage class has been created:
+  </para>
+<screen>&prompt.user;kubectl get storageclass
+NAME            PROVISIONER             AGE
+gp2 (default)   kubernetes.io/aws-ebs   1d
+gp2scoped       kubernetes.io/aws-ebs   1d
+</screen>
+  <para>
+   Use &helm; to install Stratos:
+  </para>
+<screen>helm install suse/console \
+    --name susecf-console \
+    --namespace stratos \
+    --set kube.storage_class.persistent=gp2scoped \
+    --set services.loadbalanced=true \
+    --set console.service.http.servicePort=8080
+</screen>
+  <para>
+    Monitor progress:
+  </para>
+<screen>$ watch -c 'kubectl get pods --namespace stratos'</screen>
+
+  <para>
+   Obtain the hostname of the service exposed through the public load balancer:
+  </para>
+<screen>&prompt.user;kubectl get service susecf-console-ui-ext --namespace stratos</screen>
+  <para>
+   Use this hostname to create a CNAME record.
+  </para>
+ </sect1>
+ <sect1 xml:id="sec.cap.stratos-aks">
+  <title>Deploy Stratos on &aks;</title>
+
+  <para>
+   Before deploying Stratos, ensure <literal>uaa</literal> and <literal>scf</literal>
+   have been successfully deployed on &aks; (see <xref linkend="cha.cap.depl-azure"/>).
+  </para>
+
+  <para>
+   Use &helm; to install Stratos:
+  </para>
+<screen>helm install suse/console \
+    --name susecf-console \
+    --namespace stratos \
+    --set services.loadbalanced=true \
+    --set console.service.http.servicePort=8080
+</screen>
+  <para>
+    Monitor progress:
+  </para>
+<screen>$ watch -c 'kubectl get pods --namespace stratos'</screen>
+
+  <para>
+   Obtain the IP address of the service exposed through the public load balancer:
+  </para>
+<screen>&prompt.user;kubectl get service susecf-console-ui-ext --namespace stratos</screen>
+  <para>
+   Use this IP address to create an A record.
+  </para>
+ </sect1>
  <sect1 xml:id="sec.cap.stratos-prod-kube">
   <title>Connecting Kubernetes</title>
 
