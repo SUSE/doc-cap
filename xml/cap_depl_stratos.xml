@@ -171,7 +171,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
     --namespace stratos \
     --set kube.storage_class.persistent=gp2scoped \
     --set services.loadbalanced=true \
-    --set console.service.http.servicePort=8080
+    --set console.service.http.nodePort=8080
 </screen>
   <para>
     Monitor progress:
@@ -201,7 +201,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
     --name susecf-console \
     --namespace stratos \
     --set services.loadbalanced=true \
-    --set console.service.http.servicePort=8080
+    --set console.service.http.nodePort=8080
 </screen>
   <para>
     Monitor progress:
