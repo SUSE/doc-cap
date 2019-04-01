@@ -37,13 +37,16 @@ kubectl create -f -</screen>
   <para>
    You should already have the Stratos charts when you downloaded the SUSE
    charts repository (see <xref linkend="sec.cap.addrepo-prod"/>). Search your
-   &helm; repository:
+   &helm; repository to verify that you have the <literal>suse/console</literal> 
+   chart:
   </para>
 
 &helm-search-suse;  
 
  <para>
-   Use &helm; to install Stratos:
+     Use &helm; to install Stratos, using the same 
+     <filename>scf-config-values.yaml</filename> configuration file you used to
+     deploy<literal>uaa</literal> and <literal>scf</literal>:
   </para>
 
 <screen>&prompt.user;helm install suse/console \
@@ -64,51 +67,48 @@ console-0                          3/3       Running   0          30m
 console-mariadb-3697248891-5drf5   1/1       Running   0          30m</screen>
 
   <para>
-   When all statuses show Ready, press <keycombo> <keycap function="control"/>
-   <keycap>C</keycap> </keycombo> to exit. Query with &helm; to view your
+   When all statuses show Ready, press <keycombo><keycap function="control"/>
+   <keycap>C</keycap></keycombo> to exit. Query with &helm; to view your
    release information:
   </para>
 
 <screen>&prompt.user;helm status susecf-console
-LAST DEPLOYED: Wed Jan  2 10:25:22 2019
+LAST DEPLOYED: Wed Mar 27 06:51:36 2019
 NAMESPACE: stratos
 STATUS: DEPLOYED
 
 RESOURCES:
 ==> v1/Secret
 NAME                           TYPE    DATA  AGE
-susecf-console-secret          Opaque  2     1h
-susecf-console-mariadb-secret  Opaque  2     1h
+susecf-console-secret          Opaque  2     3h
+susecf-console-mariadb-secret  Opaque  2     3h
 
 ==> v1/PersistentVolumeClaim
-NAME                                  STATUS  VOLUME                                    CAPACITY  ACCESS MODES  STORAGECLASS  AGE
-console-mariadb                       Bound   pvc-c41fb6be-0ebb-11e9-9b6c-fa163e0b27ed  1Gi       RWO           persistent    1h
-susecf-console-upgrade-volume         Bound   pvc-c420356f-0ebb-11e9-9b6c-fa163e0b27ed  20Mi      RWO           persistent    1h
-susecf-console-encryption-key-volume  Bound   pvc-c4292f69-0ebb-11e9-9b6c-fa163e0b27ed  20Mi      RWO           persistent    1h
+NAME                                  STATUS  VOLUME                                    CAPACITY  ACCESSMODES  STORAGECLASS  AGE
+susecf-console-upgrade-volume         Bound   pvc-711380d4-5097-11e9-89eb-fa163e15acf0  20Mi      RWO          persistent    3h
+susecf-console-encryption-key-volume  Bound   pvc-711b5275-5097-11e9-89eb-fa163e15acf0  20Mi      RWO          persistent    3h
+console-mariadb                       Bound   pvc-7122200c-5097-11e9-89eb-fa163e15acf0  1Gi       RWO          persistent    3h
 
 ==> v1/Service
-NAME                    TYPE       CLUSTER-IP      EXTERNAL-IP                                        PORT(S)                      AGE
-susecf-console-mariadb  ClusterIP  172.24.60.105   &lt;none>                                             3306/TCP                     1h
-susecf-console-ui-ext   NodePort   172.24.164.199  10.86.1.15,172.24.10.12,172.24.10.16,172.24.10.14  80:31104/TCP,8443:31528/TCP  1h
+NAME                    CLUSTER-IP      EXTERNAL-IP                                                PORT(S)   AGE
+susecf-console-mariadb  172.24.137.195  &lt;none>                                                     3306/TCP  3h
+susecf-console-ui-ext   172.24.80.22    10.86.101.115,172.28.0.31,172.28.0.36,172.28.0.7,172.28.0.22  8443/TCP  3h
 
 ==> v1beta1/Deployment
-NAME             DESIRED  CURRENT  UP-TO-DATE  AVAILABLE  AGE
-console-mariadb  1        1        1           1          1h
+NAME        DESIRED  CURRENT  UP-TO-DATE  AVAILABLE  AGE
+stratos-db  1        1        1           1          3h
 
 ==> v1beta1/StatefulSet
 NAME     DESIRED  CURRENT  AGE
-console  1        1        1h
-
-==> v1/Pod(related)
-NAME                              READY  STATUS   RESTARTS  AGE
-console-mariadb-66fc57b5b5-fzq7w  1/1    Running  0         1h
-console-0                         3/3    Running  0         1h
+stratos  1        1        3h
 </screen>
 
   <para>
-   Point your web browser to https://example.com:8443, or
-   https://10.86.1.15:8443 (from the <command>helm list</command> output) to
-   see the Stratos console. Wade through the nag screens about the self-signed
+  Find the external IP address with 
+  <command>helm status susecf-console|grep ui-ext</command> to access your new
+          Stratos Web console, for example https://10.86.101.115:8443, or use the
+          domain you created for it, and its port, for example 
+          https://example.com:8443. Wade through the nag screens about the self-signed
    certificates and log in as <literal>admin</literal> with the password you
    created in <filename>scf-config-values.yaml</filename>. If you see an
    upgrade message, wait a few minutes and try again.

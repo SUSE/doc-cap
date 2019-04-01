@@ -183,8 +183,8 @@
    using the <literal>--skip-ssl-validation</literal> option.
   </para>
 
-<screen>cf api https://api.example.com
-cf login</screen>
+<screen>&prompt.user;cf api https://api.example.com
+&prompt.user;cf login</screen>
 
   <sect2 xml:id="sec.cap.cert-multiple">
    <title>Configuring Multiple Certificates</title>
