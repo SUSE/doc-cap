@@ -139,7 +139,7 @@ release "susecf-scf" deleted
 namespace "scf" deleted</screen>
 
   <para>
-   Then you can start over.
+   Then you can start over. Be sure to create new release and namespace names.
   </para>
  </sect1>
  <sect1 xml:id="sec.cap.kubectl.queries">

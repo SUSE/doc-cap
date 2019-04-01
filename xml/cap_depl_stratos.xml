@@ -15,14 +15,26 @@
    <dm:translation>yes</dm:translation>
   </dm:docmanager>
  </info>
+ 
+   <para>
+   The Stratos user interface (UI) is a modern web-based management application 
+   for Cloud Foundry. It provides a graphical management console for both 
+   developers and system administrators. Install Stratos with &helm; after all 
+   of the <literal>uaa</literal> and <literal>scf</literal> pods are running.
+  </para>
+ 
  <sect1 xml:id="sec.cap.stratos-prod">
-  <title>Install Stratos with &helm;</title>
+  <title>Deploy Stratos on &susecaaspreg;</title>
 
-  <para>
-   Stratos UI is a modern web-based management application for Cloud Foundry.
-   It provides a graphical management console for both developers and system
-   administrators. Install Stratos with &helm; after all of the
-   <literal>uaa</literal> and <literal>scf</literal> pods are running.
+   <para>
+      The steps in this section describe how to install Stratos on &susecaaspreg;
+      without an external load balancer, instead mapping a worker node to your
+      &productname; domain as described in 
+      <xref linkend="sec.cap.configure-prod"/>. 
+      <!-- Hopefully an additional section describing how to deploy with a load 
+      balancer will actually be written. cjs april 1 2019 "See 
+      TODO to learn how to configure
+      Stratos to use an external load balancer."-->
   </para>
 
   <para>
@@ -105,13 +117,11 @@ stratos  1        1        3h
 
   <para>
   Find the external IP address with 
-  <command>helm status susecf-console|grep ui-ext</command> to access your new
-          Stratos Web console, for example https://10.86.101.115:8443, or use the
+  <command>kubectl get service susecf-console-ui-ext --namespace stratos</command> to access your new Stratos Web console, for example https://10.86.101.115:8443, or use the
           domain you created for it, and its port, for example 
           https://example.com:8443. Wade through the nag screens about the self-signed
    certificates and log in as <literal>admin</literal> with the password you
-   created in <filename>scf-config-values.yaml</filename>. If you see an
-   upgrade message, wait a few minutes and try again.
+   created in <filename>scf-config-values.yaml</filename>.
   </para>
 
   <figure xml:id="fig.cap.stratos-prod">
@@ -123,6 +133,7 @@ stratos  1        1        3h
    </mediaobject>
   </figure>
  </sect1>
+         
  <sect1 xml:id="sec.cap.stratos-eks">
   <title>Deploy Stratos on &eks;</title>
 
