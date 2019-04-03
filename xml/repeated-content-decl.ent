@@ -101,7 +101,8 @@ list the minimum DNS requirements to run &productname;, using
    platform-dependent, for example Microsoft Azure assigns IP addresses to your
    services, which you will map to your domains. Amazon EKS assigns hostnames,
    which you will use to create CNAMEs. &suse; &caasp; provides the flexibility
-   to manage your name services in nearly any way you wish.
+   to manage your name services in nearly any way you wish. The chapters for
+   each platform in this guide provide the relevant DNS instructions.
 </para>
 
   <informaltable xmlns="http://docbook.org/ns/docbook">
