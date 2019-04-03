@@ -156,14 +156,6 @@
       <filename>~/.kube/config</filename> on your workstation. This file
       enables the remote administration of your cluster.
      </para>
-     <figure xml:id="fig.cap.kubectl-download-prod">
-      <title>Download kubeconfig</title>
-      <mediaobject>
-       <imageobject>
-        <imagedata fileref="kubectl-download-prod.png" format="PNG" width="75%"/>
-       </imageobject>
-      </mediaobject>
-     </figure>
     </listitem>
    </varlistentry>
    <varlistentry>
@@ -205,8 +197,8 @@ contexts:
 &prompt.user;kubectl get nodes
 NAME                  STATUS   ROLES     AGE  VERSION
 ef254d3.example.com   Ready    Master    4h   v1.10.11
-b70748d.example.com   Ready    &lt;none>    4h   v1.10.11
-cb77881.example.com   Ready    &lt;none>    4h   v1.10.11
+b70748d.example.com   Ready    Master    4h   v1.10.11
+cb77881.example.com   Ready    Master    4h   v1.10.11
 d028551.example.com   Ready    &lt;none>    4h   v1.10.11
 [...]</screen>
     </listitem>
