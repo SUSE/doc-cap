@@ -30,7 +30,10 @@
       The steps in this section describe how to install Stratos on &susecaaspreg;
       without an external load balancer, instead mapping a worker node to your
       &productname; domain as described in 
-      <xref linkend="sec.cap.configure-prod"/>. 
+      <xref linkend="sec.cap.configure-prod"/>. These instructions assume you 
+      have followed the procedure in <xref linkend="cha.cap.install-production"/>, 
+      have deployed <literal>uaa</literal> and <literal>scf</literal> successfully,
+      and have created a default storage class.
       <!-- Hopefully an additional section describing how to deploy with a load 
       balancer will actually be written. cjs april 1 2019 "See 
       TODO to learn how to configure
