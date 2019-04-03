@@ -97,7 +97,11 @@ Before you start deploying &productname;, review the following documents:
 '<para xmlns="http://docbook.org/ns/docbook">
 The following tables
 list the minimum DNS requirements to run &productname;, using
-   <literal>example.com</literal> as the example domain:
+   <literal>example.com</literal> as the example domain. Your DNS management is
+   platform-dependent, for example Microsoft Azure assigns IP addresses to your
+   services, which you will map to your domains. Amazon EKS assigns hostnames,
+   which you will use to create CNAMEs. &suse; &caasp; provides the flexibility
+   to manage your name services in nearly any way you wish.
 </para>
 
   <informaltable xmlns="http://docbook.org/ns/docbook">
