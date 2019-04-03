@@ -441,10 +441,11 @@ kube:
   organization: "cap"
 
 secrets:
-  # Create a password for your CAP cluster
+  # Create a very strong password for user 'admin'
   CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
     
-  # Create a password for your uaa client secret
+  # Create a very strong password, and protect it because it
+  # provides root access to everything
   UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
   </screen>
 
