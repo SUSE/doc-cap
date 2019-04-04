@@ -245,7 +245,7 @@ cap-aks</screen>
  --node-count $NODECOUNT --admin-username $ADMINUSERNAME \
  --ssh-key-value $SSHKEYVALUE --node-vm-size $NODEVMSIZE \
  --node-osdisk-size=60 --nodepool-name $NODEPOOLNAME \
- --kubernetes-version <replaceable>1.11.8</replaceable>
+ --kubernetes-version <replaceable>&aksnodeversion;</replaceable>
 </screen>
 
   <note>
@@ -274,9 +274,9 @@ cap-aks</screen>
 
 <screen>&prompt.user;kubectl get nodes
 NAME                    STATUS    ROLES     AGE       VERSION
-aks-mypool-47788232-0   Ready     agent     5m        v1.11.6
-aks-mypool-47788232-1   Ready     agent     6m        v1.11.6
-aks-mypool-47788232-2   Ready     agent     6m        v1.11.6
+aks-mypool-47788232-0   Ready     agent     5m        v&aksnodeversion;
+aks-mypool-47788232-1   Ready     agent     6m        v&aksnodeversion;
+aks-mypool-47788232-2   Ready     agent     6m        v&aksnodeversion;
 
 &prompt.user;kubectl get pods --all-namespaces
 NAMESPACE     NAME                                READY  STATUS    RESTARTS   AGE
