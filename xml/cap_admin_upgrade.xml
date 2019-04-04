@@ -101,14 +101,7 @@ suse/uaa        2.7.0       A Helm chart for SUSE UAA
   </para>
 
   <important>
-   <title>Changes to Commands</title>
-   <para>
-    Take note of the new commands for extracting and using secrets and
-    certificates. If you are still on the &productname; 1.1 release, update
-    your <filename>scf-config-values.yaml</filename> file with the changes for
-    secrets handling and external IP addresses. (See
-    <xref linkend="sec.cap.configure-prod"/> for an example.)
-   </para>
+   &recreate-pods;
   </important>
 
   <para>
@@ -121,10 +114,6 @@ suse/uaa        2.7.0       A Helm chart for SUSE UAA
 
 <screen>&prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa \
     --values scf-config-values.yaml</screen>
-
-  <important>
-   &recreate-pods;
-  </important>
 
   <para>
    Then extract the <literal>uaa</literal> secret for <literal>scf</literal> to
@@ -147,20 +136,12 @@ suse/uaa        2.7.0       A Helm chart for SUSE UAA
 <screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}"</screen>
 
-  <important>
-   &recreate-pods;
-  </important>
-
   <para>
    Then upgrade Stratos:
   </para>
 
 <screen>&prompt.user;helm upgrade <replaceable>susecf-console</replaceable> suse/console \
  --values scf-config-values.yaml</screen>
-
-  <important>
-   &recreate-pods;
-  </important>
 
 <!-- Internal cf-usb broker broker endpoint URL change involving 1.3 -->
 
