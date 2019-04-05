@@ -217,6 +217,10 @@ cap-aks</screen>
     <para>
      Which results in something like <literal>aks-mypool-39318075-2</literal>.
     </para>
+    <para>
+     Note that uppercase characters are considered invalid in a noodpool name and should
+     not be used.
+    </para>
    </step>
   </procedure>
 
