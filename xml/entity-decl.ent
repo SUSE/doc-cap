@@ -10,7 +10,7 @@
 <!ENTITY latestuaachart "2.15.2">
 <!ENTITY latestscfchart "2.15.2">
 <!ENTITY lateststratoschart "2.3.0">
-<!ENTITY aksnodeversion "1.13.5">
+<!ENTITY aksnodeversion "1.11.8">
 <!ENTITY cfcli        "cf CLI">
 <!ENTITY guide         "<citetitle xmlns='http://docbook.org/ns/docbook'>Deployment, Administration, and User Guide</citetitle>">
 <!-- ====================================================================== -->

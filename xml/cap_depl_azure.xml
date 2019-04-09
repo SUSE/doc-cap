@@ -233,18 +233,12 @@ cap-aks</screen>
 
   <para>
    List the &kube; versions currently supported by AKS (see
-   <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/supported-kubernetes-versions"/>
+   <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/supported-kubernetes-versions"/> 
    for more information on the AKS version support policy). When creating your
-   cluster in the next step, specify the newest supported &kube; version:
+   cluster in the next step, specify a &kube; version for consistent deployments:
   </para>
 
 <screen>&prompt.user;az aks get-versions --location $REGION --output table
- KubernetesVersion    Upgrades
--------------------  ------------------------
-1.13.5               None available
-1.12.7               1.13.5
-1.12.6               1.12.7, 1.13.5
-1.11.9               1.12.6, 1.12.7
 </screen>
 
   <para>
@@ -402,8 +396,7 @@ NAME       URL
 stable     https://kubernetes-charts.storage.googleapis.com    
 local      http://127.0.0.1:8879/charts                        
 suse       https://kubernetes-charts.suse.com/                 
-svc-cat    https://svc-catalog-charts.storage.googleapis.com   
-azure      https://kubernetescharts.blob.core.windows.net/azure</screen>
+</screen>
 
   <para>
    List your chart names, as you will need these for some operations:
@@ -432,11 +425,31 @@ azure      https://kubernetescharts.blob.core.windows.net/azure</screen>
   </para>
 
   <para>
-   The following is an example configuration file, called
-   <filename>scf-azure-values.yaml</filename>, used to deploy &cap; on Azure
-   Kubernetes Service:
+   The following configuration examples show how to configure the required
+   storage class, and provide a complete example configuration for the
+   deployment.
+  </para>
+  <para>
+   AKS clusters contain two built-in storage classes (see
+   <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/azure-disks-dynamic-pv">
+       Dynamically create and use a persistent volume with Azure disks in AKS</link>,
+   the <literal>default</literal> storage class and the <literal>managed-premium</literal>
+   storage class. Deploying &cap; on AKS requires provisioning an Azure disk with the
+   <literal>managed-premium</literal> storage class. In your deployment 
+   configuration file ensure that <literal>managed-premium</literal> has been 
+   specified as the value for <literal>kube.storage_class.persistent</literal>, 
+   like this example:
   </para>
 
+<screen>kube:
+  storage_class:
+    persistent: "managed-premium"
+    shared: "shared"
+</screen>
+<para>
+    The following file, <filename>scf-azure-values.yaml</filename>, provides a 
+    complete example configuration:
+</para>
 <screen>env:
   DOMAIN: <replaceable>autolb.example.com</replaceable>
   UAA_HOST: uaa.<replaceable>autolb.example.com</replaceable>
