@@ -81,7 +81,8 @@ Before you start deploying &productname;, review the following documents:
       </para>
               <para>
          Read the Release Notes:
-         <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/1/"/>
+         <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/1/">
+           Release Notes SUSE Cloud Application Platform</link>
         </para>
                 <para>
             Read
