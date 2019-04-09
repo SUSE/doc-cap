@@ -31,6 +31,11 @@
   <itemizedlist>
    <listitem>
     <para>
+     A running deployment of <literal>scf</literal>
+    </para>
+   </listitem>
+   <listitem>
+    <para>
      <link xlink:href="https://docs.cloudfoundry.org/cf-cli/">The &cf; command
      line interface (&cfcli;)</link>
     </para>
@@ -43,7 +48,7 @@
     <para>
      The plugin can be installed by running the following command:
     </para>
-<screen>cf install-plugin app-autoscaler-plugin</screen>
+<screen>&prompt.user;cf install-plugin app-autoscaler-plugin</screen>
    </listitem>
    <listitem>
     <para>
@@ -60,8 +65,8 @@
   <para>
    By default, the App-AutoScaler service is not enabled as part of a &scf;
    deployment. To enable it, add the following values to your
-   <filename>scf-config-values.yaml</filename> file and deploy
-   <literal>scf</literal>:
+   <filename>scf-config-values.yaml</filename> file and use <command>helm upgrade</command>
+   to apply the changes to an existing <literal>scf</literal> deployment:
   </para>
 
 <screen>
@@ -90,10 +95,7 @@ sizing:
   </para>
 
   <para>
-   If <literal>uaa</literal> is deployed, pass your <literal>uaa</literal>
-   secret and certificate to <literal>scf</literal>. Otherwise deploy
-   <literal>uaa</literal> first (See
-   <xref linkend="sec.cap.install-uaa-prod"/>), then proceed with this step:
+   Pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>:
   </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
@@ -104,20 +106,8 @@ sizing:
 </screen>
 
   <para>
-   If this is an initial deployment, use <command>helm install</command> to
-   deploy <literal>scf</literal>:
-  </para>
-
-<screen>&prompt.user;helm install suse/cf \
---name susecf-scf \
---namespace scf \
---values scf-config-values.yaml \
---set "secrets.UAA_CA_CERT=${CA_CERT}"
-</screen>
-
-  <para>
-   If this is an existing deployment, use <command>helm upgrade</command> to
-   apply the change:
+   Use <command>helm upgrade</command> to apply the change to a
+   running <literal>scf</literal> deployment:
   </para>
 
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
