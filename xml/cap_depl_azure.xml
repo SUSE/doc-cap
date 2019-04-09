@@ -9,7 +9,7 @@
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
  <info>
-  <title>Preparing Microsoft Azure for &productname;</title>
+  <title>Deploying &productname; on Microsoft Azure Kubernetes Service (AKS)</title>
   <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
    <dm:bugtracker></dm:bugtracker>
    <dm:translation>yes</dm:translation>
@@ -131,7 +131,7 @@ cap-aks</screen>
    set environment variables.
   </para>
 
-  <note>
+  <tip>
    <title>Use different names</title>
    <para>
     Ensure each of your AKS clusters use unique resource group and managed
@@ -141,7 +141,7 @@ cap-aks</screen>
     deployment in a single resource group helps you keep track, and you can
     delete the whole deployment by deleting the resource group.
    </para>
-  </note>
+  </tip>
 
   <procedure xml:id="pro.envvars-azure">
    <step>
@@ -235,11 +235,17 @@ cap-aks</screen>
    List the &kube; versions currently supported by AKS (see
    <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/supported-kubernetes-versions"/>
    for more information on the AKS version support policy). When creating your
-   cluster in the next step, specify a &kube; version for consistent
-   deployments:
+   cluster in the next step, specify the newest supported &kube; version:
   </para>
 
-<screen>&prompt.user;az aks get-versions --location $REGION --output table</screen>
+<screen>&prompt.user;az aks get-versions --location $REGION --output table
+ KubernetesVersion    Upgrades
+-------------------  ------------------------
+1.13.5               None available
+1.12.7               1.13.5
+1.12.6               1.12.7, 1.13.5
+1.11.9               1.12.6, 1.12.7
+</screen>
 
   <para>
    Now you can create a new AKS managed cluster:
@@ -330,27 +336,7 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
  Happy Helming!</screen>
 
  </sect1>
- <sect1 xml:id="sec.cap.aks-storage-class">
-  <title>Storage Class</title>
 
-  <para>
-   AKS clusters contain two built-in storage classes (see
-   <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/azure-disks-dynamic-pv"/>,
-   the <literal>default</literal> storage class and the <literal>managed-premium</literal>
-   storage class. Deploying &cap; on AKS requires provisioning an Azure disk with the
-   <literal>managed-premium</literal> storage class. In your configuration file, called
-   <filename>scf-azure-values.yaml</filename> in this example, ensure that
-   <literal>managed-premium</literal> has been specified as the value for
-   <literal>kube.storage_class.persistent</literal>:
-  </para>
-
-<screen>kube:
-  storage_class:
-    # Azure supports only "default" or "managed-premium"
-    persistent: "managed-premium"
-    shared: "shared"
-</screen>
- </sect1>
  <sect1 xml:id="sec.cap.psp">
   <title>Pod Security Policies</title>
 
@@ -412,10 +398,12 @@ done</screen>
   </para>
 
 <screen>&prompt.user;helm repo list
-NAME            URL
-stable          https://kubernetes-charts.storage.googleapis.com
-local           http://127.0.0.1:8879/charts
-suse            https://kubernetes-charts.suse.com/</screen>
+NAME       URL
+stable     https://kubernetes-charts.storage.googleapis.com    
+local      http://127.0.0.1:8879/charts                        
+suse       https://kubernetes-charts.suse.com/                 
+svc-cat    https://svc-catalog-charts.storage.googleapis.com   
+azure      https://kubernetescharts.blob.core.windows.net/azure</screen>
 
   <para>
    List your chart names, as you will need these for some operations:
@@ -450,19 +438,14 @@ suse            https://kubernetes-charts.suse.com/</screen>
   </para>
 
 <screen>env:
-  # Use a FQDN
   DOMAIN: <replaceable>autolb.example.com</replaceable>
-
-  # uaa prefix is required
   UAA_HOST: uaa.<replaceable>autolb.example.com</replaceable>
   UAA_PORT: 2793
-
-  #Azure deployment requires overlay
   GARDEN_ROOTFS_DRIVER: "overlay-xfs"
 
 kube:
   storage_class:
-    # Azure supports only "default" or "managed-premium"
+    # "managed-premium" is required
     persistent: "managed-premium"
     shared: "shared"
 
@@ -473,10 +456,7 @@ kube:
   organization: "cap"
 
 secrets:
-  # Password for user 'admin' in the cluster
   CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
-
-  # Password for scf to authenticate with uaa
   UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
 
 services:
