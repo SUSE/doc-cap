@@ -48,7 +48,7 @@
     <para>
      The plugin can be installed by running the following command:
     </para>
-<screen>cf install-plugin app-autoscaler-plugin</screen>
+<screen>&prompt.user;cf install-plugin app-autoscaler-plugin</screen>
    </listitem>
    <listitem>
     <para>
