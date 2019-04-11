@@ -76,13 +76,13 @@
     <term>Network Requirements</term>
     <listitem>
      <para>
-      To enable the &cf; nodes to interact with each other, make sure your
+      To enable the &suse; &cf; nodes to interact with each other, make sure your
       network setup fulfills the following requirements:
      </para>
      <itemizedlist>
       <listitem>
        <para>
-        The &kube; cluster has a dedicated domain and subdomain.
+        The &kube; cluster has a dedicated domain and required subdomains.
        </para>
       </listitem>
       <listitem>
@@ -439,12 +439,15 @@ persistentvolumeclaim "test-sc-persistent" deleted</screen>
   </para>
   <itemizedlist>
    <listitem>
-    <formalpara>
+   <formalpara>
+        <!-- TODO External load balancers is a huge and complex topic,
+        and we need to provide some guidance in enough depth to be useful. 
+        cjs, 11 april 2019-->      
      <title>Hardware Load Balancer</title>
      <para>
-      If you are using a hardware load balancer, assign one of the worker
+      If you are using a hardware load balancer, assign one or more of the worker
       nodes an external IP address. To provide external access to the
-      cluster, map this IP address to the domain name.
+      cluster, map these IP addresses to the domain name.
      </para>
     </formalpara>
     <para>
@@ -477,12 +480,28 @@ persistentvolumeclaim "test-sc-persistent" deleted</screen>
    </listitem>
   </itemizedlist>
 
-  <para>
-   The resulting configuration file for a cluster set up to use a hardware
+<!--  We will address this in our future load balancer section. 
+  cjs, 4 april 2019-->
+<!--  <para>
+   This example configuration file for a cluster set up to use a hardware
    load balancer should look somewhat like the following, where the IP
    address <replaceable>&kubeip;</replaceable> denotes an external IP address:
-  </para>
+  </para>  -->
+  <para>
+   The example <filename>scf-config-values.yaml</filename> file is for a simple
+   deployment without an ingress controller or external load balancer. Instead, 
+   assign one worker node an external IP address, and map this to the domain 
+   name to provide external access to the cluster. Instead, assign one worker 
+   node an external IP address, and map this to the domain name to provide external 
+   access to the cluster. The <literal>external_ips</literal> parameter needs 
+   this address to provide access to the Stratos Web interface, and its also 
+   needs the internal IP addresses of the worker nodes to provide access to 
+   services.
+</para>   
+  
 <screen>
+###scf-config-values.yaml
+
 env:
   # Enter the domain you created for your CAP cluster
   DOMAIN: <replaceable>&exampledomain;</replaceable>
