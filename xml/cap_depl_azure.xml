@@ -22,7 +22,8 @@
   &productname; supports deployment on Microsoft Azure Kubernetes Service
   (AKS), Microsoft's managed &kube; service. This chapter describes the steps
   for preparing Azure for a &productname; deployment, with a basic Azure load
-  balancer. (See
+  balancer. Note that you will not create any DNS records until after
+  <literal>uaa</literal> is deployed. (See
   <link xlink:href="https://azure.microsoft.com/en-us/services/container-service/">
   Azure Kubernetes Service (AKS)</link> for more information.)
  </para>
@@ -166,10 +167,12 @@ cap-aks</screen>
    </step>
    <step>
     <para>
-     Set the Azure location. (See
+     Set the Azure location. See
      <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/container-service-quotas">
      Quotas and region availability for Azure Kubernetes Service (AKS)</link>
-     for supported locations.)
+ for supported locations. Run <command>az account list-locations</command> to
+ verify the correct way to spell your location name, for example East US is
+ <literal>eastus</literal> in your <command>az</command> commands:
     </para>
 <screen>&prompt.user;export REGION="<replaceable>eastus</replaceable>"</screen>
    </step>
@@ -234,15 +237,15 @@ cap-aks</screen>
   <para>
    List the &kube; versions currently supported by AKS (see
    <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/supported-kubernetes-versions"/> 
-   for more information on the AKS version support policy). When creating your
-   cluster in the next step, specify a &kube; version for consistent deployments:
+   for more information on the AKS version support policy):
   </para>
 
 <screen>&prompt.user;az aks get-versions --location $REGION --output table
 </screen>
 
   <para>
-   Now you can create a new AKS managed cluster:
+   Create a new AKS managed cluster, and specify the &kube; version for 
+   consistent deployments:
   </para>
 
 <screen>&prompt.user;az aks create --resource-group $RGNAME --name $AKSNAME \
@@ -406,39 +409,30 @@ suse       https://kubernetes-charts.suse.com/
 
  </sect1>
  <sect1 xml:id="sec.cap.cap-on-azure">
-  <title>Deploy &productname; with a Load Balancer</title>
-
+     <title>Deploying &productname; with a Load Balancer</title>
   <para>
-   In &productname;, load balancing is enabled by setting the
-   <literal>services.loadbalanced</literal> parameter to
-   <literal>true</literal> and specifying a fully qualified domain name (FQDN)
-   for the <literal>DOMAIN</literal> parameter in your configuration file. When
-   <literal>services.loadbalanced</literal> is set to <literal>true</literal>,
-   the
-   <link xlink:href="https://kubernetes.io/docs/concepts/services-networking/#publishing-services-service-types">ServiceType</link>
-   of public-facing services will change to
-   <link xlink:href="https://kubernetes.io/docs/concepts/services-networking/#loadbalancer">Type
-   LoadBalancer</link> and a load balancer will be provisioned for the service.
-   In &azureks;, this provisions a
-   <link xlink:href="https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-overview#skus">Basic
-   Load Balancer</link>.
+      This section describes how to deploy &productname; with a basic
+      AKS load balancer, how to set up the required storage volume, and how
+      to configure your DNS records.
   </para>
-
+<sect2 xml:id="sec.cap.aks-storage">
+    <title>Creating the Required Storage Volume</title>
   <para>
-   The following configuration examples show how to configure the required
-   storage class, and provide a complete example configuration for the
-   deployment.
-  </para>
-  <para>
-   AKS clusters contain two built-in storage classes (see
+   AKS clusters contain two built-in storage classes, the <literal>default</literal> 
+   storage class and the <literal>managed-premium</literal>
+   storage class. Deploying &cap; on AKS requires provisioning an Azure disk 
+   with the <literal>managed-premium</literal> storage class. Follow the steps
+   at
    <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/azure-disks-dynamic-pv">
-       Dynamically create and use a persistent volume with Azure disks in AKS</link>,
-   the <literal>default</literal> storage class and the <literal>managed-premium</literal>
-   storage class. Deploying &cap; on AKS requires provisioning an Azure disk with the
-   <literal>managed-premium</literal> storage class. In your deployment 
-   configuration file ensure that <literal>managed-premium</literal> has been 
-   specified as the value for <literal>kube.storage_class.persistent</literal>, 
-   like this example:
+       Dynamically create and use a persistent volume with Azure disks in AKS</link>)
+   to meet this requirement. This document also describes how to backup and restore
+   your new persistent volume; these steps are not required to deploy &cap;, but
+   are useful for operating your cluster.
+</para>
+<para>
+   When your new persistent volume is running, enter <literal>managed-premium</literal> 
+   as the value for <literal>kube.storage_class.persistent</literal> in your
+   deployment configuration file, like this example:
   </para>
 
 <screen>kube:
@@ -447,18 +441,38 @@ suse       https://kubernetes-charts.suse.com/
     shared: "shared"
 </screen>
 <para>
-    The following file, <filename>scf-azure-values.yaml</filename>, provides a 
-    complete example configuration:
+    See <xref linkend="sec.cap.aks-config"/> for a complete example deployment 
+    configuration file, <filename>scf-azure-values.yaml</filename>.
 </para>
-<screen>env:
+</sect2>
+<sect2 xml:id="sec.cap.aks-config">
+    <title>Deployment Configuration</title>
+<para>
+    It is not necessary to create any DNS records before deploying 
+    <literal>uaa</literal>. Instead, after <literal>uaa</literal>
+    is running you will find the load balancer IP address that was automatically 
+    created during deployment, and then create the necessary records.
+</para>
+<para>
+    The following file, <filename>scf-azure-values.yaml</filename>, provides a 
+    complete example deployment configuration. Enter the fully-qualified domain 
+    name (FQDN) that you intend to use for <literal>DOMAIN</literal> and 
+    <literal>HOST</literal>.
+</para>
+<screen>
+### example deployment configuration file
+### scf-azure-values.yaml
+
+env:
+  # the FQDN of your domain  
   DOMAIN: <replaceable>autolb.example.com</replaceable>
+  # the UAA prefix is required
   UAA_HOST: uaa.<replaceable>autolb.example.com</replaceable>
   UAA_PORT: 2793
   GARDEN_ROOTFS_DRIVER: "overlay-xfs"
 
 kube:
   storage_class:
-    # "managed-premium" is required
     persistent: "managed-premium"
     shared: "shared"
 
@@ -469,12 +483,15 @@ kube:
   organization: "cap"
 
 secrets:
+  # create very strong passwords, and protect them just as 
+  # carefully as you would protect any root passwords
   CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
   UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
 
 services:
   loadbalanced: true
 </screen>
+</sect2>
 
   <sect2 xml:id="sec.cap.loadbalancer-azure-uaa">
    <title>Deploy <literal>uaa</literal></title>
