@@ -76,7 +76,7 @@
     <term>Network Requirements</term>
     <listitem>
      <para>
-      To enable the &suse; &cf; nodes to interact with each other, make sure your
+      To enable the &scf; nodes to interact with each other, make sure your
       network setup fulfills the following requirements:
      </para>
      <itemizedlist>
