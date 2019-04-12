@@ -38,25 +38,52 @@
 &prompt.user;tar zxf credhub-linux-2.2.0.tgz
 </screen>
  </sect1>
- <sect1 xml:id="sec.cap.credhub-sizing">
-  <title>Enabling Credhub</title>
+ <sect1 xml:id="sec.cap.credhub-enable">
+  <title>Enabling and Disabling CredHub</title>
 
   <para>
-   Enable <literal>credhub</literal> for your deployment in the
-   <literal>sizing</literal> section of your deployment configuration file,
-   which in this guide is <filename>scf-config-values.yaml</filename>:
+   Enable CredHub for your deployment using the <command>--set "enable.credhub=true"</command>
+   flag when running <command>helm install</command> or <command>helm upgrade</command>.
   </para>
-
-<screen>
-sizing:   
-  credhub_user:
-    count: 1
-</screen>
 
   <para>
-   Then apply the change with <command>helm</command>. First fetch the
-   <literal>uaa</literal> credentials, them apply the updated configuration:
+   First fetch the <literal>uaa</literal> credentials:
   </para>
+
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+-o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+-o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"</screen>
+
+  <para>
+   If this is an initial deployment, use <command>helm install</command> to deploy
+   <literal>scf</literal> with CredHub enabled:  
+  </para>
+
+<screen>&prompt.user;helm install suse/cf \
+--name <replaceable>susecf-scf</replaceable> \
+--namespace <replaceable>scf</replaceable> \
+--values scf-config-values.yaml \
+--set "secrets.UAA_CA_CERT=${CA_CERT}" \
+--set "enable.credhub=true"</screen>
+
+ <para>
+  If this is an existing deployment, use <command>helm upgrade</command> to enable
+  CredHub:
+ </para>
+
+<screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
+--values scf-config-values.yaml \
+--set "secrets.UAA_CA_CERT=${CA_CERT}" \
+--set "enable.credhub=true"</screen>
+
+ <para>
+  To disable CredHub, run <command>helm upgrade</command> with the
+  <command>--set "enable.credhub=false"</command> flag. Be sure to
+  pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>
+  first:
+ </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
 -o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
@@ -64,11 +91,31 @@ sizing:
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
 -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
-&prompt.user;helm install suse/cf \
---name <replaceable>susecf-scf</replaceable> \
---namespace scf \
+&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
---set "secrets.UAA_CA_CERT=${CA_CERT}"</screen>
+--set "secrets.UAA_CA_CERT=${CA_CERT}" \
+--set "enable.credhub=false"</screen>
+ </sect1>
+ <sect1 xml:id="sec.cap.credhub-upgrade-considerations">
+  <title>Upgrade Considerations</title>
+
+  <para>
+   The following applies to upgrades from &productname; 1.3.1 to &productname; 1.4.0:
+  </para>
+
+  <para>
+   If CredHub is enabled on your deployment of &productname; 1.3.1, then you must
+   specify <command>--set "enable.credhub=true"</command> during the upgrade to
+   keep the feature installed. Sizing values previously set to have a count of 1,
+   which is the new minimum setting, to enable the service no longer need to be
+   set explicitly. The following values in your <filename>scf-config-values.yaml</filename>
+   file can be removed:
+  </para>
+
+<screen>sizing:   
+  credhub_user:
+    count: 1</screen>
+
  </sect1>
  <sect1 xml:id="sec.cap.credhub-connect">
   <title>Connecting to the CredHub Service</title>
