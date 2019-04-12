@@ -76,13 +76,14 @@
     <term>Network Requirements</term>
     <listitem>
      <para>
-      To enable the &cf; nodes to interact with each other, make sure your
+      To enable the &scf; nodes to interact with each other, make sure your
       network setup fulfills the following requirements:
      </para>
      <itemizedlist>
       <listitem>
        <para>
-        The &kube; cluster has a dedicated domain and subdomain.
+        The &kube; cluster has a dedicated domain and required subdomains (see
+        <xref linkend="cha.cap.depl.notes"/>).
        </para>
       </listitem>
       <listitem>
@@ -438,23 +439,41 @@ persistentvolumeclaim "test-sc-persistent" deleted</screen>
    usually relevant for production systems:
   </para>
   <itemizedlist>
-   <listitem>
-    <formalpara>
+        <!-- Sorry but this section doesn't make sense to me-wouldn't DNS be managed
+        by the load balancer, removing the need for the external_ips 
+        parameter? TODO Load balancers is a huge and complex topic,
+        and it is on our roadmap to provide some guidance in enough depth to be useful.
+        We'll come back to this.
+        cjs, 11 april 2019-->        
+<!--   <listitem>
+   <formalpara>
+    
      <title>Hardware Load Balancer</title>
      <para>
-      If you are using a hardware load balancer, assign one of the worker
+      If you are using a hardware load balancer, assign one or more of the worker
       nodes an external IP address. To provide external access to the
-      cluster, map this IP address to the domain name.
+      cluster, map these IP addresses to the domain name. Then 
      </para>
     </formalpara>
     <para>
-     To provide access to the Stratos Web interface and for the &productname;
-     pods to be able to talk to each other, use this IP address as the value of
-     the option <literal>external_ips</literal>.
+     To provide access to the Stratos Web interface and other public services 
+     use this IP address as the value of <literal>external_ips</literal>.
      <literal>external_ips</literal> also needs the internal IP addresses of
-     the worker nodes to provide access to services.
+     the worker nodes to provide access to internal services.
     </para>
-   </listitem>
+        </listitem> -->
+ <listitem>
+   <formalpara>    
+     <title>Load Balancers</title>
+     <para>
+         Production deployments usually include some kind of load balancer. 
+         Running &productname; on &suse; &caasp; provides the flexibility to
+         structure your network nearly any way you need to. This guide does not 
+         describe how to set up a load balancer or name services, as these depend 
+         on your requirements and existing network architecture. 
+     </para>
+         </formalpara>
+        </listitem>        
    <listitem>
     <formalpara>
      <title>Ingress Controller</title>
@@ -477,12 +496,27 @@ persistentvolumeclaim "test-sc-persistent" deleted</screen>
    </listitem>
   </itemizedlist>
 
-  <para>
-   The resulting configuration file for a cluster set up to use a hardware
+<!--  We will address this in our future load balancer section. 
+  cjs, 4 april 2019-->
+<!--  <para>
+   This example configuration file for a cluster set up to use a hardware
    load balancer should look somewhat like the following, where the IP
    address <replaceable>&kubeip;</replaceable> denotes an external IP address:
-  </para>
+  </para>  -->
+  <para>
+   The example <filename>scf-config-values.yaml</filename> file is for a simple
+   deployment without an ingress controller or external load balancer. Instead, 
+   assign one worker node an external IP address, and map this to the domain 
+   name to provide external access to the cluster. The 
+   <literal>external_ips</literal> parameter needs 
+   this address to provide access to the Stratos Web interface and other public
+   servers, and it needs the internal IP addresses of the worker nodes to provide 
+   access to internal services.
+</para>   
+  
 <screen>
+###scf-config-values.yaml
+
 env:
   # Enter the domain you created for your CAP cluster
   DOMAIN: <replaceable>&exampledomain;</replaceable>
@@ -508,11 +542,9 @@ kube:
   organization: "cap"
 
 secrets:
-  # Create a very strong password for user 'admin'
+  # Create very strong passwords and protect them as
+  # carefully as you would protect any root password
   CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
-    
-  # Create a very strong password, and protect it because it
-  # provides root access to everything
   UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
   </screen>
 
