@@ -64,7 +64,8 @@
 
   <para>
    Run the following commands to complete the integration of your &cap;
-   deployment and LDAP server.
+   deployment and LDAP server. In this example, <literal>scf</literal> has
+   been deployed to a namespace named <replaceable>scf</replaceable>.
   </para>
 
   <procedure>
@@ -88,7 +89,8 @@
      structure. Ensure the user specifed in the <literal>bindUserDn</literal>
      has permissions to search the directory.
     </para>
-<screen>&prompt.user;uaac curl /identity-providers?rawConfig=true -X POST \
+<screen>&prompt.user;uaac curl /identity-providers?rawConfig=true \
+    -X POST \
     -k \
     -H 'Content-Type: application/json' \
     -H 'X-Identity-Zone-Subdomain: <replaceable>scf</replaceable>' \
@@ -198,13 +200,20 @@ User:           username@ldap.example.com
     <para>
      Obtain the ID of your identity provider.
     </para>
-<screen>&prompt.user;uaac curl /identity-providers -k -H "X-Identity-Zone-Id:<replaceable>scf</replaceable>" -H "Content-Type:application/json" -H "Accept:application/json"</screen>
+<screen>&prompt.user;uaac curl /identity-providers \
+    -k \
+    -H "Content-Type:application/json" \
+    -H "Accept:application/json" \
+    -H "X-Identity-Zone-Id:<replaceable>scf</replaceable>"</screen>
    </step>
    <step>
     <para>
      Delete the identity provider.
     </para>
-    <screen>&prompt.user;uaac curl -k /identity-providers/<replaceable>IDENTITY_PROVIDER_ID</replaceable> -X DELETE -H "X-Identity-Zone-Id:<replaceable>scf</replaceable>"</screen>
+<screen>&prompt.user;uaac curl /identity-providers/<replaceable>IDENTITY_PROVIDER_ID</replaceable> \
+    -X DELETE \
+    -k \
+    -H "X-Identity-Zone-Id:<replaceable>scf</replaceable>"</screen>
    </step>
   </procedure>
  </sect1>
