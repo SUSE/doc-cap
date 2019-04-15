@@ -377,6 +377,23 @@ done</screen>
    </step>
   </procedure>
  </sect1>
+ <sect1 xml:id="sec.cap.aks-dns">
+  <title>DNS Configuration</title>
+
+  <para>
+   This section provides an overview of the domain and sub-domains that require
+   A records to be set up for. The process is described in more detail in the
+   deployment section.
+  </para>
+
+  <para>
+   The following table lists the required domain and sub-domains, using
+   <literal>example.com</literal> as the example domain:
+  </para>
+
+&dns-tables;
+
+ </sect1>
  <sect1 xml:id="sec.cap.addrepo-aks">
   <title>Add the &kube; charts repository</title>
 
