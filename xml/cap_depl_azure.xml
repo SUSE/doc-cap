@@ -457,7 +457,7 @@ suse       https://kubernetes-charts.suse.com/
     The following file, <filename>scf-azure-values.yaml</filename>, provides a 
     complete example deployment configuration. Enter the fully-qualified domain 
     name (FQDN) that you intend to use for <literal>DOMAIN</literal> and 
-    <literal>HOST</literal>.
+    <literal>UAA_HOST</literal>.
 </para>
 <screen>
 ### example deployment configuration file
