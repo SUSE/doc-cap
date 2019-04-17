@@ -435,26 +435,39 @@ suse       https://kubernetes-charts.suse.com/
 <sect2 xml:id="sec.cap.aks-storage">
     <title>Creating the Required Storage Volume</title>
   <para>
-   AKS clusters contain two built-in storage classes, the <literal>default</literal> 
-   storage class and the <literal>managed-premium</literal>
-   storage class. Deploying &cap; on AKS requires provisioning an Azure disk 
-   with the <literal>managed-premium</literal> storage class. Follow the steps
-   at
-   <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/azure-disks-dynamic-pv">
-       Dynamically create and use a persistent volume with Azure disks in AKS</link>)
-   to meet this requirement. This document also describes how to backup and restore
-   your new persistent volume; these steps are not required to deploy &cap;, but
-   are useful for operating your cluster.
-</para>
-<para>
-   When your new persistent volume is running, enter <literal>managed-premium</literal> 
+   This example creates a <literal>managed-premium</literal> (see
+   <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/azure-disks-dynamic-pv"/>)
+   storage class for your cluster using the manifest defined in
+   <filename>storage-class.yaml</filename> below:
+  </para>
+
+<screen>---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  labels:
+    kubernetes.io/cluster-service: "true"
+  name: persistent
+parameters:
+  kind: Managed
+  storageaccounttype: Premium_LRS
+provisioner: kubernetes.io/azure-disk
+reclaimPolicy: Delete</screen>
+
+  <para>
+   Then apply the new storage class configuration with this command:
+  </para>
+
+<screen>&prompt.user;kubectl create -f storage-class.yaml</screen>
+  <para>
+   Specify the newly created created storage class, called <literal>persistent</literal>,
    as the value for <literal>kube.storage_class.persistent</literal> in your
    deployment configuration file, like this example:
   </para>
 
 <screen>kube:
   storage_class:
-    persistent: "managed-premium"
+    persistent: "persistent"
     shared: "shared"
 </screen>
 <para>
@@ -490,7 +503,7 @@ env:
 
 kube:
   storage_class:
-    persistent: "managed-premium"
+    persistent: "persistent"
     shared: "shared"
 
   registry:
