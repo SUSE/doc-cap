@@ -449,17 +449,21 @@ suse            https://kubernetes-charts.suse.com/</screen>
 
   <para>
    Because of the way EKS runs health checks, &cap; requires an edit to one of
-   the <literal>scf</literal> &helm; charts, and then after a successful
+   the <literal>scf</literal> &helm; chart's templates, and then after a successful
    <literal>scf</literal> deployment remove a listening port from the Elastic
    Load Balancer's listeners list.
   </para>
 
   <para>
-   On your remote admin machine, look in
-   <filename>~.helm/cache/archive/cf-2.15.2.tgz</filename>. Extract the
-   <filename>cf-2.15.2.tgz</filename>archive, and add this to the
-   <literal>ports</literal> section of
-   <filename>templates/tcp-router.yaml</filename>:
+   Fetch and extract the <literal>scf</literal> &helm; chart:
+  </para>
+
+<screen>&prompt.user;helm fetch --untar suse/cf</screen>
+
+  <para>
+   In <filename>cf/templates/tcp-router.yaml</filename>, add the following to the
+   <literal>ports</literal> section of the
+   <literal>tcp-router-tcp-router-public</literal> definition:
   </para>
 
 <screen>
@@ -491,7 +495,8 @@ suse            https://kubernetes-charts.suse.com/</screen>
 
   <para>
    Now pass your <literal>uaa</literal> secret and certificate to
-   <literal>scf</literal>, then use &helm; to install &suse; &cf;:
+   <literal>scf</literal>, then use &helm; to install &scf;
+   using the modified chart directory:
   </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
@@ -500,14 +505,14 @@ suse            https://kubernetes-charts.suse.com/</screen>
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
 -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
-&prompt.user;helm install suse/cf \
+&prompt.user;helm install /path/to/cf \
 --name <replaceable>susecf-scf</replaceable> \
 --namespace scf \
 --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"</screen>
 
   <para>
-   Sit back and wait for the pods come online:
+   Sit back and wait for the pods to come online:
   </para>
 
 <screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
