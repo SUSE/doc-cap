@@ -362,7 +362,9 @@ gp2scoped       kubernetes.io/aws-ebs   1d
     <filename>stratos-metrics-values.yaml</filename>, with the following
     contents:
    </para>
-<screen>kubernetes:
+<screen>env:
+  DOPPLER_PORT: 443
+kubernetes:
   authEndpoint: <replaceable>kube_server_address.example.com</replaceable>
 prometheus:
   kubeStateMetrics:
