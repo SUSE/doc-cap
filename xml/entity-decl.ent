@@ -167,6 +167,7 @@
 <!ENTITY msaks         "&ms; &azureks;">
 <!ENTITY aks           "Microsoft AKS">
 <!ENTITY eks           "Amazon EKS">
+<!ENTITY gke           "Google GKE">
 <!-- ============================================================= -->
 <!-- Virtualization                                                -->
 <!-- ============================================================= -->

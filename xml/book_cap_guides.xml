@@ -53,6 +53,7 @@ Part: CAP Deployment Guide
   <xi:include href="cap_depl_ldap.xml"/>
   <xi:include href="cap_depl_azure.xml"/>
   <xi:include href="cap_depl_eks.xml"/>
+  <xi:include href="cap_depl_gke.xml"/>
   <xi:include href="cap_depl_openstack.xml"/>
  </part>
 <!--============================================================================
