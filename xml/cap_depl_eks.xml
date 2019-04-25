@@ -656,7 +656,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
        </para>
 <screen>&prompt.user;openssl req -newkey rsa:4096 -keyout tls.key.encrypted -out tls.req -days 365 \
   -passout pass:<replaceable>1234</replaceable> \
-  -subj '/CN=aws-servicebroker.${BROKER_NAMESPACE}' -batch \
+  -subj '/CN=aws-servicebroker.'${BROKER_NAMESPACE} -batch \
   &lt;/dev/null
 </screen>
       </step>
