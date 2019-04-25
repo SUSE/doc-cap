@@ -429,11 +429,11 @@ suse       https://kubernetes-charts.suse.com/
      <title>Deploying &productname; with a Load Balancer</title>
   <para>
       This section describes how to deploy &productname; with a basic
-      AKS load balancer, how to set up the required storage volume, and how
+      AKS load balancer, how to set up the required storage class, and how
       to configure your DNS records.
   </para>
 <sect2 xml:id="sec.cap.aks-storage">
-    <title>Creating the Required Storage Volume</title>
+    <title>Create a Storage Class</title>
   <para>
    This example creates a <literal>managed-premium</literal> (see
    <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/azure-disks-dynamic-pv"/>)
