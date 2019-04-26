@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha.cap.manage-nproc-limits"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <title>Managing nproc limits of pods</title>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+ </info>
+
+ <para>
+  In &productname; there are parameters,
+  <command>kube.limits.nproc.soft</command> and
+  <command>kube.limits.nproc.hard</command>, to configure a soft nproc limit
+  and a hard nproc limit for <literal>scf</literal> pods. By default, these
+  limits are set to <literal>4096</literal> and can be changed to suit your
+  workloads. Note that the limits are applied to all pods.
+ </para>
+
+ <para>
+  When configuring the nproc limits, take note that:
+ </para>
+
+ <itemizedlist>
+  <listitem>
+   <para>
+    If the soft limit is set, the hard limit must be set as well.
+   </para>
+  </listitem>
+  <listitem>
+   <para>
+    If the hard limit is set, the soft limit must be set as well.
+   </para>
+  </listitem>
+  <listitem>
+   <para>
+    The soft limit cannot be greater than the hard limit.
+   </para>
+  </listitem>
+ </itemizedlist>
+
+ <para>
+  To configure the nproc limits, add the following to your
+  <filename>scf-config-values.yaml</filename>:
+ </para>
+
+<screen>kube:
+  limits:
+    nproc:
+      hard: ""
+      soft: ""
+</screen>
+
+ <para>
+   If <literal>uaa</literal> is deployed, pass your <literal>uaa</literal>
+   secret and certificate to <literal>scf</literal>. Otherwise deploy
+   <literal>uaa</literal> first (See
+   <xref linkend="sec.cap.install-uaa-prod"/>), then proceed with this step:
+ </para>
+
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+-o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+-o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+</screen>
+
+ <para>
+  If this is an initial deployment, use <command>helm install</command> to
+  deploy <literal>scf</literal>:
+ </para>
+
+<screen>&prompt.user;helm install suse/cf \
+--name susecf-scf \
+--namespace scf \
+--values scf-config-values.yaml \
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
+</screen>
+
+ <para>
+  If this is an existing deployment, use <command>helm upgrade</command> to
+  apply the change:
+ </para>
+
+<screen>&prompt.user;helm upgrade susecf-scf suse/cf \
+--values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}"
+</screen>
+
+ <para>
+  Monitor the progess of the deployment:
+ </para>
+
+<screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
+
+ <para>
+  When all pods are in a ready state, do the following to confirm the limits
+  have been configured correctly:
+ </para>
+
+ <para>
+  Open a shell into any container. The below opens a shell to the default
+  container in the <literal>blobstore-0</literal> pod:
+ </para>
+
+<screen>&prompt.user;kubectl exec -it <replaceable>blobstore-0</replaceable> --namespace scf -- env /bin/bash</screen>
+
+ <para>
+  Use the <literal>vcap</literal> user identity:
+ </para>
+
+<screen>&prompt.user;su vcap</screen>
+
+ <para>
+  Verify the maximum number of processes for the <literal>vcap</literal> user matches the limits you set:
+ </para>
+
+<screen>&prompt.user;ulimit -u
+
+&prompt.user;cat /etc/security/limits.conf | grep nproc
+</screen>
+</chapter>

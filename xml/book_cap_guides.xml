@@ -75,6 +75,7 @@ Part: CAP Administration Guide
   <xi:include href="cap_admin_credhub.xml"/>
   <xi:include href="cap_admin_offline_buildpacks.xml"/>
   <xi:include href="cap_admin_app_domains.xml"/>
+  <xi:include href="cap_admin_nproc_limits.xml"/>
  </part>
 <!--============================================================================
 Part: CAP User Guide
