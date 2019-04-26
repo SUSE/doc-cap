@@ -84,6 +84,7 @@ NAME            REVISION  UPDATED                  STATUS    CHART           NAM
 
 <screen>&prompt.user;helm search suse/uaa -l
 NAME            VERSION     DESCRIPTION              
+suse/uaa        2.16.1      A Helm chart for SUSE UAA
 suse/uaa        2.15.2      A Helm chart for SUSE UAA
 suse/uaa        2.14.5      A Helm chart for SUSE UAA
 suse/uaa        2.13.3      A Helm chart for SUSE UAA
