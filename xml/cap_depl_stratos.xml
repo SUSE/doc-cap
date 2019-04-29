@@ -180,7 +180,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <para>
    Use &helm; to install Stratos:
   </para>
-<screen>&prompt.user;helm install suse/console \
+<screen>helm install suse/console \
     --name susecf-console \
     --namespace stratos \
     --set kube.storage_class.persistent=gp2scoped \
@@ -190,7 +190,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <para>
     Monitor progress:
   </para>
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace stratos'</screen>
+<screen>$ watch -c 'kubectl get pods --namespace stratos'</screen>
 
   <para>
    Obtain the hostname of the service exposed through the public load balancer:
@@ -211,7 +211,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <para>
    Use &helm; to install Stratos:
   </para>
-<screen>&prompt.user;helm install suse/console \
+<screen>helm install suse/console \
     --name susecf-console \
     --namespace stratos \
     --set services.loadbalanced=true \
@@ -220,37 +220,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <para>
     Monitor progress:
   </para>
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace stratos'</screen>
-
-  <para>
-   Obtain the IP address of the service exposed through the public load balancer:
-  </para>
-<screen>&prompt.user;kubectl get service susecf-console-ui-ext --namespace stratos</screen>
-  <para>
-   Use this IP address to create an A record.
-  </para>
- </sect1>
- <sect1 xml:id="sec.cap.stratos-gke">
-  <title>Deploy Stratos on &gke;</title>
-
-  <para>
-   Before deploying Stratos, ensure <literal>uaa</literal> and <literal>scf</literal>
-   have been successfully deployed on &gke; (see <xref linkend="cha.cap.depl-gke"/>).
-  </para>
-
-  <para>
-   Use &helm; to install Stratos:
-  </para>
-<screen>&prompt.user;helm install suse/console \
-    --name susecf-console \
-    --namespace stratos \
-    --set services.loadbalanced=true \
-    --set console.service.http.nodePort=8080
-</screen>
-  <para>
-    Monitor progress:
-  </para>
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace stratos'</screen>
+<screen>$ watch -c 'kubectl get pods --namespace stratos'</screen>
 
   <para>
    Obtain the IP address of the service exposed through the public load balancer:
