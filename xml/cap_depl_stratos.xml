@@ -180,7 +180,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <para>
    Use &helm; to install Stratos:
   </para>
-<screen>helm install suse/console \
+<screen>&prompt.user;helm install suse/console \
     --name susecf-console \
     --namespace stratos \
     --set kube.storage_class.persistent=gp2scoped \
@@ -190,7 +190,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <para>
     Monitor progress:
   </para>
-<screen>$ watch -c 'kubectl get pods --namespace stratos'</screen>
+<screen>&prompt.user;watch -c 'kubectl get pods --namespace stratos'</screen>
 
   <para>
    Obtain the hostname of the service exposed through the public load balancer:
@@ -211,7 +211,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <para>
    Use &helm; to install Stratos:
   </para>
-<screen>helm install suse/console \
+<screen>&prompt.user;helm install suse/console \
     --name susecf-console \
     --namespace stratos \
     --set services.loadbalanced=true \
@@ -220,7 +220,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <para>
     Monitor progress:
   </para>
-<screen>$ watch -c 'kubectl get pods --namespace stratos'</screen>
+<screen>&prompt.user;watch -c 'kubectl get pods --namespace stratos'</screen>
 
   <para>
    Obtain the IP address of the service exposed through the public load balancer:
@@ -241,7 +241,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <para>
    Use &helm; to install Stratos:
   </para>
-<screen>helm install suse/console \
+<screen>&prompt.user;helm install suse/console \
     --name susecf-console \
     --namespace stratos \
     --set services.loadbalanced=true \
@@ -250,7 +250,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <para>
     Monitor progress:
   </para>
-<screen>$ watch -c 'kubectl get pods --namespace stratos'</screen>
+<screen>&prompt.user;watch -c 'kubectl get pods --namespace stratos'</screen>
 
   <para>
    Obtain the IP address of the service exposed through the public load balancer:
