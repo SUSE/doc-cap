@@ -16,11 +16,18 @@
   </dm:docmanager>
  </info>
 
+ <warning>
+  <title>Do Not Adjust Without Guidance</title>
+  <para>
+   It is not recommended to change these values without the guidance of
+   &productname; developers. Please contact support for assistance.
+  </para>
+ </warning>
+
  <para>
   Nproc is the maximum number of processes allowed per user. In the case of
   <literal>scf</literal>, the nproc value applies to the
-  <literal>vcap</literal> user and has a default limit of 4096. In
-  <literal>scf</literal>, there are parameters,
+  <literal>vcap</literal> user. In <literal>scf</literal>, there are parameters,
   <command>kube.limits.nproc.soft</command> and
   <command>kube.limits.nproc.hard</command>, to configure a soft nproc limit
   and a hard nproc limit for processes spawned by the <literal>vcap</literal>
