@@ -135,6 +135,86 @@ stratos  1        1        3h
     </imageobject>
    </mediaobject>
   </figure>
+
+  <sect2 xml:id="sec.cap-stratos-caasp-connect">
+   <title>Connecting &susecaaspreg; to Stratos</title>
+
+   <para>
+    Stratos can show information from your &susecaaspreg; environment.
+   </para>
+
+   <para>
+    To enable this, you must register and connect your &susecaaspreg; environment
+    with Stratos.
+   </para>
+
+   <para>
+    In the Stratos UI, go to <guimenu>Endpoints</guimenu> in the left-hand side
+    navigation and click on the <guimenu>+</guimenu> icon in the top-right of
+    the view - you should be shown the "Register new Endpoint" view.
+   </para>
+
+   <procedure>
+    <step>
+     <para>
+      In the Stratos UI, go to <guimenu>Endpoints</guimenu> in the left-hand side
+      navigation and click on the <guimenu>+</guimenu> icon in the top-right of
+      the view.
+     </para>
+    </step>
+    <step>
+     <para>
+      On the <literal>Register a new Endpoint</literal> view, click the
+      <literal>SUSE CaaS Platform</literal> button.
+     </para>
+    </step>
+    <step>
+     <para>
+      Enter a memorable name for your &susecaaspreg; environment in the <guimenu>Name</guimenu>
+      field. For example, <replaceable>my-endpoint</replaceable>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Enter the URL of the API server for your Kubernetes environment in the
+      <guimenu>Endpoint Address</guimenu> field. Run <command>kubectl cluster-info</command>
+      and use the value of <literal>Kubernetes master</literal> as the URL.
+     </para>
+<screen>&prompt.user;kubectl cluster-info</screen>
+    </step>
+    <step>
+     <para>
+      Activate the <guimenu>Skip SSL validation for the endpoint</guimenu> check box
+      if using self-signed certificates.
+     </para>
+    </step>
+    <step>
+     <para>
+      Click <guimenu>Register</guimenu>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Activate the <guimenu>Connect to my-endpoint now (optional).</guimenu> check box. 
+     </para>
+    </step>
+    <step>
+     <para>
+      Provide a valid <filename>kubeconfig</filename> file for your &susecaaspreg; environment.
+     </para>
+    </step>
+    <step>
+     Click <guimenu>Connect</guimenu>.
+    </step>
+    <step>
+     <para>
+      In the Stratos UI, go to <guimenu>Kubernetes</guimenu> in the left-hand side
+      navigation. Information for your &susecaaspreg; environment should now be displayed.
+     </para>
+    </step>
+   </procedure>
+  </sect2>
+
  </sect1>
          
  <sect1 xml:id="sec.cap.stratos-eks">
@@ -183,6 +263,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
 <screen>&prompt.user;helm install suse/console \
     --name susecf-console \
     --namespace stratos \
+    --values scf-config-values.yaml \
     --set kube.storage_class.persistent=gp2scoped \
     --set services.loadbalanced=true \
     --set console.service.http.nodePort=8080
@@ -199,6 +280,98 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <para>
    Use this hostname to create a CNAME record.
   </para>
+
+  <sect2 xml:id="sec.cap-stratos-eks-connect">
+   <title>Connecting &eks; to Stratos</title>
+
+   <para>
+    Stratos can show information from your &eks; environment.
+   </para>
+
+   <para>
+    To enable this, you must register and connect your &eks; environment
+    with Stratos.
+   </para>
+
+   <para>
+    In the Stratos UI, go to <guimenu>Endpoints</guimenu> in the left-hand side
+    navigation and click on the <guimenu>+</guimenu> icon in the top-right of
+    the view - you should be shown the "Register new Endpoint" view.
+   </para>
+
+   <procedure>
+    <step>
+     <para>
+      In the Stratos UI, go to <guimenu>Endpoints</guimenu> in the left-hand side
+      navigation and click on the <guimenu>+</guimenu> icon in the top-right of
+      the view.
+     </para>
+    </step>
+    <step>
+     <para>
+      On the <literal>Register a new Endpoint</literal> view, click the
+      <literal>Amazon EKS</literal> button.
+     </para>
+    </step>
+    <step>
+     <para>
+      Enter a memorable name for your &eks; environment in the <guimenu>Name</guimenu>
+      field. For example, <replaceable>my-endpoint</replaceable>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Enter the URL of the API server for your Kubernetes environment in the
+      <guimenu>Endpoint Address</guimenu> field. Run <command>kubectl cluster-info</command>
+      and use the value of <literal>Kubernetes master</literal> as the URL.
+     </para>
+<screen>&prompt.user;kubectl cluster-info</screen>
+    </step>
+    <step>
+     <para>
+      Activate the <guimenu>Skip SSL validation for the endpoint</guimenu> check box
+      if using self-signed certificates.
+     </para>
+    </step>
+    <step>
+     <para>
+      Click <guimenu>Register</guimenu>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Activate the <guimenu>Connect to my-endpoint now (optional).</guimenu> check box. 
+     </para>
+    </step>
+    <step>
+     <para>
+      Enter the name of your &eks; cluster in the <guimenu>Cluster</guimenu>
+      field.
+     </para>
+    </step>
+    <step>
+     <para>
+      Enter your AWS Access Key ID in the <guimenu>Access Key ID</guimenu>
+      field.
+     </para>
+    </step>
+    <step>
+     <para>
+      Enter your AWS Secret Access Key in the <guimenu>Secret Access Key</guimenu>
+      field.
+     </para>
+    </step>
+    <step>
+     Click <guimenu>Connect</guimenu>.
+    </step>
+    <step>
+     <para>
+      In the Stratos UI, go to <guimenu>Kubernetes</guimenu> in the left-hand side
+      navigation. Information for your &eks; environment should now be displayed.
+     </para>
+    </step>
+   </procedure>
+  </sect2>
  </sect1>
  <sect1 xml:id="sec.cap.stratos-aks">
   <title>Deploy Stratos on &aks;</title>
@@ -214,6 +387,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
 <screen>&prompt.user;helm install suse/console \
     --name susecf-console \
     --namespace stratos \
+    --values scf-config-values.yaml \
     --set services.loadbalanced=true \
     --set console.service.http.nodePort=8080
 </screen>
@@ -229,6 +403,86 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <para>
    Use this IP address to create an A record.
   </para>
+
+  <sect2 xml:id="sec.cap-stratos-aks-connect">
+   <title>Connecting &aks; to Stratos</title>
+
+   <para>
+    Stratos can show information from your &aks; environment.
+   </para>
+
+   <para>
+    To enable this, you must register and connect your &aks; environment
+    with Stratos.
+   </para>
+
+   <para>
+    In the Stratos UI, go to <guimenu>Endpoints</guimenu> in the left-hand side
+    navigation and click on the <guimenu>+</guimenu> icon in the top-right of
+    the view - you should be shown the "Register new Endpoint" view.
+   </para>
+
+   <procedure>
+    <step>
+     <para>
+      In the Stratos UI, go to <guimenu>Endpoints</guimenu> in the left-hand side
+      navigation and click on the <guimenu>+</guimenu> icon in the top-right of
+      the view.
+     </para>
+    </step>
+    <step>
+     <para>
+      On the <literal>Register a new Endpoint</literal> view, click the
+      <literal>Azure AKS</literal> button.
+     </para>
+    </step>
+    <step>
+     <para>
+      Enter a memorable name for your &aks; environment in the <guimenu>Name</guimenu>
+      field. For example, <replaceable>my-endpoint</replaceable>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Enter the URL of the API server for your Kubernetes environment in the
+      <guimenu>Endpoint Address</guimenu> field. Run <command>kubectl cluster-info</command>
+      and use the value of <literal>Kubernetes master</literal> as the URL.
+     </para>
+<screen>&prompt.user;kubectl cluster-info</screen>
+    </step>
+    <step>
+     <para>
+      Activate the <guimenu>Skip SSL validation for the endpoint</guimenu> check box
+      if using self-signed certificates.
+     </para>
+    </step>
+    <step>
+     <para>
+      Click <guimenu>Register</guimenu>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Activate the <guimenu>Connect to my-endpoint now (optional).</guimenu> check box. 
+     </para>
+    </step>
+    <step>
+     <para>
+      Provide a valid <filename>kubeconfig</filename> file for your &aks; environment.
+     </para>
+    </step>
+    <step>
+     Click <guimenu>Connect</guimenu>.
+    </step>
+    <step>
+     <para>
+      In the Stratos UI, go to <guimenu>Kubernetes</guimenu> in the left-hand side
+      navigation. Information for your &aks; environment should now be displayed.
+     </para>
+    </step>
+   </procedure>
+  </sect2>
+
  </sect1>
  <sect1 xml:id="sec.cap.stratos-gke">
   <title>Deploy Stratos on &gke;</title>
@@ -244,6 +498,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
 <screen>&prompt.user;helm install suse/console \
     --name susecf-console \
     --namespace stratos \
+    --values scf-config-values.yaml \
     --set services.loadbalanced=true \
     --set console.service.http.nodePort=8080
 </screen>
@@ -259,109 +514,89 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <para>
    Use this IP address to create an A record.
   </para>
- </sect1>
- <sect1 xml:id="sec.cap.stratos-prod-kube">
-  <title>Connecting Kubernetes</title>
 
-  <para>
-   Stratos can show information from your Kubernetes environment.
-  </para>
+  <sect2 xml:id="sec.cap-stratos-gke-connect">
+   <title>Connecting &gke; to Stratos</title>
 
-  <para>
-   To enable this, you must register and connect your Kubernetes environment
-   with Stratos.
-  </para>
+   <para>
+    Stratos can show information from your &gke; environment.
+   </para>
 
-  <para>
-   In the Stratos UI, go to <guimenu>Endpoints</guimenu> in the left-hand side
-   navigation and click on the <guimenu>+</guimenu> icon in the top-right of
-   the view - you should be shown the "Register new Endpoint" view.
-  </para>
+   <para>
+    To enable this, you must register and connect your &gke; environment
+    with Stratos.
+   </para>
 
-  <procedure>
-   <step>
-    <para>
-     Select <literal>Kubernetes</literal> from the <guimenu>Endpoint
-     Type</guimenu> drop-down
-    </para>
-   </step>
-   <step>
-    <para>
-     Enter a memorable name for your environment in the <guimenu>Name</guimenu>
-     field
-    </para>
-   </step>
-   <step>
-    <para>
-     Enter the URL of the API server for your Kubernetes environment
-    </para>
-   </step>
-   <step>
-    <para>
-     Check the <guimenu>Skip SSL validation for the endpoint</guimenu> checkbox
-     if using self-signed certificates
-    </para>
-   </step>
-   <step>
-    <para>
-     Click <guimenu>Finish</guimenu>
-    </para>
-   </step>
-  </procedure>
+   <para>
+    In the Stratos UI, go to <guimenu>Endpoints</guimenu> in the left-hand side
+    navigation and click on the <guimenu>+</guimenu> icon in the top-right of
+    the view - you should be shown the "Register new Endpoint" view.
+   </para>
 
-  <para>
-   The view will refresh to show the new endpoint in the disconnected state.
-  </para>
-
-  <para>
-   Next, you will need to connect to this endpoint. In the table of endpoints,
-   click the overflow menu icon alongside the endpoint that you added above.
-   Click on <guimenu>Connect</guimenu> in the drop-down menu.
-  </para>
-
-  <para>
-   You will need to select the appropriate Auth Type for your Kubernetes
-   environment and provide the required credentials:
-  </para>
-
-  <itemizedlist>
-   <listitem>
-    <para>
-     For CaaSP, use the Auth Type <literal>CAASP (OIDC)</literal> and provide a
-     valid <filename>kubeconfig</filename> file for your environment
-    </para>
-   </listitem>
-   <listitem>
-    <para>
-     For Amazon EKS, use the Auth Type <literal>AWS IAM (EKS)</literal> and
-     provide the name of your EKS cluster and your AWS Access Key ID and Secret
-     Access Key
-    </para>
-   </listitem>
-   <listitem>
-    <para>
-     For Azure AKS, use the Auth Type <literal>Azure AKS</literal> and provide
-     a valid <filename>kubeconfig</filename> file for your environment
-    </para>
-   </listitem>
-   <listitem>
-    <para>
-     For Minikube, use the Auth Type <literal>Kubernetes Cert Auth</literal>
-     and provide the Certificate and Certificate Key files
-    </para>
-   </listitem>
-  </itemizedlist>
-
-  <para>
-   Finally, click <guimenu>Connect</guimenu> to connect the endpoint with the
-   authentication information that you have provided. The endpoint list should
-   update to show that your Kubernetes endpoint is connected.
-  </para>
-
-  <para>
-   Once connected, you should see a Kubernetes menu item in the left-hand side
-   navigation - click on this to access Kubernetes views.
-  </para>
+   <procedure>
+    <step>
+     <para>
+      In the Stratos UI, go to <guimenu>Endpoints</guimenu> in the left-hand side
+      navigation and click on the <guimenu>+</guimenu> icon in the top-right of
+      the view.
+     </para>
+    </step>
+    <step>
+     <para>
+      On the <literal>Register a new Endpoint</literal> view, click the
+      <literal>Google Kubernetes Engine</literal> button.
+     </para>
+    </step>
+    <step>
+     <para>
+      Enter a memorable name for your &aks; environment in the <guimenu>Name</guimenu>
+      field. For example, <replaceable>my-endpoint</replaceable>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Enter the URL of the API server for your Kubernetes environment in the
+      <guimenu>Endpoint Address</guimenu> field. Run <command>kubectl cluster-info</command>
+      and use the value of <literal>Kubernetes master</literal> as the URL.
+     </para>
+<screen>&prompt.user;kubectl cluster-info</screen>
+    </step>
+    <step>
+     <para>
+      Activate the <guimenu>Skip SSL validation for the endpoint</guimenu> check box
+      if using self-signed certificates.
+     </para>
+    </step>
+    <step>
+     <para>
+      Click <guimenu>Register</guimenu>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Activate the <guimenu>Connect to my-endpoint now (optional).</guimenu> check box. 
+     </para>
+    </step>
+    <step>
+     <para>
+      Provide a valid <filename>Application Default Credentials</filename> file for your
+      &gke; environment. Generate the file using the command below. The command saves the
+      credentials to a file named <filename>application_default_credentials.json</filename>
+      and outputs the path of the file.
+     </para>
+<screen>&prompt.user;gcloud auth application-default login</screen>
+    </step>
+    <step>
+     Click <guimenu>Connect</guimenu>.
+    </step>
+    <step>
+     <para>
+      In the Stratos UI, go to <guimenu>Kubernetes</guimenu> in the left-hand side
+      navigation. Information for your &gke; environment should now be displayed.
+     </para>
+    </step>
+   </procedure>
+  </sect2>
  </sect1>
  <sect1 xml:id="sec.cap.stratos-metrics">
   <title>Stratos Metrics</title>
