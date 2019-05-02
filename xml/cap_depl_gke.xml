@@ -312,7 +312,7 @@ suse       https://kubernetes-charts.suse.com/
 <sect2 xml:id="sec.cap.gke-storage">
     <title>Create a Storage Class</title>
   <para>
-   This example creates a <literal>pd-standard</literal>
+   This example creates a <literal>pd-ssd</literal>
    storage class for your cluster.  Create a file named
    <filename>gke-persistent-sc.yaml</filename> with the following:
   </para>
@@ -325,7 +325,7 @@ metadata:
     kubernetes.io/cluster-service: "true"
   name: persistent
 parameters:
-  type: pd-standard
+  type: pd-ssd
 provisioner: kubernetes.io/gce-pd
 reclaimPolicy: Delete
 </screen>
