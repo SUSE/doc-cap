@@ -72,9 +72,9 @@ Update Complete. ⎈ Happy Helming!⎈
 
 <screen>&prompt.user;helm list
 NAME            REVISION  UPDATED                  STATUS    CHART           NAMESPACE
-<replaceable>susecf-console</replaceable>  1         Tue Aug 14 11:53:28 2018 DEPLOYED  console-2.0.0   stratos  
-<replaceable>susecf-scf</replaceable>      1         Tue Aug 14 10:58:16 2018 DEPLOYED  cf-2.11.0       scf      
-<replaceable>susecf-uaa</replaceable>      1         Tue Aug 14 10:49:30 2018 DEPLOYED  uaa-2.11.0      uaa
+<replaceable>susecf-console</replaceable>  1         Fri Apr 12 22:29:38 2019 DEPLOYED  console-2.3.0   stratos
+<replaceable>susecf-scf</replaceable>      1         Fri Apr 12 22:19:10 2019 DEPLOYED  cf-2.15.2       scf
+<replaceable>susecf-uaa</replaceable>      1         Fri Apr 12 22:12:13 2019 DEPLOYED  uaa-2.15.2      uaa
 </screen>
 &helm-search-suse;
 
