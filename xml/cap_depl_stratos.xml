@@ -204,7 +204,9 @@ stratos  1        1        3h
      </para>
     </step>
     <step>
-     Click <guimenu>Connect</guimenu>.
+     <para>
+      Click <guimenu>Connect</guimenu>.
+     </para>
     </step>
     <step>
      <para>
@@ -362,7 +364,9 @@ gp2scoped       kubernetes.io/aws-ebs   1d
      </para>
     </step>
     <step>
-     Click <guimenu>Connect</guimenu>.
+     <para>
+      Click <guimenu>Connect</guimenu>.
+     </para>
     </step>
     <step>
      <para>
@@ -472,7 +476,9 @@ gp2scoped       kubernetes.io/aws-ebs   1d
      </para>
     </step>
     <step>
-     Click <guimenu>Connect</guimenu>.
+     <para>
+      Click <guimenu>Connect</guimenu>.
+     </para>
     </step>
     <step>
      <para>
@@ -587,7 +593,9 @@ gp2scoped       kubernetes.io/aws-ebs   1d
 <screen>&prompt.user;gcloud auth application-default login</screen>
     </step>
     <step>
-     Click <guimenu>Connect</guimenu>.
+     <para>
+      Click <guimenu>Connect</guimenu>.
+     </para>
     </step>
     <step>
      <para>
