@@ -47,6 +47,7 @@ Part: CAP Deployment Guide
   <title>Deploying &productname;</title>
   <info/>
   <xi:include href="cap_depl_admin_notes.xml"/>
+  <xi:include href="cap_depl_ingress.xml"/>
   <xi:include href="cap_depl_install_caasp.xml"/>
   <xi:include href="cap_depl_stratos.xml"/>
   <xi:include href="cap_depl_ha.xml"/>
