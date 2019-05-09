@@ -159,11 +159,19 @@ nginx-ingress-controller   LoadBalancer   <replaceable>10.63.248.70</replaceable
      the PEM format. Note the port changes, this ensures all communications to
      <literal>uaa</literal> are routed through the Ingress controller.
     </para>
+    <para>
+     The <literal>nginx.ingress.kubernetes.io/proxy-body-size</literal> value indicates the maximum
+     client request body size. Actions such as pushing an application through <command>cf push</command>
+     can result in larger request body sizes depending on the application type you work with. This value
+     will need to be adapted to your workflow.
+    </para>
 <screen>UAA_PORT: 443
 UAA_PUBLIC_PORT: 443
 ...
 ingress:
   enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: <replaceable>1024m</replaceable>
   tls:
     crt: |
       -----BEGIN CERTIFICATE-----
@@ -252,6 +260,56 @@ ingress:
      you are able to login using the &cfcli;.
     </para>	
 <screen>&prompt.user;cf login https://api.example.com -u <replaceable>username</replaceable> -p <replaceable>password</replaceable></screen>
+   </step>
+  </procedure>
+ </sect1>
+ 
+ <sect1 xml:id="sec.cap.ingress-body-size">
+  <title>Changing the Max Body Size</title>
+
+  <para>
+   The <literal>nginx.ingress.kubernetes.io/proxy-body-size</literal> value indicates the maximum
+   client request body size. Actions such as pushing an application through <command>cf push</command>
+   can result in larger request body sizes depending on the application type you work with. If your
+   current setting is insufficient, you may encounter a <literal>413 Request Entity Too Large</literal>
+   error.
+  </para>
+
+  <para>
+   The maximum client request body size can be changed to adapt to your workflow using the following.
+  </para>
+
+  <procedure>
+   <step>
+    <para>
+     Add <literal>nginx.ingress.kubernetes.io/proxy-body-size</literal> to your <filename>scf-config-values.yaml</filename>
+     and specify a value.
+    </para>
+<screen>ingress:
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: <replaceable>1024m</replaceable>
+</screen>
+   </step>
+   <step>
+    <para>
+     Set up the <literal>scf</literal> deployment to trust the CA certificate
+     that signed the certificate of the Ingress Controller.
+    </para>
+<screen>&prompt.user;export INGRESS_CA_CERT=$(cat ingress-ca-cert.pem)</screen>
+   </step>
+   <step>
+    <para>
+     Use <command>helm upgrade</command> to apply the change.
+    </para>
+<screen>&prompt.user;helm upgrade susecf-scf suse/cf \
+--values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${INGRESS_CA_CERT}"
+</screen>
+   </step>
+   <step>
+    <para>
+     Monitor the deployment progress using the <command>watch</command> command.
+    </para>
+<screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
    </step>
   </procedure>
  </sect1>
