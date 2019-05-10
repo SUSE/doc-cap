@@ -434,7 +434,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
    When the status shows RUNNING for all of the <literal>uaa</literal> pods,
    create CNAMEs for the required domains. (See
    <xref linkend="sec.cap.eks.dns"/>.) Use <command>kubectl</command> to find
-   the service hostnames. These hostnames include the <literal>elb</literal>
+   the service host names. These host names include the <literal>elb</literal>
    sub-domain, so use this to get the correct results:
   </para>
 
@@ -530,7 +530,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
    Now health checks should operate correctly. When the status shows RUNNING
    for all of the <literal>scf</literal> pods, create CNAMEs for the required
    domains. (See <xref linkend="sec.cap.eks.dns"/>) Use
-   <command>kubectl</command> to find the service hostnames. These hostnames
+   <command>kubectl</command> to find the service host names. These host names
    include the <literal>elb</literal> sub-domain, so use this to get the
    correct results:
   </para>
