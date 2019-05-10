@@ -41,7 +41,7 @@
   </para>
 
   <para>
-   If you are using &ses; as your storage backend, copy the secret into the
+   If you are using &ses; as your storage back-end, copy the secret into the
    Stratos namespace:
   </para>
 

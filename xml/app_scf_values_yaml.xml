@@ -1002,7 +1002,7 @@ env:
   ROOTFS_TRUSTED_CERTS: ""
 
   # The algorithm used by the router to distribute requests for a route across
-  # backends. Supported values are round-robin and least-connection.
+  # back-ends. Supported values are round-robin and least-connection.
   ROUTER_BALANCING_ALGORITHM: "round-robin"
 
   # How to handle client certificates. Supported values are none, request, or
@@ -1752,9 +1752,9 @@ sizing:
   #
   # - gorouter: Gorouter maintains a dynamic routing table based on updates
   #   received from NATS and (when enabled) the Routing API. This routing table
-  #   maps URLs to backends. The router finds the URL in the routing table that
+  #   maps URLs to back-ends. The router finds the URL in the routing table that
   #   most closely matches the host header of the request and load balances
-  #   across the associated backends.
+  #   across the associated back-ends.
   #
   # Also: loggregator_agent
   router:

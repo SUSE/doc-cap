@@ -21,9 +21,9 @@
  <para>
   You may set up a minimal deployment on four &kube; nodes for testing. This is
   not sufficient for a production deployment. A basic &productname; production
-  deployment requires at least eight hosts plus a storage backend: one &suse;
+  deployment requires at least eight hosts plus a storage back-end: one &suse;
   &caasp; admin server, three &kube; masters, three &kube; workers, a DNS/DHCP
-  server, and a storage backend such as &ses; or NFS. This is a bare minimum,
+  server, and a storage back-end such as &ses; or NFS. This is a bare minimum,
   and actual requirements are likely to be much larger, depending on your
   workloads. You also need an external workstation for administering your
   cluster. (See <xref linkend="sec.cap.requirements"/>.) You may optionally
@@ -324,7 +324,7 @@ Happy Helming!</screen>
    store persistent data. Your available storage classes depend on which
    storage cluster you are using (&ses; users, see
    <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_admin/data/cha_admin_integration.html">&suse;
-   &caasp; Integration with SES</link>). After connecting your storage backend
+   &caasp; Integration with SES</link>). After connecting your storage back-end
    use <command>kubectl</command> to see your available storage classes. This
    example is for an NFS storage class:
   </para>
