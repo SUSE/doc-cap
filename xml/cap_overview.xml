@@ -383,12 +383,12 @@
     <listitem>
      <para>
       &helm;, the &kube; package manager, which includes Tiller, the &helm;
-      server, and the <command>helm</command> command-line client.
+      server, and the <command>helm</command> command line client.
      </para>
     </listitem>
     <listitem>
      <para>
-      <command>kubectl</command>, the command-line client for &kube;.
+      <command>kubectl</command>, the command line client for &kube;.
      </para>
     </listitem>
     <listitem>

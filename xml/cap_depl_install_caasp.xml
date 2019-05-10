@@ -696,7 +696,7 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -</screen>
 <screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
 
   <para>
-   When all services are running use the &cf; command-line interface to log in
+   When all services are running use the &cf; command line interface to log in
    to &suse; &cf; to deploy and manage your applications. (See
    <xref linkend="sec.cap.cf-cli"/>)
   </para>

@@ -39,7 +39,7 @@
   <title>Prerequisites</title>
 
   <para>
-   Install <command>az</command>, the Azure command-line client, on your remote
+   Install <command>az</command>, the Azure command line client, on your remote
    administration machine. See
    <link xlink:href="https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest">
    Install Azure CLI 2.0</link> for instructions.
