@@ -124,7 +124,7 @@ suse/minibroker             	0.2.0  	A minibroker for your minikube
     </para>
 <screen>&prompt.user;cf create-service-broker <replaceable>minibroker</replaceable> <replaceable>username</replaceable> <replaceable>password</replaceable> http://minibroker-minibroker.minibroker.svc.cluster.local</screen>
     <para>
-     Once the service broker is ready, it can be seen on your deployment:
+     After the service broker is ready, it can be seen on your deployment:
     </para>
 <screen>&prompt.user;cf service-brokers
 Getting service brokers as admin...

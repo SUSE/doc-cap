@@ -547,7 +547,7 @@ services:
    </para>
 <screen>&prompt.user;watch -c 'kubectl get pods --namespace uaa'</screen>
    <para>
-    Once the deployment completes, a &kube; service for <literal>uaa</literal>
+    After the deployment completes, a &kube; service for <literal>uaa</literal>
     will be exposed on an Azure load balancer that is automatically set up by
     AKS (named <literal>kubernetes</literal> in the resource group that hosts
     the worker node VMs).
@@ -640,7 +640,7 @@ uaa-uaa-public    LoadBalancer   10.0.67.56     40.85.188.67   2793:32034/TCP
    </para>
 <screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
    <para>
-    Once the deployment completes, a number of public services will be setup
+    After the deployment completes, a number of public services will be setup
     using a load balancer that has been configured with corresponding load
     balancing rules and probes as well as having the correct ports opened in
     Network Security Group.
