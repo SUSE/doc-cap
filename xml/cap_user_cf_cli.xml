@@ -77,7 +77,7 @@ sed -n -e '/NOTES/,$p'</screen>
    <filename>scf-config-values.yaml</filename>, plus the
    <literal>api.</literal> prefix, as it shows in the above welcome screen. Set
    your endpoint, and use <command>--skip-ssl-validation</command> when you
-   have self-signed SSL certificates. It asks for an email address, but you
+   have self-signed SSL certificates. It asks for an e-mail address, but you
    must enter <literal>admin</literal> instead (you cannot change this to a
    different username, though you may create additional users), and the
    password is the one you created in
