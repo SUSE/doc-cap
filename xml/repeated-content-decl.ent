@@ -184,8 +184,13 @@ Before you start deploying &productname;, review the following documents:
      </row>
     </thead>
     <tbody>
+    <row>
+      <entry>1.4 (current release)</entry>
+      <entry>2.16.4</entry>
+      <entry>2.4.0</entry>
+     </row>
      <row>
-      <entry>1.3.1 (current release)</entry>
+      <entry>1.3.1</entry>
       <entry>2.15.2</entry>
       <entry>2.3.0</entry>
      </row>
