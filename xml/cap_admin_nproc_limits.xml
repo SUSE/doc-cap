@@ -31,7 +31,8 @@
   <command>kube.limits.nproc.soft</command> and
   <command>kube.limits.nproc.hard</command>, to configure a soft nproc limit
   and a hard nproc limit for processes spawned by the <literal>vcap</literal>
-  user in <literal>scf</literal> pods. The soft and hard limits can be changed
+  user in <literal>scf</literal> pods. By default, the soft limit is 1024 while
+  the hard limit is 2048. The soft and hard limits can be changed
   to suit your workloads. Note that the limits are applied to all pods.
  </para>
 
@@ -63,15 +64,14 @@
   <para>
    To configure the nproc limits, add the following to your
    <filename>scf-config-values.yaml</filename>. Replace
-   <replaceable>8192</replaceable> with a value suitable for your
-   workloads:
+   the example values with limits suitable for your workloads:
   </para>
 
 <screen>kube:
   limits:
     nproc:
-      hard: <replaceable>8192</replaceable>
-      soft: <replaceable>8192</replaceable>
+      hard: <replaceable>3072</replaceable>
+      soft: <replaceable>2048</replaceable>
 </screen>
 
   <sect2 xml:id="sec.cap.new-deployment-apply-nproc">
