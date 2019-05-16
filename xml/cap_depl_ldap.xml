@@ -64,7 +64,8 @@
 
   <para>
    Run the following commands to complete the integration of your &cap;
-   deployment and LDAP server.
+   deployment and LDAP server. In this example, <literal>scf</literal> has
+   been deployed to a namespace named <replaceable>scf</replaceable>.
   </para>
 
   <procedure>
@@ -88,10 +89,11 @@
      structure. Ensure the user specifed in the <literal>bindUserDn</literal>
      has permissions to search the directory.
     </para>
-<screen>&prompt.user;uaac curl /identity-providers?rawConfig=true -X POST \
+<screen>&prompt.user;uaac curl /identity-providers?rawConfig=true \
+    -X POST \
     -k \
     -H 'Content-Type: application/json' \
-    -H 'X-Identity-Zone-Subdomain: scf' \
+    -H 'X-Identity-Zone-Subdomain: <replaceable>scf</replaceable>' \
     -d '{
   "type" : "ldap",
   "config" : {
@@ -114,10 +116,10 @@
    <step>
     <para>
      Verify the LDAP identify provider has been created in the
-     <literal>scf</literal> zone. The output should now contain an entry for
+     <replaceable>scf</replaceable> zone. The output should now contain an entry for
      the <literal>ldap</literal> type.
     </para>
-<screen>&prompt.user;uaac curl /identity-providers -k -H "X-Identity-Zone-Id: scf"</screen>
+<screen>&prompt.user;uaac curl /identity-providers -k -H "X-Identity-Zone-Id: <replaceable>scf</replaceable>"</screen>
    </step>
    <step>
     <para>
@@ -187,6 +189,31 @@ OK
 API endpoint:   https://api.example.com (API version: 2.115.0)
 User:           username@ldap.example.com
 </screen>
+   </step>
+  </procedure>
+  <para>
+   If the LDAP identity provider is no longer needed, it can be removed with the following
+   steps.
+  </para>
+  <procedure>
+   <step>
+    <para>
+     Obtain the ID of your identity provider.
+    </para>
+<screen>&prompt.user;uaac curl /identity-providers \
+    -k \
+    -H "Content-Type:application/json" \
+    -H "Accept:application/json" \
+    -H "X-Identity-Zone-Id:<replaceable>scf</replaceable>"</screen>
+   </step>
+   <step>
+    <para>
+     Delete the identity provider.
+    </para>
+<screen>&prompt.user;uaac curl /identity-providers/<replaceable>IDENTITY_PROVIDER_ID</replaceable> \
+    -X DELETE \
+    -k \
+    -H "X-Identity-Zone-Id:<replaceable>scf</replaceable>"</screen>
    </step>
   </procedure>
  </sect1>

@@ -92,21 +92,10 @@ Before you start deploying &productname;, review the following documents:
      </varlistentry>
      </variablelist>'>
      
-<!--ENTITY dns-management...................................................-->     
+<!--ENTITY dns-tables.......................................................-->
 
-<!ENTITY dns-management
-'<para xmlns="http://docbook.org/ns/docbook">
-The following tables
-list the minimum DNS requirements to run &productname;, using
-   <literal>example.com</literal> as the example domain. Your DNS management is
-   platform-dependent, for example Microsoft AKS assigns IP addresses to your
-   services, which you will map to A records. Amazon EKS assigns hostnames,
-   which you will use to create CNAMEs. &suse; &caasp; provides the flexibility
-   to manage your name services in nearly any way you wish. The chapters for
-   each platform in this guide provide the relevant DNS instructions.
-</para>
-
-  <informaltable xmlns="http://docbook.org/ns/docbook">
+<!ENTITY dns-tables
+'<informaltable xmlns="http://docbook.org/ns/docbook">
    <tgroup cols="2">
     <thead>
      <row>
@@ -117,27 +106,27 @@ list the minimum DNS requirements to run &productname;, using
     <tbody>
      <row>
       <entry>uaa.example.com</entry>
-      <entry>uaa/uaa-public</entry>
+      <entry>uaa-uaa-public</entry>
      </row>
      <row>
       <entry>*.uaa.example.com</entry>
-      <entry>uaa/uaa-public</entry>
+      <entry>uaa-uaa-public</entry>
      </row>
      <row>
       <entry>example.com</entry>
-      <entry>scf/router-public</entry>
+      <entry>router-gorouter-public</entry>
      </row>
      <row>
       <entry>*.example.com</entry>
-      <entry>scf/router-public</entry>
+      <entry>router-gorouter-public</entry>
      </row>
      <row>
       <entry>tcp.example.com</entry>
-      <entry>scf/tcp-router-public</entry>
+      <entry>tcp-router-tcp-router-public</entry>
      </row>
      <row>
       <entry>ssh.example.com</entry>
-      <entry>scf/diego-access-public</entry>
+      <entry>diego-ssh-ssh-proxy-public</entry>
      </row>
     </tbody>
    </tgroup>
@@ -195,8 +184,13 @@ list the minimum DNS requirements to run &productname;, using
      </row>
     </thead>
     <tbody>
+    <row>
+      <entry>1.4 (current release)</entry>
+      <entry>2.16.4</entry>
+      <entry>2.4.0</entry>
+     </row>
      <row>
-      <entry>1.3.1 (current release)</entry>
+      <entry>1.3.1</entry>
       <entry>2.15.2</entry>
       <entry>2.3.0</entry>
      </row>

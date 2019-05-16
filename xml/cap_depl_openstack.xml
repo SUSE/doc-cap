@@ -177,12 +177,16 @@ workers = 2</screen>
   </para>
  </sect1>
  <sect1 xml:id="sec.cap.bootstrap-caasp">
-  <title>Bootstrap &productname;</title>
+  <title>Bootstrapping &productname;</title>
 
   <para>
    The following examples use the <literal>xip.io</literal> wildcard DNS
    service. You may use your own DNS/DHCP services that you have set up in
    OpenStack in place of <literal>xip.io</literal>.
+  </para>
+  <para>
+   For more information about networking requirements, see
+   <xref linkend="sec.cap.prereqs-prod"/>.
   </para>
 
   <itemizedlist>

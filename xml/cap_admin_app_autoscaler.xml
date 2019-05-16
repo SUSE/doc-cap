@@ -222,7 +222,6 @@
 --set "enable.autoscaler=true" \
 --set sizing.autoscaler_postgres.disk_sizes.postgres_data=100
 </screen>
-
  </sect1>
  <sect1 xml:id="sec.cap.app-autoscaler-usage">
   <title>Using the App-AutoScaler Service</title>
