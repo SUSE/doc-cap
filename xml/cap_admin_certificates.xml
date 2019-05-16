@@ -231,6 +231,17 @@
    </step>
    <step>
     <para>
+     Pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>:
+    </para>
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+-o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+-o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+</screen>
+   </step>
+   <step>
+    <para>
      Deploy <literal>scf</literal>:
     </para>
 <screen>&prompt.user;helm install suse/cf \
