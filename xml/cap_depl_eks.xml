@@ -652,11 +652,11 @@ suse            https://kubernetes-charts.suse.com/</screen>
       </step>
       <step>
        <para>
-        Create a signing request:
+	Create a signing request. Replace <literal>BROKER_NAMESPACE</literal> with the namespace assigned in Step 3:
        </para>
 <screen>&prompt.user;openssl req -newkey rsa:4096 -keyout tls.key.encrypted -out tls.req -days 365 \
   -passout pass:<replaceable>1234</replaceable> \
-  -subj '/CN=aws-servicebroker.${BROKER_NAMESPACE}' -batch \
+  -subj '/CN=aws-servicebroker.'${BROKER_NAMESPACE} -batch \
   &lt;/dev/null
 </screen>
       </step>
