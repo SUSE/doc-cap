@@ -37,7 +37,7 @@
   <para>
    When you create your cluster, use node sizes that are at least
    <literal>t2.large</literal>. The <literal>NodeVolumeSize</literal> must be a
-   minimum of 60GB.
+   minimum of 60 GB.
   </para>
 
   <para>

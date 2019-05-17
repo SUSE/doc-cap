@@ -219,7 +219,7 @@
    deployment includes &scf; installed on &suse; &caasp;, Amazon EKS, or Azure
    AKS. You also need a storage back-end such as &ses; or NFS, a DNS/DHCP
    server, and an Internet connection to download additional packages during
-   installation and ~10GB of &docker; images on each &kube; worker after
+   installation and ~10 GB of &docker; images on each &kube; worker after
    installation. (See <xref linkend="cha.cap.install-production"/>.)
   </para>
 

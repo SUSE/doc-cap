@@ -264,7 +264,7 @@ cap-aks</screen>
 
   <note>
    <para>
-    An OS disk size of at least 60GB must be specified using the
+    An OS disk size of at least 60 GB must be specified using the
     <command>--node-osdisk-size</command> flag.
    </para>
   </note>

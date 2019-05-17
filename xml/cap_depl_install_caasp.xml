@@ -59,16 +59,16 @@
     <term>Minimum Hardware Requirements</term>
     <listitem>
      <para>
-      8GB of memory per &caasp; dashboard and &kube; master nodes.
+      8 GB of memory per &caasp; dashboard and &kube; master nodes.
      </para>
      <para>
-      16GB of memory per &kube; worker.
+      16 GB of memory per &kube; worker.
      </para>
      <para>
-      40GB disk space per &caasp; dashboard and &kube; master nodes.
+      40 GB disk space per &caasp; dashboard and &kube; master nodes.
      </para>
      <para>
-      60GB disk space per &kube; worker.
+      60 GB disk space per &kube; worker.
      </para>
     </listitem>
    </varlistentry>
@@ -163,7 +163,7 @@
       Installation with AutoYaST</link>. Set up &caasp; with one admin node and
       at least three Kubernetes masters and three Kubernetes workers. You also
       need an Internet connection, as the installer downloads additional
-      packages, and the &kube; workers will each download ~10GB of Docker
+      packages, and the &kube; workers will each download ~10 GB of Docker
       images.
      </para>
      <figure xml:id="fig.cap.select-master-nodes">
