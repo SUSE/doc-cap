@@ -180,11 +180,11 @@ ingress:
       xC8x/+zB7XlvcRJRio6kk670+25ABP==
       -----END CERTIFICATE-----
     key: |
-      ----BEGIN CERTIFICATE-----
+      -----BEGIN RSA PRIVATE KEY-----
       MIIE8jCCAtqgAwIBAgIUSI02lj2b2ImLy/zMrjNgW5d8EygwQSVJKoZIhvcYEGAW
       [...]
       to2WV7rPMb9W9fd2vVUXKKHTc+PiNg==
-      -----END CERTIFICATE-----
+      -----END RSA PRIVATE KEY-----
 </screen>
    </step>
    <step>
