@@ -255,7 +255,7 @@ d028551.example.com   Ready    &lt;none>    4h   v1.10.11
       </para>
      </warning>
      <para>
-      If the Linux distribution on your workstation doesn't provide the correct
+      If the Linux distribution on your workstation does not provide the correct
       &helm; version, or you are using some other platform, see the
       <link xlink:href="https://docs.helm.sh/using_helm/#quickstart"> &helm;
       Quickstart Guide</link> for installation instructions and basic usage
@@ -439,7 +439,7 @@ persistentvolumeclaim "test-sc-persistent" deleted</screen>
    usually relevant for production systems:
   </para>
   <itemizedlist>
-        <!-- Sorry but this section doesn't make sense to me-wouldn't DNS be managed
+        <!-- Sorry but this section does not make sense to me-wouldn't DNS be managed
         by the load balancer, removing the need for the external_ips 
         parameter? TODO Load balancers is a huge and complex topic,
         and it is on our roadmap to provide some guidance in enough depth to be useful.
