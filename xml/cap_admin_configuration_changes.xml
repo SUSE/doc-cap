@@ -22,7 +22,7 @@
   the <command>helm upgrade</command> command.
  </para>
  <warning>
-  <title>Do not make changes to pod counts during a version upgrade</title>
+  <title>Do Not Make Changes to pod counts During a Version Upgrade</title>
   <para>
    The <command>helm upgrade</command> command can be used to apply
    configuration changes as well as perform version upgrades to &cap;. A change

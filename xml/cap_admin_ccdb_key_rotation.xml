@@ -217,7 +217,7 @@ MariaDB [(none)]> select name, encrypted_environment_variables, encryption_key_l
   </variablelist>
 
   <sect2 xml:id="sec.cap.ccdb-update-existing-table-data">
-   <title>Update existing data with new encryption key</title>
+   <title>Update Existing Data with New Encryption Key</title>
    <para>
     To ensure the encryption key is updated for existing data, the command (or
     its <command>update-</command> equivalent) can be run again with the same

@@ -10,7 +10,7 @@
  xmlns:xi="http://www.w3.org/2001/XInclude"
  xmlns:xlink="http://www.w3.org/1999/xlink"
  version="5.0">
- <title>Complete suse/uaa values.yaml file</title>
+ <title>Complete suse/uaa values.yaml File</title>
 
  <para>
   This is the complete output of <literal>helm inspect suse/uaa</literal> for

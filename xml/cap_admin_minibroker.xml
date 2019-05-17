@@ -23,7 +23,7 @@
   provides a simple method to provision service brokers on Kubernetes clusters.
  </para>
  <warning>
-  <title>Do not use Minibroker on production systems</title>
+  <title>Do Not Use Minibroker on Production Systems</title>
   <para>
    Minibroker is a technology preview that is useful for development and
    testing purposes. It is currently not production-ready and not recommended
@@ -99,7 +99,7 @@ suse/minibroker             	0.2.0  	A minibroker for your minikube
   </procedure>
  </sect1>
  <sect1 xml:id="sec.cap.minibroker-environment-setup">
-  <title>Setting up the environment for Minibroker usage</title>
+  <title>Setting Up the Environment for Minibroker Usage</title>
 
   <procedure>
    <step>
@@ -274,7 +274,7 @@ minibroker-minibroker-5865f66bb8-6dxm7          2/2       Running            0  
   </procedure>
 
   <important>
-   <title>Database names for PostgreSQL and MariaDB instances</title>
+   <title>Database Names for PostgreSQL and MariaDB Instances</title>
    <para>
     By default, Minibroker creates PostgreSQL and MariaDB server instances
     without a named database. A named database is required for normal usage
