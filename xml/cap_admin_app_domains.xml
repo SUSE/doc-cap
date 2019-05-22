@@ -138,7 +138,7 @@ instances:         1/1
 usage:             1G x 1 instances
 routes:            <replaceable>myapp.appdomain.com</replaceable>
 last uploaded:     Mon 14 Jan 11:08:02 PST 2019
-stack:             sle12
+stack:             sle15
 buildpack:         ruby
 start command:     bundle exec rackup config.ru -p $PORT
 
