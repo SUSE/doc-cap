@@ -114,14 +114,14 @@
     <para>
      Build the latest released SUSE Ruby buildpack for the &sle; 12 stack:
     </para>
-<screen>&prompt.user;docker run -it --rm -v $PWD:/out splatform/cf-buildpack-packager <replaceable>SUSE</replaceable> <replaceable>ruby</replaceable> <replaceable>""</replaceable> <replaceable>sle12</replaceable></screen>
+<screen>&prompt.user;docker run -it --rm -v $PWD:/out splatform/cf-buildpack-packager <replaceable>SUSE</replaceable> <replaceable>ruby</replaceable> <replaceable>""</replaceable> <replaceable>sle15</replaceable></screen>
    </step>
    <step>
     <para>
      Verify the archive has been created in your current working directory:
     </para>
 <screen>&prompt.user;ls
-<replaceable>ruby_buildpack-cached-sle12-v1.7.30.1.zip</replaceable>
+<replaceable>ruby_buildpack-cached-sle15-v1.7.30.1.zip</replaceable>
     </screen>
    </step>
    <step>
@@ -159,7 +159,7 @@ dotnet-core_buildpack   9          true      false    dotnet-core-buildpack-v2.0
     <para>
      Upload your packaged offline buildpack to your &cap; deployment:
     </para>
-<screen>&prompt.user;cf create-buildpack <replaceable>ruby_buildpack_cached</replaceable> <replaceable>/tmp/ruby_buildpack-cached-sle12-v1.7.30.1.zip</replaceable> <replaceable>1</replaceable> <replaceable>--enable</replaceable>
+<screen>&prompt.user;cf create-buildpack <replaceable>ruby_buildpack_cached</replaceable> <replaceable>/tmp/ruby_buildpack-cached-sle15-v1.7.30.1.zip</replaceable> <replaceable>1</replaceable> <replaceable>--enable</replaceable>
 Creating buildpack <replaceable>ruby_buildpack_cached</replaceable>...
 OK
 
@@ -176,7 +176,7 @@ OK
 Getting buildpacks...
 
 buildpack               position   enabled   locked   filename
-<replaceable>ruby_buildpack_cached</replaceable>   1          true      false    ruby_buildpack-cached-sle12-v1.7.30.1.zip
+<replaceable>ruby_buildpack_cached</replaceable>   1          true      false    ruby_buildpack-cached-sle15-v1.7.30.1.zip
 staticfile_buildpack    2          true      false    staticfile_buildpack-v1.4.34.1-1.1-1dd6386a.zip
 java_buildpack          3          true      false    java-buildpack-v4.16.1-e638145.zip
 ruby_buildpack          4          true      false    ruby_buildpack-v1.7.26.1-1.1-c2218d66.zip
