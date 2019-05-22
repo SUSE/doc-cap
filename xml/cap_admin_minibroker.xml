@@ -22,14 +22,18 @@
   <link xlink:href="https://github.com/osbkit">Microsoft Azure team</link>. It
   provides a simple method to provision service brokers on Kubernetes clusters.
  </para>
- <warning>
-  <title>Do not use Minibroker on production systems</title>
+ <important>
+  <title>Minibroker Upstream Services</title>
   <para>
-   Minibroker is a technology preview that is useful for development and
-   testing purposes. It is currently not production-ready and not recommended
-   for use with production systems.
+   The services deployed by Minibroker are sourced from the stable upstream
+   charts repository, see
+   <link xlink:href="https://github.com/helm/charts/tree/master/stable"/>,
+   and maintained by contributors to the Helm project. Though &suse; supports
+   Minibroker itself, it does not support the service charts it deploys.
+   Operators should inspect the charts and images exposed by the service plans
+   before deciding to use them in a production environment.
   </para>
- </warning>
+ </important>
  <sect1 xml:id="sec.cap.minibroker-deployment">
   <title>Deploy Minibroker</title>
 
