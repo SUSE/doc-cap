@@ -232,29 +232,6 @@ Before you start deploying &productname;, review the following documents:
     </tbody>
    </tgroup>
    </informaltable>'> 
-   
-<!--ENTITY recreate-pods...................................................-->   
-
-<!ENTITY recreate-pods
-'<variablelist xmlns="http://docbook.org/ns/docbook">
-<varlistentry>
-     <term>Using <command>--recreate-pods</command> during a <command>helm upgrade</command></term>
-     <listitem>
-      <para>
-       Note that <command>--recreate-pods</command> will cause downtime for
-       applications, but is required as multiple versions of statefulsets may
-       co-exist which can cause incompatibilities between dependent statefulsets,
-       and result in a broken upgrade.
-      </para>
-      <para>
-       When upgrading from &productname; 1.3.0 to 1.3.1, running <command>helm upgrade</command> does not require the <command>--recreate-pods</command> option to be used. A change to the active/passive model has allowed for previously unready pods to be upgraded, which allows for zero app downtime during the upgrade process.
-      </para>
-      <para>
-       Upgrades between other versions will require the <command>--recreate-pods</command> option when using the <command>helm upgrade</command> command.
-      </para>
-     </listitem>
-    </varlistentry>
-</variablelist>'>
 
 <!--ENTITY uaac-prereq......................................................-->
 
