@@ -45,7 +45,13 @@
    </para>
   </warning>
 
-<!--TODO insert table entity-->
+  <para>
+   The supported upgrade method is to install all upgrades, in order. Skipping
+   releases is not supported. This table matches the Helm chart versions to
+   each release:
+  </para>
+
+  &releases-table;
 
   <para>
    Do not make changes to pod counts when you upgrade. You may make sizing
