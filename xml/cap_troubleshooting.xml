@@ -40,7 +40,7 @@
   </para>
  </sect1>
  <sect1 xml:id="sec.cap.tbl.toolong">
-  <title>Deployment is Taking Too Long</title>
+  <title>Deployment Is Taking Too Long</title>
 
   <para>
    A deployment step seems to take too long, or you see that some pods are not

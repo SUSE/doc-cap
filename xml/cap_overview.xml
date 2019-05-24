@@ -424,7 +424,7 @@
   </sect2>
 
   <sect2 xml:id="sec.cap.containers">
-   <title>&scf; containers</title>
+   <title>&scf; Containers</title>
    <para>
     <xref linkend="fig.cap.cap-containers"/> provides a look at &scf;'s
     containers.
@@ -636,7 +636,7 @@
   </sect2>
 
   <sect2 xml:id="sec.cap.service-diagram">
-   <title>&scf; service diagram</title>
+   <title>&scf; Service Diagram</title>
    <para>
     This simple service diagram illustrates how &scf; components communicate
     with each other (<xref linkend="fig.cap.simple-services"/>). See

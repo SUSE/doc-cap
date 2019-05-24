@@ -596,7 +596,7 @@ secrets:
   </procedure>
  </sect1>
  <sect1 xml:id="sec.cap.addrepo-prod">
-  <title>Add the &kube; charts repository</title>
+  <title>Add the &kube; Charts Repository</title>
 
   <para>
    Download the &suse; &kube; charts repository with &helm;:

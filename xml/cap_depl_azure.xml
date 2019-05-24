@@ -140,7 +140,7 @@ cap-aks</screen>
   </para>
 
   <tip>
-   <title>Use different names</title>
+   <title>Use Different Names</title>
    <para>
     Ensure each of your AKS clusters use unique resource group and managed
     cluster names, and not copy the examples, especially when your Azure
@@ -405,7 +405,7 @@ done</screen>
 
  </sect1>
  <sect1 xml:id="sec.cap.addrepo-aks">
-  <title>Add the &kube; charts repository</title>
+  <title>Add the &kube; Charts Repository</title>
 
   <para>
    Download the &suse; &kube; charts repository with &helm;:

@@ -21,11 +21,11 @@
   Important things to know before deploying &productname;.
  </para>
  <sect1>
-  <title>README first</title>
+  <title>README First</title>
 &readmefirst;
 </sect1>
  <sect1>
-  <title>Not running/Completed Pods</title>
+  <title>Not Running/Completed Pods</title>
 &completed-pods;
 </sect1>
  <sect1>
@@ -34,7 +34,7 @@
 &fresh-namespace;
 </sect1>
  <sect1>
-  <title>DNS management</title> 
+  <title>DNS Management</title> 
 
   <para>
    The following tables list the minimum DNS requirements to run &productname;, using
@@ -49,7 +49,7 @@
 &dns-tables;
 </sect1>
  <sect1>
-  <title>Releases and &helm; chart versions</title>
+  <title>Releases and &helm; Chart Versions</title>
 
   <para>
    The supported upgrade method is to install all upgrades, in order. Skipping

@@ -31,7 +31,7 @@
   </para>
 
   <warning>
-   <title><command>helm rollback</command> is not supported</title>
+   <title><command>helm rollback</command> Is Not Supported</title>
    <para>
     <command>helm rollback</command> is not supported in &productname; or in
     upstream &cf;, and may break your cluster completely, because database
