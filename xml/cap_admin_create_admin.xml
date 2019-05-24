@@ -95,7 +95,7 @@
 
 &prompt.user;cf set-org-role <replaceable>new-admin</replaceable> org OrgManager
 
-&prompt.user;cf create-buildpack <replaceable>test_buildpack</replaceable> <replaceable>/tmp/ruby_buildpack-cached-sle12-v1.7.30.1.zip</replaceable> <replaceable>1</replaceable>
+&prompt.user;cf create-buildpack <replaceable>test_buildpack</replaceable> <replaceable>/tmp/ruby_buildpack-cached-sle15-v1.7.30.1.zip</replaceable> <replaceable>1</replaceable>
 </screen>
     <para>
      If the account has sufficient permissions, you should not receive any authorization message similar to the following:
