@@ -1513,8 +1513,8 @@ sizing:
   #   SCF patches for upstream bugs
   #
   # Also: rep, cfdot, route_emitter, garden, groot-btrfs,
-  # cflinuxfs2-rootfs-setup, opensuse42-rootfs-setup, cf-sle12-setup,
-  # loggregator_agent, nfsv3driver
+  # cflinuxfs3-rootfs-setup, cf-sle12-setup, cf-sle15-rootfs-setup, loggregator_agent,
+  # nfsv3driver
   diego_cell:
     # Node affinity rules can be specified here
     affinity: {}
