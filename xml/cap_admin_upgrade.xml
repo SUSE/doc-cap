@@ -15,35 +15,101 @@
    <dm:translation>yes</dm:translation>
   </dm:docmanager>
  </info>
- <sect1 xml:id="sec.cap.update">
-  <title>Upgrading &productname;</title>
-
-  <para>
-   <literal>uaa</literal>, <literal>scf</literal>, and Stratos together make up
-   a &productname; release. Maintenance updates are delivered as container
-   images from the &suse; registry and applied with &helm;.
-  </para>
-
-  <para>
+ <para>
+  <literal>uaa</literal>, <literal>scf</literal>, and Stratos together make up
+  a &productname; release. Maintenance updates are delivered as container
+  images from the &suse; registry and applied with &helm;.
+ </para>
+ <para>
    For additional upgrade information, always review the release notes
    published at
    <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/1/"/>.
+ </para>
+ <sect1 xml:id="sec.cap.upgrade-considerations">
+  <title>Important Considerations</title>
+
+  <para>
+   Before performing an upgrade, be sure to take note of the following:
   </para>
 
-  <warning>
-   <title><command>helm rollback</command> is not supported</title>
-   <para>
-    <command>helm rollback</command> is not supported in &productname; or in
-    upstream &cf;, and may break your cluster completely, because database
-    migrations only run forward and cannot be reversed. Database schema can
-    change over time. During upgrades both pods of the current and the next
-    release may run concurrently, so the schema must stay compatible with the
-    immediately previous release. But there is no way to guarantee such
-    compatibility for future upgrades. One way to address this is to perform a
-    full raw data backup and restore. (See
-    <xref linkend="sec.cap.backup-restore-of-raw-data"/>)
-   </para>
-  </warning>
+  <variablelist>
+   <varlistentry>
+    <term>Perform Upgrades in Sequence</term>
+    <listitem>
+     <para>
+      &cap; only supports upgrading releases in sequential order. If there are
+      any intermediate releases between your current release and your target
+      release, they must be installed. Skipping
+      releases is not supported. See <xref linkend="sec.cap.skipped-release"/>
+      for more information.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>Preserve &helm; Value Changes during Upgrades</term>
+    <listitem>
+     <para>
+      During a <command>helm upgrade</command>, always ensure the
+      <command>--reuse-values</command> flag is specified and your
+      <filename>scf-config-values-yaml</filename> file is passed. This will
+      preserve any previously set &helm; values while allowing additional
+      &helm; value changes to be made.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>Use <command>--recreate-pods</command> during a <command>helm upgrade</command></term>
+    <listitem>
+     <para>
+      Note that using <command>--recreate-pods</command> will cause downtime for
+      applications, but is required as multiple versions of statefulsets may
+      co-exist which can cause incompatibilities between dependent statefulsets,
+      and result in a broken upgrade.
+     </para>
+     <para>
+      When upgrading from &productname; 1.3.0 to 1.3.1, running
+      <command>helm upgrade</command> does not require the
+      <command>--recreate-pods</command> option to be used. A change to the
+      active/passive model has allowed for previously unready pods to be
+      upgraded, which allows for zero app downtime during the upgrade process.
+     </para>
+     <para>
+      Upgrades between other versions will require the
+      <command>--recreate-pods</command> option when using the
+      <command>helm upgrade</command> command.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><command>helm rollback</command> Is Not Supported</term>
+    <listitem>
+     <para>
+      <command>helm rollback</command> is not supported in &productname; or in
+      upstream &cf;, and may break your cluster completely, because database
+      migrations only run forward and cannot be reversed. Database schema can
+      change over time. During upgrades both pods of the current and the next
+      release may run concurrently, so the schema must stay compatible with the
+      immediately previous release. But there is no way to guarantee such
+      compatibility for future upgrades. One way to address this is to perform a
+      full raw data backup and restore. (See
+      <xref linkend="sec.cap.backup-restore-of-raw-data"/>)
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>Do Not Make Changes to Pod Counts During a Upgrade</term>
+    <listitem>
+     <para>
+      If sizing changes need to be mader, make the change either before or after
+      an upgrade. See <xref linkend="sec.cap.ha-prod"/>.
+     </para>
+    </listitem>
+   </varlistentry>
+  </variablelist>
+ </sect1>
+
+ <sect1 xml:id="sec.cap.update">
+  <title>Upgrading &productname;</title>
 
   <para>
    The supported upgrade method is to install all upgrades, in order. Skipping
@@ -52,11 +118,6 @@
   </para>
 
   &releases-table;
-
-  <para>
-   Do not make changes to pod counts when you upgrade. You may make sizing
-   changes before or after an upgrade (see <xref linkend="sec.cap.ha-prod"/>).
-  </para>
 
   <para>
    Use &helm; to check for updates:
@@ -102,14 +163,11 @@ suse/uaa        2.7.0       A Helm chart for SUSE UAA
 </screen>
 
   <para>
-   When you have verified that the upgrade is the next release from your
-   current release, run the following commands to perform the upgrade. What if
-   you missed a release? See <xref linkend="sec.cap.skipped-release"/>.
+   Verify the latest release is the next sequential release from your
+   currently-installed release. If it is, proceed with the commands below to
+   perform the upgrade. If any releases have been missed, see
+   <xref linkend="sec.cap.skipped-release"/>.
   </para>
-
-  <important>
-   &recreate-pods;
-  </important>
 
   <para>
    Just like your initial installation, wait for each command to complete
@@ -120,8 +178,10 @@ suse/uaa        2.7.0       A Helm chart for SUSE UAA
   </para>
 
 <screen>&prompt.user;helm upgrade --force --recreate-pods <replaceable>susecf-uaa</replaceable> suse/uaa \
+--reuse-values \
 --values scf-config-values.yaml
 </screen>
+
 
   <para>
    Then extract the <literal>uaa</literal> secret for <literal>scf</literal> to
@@ -142,6 +202,7 @@ suse/uaa        2.7.0       A Helm chart for SUSE UAA
   </para>
 
 <screen>&prompt.user;helm upgrade --force --recreate-pods <replaceable>susecf-scf</replaceable> suse/cf \
+--reuse-values \
 --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
@@ -151,9 +212,9 @@ suse/uaa        2.7.0       A Helm chart for SUSE UAA
   </para>
 
 <screen>&prompt.user;helm upgrade --force --recreate-pods <replaceable>susecf-console</replaceable> suse/console \
+--reuse-values \
 --values scf-config-values.yaml
 </screen>
-
 <!-- Internal cf-usb broker broker endpoint URL change involving 1.3 -->
 
   <xi:include href="sec_cf_usb_url.xml"/>
