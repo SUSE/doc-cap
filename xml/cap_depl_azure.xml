@@ -9,7 +9,7 @@
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
  <info>
-  <title>Preparing Microsoft Azure for &productname;</title>
+  <title>Deploying &productname; on Microsoft Azure Kubernetes Service (AKS)</title>
   <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
    <dm:bugtracker></dm:bugtracker>
    <dm:translation>yes</dm:translation>
@@ -22,7 +22,8 @@
   &productname; supports deployment on Microsoft Azure Kubernetes Service
   (AKS), Microsoft's managed &kube; service. This chapter describes the steps
   for preparing Azure for a &productname; deployment, with a basic Azure load
-  balancer. (See
+  balancer. Note that you will not create any DNS records until after
+  <literal>uaa</literal> is deployed. (See
   <link xlink:href="https://azure.microsoft.com/en-us/services/container-service/">
   Azure Kubernetes Service (AKS)</link> for more information.)
  </para>
@@ -58,6 +59,13 @@
    (Get &helm; from
    <link xlink:href="https://github.com/helm/helm/releases">Helm
    Releases</link>.)
+  </para>
+
+  <para>
+   Note that 24 vCPUs are required for the minimal installation described in
+   this guide. If your account only has the default 10 vCPUs available, you
+   can request a quota increase by going to
+   <link xlink:href="https://docs.microsoft.com/en-us/azure/azure-supportability/resource-manager-core-quotas-request"/>.
   </para>
 
   <para>
@@ -131,7 +139,7 @@ cap-aks</screen>
    set environment variables.
   </para>
 
-  <note>
+  <tip>
    <title>Use different names</title>
    <para>
     Ensure each of your AKS clusters use unique resource group and managed
@@ -141,7 +149,7 @@ cap-aks</screen>
     deployment in a single resource group helps you keep track, and you can
     delete the whole deployment by deleting the resource group.
    </para>
-  </note>
+  </tip>
 
   <procedure xml:id="pro.envvars-azure">
    <step>
@@ -166,10 +174,12 @@ cap-aks</screen>
    </step>
    <step>
     <para>
-     Set the Azure location. (See
+     Set the Azure location. See
      <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/container-service-quotas">
      Quotas and region availability for Azure Kubernetes Service (AKS)</link>
-     for supported locations.)
+ for supported locations. Run <command>az account list-locations</command> to
+ verify the correct way to spell your location name, for example East US is
+ <literal>eastus</literal> in your <command>az</command> commands:
     </para>
 <screen>&prompt.user;export REGION="<replaceable>eastus</replaceable>"</screen>
    </step>
@@ -185,8 +195,8 @@ cap-aks</screen>
      <link xlink:href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-general">
      General purpose virtual machine sizes</link>). A virtual machine size of
      at least <literal>Standard_DS4_v2</literal> using premium storage (see
-     <link xlink:href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/premium-storage">High-performance
-     Premium Storage and managed disks for VMs</link>) is recommended. Note
+     <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/azure-disks-dynamic-pv">Built in
+     storage classes</link>) is recommended. Note
      <literal>managed-premium</literal> has been specified in the example
      <filename>scf-azure-values.yaml</filename> used (see
      <xref linkend="sec.cap.cap-on-azure"/>):
@@ -217,6 +227,10 @@ cap-aks</screen>
     <para>
      Which results in something like <literal>aks-mypool-39318075-2</literal>.
     </para>
+    <para>
+     Note that uppercase characters are considered invalid in a nodepool name and should
+     not be used.
+    </para>
    </step>
   </procedure>
 
@@ -229,23 +243,23 @@ cap-aks</screen>
 
   <para>
    List the &kube; versions currently supported by AKS (see
-   <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/supported-kubernetes-versions"/>
-   for more information on the AKS version support policy). When creating your
-   cluster in the next step, specify a &kube; version for consistent
-   deployments:
+   <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/supported-kubernetes-versions"/> 
+   for more information on the AKS version support policy):
   </para>
 
-<screen>&prompt.user;az aks get-versions --location $REGION --output table</screen>
+<screen>&prompt.user;az aks get-versions --location $REGION --output table
+</screen>
 
   <para>
-   Now you can create a new AKS managed cluster:
+   Create a new AKS managed cluster, and specify the &kube; version for 
+   consistent deployments:
   </para>
 
 <screen>&prompt.user;az aks create --resource-group $RGNAME --name $AKSNAME \
  --node-count $NODECOUNT --admin-username $ADMINUSERNAME \
  --ssh-key-value $SSHKEYVALUE --node-vm-size $NODEVMSIZE \
  --node-osdisk-size=60 --nodepool-name $NODEPOOLNAME \
- --kubernetes-version <replaceable>1.11.8</replaceable>
+ --kubernetes-version <replaceable>&aksnodeversion;</replaceable>
 </screen>
 
   <note>
@@ -274,9 +288,9 @@ cap-aks</screen>
 
 <screen>&prompt.user;kubectl get nodes
 NAME                    STATUS    ROLES     AGE       VERSION
-aks-mypool-47788232-0   Ready     agent     5m        v1.11.6
-aks-mypool-47788232-1   Ready     agent     6m        v1.11.6
-aks-mypool-47788232-2   Ready     agent     6m        v1.11.6
+aks-mypool-47788232-0   Ready     agent     5m        v&aksnodeversion;
+aks-mypool-47788232-1   Ready     agent     6m        v&aksnodeversion;
+aks-mypool-47788232-2   Ready     agent     6m        v&aksnodeversion;
 
 &prompt.user;kubectl get pods --all-namespaces
 NAMESPACE     NAME                                READY  STATUS    RESTARTS   AGE
@@ -303,10 +317,7 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
 
   <para>
    You must create a &tiller; service account in order to give &tiller;
-   sufficient permissions to make changes on your cluster. There are two ways
-   to create a service account: from the command line with
-   <command>kubectl</command>, or applying a configuration file with
-   <command>kubectl</command> and <command>helm</command>.
+   sufficient permissions to make changes on your cluster.
   </para>
 
   <para>
@@ -328,43 +339,8 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
  Tiller (the Helm server-side component) has been installed into your Kubernetes Cluster.
  Happy Helming!</screen>
 
-  <para>
-   Creating your &tiller; service account with a configuration file requires
-   &helm; version 2.9 or newer (see
-   <link xlink:href="https://github.com/helm/helm/releases"/>
-  </para>
-
-  <para>
-   First create the configuration file, which this example is
-   <filename>rbac-config.yaml</filename>:
-  </para>
-
-<screen>apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: tiller
-  namespace: kube-system
----
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
-metadata:
-  name: tiller
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-  - kind: ServiceAccount
-    name: tiller
-    namespace: kube-system</screen>
-
-  <para>
-   Apply it to your cluster with these commands:
-  </para>
-
-<screen>&prompt.user;kubectl create -f rbac-config.yaml
-&prompt.user;helm init --service-account tiller</screen>
  </sect1>
+
  <sect1 xml:id="sec.cap.psp">
   <title>Pod Security Policies</title>
 
@@ -411,46 +387,130 @@ done</screen>
    </step>
   </procedure>
  </sect1>
+ <sect1 xml:id="sec.cap.aks-dns">
+  <title>DNS Configuration</title>
+
+  <para>
+   This section provides an overview of the domain and sub-domains that require
+   A records to be set up for. The process is described in more detail in the
+   deployment section.
+  </para>
+
+  <para>
+   The following table lists the required domain and sub-domains, using
+   <literal>example.com</literal> as the example domain:
+  </para>
+
+&dns-tables;
+
+ </sect1>
+ <sect1 xml:id="sec.cap.addrepo-aks">
+  <title>Add the &kube; charts repository</title>
+
+  <para>
+   Download the &suse; &kube; charts repository with &helm;:
+  </para>
+
+<screen>&prompt.user;helm repo add <replaceable>suse</replaceable> https://kubernetes-charts.suse.com/</screen>
+
+  <para>
+   You may replace the example <replaceable>suse</replaceable> name with any
+   name. Verify with <command>helm</command>:
+  </para>
+
+<screen>&prompt.user;helm repo list
+NAME       URL
+stable     https://kubernetes-charts.storage.googleapis.com    
+local      http://127.0.0.1:8879/charts                        
+suse       https://kubernetes-charts.suse.com/                 
+</screen>
+
+  <para>
+   List your chart names, as you will need these for some operations:
+  </para>
+
+&helm-search-suse;
+
+ </sect1>
  <sect1 xml:id="sec.cap.cap-on-azure">
-  <title>Deploy &productname; with a Load Balancer</title>
-
+     <title>Deploying &productname; with a Load Balancer</title>
   <para>
-   In &productname;, load balancing is enabled by setting the
-   <literal>services.loadbalanced</literal> parameter to
-   <literal>true</literal> and specifying a fully qualified domain name (FQDN)
-   for the <literal>DOMAIN</literal> parameter in your configuration file. When
-   <literal>services.loadbalanced</literal> is set to <literal>true</literal>,
-   the
-   <link xlink:href="https://kubernetes.io/docs/concepts/services-networking/#publishing-services-service-types">ServiceType</link>
-   of public-facing services will change to
-   <link xlink:href="https://kubernetes.io/docs/concepts/services-networking/#loadbalancer">Type
-   LoadBalancer</link> and a load balancer will be provisioned for the service.
-   In &azureks;, this provisions a
-   <link xlink:href="https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-overview#skus">Basic
-   Load Balancer</link>.
+      This section describes how to deploy &productname; with a basic
+      AKS load balancer, how to set up the required storage class, and how
+      to configure your DNS records.
+  </para>
+<sect2 xml:id="sec.cap.aks-storage">
+    <title>Create a Storage Class</title>
+  <para>
+   This example creates a <literal>managed-premium</literal> (see
+   <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/azure-disks-dynamic-pv"/>)
+   storage class for your cluster using the manifest defined in
+   <filename>storage-class.yaml</filename> below:
   </para>
 
+<screen>---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  labels:
+    kubernetes.io/cluster-service: "true"
+  name: persistent
+parameters:
+  kind: Managed
+  storageaccounttype: Premium_LRS
+provisioner: kubernetes.io/azure-disk
+reclaimPolicy: Delete</screen>
+
   <para>
-   The following is an example configuration file, called
-   <filename>scf-azure-values.yaml</filename>, used to deploy &cap; on Azure
-   Kubernetes Service:
+   Then apply the new storage class configuration with this command:
   </para>
 
-<screen>env:
-  # Use a FQDN
+<screen>&prompt.user;kubectl create -f storage-class.yaml</screen>
+  <para>
+   Specify the newly created created storage class, called <literal>persistent</literal>,
+   as the value for <literal>kube.storage_class.persistent</literal> in your
+   deployment configuration file, like this example:
+  </para>
+
+<screen>kube:
+  storage_class:
+    persistent: "persistent"
+    shared: "shared"
+</screen>
+<para>
+    See <xref linkend="sec.cap.aks-config"/> for a complete example deployment 
+    configuration file, <filename>scf-azure-values.yaml</filename>.
+</para>
+</sect2>
+<sect2 xml:id="sec.cap.aks-config">
+    <title>Deployment Configuration</title>
+<para>
+    It is not necessary to create any DNS records before deploying 
+    <literal>uaa</literal>. Instead, after <literal>uaa</literal>
+    is running you will find the load balancer IP address that was automatically 
+    created during deployment, and then create the necessary records.
+</para>
+<para>
+    The following file, <filename>scf-azure-values.yaml</filename>, provides a 
+    complete example deployment configuration. Enter the fully-qualified domain 
+    name (FQDN) that you intend to use for <literal>DOMAIN</literal> and 
+    <literal>UAA_HOST</literal>.
+</para>
+<screen>
+### example deployment configuration file
+### scf-azure-values.yaml
+
+env:
+  # the FQDN of your domain  
   DOMAIN: <replaceable>autolb.example.com</replaceable>
-
-  # uaa prefix is required
+  # the UAA prefix is required
   UAA_HOST: uaa.<replaceable>autolb.example.com</replaceable>
   UAA_PORT: 2793
-
-  #Azure deployment requires overlay
   GARDEN_ROOTFS_DRIVER: "overlay-xfs"
 
 kube:
   storage_class:
-    # Azure supports only "default" or "managed-premium"
-    persistent: "managed-premium"
+    persistent: "persistent"
     shared: "shared"
 
   registry:
@@ -460,15 +520,15 @@ kube:
   organization: "cap"
 
 secrets:
-  # Password for user 'admin' in the cluster
+  # create very strong passwords, and protect them just as 
+  # carefully as you would protect any root passwords
   CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
-
-  # Password for scf to authenticate with uaa
   UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
 
 services:
   loadbalanced: true
 </screen>
+</sect2>
 
   <sect2 xml:id="sec.cap.loadbalancer-azure-uaa">
    <title>Deploy <literal>uaa</literal></title>
@@ -680,8 +740,9 @@ tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.
   <title>Configuring and Testing the Native &aks; Service Broker</title>
 
   <para>
-   &ms; &azureks; provides a service broker. This section describes how to use
-   it with your &productname; deployment.
+   &ms; &azureks; provides a service broker called the Open Service Broker for
+   Azure (see <link xlink:href="https://github.com/Azure/open-service-broker-azure"/>.
+   This section describes how to use it with your &productname; deployment.
   </para>
 
   <para>
@@ -732,7 +793,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.
 </screen>
 
   <para>
-   Set up the service broker with your variables, then create it:
+   Set up the service broker with your variables:
   </para>
 
 <screen>
@@ -748,25 +809,39 @@ tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.
 --set basicAuth.username=$(tr -dc 'a-zA-Z0-9' &lt; /dev/urandom | head -c 16) \
 --set basicAuth.password=$(tr -dc 'a-zA-Z0-9' &lt; /dev/urandom | head -c 16) \
 --set tls.enabled=false
-
+</screen>
+  <para>
+   Monitor the progress:
+  </para>
+<screen>&prompt.user;watch -c 'kubectl get pods --namespace osba'</screen>
+  <para>
+   When all pods are running, create the service broker in &scf; using the &cfcli;:
+  </para>
+<screen>
 &prompt.user;cf login
 
-&prompt.user;cf create-service-broker azure $(kubectl get deployment osba-open-service-broker-azure \
+&prompt.user;cf create-service-broker <replaceable>azure</replaceable> $(kubectl get deployment osba-open-service-broker-azure \
 --namespace osba -o jsonpath='{.spec.template.spec.containers[0].env[?(@.name == "BASIC_AUTH_USERNAME")].value}') $(kubectl get secret --namespace osba osba-open-service-broker-azure -o jsonpath='{.data.basic-auth-password}' | base64 -d) http://osba-open-service-broker-azure.osba
 </screen>
 
   <para>
-   Register the service broker in &scf;:
+   List the available service plans. For more information about the services
+   supported see
+   <link xlink:href="https://github.com/Azure/open-service-broker-azure#supported-services"/>:
   </para>
-
+<screen>&prompt.user;cf service-access -b <replaceable>azure</replaceable></screen>
+  <para>
+   Use <command>cf enable-service-access</command> to enable access to a service plan. This
+   example enables all <literal>basic</literal> plans:
+  </para>
 <screen>
-&prompt.user;cf service-access -b azure | \
+&prompt.user;cf service-access -b <replaceable>azure</replaceable> | \
 awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
 </screen>
 
   <para>
-   Test your new service broker with an example Rails app. First create a space
-   and org for your test app:
+   Test your new service broker with an example PHP application. First create an
+   organization and space to deploy your test application to:
   </para>
 
 <screen>
@@ -776,11 +851,11 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
 
 &prompt.user;cf target -o "<replaceable>testorg</replaceable>" -s "<replaceable>scftest</replaceable>"
 
-&prompt.user;cf create-service azure-mysql-5-7 basic <replaceable>scf-rails-example-db</replaceable> \
+&prompt.user;cf create-service azure-mysql-5-7 basic <replaceable>question2answer-db</replaceable> \
 -c "{ \"location\": \"${REGION}\", \"resourceGroup\": \"${SBRGNAME}\", \"firewallRules\": [{\"name\": \
 \"AllowAll\", \"startIPAddress\":\"0.0.0.0\",\"endIPAddress\":\"255.255.255.255\"}]}"
 
-&prompt.user;cf service <replaceable>scf-rails-example-db</replaceable> | grep status
+&prompt.user;cf service <replaceable>question2answer-db</replaceable> | grep status
 </screen>
 
   <para>
@@ -803,45 +878,30 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
   </para>
 
   <para>
-   Build and push the test Rails app:
+   Build and push the example PHP application:
   </para>
 
 <screen>
-&prompt.user;git clone https://github.com/scf-samples/rails-example
+&prompt.user;git clone https://github.com/scf-samples/question2answer
 
-&prompt.user;cd rails-example
+&prompt.user;cd question2answer
 
 &prompt.user;cf push
 
-&prompt.user;cf ssh scf-rails-example -c "export PATH=/home/vcap/deps/0/bin:/usr/local/bin:/usr/bin:/bin &amp;&amp; \
-export BUNDLE_PATH=/home/vcap/deps/0/vendor_bundle/ruby/2.5.0 &amp;&amp; \
-export BUNDLE_GEMFILE=/home/vcap/app/Gemfile &amp;&amp; cd app &amp;&amp; bundle exec rake db:seed"
-
-&prompt.user;cf service scf-rails-example-db # => bound apps
+&prompt.user;cf service question2answer-db # => bound apps
 </screen>
 
   <para>
-   Test your new service deployment with <command>curl</command>, replacing the
-   example IP address with your own IP address:
+   When the application has finished deploying, use your browser and
+   navigate to the URL specified in the <literal>routes</literal>
+   field displayed at the end of the staging logs. For example, the
+   application route could be
+   <replaceable>question2answer.btat.susecap.net</replaceable>. 
   </para>
-
-<screen>
-&prompt.user;curl -k https://scf-rails-example.<replaceable>&publicip;</replaceable>
-</screen>
 
   <para>
-   A successful deployment returns output like this abbreviated example:
+   Press the button to prepare the database. When the database is ready,
+   further verify by creating an initial user and posting some test questions.
   </para>
-
-<screen>
- &lt;h1>Hello from Rails on SCF!&lt;/h1>
-2018-12-19T12:53:30+00:00
-
-&lt;ul>
-  &lt;li>#1: Drink coffee&lt;/li>
-  &lt;li>#2: Go to work&lt;/li>
-  &lt;li>#3: Have some rest&lt;/li>
-&lt;/ul>
-</screen>
  </sect1>
 </chapter>

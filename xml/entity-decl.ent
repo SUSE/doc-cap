@@ -4,12 +4,13 @@
 
 <!ENTITY productname    "&suse; Cloud Application Platform">
 <!ENTITY productnamereg "&suse;&reg; Cloud Application Platform">
-<!ENTITY productnumber  "1.3.1">
+<!ENTITY productnumber  "1.4">
 <!ENTITY github.url     "https://github.com/SUSE/doc-cap">
 <!ENTITY cap            "Cloud Application Platform">
-<!ENTITY latestuaachart "2.15.2">
-<!ENTITY latestscfchart "2.15.2">
-<!ENTITY lateststratoschart "2.3.0">
+<!ENTITY latestuaachart "2.16.4">
+<!ENTITY latestscfchart "2.16.4">
+<!ENTITY lateststratoschart "2.4.0">
+<!ENTITY aksnodeversion "1.11.8">
 <!ENTITY cfcli        "cf CLI">
 <!ENTITY guide         "<citetitle xmlns='http://docbook.org/ns/docbook'>Deployment, Administration, and User Guide</citetitle>">
 <!-- ====================================================================== -->
@@ -161,10 +162,12 @@
 <!-- Cloud Platforms                                               -->
 <!-- ============================================================= -->
 
-<!ENTITY ms             "Microsoft">
-<!ENTITY azureks        "Azure Kubernetes Service">
-<!ENTITY msaks            "&ms; &azureks;">
-<!ENTITY aks             "Microsoft AKS">
+<!ENTITY ms            "Microsoft">
+<!ENTITY azureks       "Azure Kubernetes Service">
+<!ENTITY msaks         "&ms; &azureks;">
+<!ENTITY aks           "Microsoft AKS">
+<!ENTITY eks           "Amazon EKS">
+<!ENTITY gke           "Google GKE">
 <!-- ============================================================= -->
 <!-- Virtualization                                                -->
 <!-- ============================================================= -->

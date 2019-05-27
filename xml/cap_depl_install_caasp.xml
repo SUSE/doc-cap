@@ -76,21 +76,49 @@
     <term>Network Requirements</term>
     <listitem>
      <para>
-      Your &kube; cluster needs its own domain and network. Each node should
-      resolve to its hostname, and to its fully-qualified domain name.
+      To enable the &scf; nodes to interact with each other, make sure your
+      network setup fulfills the following requirements:
+     </para>
+     <itemizedlist>
+      <listitem>
+       <para>
+        The &kube; cluster has a dedicated domain and required subdomains (see
+        <xref linkend="cha.cap.depl.notes"/>).
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        Each node is able resolve to its host name and fully-qualified domain
+        name (FQDN).
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        &productname; has a dedicated domain or subdomain separate from the
+        &kube; cluster.
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        Traffic inside of &productname; resolves to a &kube; worker node in
+        that dedicated domain.
+       </para>
+      </listitem>
+     </itemizedlist>
+     <para>
       Typically, a &kube; cluster sits behind a load balancer, which also
       provides external access to the cluster. Another option is to use DNS
       round-robin to the &kube; workers to provide external access. It is also
       a common practice to create a wildcard DNS entry pointing to the domain,
-      for example *.&exampledomain;, so that applications can be deployed
+      for example <literal>*.&exampledomain;</literal>, so that applications
+      can be deployed
       without creating DNS entries for each application. This guide does not
       describe how to set up a load balancer or name services, as these depend
-      on customer requirements and existing network architectures.
+      on your requirements and existing network architectures.
      </para>
      <para>
-      <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_deployment/data/sec_deploy_requirements_system.html#sec_deploy_requirements_network">
-      &suse; &caasp; Deployment Guide: Network Requirements</link> provides
-      guidance on network and name services configurations.
+      For information about network and name services configurations, see
+      <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_deployment/data/sec_deploy_requirements_system.html#sec_deploy_requirements_network"/>.
      </para>
     </listitem>
    </varlistentry>
@@ -156,14 +184,6 @@
       <filename>~/.kube/config</filename> on your workstation. This file
       enables the remote administration of your cluster.
      </para>
-     <figure xml:id="fig.cap.kubectl-download-prod">
-      <title>Download kubeconfig</title>
-      <mediaobject>
-       <imageobject>
-        <imagedata fileref="kubectl-download-prod.png" format="PNG" width="75%"/>
-       </imageobject>
-      </mediaobject>
-     </figure>
     </listitem>
    </varlistentry>
    <varlistentry>
@@ -205,8 +225,8 @@ contexts:
 &prompt.user;kubectl get nodes
 NAME                  STATUS   ROLES     AGE  VERSION
 ef254d3.example.com   Ready    Master    4h   v1.10.11
-b70748d.example.com   Ready    &lt;none>    4h   v1.10.11
-cb77881.example.com   Ready    &lt;none>    4h   v1.10.11
+b70748d.example.com   Ready    Master    4h   v1.10.11
+cb77881.example.com   Ready    Master    4h   v1.10.11
 d028551.example.com   Ready    &lt;none>    4h   v1.10.11
 [...]</screen>
     </listitem>
@@ -414,16 +434,89 @@ persistentvolumeclaim "test-sc-persistent" deleted</screen>
   </para>
 
   <para>
-   The example <filename>scf-config-values.yaml</filename> file is for a simple
-   deployment without an ingress controller or load balancer. Instead, assign
-   one worker node an external IP address, and map this to the domain name to
-   provide external access to the cluster. The <literal>external_ips</literal>
-   needs this address to provide access to the Stratos Web interface.
-   <literal>external_ips</literal> also needs the internal IP addresses of the
-   worker nodes to provide access to services.
+   The example configuration file <filename>scf-config-values.yaml</filename>
+   is for a simple deployment without the following network resources that are
+   usually relevant for production systems:
   </para>
+  <itemizedlist>
+        <!-- Sorry but this section doesn't make sense to me-wouldn't DNS be managed
+        by the load balancer, removing the need for the external_ips 
+        parameter? TODO Load balancers is a huge and complex topic,
+        and it is on our roadmap to provide some guidance in enough depth to be useful.
+        We'll come back to this.
+        cjs, 11 april 2019-->        
+<!--   <listitem>
+   <formalpara>
+    
+     <title>Hardware Load Balancer</title>
+     <para>
+      If you are using a hardware load balancer, assign one or more of the worker
+      nodes an external IP address. To provide external access to the
+      cluster, map these IP addresses to the domain name. Then 
+     </para>
+    </formalpara>
+    <para>
+     To provide access to the Stratos Web interface and other public services 
+     use this IP address as the value of <literal>external_ips</literal>.
+     <literal>external_ips</literal> also needs the internal IP addresses of
+     the worker nodes to provide access to internal services.
+    </para>
+        </listitem> -->
+ <listitem>
+   <formalpara>    
+     <title>Load Balancers</title>
+     <para>
+         Production deployments usually include some kind of load balancer. 
+         Running &productname; on &suse; &caasp; provides the flexibility to
+         structure your network nearly any way you need to. This guide does not 
+         describe how to set up a load balancer or name services, as these depend 
+         on your requirements and existing network architecture. 
+     </para>
+         </formalpara>
+        </listitem>        
+   <listitem>
+    <formalpara>
+     <title>Ingress Controller</title>
+     <para>
+      For more information about using an ingress controller, see
+      <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/singlehtml/book_caasp_admin/book_caasp_admin.html#nginx-ingress-controller"/>.
+     </para>
+     <!-- FIXME: Can we explan the ingress controller as a "software load
+     balancer?" - sknorr, 2019-04-05 -->
+    </formalpara>
+   </listitem>
+   <listitem>
+    <formalpara>
+     <title>External Log Host</title>
+     <para>
+      For information about using an external log host, see
+      <xref linkend="sec.cap.log-external"/>.
+     </para>
+    </formalpara>
+   </listitem>
+  </itemizedlist>
 
+<!--  We will address this in our future load balancer section. 
+  cjs, 4 april 2019-->
+<!--  <para>
+   This example configuration file for a cluster set up to use a hardware
+   load balancer should look somewhat like the following, where the IP
+   address <replaceable>&kubeip;</replaceable> denotes an external IP address:
+  </para>  -->
+  <para>
+   The example <filename>scf-config-values.yaml</filename> file is for a simple
+   deployment without an ingress controller or external load balancer. Instead, 
+   assign one worker node an external IP address, and map this to the domain 
+   name to provide external access to the cluster. The 
+   <literal>external_ips</literal> parameter needs 
+   this address to provide access to the Stratos Web interface and other public
+   servers, and it needs the internal IP addresses of the worker nodes to provide 
+   access to internal services.
+</para>   
+  
 <screen>
+###scf-config-values.yaml
+
 env:
   # Enter the domain you created for your CAP cluster
   DOMAIN: <replaceable>&exampledomain;</replaceable>
@@ -449,10 +542,9 @@ kube:
   organization: "cap"
 
 secrets:
-  # Create a password for your CAP cluster
+  # Create very strong passwords and protect them as
+  # carefully as you would protect any root password
   CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
-    
-  # Create a password for your uaa client secret
   UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
   </screen>
 
@@ -526,20 +618,10 @@ suse            https://kubernetes-charts.suse.com/</screen>
   <para>
    List your chart names, as you will need these for some operations:
   </para>
-
-<screen>&prompt.user;helm search suse
-NAME                        	VERSION	DESCRIPTION
-suse/cf-opensuse            	&latestscfchart;  A Helm chart for SUSE Cloud Foundry
-suse/uaa-opensuse           	&latestuaachart;  A Helm chart for SUSE UAA
-suse/cf                     	&latestscfchart;  A Helm chart for SUSE Cloud Foundry
-suse/cf-usb-sidecar-mysql   	1.0.1  	A Helm chart for SUSE Universal Service Broker ...
-suse/cf-usb-sidecar-postgres	1.0.1  	A Helm chart for SUSE Universal Service Broker ...
-suse/console                	&lateststratoschart;   A Helm chart for deploying Stratos UI Console
-suse/metrics                	1.0.0  	A Helm chart for Stratos Metrics
-suse/nginx-ingress          	0.28.3 	An nginx Ingress controller that uses ConfigMap...
-suse/uaa                    	&latestuaachart;  A Helm chart for SUSE <literal>uaa</literal>
-</screen>
- </sect1>
+  
+&helm-search-suse;
+ 
+</sect1>
  <sect1 xml:id="sec.cap.copy-secret-prod">
   <title>Copy &ses; Secret</title>
 

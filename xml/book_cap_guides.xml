@@ -47,12 +47,14 @@ Part: CAP Deployment Guide
   <title>Deploying &productname;</title>
   <info/>
   <xi:include href="cap_depl_admin_notes.xml"/>
+  <xi:include href="cap_depl_ingress.xml"/>
   <xi:include href="cap_depl_install_caasp.xml"/>
   <xi:include href="cap_depl_stratos.xml"/>
   <xi:include href="cap_depl_ha.xml"/>
   <xi:include href="cap_depl_ldap.xml"/>
   <xi:include href="cap_depl_azure.xml"/>
   <xi:include href="cap_depl_eks.xml"/>
+  <xi:include href="cap_depl_gke.xml"/>
   <xi:include href="cap_depl_openstack.xml"/>
  </part>
 <!--============================================================================
@@ -63,6 +65,7 @@ Part: CAP Administration Guide
   <info/>
   <xi:include href="cap_admin_upgrade.xml"/>
   <xi:include href="cap_admin_configuration_changes.xml"/>
+  <xi:include href="cap_admin_create_admin.xml"/>
   <xi:include href="cap_admin_passwords.xml"/>
   <xi:include href="cap_admin_ccdb_key_rotation.xml"/>
   <xi:include href="cap_admin_backup-restore.xml"/>
@@ -74,6 +77,7 @@ Part: CAP Administration Guide
   <xi:include href="cap_admin_credhub.xml"/>
   <xi:include href="cap_admin_offline_buildpacks.xml"/>
   <xi:include href="cap_admin_app_domains.xml"/>
+  <xi:include href="cap_admin_nproc_limits.xml"/>
  </part>
 <!--============================================================================
 Part: CAP User Guide

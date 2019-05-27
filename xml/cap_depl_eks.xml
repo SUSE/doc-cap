@@ -304,80 +304,8 @@ Custom TCP Rule    TCP          20000-20009     0.0.0.0/0       TCP Routing</scr
    <literal>example.com</literal> as the example domain:
   </para>
 
-  <informaltable>
-   <tgroup cols="2">
-    <thead>
-     <row>
-      <entry>Domains</entry>
-      <entry>Services</entry>
-     </row>
-    </thead>
-    <tbody>
-     <row>
-      <entry>uaa.example.com</entry>
-      <entry>uaa/uaa-public</entry>
-     </row>
-     <row>
-      <entry>*.uaa.example.com</entry>
-      <entry>uaa/uaa-public</entry>
-     </row>
-     <row>
-      <entry>example.com</entry>
-      <entry>scf/router-public</entry>
-     </row>
-     <row>
-      <entry>*.example.com</entry>
-      <entry>scf/router-public</entry>
-     </row>
-     <row>
-      <entry>tcp.example.com</entry>
-      <entry>scf/tcp-router-public</entry>
-     </row>
-     <row>
-      <entry>ssh.example.com</entry>
-      <entry>scf/diego-access-public</entry>
-     </row>
-    </tbody>
-   </tgroup>
-  </informaltable>
+&dns-tables;
 
-  <para>
-   A &productname; cluster exposes these four services:
-  </para>
-
-  <informaltable>
-   <tgroup cols="2">
-    <thead>
-     <row>
-      <entry>&kube; service descriptions</entry>
-      <entry>&kube; service names</entry>
-     </row>
-    </thead>
-    <tbody>
-     <row>
-      <entry>User Account and Authentication (<literal>uaa</literal>)</entry>
-      <entry>uaa-uaa-public</entry>
-     </row>
-     <row>
-      <entry>Cloud Foundry (CF) TCP routing service</entry>
-      <entry>tcp-router-tcp-router-public</entry>
-     </row>
-     <row>
-      <entry>CF application SSH access</entry>
-      <entry>diego-ssh-ssh-proxy-public</entry>
-     </row>
-     <row>
-      <entry>CF router</entry>
-      <entry>router-gorouter-public</entry>
-     </row>
-    </tbody>
-   </tgroup>
-  </informaltable>
-
-  <para>
-   <literal>uaa-uaa-public</literal> is in the <literal>uaa</literal>
-   namespace, and the rest are in the <literal>scf</literal> namespace.
-  </para>
  </sect1>
  <sect1 xml:id="sec.cap.eks-configuration">
   <title>Deployment Configuration</title>
@@ -477,18 +405,8 @@ suse            https://kubernetes-charts.suse.com/</screen>
    List your chart names, as you will need these for some operations:
   </para>
 
-<screen>&prompt.user;helm search suse
-NAME                        	VERSION	DESCRIPTION
-suse/cf-opensuse            	&latestscfchart;  A Helm chart for SUSE Cloud Foundry
-suse/uaa-opensuse           	&latestuaachart;  A Helm chart for SUSE UAA
-suse/cf                     	&latestscfchart;  A Helm chart for SUSE Cloud Foundry
-suse/cf-usb-sidecar-mysql   	1.0.1  	A Helm chart for SUSE Universal Service Broker ...
-suse/cf-usb-sidecar-postgres	1.0.1  	A Helm chart for SUSE Universal Service Broker ...
-suse/console                	&lateststratoschart;   A Helm chart for deploying Stratos UI Console
-suse/metrics                	1.0.0  	A Helm chart for Stratos Metrics
-suse/nginx-ingress          	0.28.3 	An nginx Ingress controller that uses ConfigMap...
-suse/uaa                    	&latestuaachart;  A Helm chart for SUSE UAA
-</screen>
+&helm-search-suse;
+
  </sect1>
  <sect1 xml:id="sec.cap.install-uaa-eks">
   <title>Deploy <literal>uaa</literal></title>
@@ -531,17 +449,21 @@ suse/uaa                    	&latestuaachart;  A Helm chart for SUSE UAA
 
   <para>
    Because of the way EKS runs health checks, &cap; requires an edit to one of
-   the <literal>scf</literal> &helm; charts, and then after a successful
+   the <literal>scf</literal> &helm; chart's templates, and then after a successful
    <literal>scf</literal> deployment remove a listening port from the Elastic
    Load Balancer's listeners list.
   </para>
 
   <para>
-   On your remote admin machine, look in
-   <filename>~.helm/cache/archive/cf-2.15.2.tgz</filename>. Extract the
-   <filename>cf-2.15.2.tgz</filename>archive, and add this to the
-   <literal>ports</literal> section of
-   <filename>templates/tcp-router.yaml</filename>:
+   Fetch and extract the <literal>scf</literal> &helm; chart:
+  </para>
+
+<screen>&prompt.user;helm fetch --untar suse/cf</screen>
+
+  <para>
+   In <filename>cf/templates/tcp-router.yaml</filename>, add the following to the
+   <literal>ports</literal> section of the
+   <literal>tcp-router-tcp-router-public</literal> definition:
   </para>
 
 <screen>
@@ -573,7 +495,8 @@ suse/uaa                    	&latestuaachart;  A Helm chart for SUSE UAA
 
   <para>
    Now pass your <literal>uaa</literal> secret and certificate to
-   <literal>scf</literal>, then use &helm; to install &suse; &cf;:
+   <literal>scf</literal>, then use &helm; to install &scf;
+   using the modified chart directory:
   </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
@@ -582,14 +505,14 @@ suse/uaa                    	&latestuaachart;  A Helm chart for SUSE UAA
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
 -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
-&prompt.user;helm install suse/cf \
+&prompt.user;helm install /path/to/cf \
 --name <replaceable>susecf-scf</replaceable> \
 --namespace scf \
 --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"</screen>
 
   <para>
-   Sit back and wait for the pods come online:
+   Sit back and wait for the pods to come online:
   </para>
 
 <screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
@@ -729,11 +652,11 @@ suse/uaa                    	&latestuaachart;  A Helm chart for SUSE UAA
       </step>
       <step>
        <para>
-        Create a signing request:
+	Create a signing request. Replace <literal>BROKER_NAMESPACE</literal> with the namespace assigned in Step 3:
        </para>
 <screen>&prompt.user;openssl req -newkey rsa:4096 -keyout tls.key.encrypted -out tls.req -days 365 \
   -passout pass:<replaceable>1234</replaceable> \
-  -subj '/CN=aws-servicebroker.${BROKER_NAMESPACE}' -batch \
+  -subj '/CN=aws-servicebroker.'${BROKER_NAMESPACE} -batch \
   &lt;/dev/null
 </screen>
       </step>

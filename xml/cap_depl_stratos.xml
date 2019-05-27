@@ -15,14 +15,29 @@
    <dm:translation>yes</dm:translation>
   </dm:docmanager>
  </info>
+ 
+   <para>
+   The Stratos user interface (UI) is a modern web-based management application 
+   for Cloud Foundry. It provides a graphical management console for both 
+   developers and system administrators. Install Stratos with &helm; after all 
+   of the <literal>uaa</literal> and <literal>scf</literal> pods are running.
+  </para>
+ 
  <sect1 xml:id="sec.cap.stratos-prod">
-  <title>Install Stratos with &helm;</title>
+  <title>Deploy Stratos on &susecaaspreg;</title>
 
-  <para>
-   Stratos UI is a modern web-based management application for Cloud Foundry.
-   It provides a graphical management console for both developers and system
-   administrators. Install Stratos with &helm; after all of the
-   <literal>uaa</literal> and <literal>scf</literal> pods are running.
+   <para>
+      The steps in this section describe how to install Stratos on &susecaaspreg;
+      without an external load balancer, instead mapping a worker node to your
+      &productname; domain as described in 
+      <xref linkend="sec.cap.configure-prod"/>. These instructions assume you 
+      have followed the procedure in <xref linkend="cha.cap.install-production"/>, 
+      have deployed <literal>uaa</literal> and <literal>scf</literal> successfully,
+      and have created a default storage class.
+      <!-- Hopefully an additional section describing how to deploy with a load 
+      balancer will actually be written. cjs april 1 2019 "See 
+      TODO to learn how to configure
+      Stratos to use an external load balancer."-->
   </para>
 
   <para>
@@ -37,24 +52,16 @@ kubectl create -f -</screen>
   <para>
    You should already have the Stratos charts when you downloaded the SUSE
    charts repository (see <xref linkend="sec.cap.addrepo-prod"/>). Search your
-   &helm; repository:
+   &helm; repository to verify that you have the <literal>suse/console</literal> 
+   chart:
   </para>
 
-<screen>&prompt.user;helm search suse                                  
-NAME                            VERSION DESCRIPTION
-suse/cf-opensuse                &latestscfchart;  A Helm chart for SUSE Cloud Foundry
-suse/uaa-opensuse               &latestuaachart;  A Helm chart for SUSE UAA
-suse/cf                         &latestscfchart;  A Helm chart for SUSE Cloud Foundry
-suse/cf-usb-sidecar-mysql       1.0.1   A Helm chart for SUSE Universal Service Broker ...
-suse/cf-usb-sidecar-postgres    1.0.1   A Helm chart for SUSE Universal Service Broker ...
-suse/console                    &lateststratoschart;   A Helm chart for deploying Stratos UI Console
-suse/metrics                    1.0.0   A Helm chart for Stratos Metrics
-suse/nginx-ingress              0.28.3  An nginx Ingress controller that uses ConfigMap...
-suse/uaa                        &latestuaachart;  A Helm chart for SUSE UAA
-</screen>
+&helm-search-suse;  
 
-  <para>
-   Use &helm; to install Stratos:
+ <para>
+     Use &helm; to install Stratos, using the same 
+     <filename>scf-config-values.yaml</filename> configuration file you used to
+     deploy<literal>uaa</literal> and <literal>scf</literal>:
   </para>
 
 <screen>&prompt.user;helm install suse/console \
@@ -75,54 +82,49 @@ console-0                          3/3       Running   0          30m
 console-mariadb-3697248891-5drf5   1/1       Running   0          30m</screen>
 
   <para>
-   When all statuses show Ready, press <keycombo> <keycap function="control"/>
-   <keycap>C</keycap> </keycombo> to exit. Query with &helm; to view your
+   When all statuses show Ready, press <keycombo><keycap function="control"/>
+   <keycap>C</keycap></keycombo> to exit. Query with &helm; to view your
    release information:
   </para>
 
 <screen>&prompt.user;helm status susecf-console
-LAST DEPLOYED: Wed Jan  2 10:25:22 2019
+LAST DEPLOYED: Wed Mar 27 06:51:36 2019
 NAMESPACE: stratos
 STATUS: DEPLOYED
 
 RESOURCES:
 ==> v1/Secret
 NAME                           TYPE    DATA  AGE
-susecf-console-secret          Opaque  2     1h
-susecf-console-mariadb-secret  Opaque  2     1h
+susecf-console-secret          Opaque  2     3h
+susecf-console-mariadb-secret  Opaque  2     3h
 
 ==> v1/PersistentVolumeClaim
-NAME                                  STATUS  VOLUME                                    CAPACITY  ACCESS MODES  STORAGECLASS  AGE
-console-mariadb                       Bound   pvc-c41fb6be-0ebb-11e9-9b6c-fa163e0b27ed  1Gi       RWO           persistent    1h
-susecf-console-upgrade-volume         Bound   pvc-c420356f-0ebb-11e9-9b6c-fa163e0b27ed  20Mi      RWO           persistent    1h
-susecf-console-encryption-key-volume  Bound   pvc-c4292f69-0ebb-11e9-9b6c-fa163e0b27ed  20Mi      RWO           persistent    1h
+NAME                                  STATUS  VOLUME                                    CAPACITY  ACCESSMODES  STORAGECLASS  AGE
+susecf-console-upgrade-volume         Bound   pvc-711380d4-5097-11e9-89eb-fa163e15acf0  20Mi      RWO          persistent    3h
+susecf-console-encryption-key-volume  Bound   pvc-711b5275-5097-11e9-89eb-fa163e15acf0  20Mi      RWO          persistent    3h
+console-mariadb                       Bound   pvc-7122200c-5097-11e9-89eb-fa163e15acf0  1Gi       RWO          persistent    3h
 
 ==> v1/Service
-NAME                    TYPE       CLUSTER-IP      EXTERNAL-IP                                        PORT(S)                      AGE
-susecf-console-mariadb  ClusterIP  172.24.60.105   &lt;none>                                             3306/TCP                     1h
-susecf-console-ui-ext   NodePort   172.24.164.199  10.86.1.15,172.24.10.12,172.24.10.16,172.24.10.14  80:31104/TCP,8443:31528/TCP  1h
+NAME                    CLUSTER-IP      EXTERNAL-IP                                                PORT(S)   AGE
+susecf-console-mariadb  172.24.137.195  &lt;none>                                                     3306/TCP  3h
+susecf-console-ui-ext   172.24.80.22    10.86.101.115,172.28.0.31,172.28.0.36,172.28.0.7,172.28.0.22  8443/TCP  3h
 
 ==> v1beta1/Deployment
-NAME             DESIRED  CURRENT  UP-TO-DATE  AVAILABLE  AGE
-console-mariadb  1        1        1           1          1h
+NAME        DESIRED  CURRENT  UP-TO-DATE  AVAILABLE  AGE
+stratos-db  1        1        1           1          3h
 
 ==> v1beta1/StatefulSet
 NAME     DESIRED  CURRENT  AGE
-console  1        1        1h
-
-==> v1/Pod(related)
-NAME                              READY  STATUS   RESTARTS  AGE
-console-mariadb-66fc57b5b5-fzq7w  1/1    Running  0         1h
-console-0                         3/3    Running  0         1h
+stratos  1        1        3h
 </screen>
 
   <para>
-   Point your web browser to https://example.com:8443, or
-   https://10.86.1.15:8443 (from the <command>helm list</command> output) to
-   see the Stratos console. Wade through the nag screens about the self-signed
+  Find the external IP address with 
+  <command>kubectl get service susecf-console-ui-ext --namespace stratos</command> to access your new Stratos Web console, for example https://10.86.101.115:8443, or use the
+          domain you created for it, and its port, for example 
+          https://example.com:8443. Wade through the nag screens about the self-signed
    certificates and log in as <literal>admin</literal> with the password you
-   created in <filename>scf-config-values.yaml</filename>. If you see an
-   upgrade message, wait a few minutes and try again.
+   created in <filename>scf-config-values.yaml</filename>.
   </para>
 
   <figure xml:id="fig.cap.stratos-prod">
@@ -133,109 +135,476 @@ console-0                         3/3    Running  0         1h
     </imageobject>
    </mediaobject>
   </figure>
+
+  <sect2 xml:id="sec.cap-stratos-caasp-connect">
+   <title>Connecting &susecaaspreg; to Stratos</title>
+
+   <para>
+    Stratos can show information from your &susecaaspreg; environment.
+   </para>
+
+   <para>
+    To enable this, you must register and connect your &susecaaspreg; environment
+    with Stratos.
+   </para>
+
+   <para>
+    In the Stratos UI, go to <guimenu>Endpoints</guimenu> in the left-hand side
+    navigation and click on the <guimenu>+</guimenu> icon in the top-right of
+    the view - you should be shown the "Register new Endpoint" view.
+   </para>
+
+   <procedure>
+    <step>
+     <para>
+      In the Stratos UI, go to <guimenu>Endpoints</guimenu> in the left-hand side
+      navigation and click on the <guimenu>+</guimenu> icon in the top-right of
+      the view.
+     </para>
+    </step>
+    <step>
+     <para>
+      On the <literal>Register a new Endpoint</literal> view, click the
+      <literal>SUSE CaaS Platform</literal> button.
+     </para>
+    </step>
+    <step>
+     <para>
+      Enter a memorable name for your &susecaaspreg; environment in the <guimenu>Name</guimenu>
+      field. For example, <replaceable>my-endpoint</replaceable>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Enter the URL of the API server for your Kubernetes environment in the
+      <guimenu>Endpoint Address</guimenu> field. Run <command>kubectl cluster-info</command>
+      and use the value of <literal>Kubernetes master</literal> as the URL.
+     </para>
+<screen>&prompt.user;kubectl cluster-info</screen>
+    </step>
+    <step>
+     <para>
+      Activate the <guimenu>Skip SSL validation for the endpoint</guimenu> check box
+      if using self-signed certificates.
+     </para>
+    </step>
+    <step>
+     <para>
+      Click <guimenu>Register</guimenu>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Activate the <guimenu>Connect to my-endpoint now (optional).</guimenu> check box. 
+     </para>
+    </step>
+    <step>
+     <para>
+      Provide a valid <filename>kubeconfig</filename> file for your &susecaaspreg; environment.
+     </para>
+    </step>
+    <step>
+     <para>
+      Click <guimenu>Connect</guimenu>.
+     </para>
+    </step>
+    <step>
+     <para>
+      In the Stratos UI, go to <guimenu>Kubernetes</guimenu> in the left-hand side
+      navigation. Information for your &susecaaspreg; environment should now be displayed.
+     </para>
+    </step>
+   </procedure>
+  </sect2>
+
  </sect1>
- <sect1 xml:id="sec.cap.stratos-prod-kube">
-  <title>Connecting Kubernetes</title>
+         
+ <sect1 xml:id="sec.cap.stratos-eks">
+  <title>Deploy Stratos on &eks;</title>
 
   <para>
-   Stratos can show information from your Kubernetes environment.
+   Before deploying Stratos, ensure <literal>uaa</literal> and <literal>scf</literal>
+   have been successfully deployed on &eks; (see <xref linkend="cha.cap.eks"/>).
+  </para>
+  <para>
+   Configure a scoped storage class for your Stratos deployment. Create a configuration
+   file, called <filename>scoped-storage-class.yaml</filename> in this example,
+   using the following as a template. Specify the region you are using as the
+   <literal>zone</literal> and be sure to include the letter (for example, the
+   letter <literal>a</literal> in <literal>us-west-2a</literal>) identifier to indicate
+   the Availability Zone used:
+  </para>
+<screen>kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: <replaceable>gp2scoped</replaceable>
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp2
+  zone: <replaceable>"us-west-2a"</replaceable>
+reclaimPolicy: Retain
+mountOptions:
+  - debug
+</screen>
+  <para>
+   Create the storage class using the <filename>scoped-storage-class.yaml</filename>
+   configuration file:
+  </para>
+<screen>&prompt.user;kubectl create --filename <replaceable>scoped-storage-class.yaml</replaceable></screen>
+  <para>
+   Verify the storage class has been created:
+  </para>
+<screen>&prompt.user;kubectl get storageclass
+NAME            PROVISIONER             AGE
+gp2 (default)   kubernetes.io/aws-ebs   1d
+gp2scoped       kubernetes.io/aws-ebs   1d
+</screen>
+  <para>
+   Use &helm; to install Stratos:
+  </para>
+<screen>&prompt.user;helm install suse/console \
+    --name susecf-console \
+    --namespace stratos \
+    --values scf-config-values.yaml \
+    --set kube.storage_class.persistent=gp2scoped \
+    --set services.loadbalanced=true \
+    --set console.service.http.nodePort=8080
+</screen>
+  <para>
+    Monitor progress:
+  </para>
+<screen>&prompt.user;watch -c 'kubectl get pods --namespace stratos'</screen>
+
+  <para>
+   Obtain the hostname of the service exposed through the public load balancer:
+  </para>
+<screen>&prompt.user;kubectl get service susecf-console-ui-ext --namespace stratos</screen>
+  <para>
+   Use this hostname to create a CNAME record.
+  </para>
+
+  <sect2 xml:id="sec.cap-stratos-eks-connect">
+   <title>Connecting &eks; to Stratos</title>
+
+   <para>
+    Stratos can show information from your &eks; environment.
+   </para>
+
+   <para>
+    To enable this, you must register and connect your &eks; environment
+    with Stratos.
+   </para>
+
+   <para>
+    In the Stratos UI, go to <guimenu>Endpoints</guimenu> in the left-hand side
+    navigation and click on the <guimenu>+</guimenu> icon in the top-right of
+    the view - you should be shown the "Register new Endpoint" view.
+   </para>
+
+   <procedure>
+    <step>
+     <para>
+      In the Stratos UI, go to <guimenu>Endpoints</guimenu> in the left-hand side
+      navigation and click on the <guimenu>+</guimenu> icon in the top-right of
+      the view.
+     </para>
+    </step>
+    <step>
+     <para>
+      On the <literal>Register a new Endpoint</literal> view, click the
+      <literal>Amazon EKS</literal> button.
+     </para>
+    </step>
+    <step>
+     <para>
+      Enter a memorable name for your &eks; environment in the <guimenu>Name</guimenu>
+      field. For example, <replaceable>my-endpoint</replaceable>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Enter the URL of the API server for your Kubernetes environment in the
+      <guimenu>Endpoint Address</guimenu> field. Run <command>kubectl cluster-info</command>
+      and use the value of <literal>Kubernetes master</literal> as the URL.
+     </para>
+<screen>&prompt.user;kubectl cluster-info</screen>
+    </step>
+    <step>
+     <para>
+      Activate the <guimenu>Skip SSL validation for the endpoint</guimenu> check box
+      if using self-signed certificates.
+     </para>
+    </step>
+    <step>
+     <para>
+      Click <guimenu>Register</guimenu>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Activate the <guimenu>Connect to my-endpoint now (optional).</guimenu> check box. 
+     </para>
+    </step>
+    <step>
+     <para>
+      Enter the name of your &eks; cluster in the <guimenu>Cluster</guimenu>
+      field.
+     </para>
+    </step>
+    <step>
+     <para>
+      Enter your AWS Access Key ID in the <guimenu>Access Key ID</guimenu>
+      field.
+     </para>
+    </step>
+    <step>
+     <para>
+      Enter your AWS Secret Access Key in the <guimenu>Secret Access Key</guimenu>
+      field.
+     </para>
+    </step>
+    <step>
+     <para>
+      Click <guimenu>Connect</guimenu>.
+     </para>
+    </step>
+    <step>
+     <para>
+      In the Stratos UI, go to <guimenu>Kubernetes</guimenu> in the left-hand side
+      navigation. Information for your &eks; environment should now be displayed.
+     </para>
+    </step>
+   </procedure>
+  </sect2>
+ </sect1>
+ <sect1 xml:id="sec.cap.stratos-aks">
+  <title>Deploy Stratos on &aks;</title>
+
+  <para>
+   Before deploying Stratos, ensure <literal>uaa</literal> and <literal>scf</literal>
+   have been successfully deployed on &aks; (see <xref linkend="cha.cap.depl-azure"/>).
   </para>
 
   <para>
-   To enable this, you must register and connect your Kubernetes environment
-   with Stratos.
+   Use &helm; to install Stratos:
+  </para>
+<screen>&prompt.user;helm install suse/console \
+    --name susecf-console \
+    --namespace stratos \
+    --values scf-config-values.yaml \
+    --set services.loadbalanced=true \
+    --set console.service.http.nodePort=8080
+</screen>
+  <para>
+    Monitor progress:
+  </para>
+<screen>&prompt.user;watch -c 'kubectl get pods --namespace stratos'</screen>
+
+  <para>
+   Obtain the IP address of the service exposed through the public load balancer:
+  </para>
+<screen>&prompt.user;kubectl get service susecf-console-ui-ext --namespace stratos</screen>
+  <para>
+   Use this IP address to create an A record.
+  </para>
+
+  <sect2 xml:id="sec.cap-stratos-aks-connect">
+   <title>Connecting &aks; to Stratos</title>
+
+   <para>
+    Stratos can show information from your &aks; environment.
+   </para>
+
+   <para>
+    To enable this, you must register and connect your &aks; environment
+    with Stratos.
+   </para>
+
+   <para>
+    In the Stratos UI, go to <guimenu>Endpoints</guimenu> in the left-hand side
+    navigation and click on the <guimenu>+</guimenu> icon in the top-right of
+    the view - you should be shown the "Register new Endpoint" view.
+   </para>
+
+   <procedure>
+    <step>
+     <para>
+      In the Stratos UI, go to <guimenu>Endpoints</guimenu> in the left-hand side
+      navigation and click on the <guimenu>+</guimenu> icon in the top-right of
+      the view.
+     </para>
+    </step>
+    <step>
+     <para>
+      On the <literal>Register a new Endpoint</literal> view, click the
+      <literal>Azure AKS</literal> button.
+     </para>
+    </step>
+    <step>
+     <para>
+      Enter a memorable name for your &aks; environment in the <guimenu>Name</guimenu>
+      field. For example, <replaceable>my-endpoint</replaceable>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Enter the URL of the API server for your Kubernetes environment in the
+      <guimenu>Endpoint Address</guimenu> field. Run <command>kubectl cluster-info</command>
+      and use the value of <literal>Kubernetes master</literal> as the URL.
+     </para>
+<screen>&prompt.user;kubectl cluster-info</screen>
+    </step>
+    <step>
+     <para>
+      Activate the <guimenu>Skip SSL validation for the endpoint</guimenu> check box
+      if using self-signed certificates.
+     </para>
+    </step>
+    <step>
+     <para>
+      Click <guimenu>Register</guimenu>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Activate the <guimenu>Connect to my-endpoint now (optional).</guimenu> check box. 
+     </para>
+    </step>
+    <step>
+     <para>
+      Provide a valid <filename>kubeconfig</filename> file for your &aks; environment.
+     </para>
+    </step>
+    <step>
+     <para>
+      Click <guimenu>Connect</guimenu>.
+     </para>
+    </step>
+    <step>
+     <para>
+      In the Stratos UI, go to <guimenu>Kubernetes</guimenu> in the left-hand side
+      navigation. Information for your &aks; environment should now be displayed.
+     </para>
+    </step>
+   </procedure>
+  </sect2>
+
+ </sect1>
+ <sect1 xml:id="sec.cap.stratos-gke">
+  <title>Deploy Stratos on &gke;</title>
+
+  <para>
+   Before deploying Stratos, ensure <literal>uaa</literal> and <literal>scf</literal>
+   have been successfully deployed on &gke; (see <xref linkend="cha.cap.depl-gke"/>).
   </para>
 
   <para>
-   In the Stratos UI, go to <guimenu>Endpoints</guimenu> in the left-hand side
-   navigation and click on the <guimenu>+</guimenu> icon in the top-right of
-   the view - you should be shown the "Register new Endpoint" view.
+   Use &helm; to install Stratos:
   </para>
-
-  <procedure>
-   <step>
-    <para>
-     Select <literal>Kubernetes</literal> from the <guimenu>Endpoint
-     Type</guimenu> drop-down
-    </para>
-   </step>
-   <step>
-    <para>
-     Enter a memorable name for your environment in the <guimenu>Name</guimenu>
-     field
-    </para>
-   </step>
-   <step>
-    <para>
-     Enter the URL of the API server for your Kubernetes environment
-    </para>
-   </step>
-   <step>
-    <para>
-     Check the <guimenu>Skip SSL validation for the endpoint</guimenu> checkbox
-     if using self-signed certificates
-    </para>
-   </step>
-   <step>
-    <para>
-     Click <guimenu>Finish</guimenu>
-    </para>
-   </step>
-  </procedure>
+<screen>&prompt.user;helm install suse/console \
+    --name susecf-console \
+    --namespace stratos \
+    --values scf-config-values.yaml \
+    --set services.loadbalanced=true \
+    --set console.service.http.nodePort=8080
+</screen>
+  <para>
+    Monitor progress:
+  </para>
+<screen>&prompt.user;watch -c 'kubectl get pods --namespace stratos'</screen>
 
   <para>
-   The view will refresh to show the new endpoint in the disconnected state.
+   Obtain the IP address of the service exposed through the public load balancer:
   </para>
-
+<screen>&prompt.user;kubectl get service susecf-console-ui-ext --namespace stratos</screen>
   <para>
-   Next, you will need to connect to this endpoint. In the table of endpoints,
-   click the overflow menu icon alongside the endpoint that you added above.
-   Click on <guimenu>Connect</guimenu> in the drop-down menu.
+   Use this IP address to create an A record.
   </para>
 
-  <para>
-   You will need to select the appropriate Auth Type for your Kubernetes
-   environment and provide the required credentials:
-  </para>
+  <sect2 xml:id="sec.cap-stratos-gke-connect">
+   <title>Connecting &gke; to Stratos</title>
 
-  <itemizedlist>
-   <listitem>
-    <para>
-     For CaaSP, use the Auth Type <literal>CAASP (OIDC)</literal> and provide a
-     valid <filename>kubeconfig</filename> file for your environment
-    </para>
-   </listitem>
-   <listitem>
-    <para>
-     For Amazon EKS, use the Auth Type <literal>AWS IAM (EKS)</literal> and
-     provide the name of your EKS cluster and your AWS Access Key ID and Secret
-     Access Key
-    </para>
-   </listitem>
-   <listitem>
-    <para>
-     For Azure AKS, use the Auth Type <literal>Azure AKS</literal> and provide
-     a valid <filename>kubeconfig</filename> file for your environment
-    </para>
-   </listitem>
-   <listitem>
-    <para>
-     For Minikube, use the Auth Type <literal>Kubernetes Cert Auth</literal>
-     and provide the Certificate and Certificate Key files
-    </para>
-   </listitem>
-  </itemizedlist>
+   <para>
+    Stratos can show information from your &gke; environment.
+   </para>
 
-  <para>
-   Finally, click <guimenu>Connect</guimenu> to connect the endpoint with the
-   authentication information that you have provided. The endpoint list should
-   update to show that your Kubernetes endpoint is connected.
-  </para>
+   <para>
+    To enable this, you must register and connect your &gke; environment
+    with Stratos.
+   </para>
 
-  <para>
-   Once connected, you should see a Kubernetes menu item in the left-hand side
-   navigation - click on this to access Kubernetes views.
-  </para>
+   <para>
+    In the Stratos UI, go to <guimenu>Endpoints</guimenu> in the left-hand side
+    navigation and click on the <guimenu>+</guimenu> icon in the top-right of
+    the view - you should be shown the "Register new Endpoint" view.
+   </para>
+
+   <procedure>
+    <step>
+     <para>
+      In the Stratos UI, go to <guimenu>Endpoints</guimenu> in the left-hand side
+      navigation and click on the <guimenu>+</guimenu> icon in the top-right of
+      the view.
+     </para>
+    </step>
+    <step>
+     <para>
+      On the <literal>Register a new Endpoint</literal> view, click the
+      <literal>Google Kubernetes Engine</literal> button.
+     </para>
+    </step>
+    <step>
+     <para>
+      Enter a memorable name for your &aks; environment in the <guimenu>Name</guimenu>
+      field. For example, <replaceable>my-endpoint</replaceable>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Enter the URL of the API server for your Kubernetes environment in the
+      <guimenu>Endpoint Address</guimenu> field. Run <command>kubectl cluster-info</command>
+      and use the value of <literal>Kubernetes master</literal> as the URL.
+     </para>
+<screen>&prompt.user;kubectl cluster-info</screen>
+    </step>
+    <step>
+     <para>
+      Activate the <guimenu>Skip SSL validation for the endpoint</guimenu> check box
+      if using self-signed certificates.
+     </para>
+    </step>
+    <step>
+     <para>
+      Click <guimenu>Register</guimenu>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Activate the <guimenu>Connect to my-endpoint now (optional).</guimenu> check box. 
+     </para>
+    </step>
+    <step>
+     <para>
+      Provide a valid <filename>Application Default Credentials</filename> file for your
+      &gke; environment. Generate the file using the command below. The command saves the
+      credentials to a file named <filename>application_default_credentials.json</filename>
+      and outputs the path of the file.
+     </para>
+<screen>&prompt.user;gcloud auth application-default login</screen>
+    </step>
+    <step>
+     <para>
+      Click <guimenu>Connect</guimenu>.
+     </para>
+    </step>
+    <step>
+     <para>
+      In the Stratos UI, go to <guimenu>Kubernetes</guimenu> in the left-hand side
+      navigation. Information for your &gke; environment should now be displayed.
+     </para>
+    </step>
+   </procedure>
+  </sect2>
  </sect1>
  <sect1 xml:id="sec.cap.stratos-metrics">
   <title>Stratos Metrics</title>
@@ -266,14 +635,17 @@ console-0                         3/3    Running  0         1h
     <filename>stratos-metrics-values.yaml</filename>, with the following
     contents:
    </para>
-<screen>kubernetes:
+<screen>env:
+  DOPPLER_PORT: 443
+kubernetes:
   authEndpoint: <replaceable>kube_server_address.example.com</replaceable>
 prometheus:
   kubeStateMetrics:
     enabled: true
 nginx:
   username: <replaceable>username</replaceable>
-  password: <replaceable>password</replaceable></screen>
+  password: <replaceable>password</replaceable>
+useLb: true</screen>
    <para>
     where:
    </para>
@@ -294,7 +666,15 @@ nginx:
     <listitem>
      <para>
       <literal>password</literal> should be chosen by you as the password that
-      you will use when connecting to Stratos Metrics
+      you will use when connecting to Stratos Metrics. Ensure to choose a secure
+      password
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      <literal>useLb</literal> is set to <literal>true</literal> if your &kube;
+      deployment supports automatic configuration of a load balancer (for example,
+      AKS and EKS)
      </para>
     </listitem>
    </itemizedlist>
@@ -315,16 +695,6 @@ nginx:
     <keycap function="control"/> <keycap>C</keycap> </keycombo> to exit and to
     view your release information.
    </para>
-   <para>
-    You can locate the IP and port that Stratos Metrics is running on with:
-   </para>
-<screen>kubectl get service susecf-metrics-metrics-nginx --namespace=metrics</screen>
-   <para>
-    This will give output similar to:
-   </para>
-<screen>
-NAME                         TYPE     CLUSTER-IP     EXTERNAL-IP PORT(S)       AGE
-susecf-metrics-metrics-nginx NodePort 172.24.218.219 10.17.3.1   443:31173/TCP 13s</screen>
   </sect2>
 
   <sect2 xml:id="sec.cap.stratos-metrics-connect">
@@ -357,6 +727,21 @@ susecf-metrics-metrics-nginx NodePort 172.24.218.219 10.17.3.1   443:31173/TCP 1
     </step>
     <step>
      <para>
+      Find the external endpoint Stratos Metrics is running on:
+     </para>
+<screen>&prompt.user;kubectl get service susecf-metrics-metrics-nginx --namespace metrics
+NAME                           TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)         AGE
+susecf-metrics-metrics-nginx   LoadBalancer   10.0.202.180   52.170.253.229   443:30263/TCP   21h
+</screen>
+     <para>
+      Prepend <literal>https://</literal> to the endpoint of your
+      Stratos Metrics deployment and enter it into the
+      <guimenu>Endpoint Address</guimenu> field. In this example,
+      <literal>https://52.170.253.229</literal> will be used.
+     </para>
+    </step>
+    <step>
+     <para>
       Check the <guimenu>Skip SSL validation for the endpoint</guimenu>
       checkbox if using self-signed certificates
      </para>
@@ -383,12 +768,16 @@ susecf-metrics-metrics-nginx NodePort 172.24.218.219 10.17.3.1   443:31173/TCP 1
     </step>
     <step>
      <para>
-      Enter the username for your Stratos Metrics instance
+      Enter the username for your Stratos Metrics instance. This will be the
+      <literal>nginx.username</literal> defined in your
+      <filename>stratos-metrics-values.yaml</filename> file
      </para>
     </step>
     <step>
      <para>
-      Enter the password for your Stratos Metrics instance
+      Enter the password for your Stratos Metrics instance. This will be the
+      <literal>nginx.password</literal> defined in your 
+      <filename>stratos-metrics-values.yaml</filename> file
      </para>
     </step>
     <step>

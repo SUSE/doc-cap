@@ -9,6 +9,9 @@ parent formatting tag in each entity, to avoid "Namespace default prefix was not
 found" errors
 ............................................................................-->
 
+
+<!--ENTITY completed-pods...................................................-->
+
 <!ENTITY completed-pods 
 '<variablelist xmlns="http://docbook.org/ns/docbook">
 <varlistentry>
@@ -23,13 +26,15 @@ found" errors
 <screen>
 &prompt.user;kubectl get pods --namespace uaa
 secret-generation-1-z4nlz   0/1       Completed
-          
+
 &prompt.user;kubectl get pods --namespace scf
 secret-generation-1-m6k2h       0/1       Completed
 post-deployment-setup-1-hnpln   0/1       Completed</screen>      
      </listitem>
     </varlistentry>
 </variablelist>'>
+
+<!--ENTITY namespace-length ................................................-->
 
 <!ENTITY namespace-length 
 '<variablelist xmlns="http://docbook.org/ns/docbook">
@@ -43,6 +48,8 @@ have a maximum length of 36 characters.
      </listitem>
     </varlistentry>
 </variablelist>'>
+
+<!--ENTITY fresh-namespace..................................................-->
 
 <!ENTITY fresh-namespace
 '<variablelist xmlns="http://docbook.org/ns/docbook">
@@ -62,6 +69,8 @@ have a maximum length of 36 characters.
     </varlistentry>
 </variablelist>'>    
 
+<!--ENTITY readmefirst......................................................-->
+
 <!ENTITY readmefirst
 '<variablelist xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
 <varlistentry>
@@ -72,7 +81,8 @@ Before you start deploying &productname;, review the following documents:
       </para>
               <para>
          Read the Release Notes:
-         <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/1/"/>
+         <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/1/">
+           Release Notes SUSE Cloud Application Platform</link>
         </para>
                 <para>
             Read
@@ -80,18 +90,91 @@ Before you start deploying &productname;, review the following documents:
         </para>
      </listitem>
      </varlistentry>
-     </variablelist>'>    
+     </variablelist>'>
+     
+<!--ENTITY dns-tables.......................................................-->
 
-<!ENTITY dns-management
-'<para xmlns="http://docbook.org/ns/docbook">
-<!--TODO link to DNS requirements section, when it exists -->
-You must have control of your own DNS management, and set up all the necessary 
-domains and subdomains for &productname; and your applications.
-</para>'>
+<!ENTITY dns-tables
+'<informaltable xmlns="http://docbook.org/ns/docbook">
+   <tgroup cols="2">
+    <thead>
+     <row>
+      <entry>Domains</entry>
+      <entry>Services</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>uaa.example.com</entry>
+      <entry>uaa-uaa-public</entry>
+     </row>
+     <row>
+      <entry>*.uaa.example.com</entry>
+      <entry>uaa-uaa-public</entry>
+     </row>
+     <row>
+      <entry>example.com</entry>
+      <entry>router-gorouter-public</entry>
+     </row>
+     <row>
+      <entry>*.example.com</entry>
+      <entry>router-gorouter-public</entry>
+     </row>
+     <row>
+      <entry>tcp.example.com</entry>
+      <entry>tcp-router-tcp-router-public</entry>
+     </row>
+     <row>
+      <entry>ssh.example.com</entry>
+      <entry>diego-ssh-ssh-proxy-public</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+
+  <para xmlns="http://docbook.org/ns/docbook">
+   A &productname; cluster exposes these four services:
+  </para>
+
+  <informaltable xmlns="http://docbook.org/ns/docbook">
+   <tgroup cols="2">
+    <thead>
+     <row>
+      <entry>&kube; service descriptions</entry>
+      <entry>&kube; service names</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>User Account and Authentication (<literal>uaa</literal>)</entry>
+      <entry>uaa-uaa-public</entry>
+     </row>
+     <row>
+      <entry>Cloud Foundry (CF) TCP routing service</entry>
+      <entry>tcp-router-tcp-router-public</entry>
+     </row>
+     <row>
+      <entry>CF application SSH access</entry>
+      <entry>diego-ssh-ssh-proxy-public</entry>
+     </row>
+     <row>
+      <entry>CF router</entry>
+      <entry>router-gorouter-public</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+  
+  <para xmlns="http://docbook.org/ns/docbook">
+   <literal>uaa-uaa-public</literal> is in the <literal>uaa</literal>
+   namespace, and the rest are in the <literal>scf</literal> namespace.
+  </para>'>
+
+<!--ENTITY releases-table...................................................-->
 
 <!ENTITY releases-table    
 '<!-- TODO remember to keep this table updated -->
-    <informaltable xmlns="http://docbook.org/ns/docbook" >
+    <informaltable xmlns="http://docbook.org/ns/docbook">
    <tgroup cols="3">
     <thead>
      <row>
@@ -101,8 +184,13 @@ domains and subdomains for &productname; and your applications.
      </row>
     </thead>
     <tbody>
+    <row>
+      <entry>1.4 (current release)</entry>
+      <entry>2.16.4</entry>
+      <entry>2.4.0</entry>
+     </row>
      <row>
-      <entry>1.3.1 (current release)</entry>
+      <entry>1.3.1</entry>
       <entry>2.15.2</entry>
       <entry>2.3.0</entry>
      </row>
@@ -143,7 +231,9 @@ domains and subdomains for &productname; and your applications.
      </row>
     </tbody>
    </tgroup>
-   </informaltable>'>    
+   </informaltable>'> 
+   
+<!--ENTITY recreate-pods...................................................-->   
 
 <!ENTITY recreate-pods
 '<variablelist xmlns="http://docbook.org/ns/docbook">
@@ -151,14 +241,71 @@ domains and subdomains for &productname; and your applications.
      <term>Using <command>--recreate-pods</command> during a <command>helm upgrade</command></term>
      <listitem>
       <para>
+       Note that <command>--recreate-pods</command> will cause downtime for
+       applications, but is required as multiple versions of statefulsets may
+       co-exist which can cause incompatibilities between dependent statefulsets,
+       and result in a broken upgrade.
+      </para>
+      <para>
        When upgrading from &productname; 1.3.0 to 1.3.1, running <command>helm upgrade</command> does not require the <command>--recreate-pods</command> option to be used. A change to the active/passive model has allowed for previously unready pods to be upgraded, which allows for zero app downtime during the upgrade process.
       </para>
       <para>
-       Upgrades between other versions will require the <command>--recreate-pods</command> option when using the <command>helm upgrade</command> command. For example, the command to upgrade <literal>uaa</literal> from &productname; 1.2.1 to 1.3.0 will be as follows:
-
+       Upgrades between other versions will require the <command>--recreate-pods</command> option when using the <command>helm upgrade</command> command.
       </para>
-<screen>&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-uaa</replaceable> suse/uaa \
-    --values scf-config-values.yaml</screen>      
      </listitem>
     </varlistentry>
 </variablelist>'>
+
+<!--ENTITY uaac-prereq......................................................-->
+
+<!ENTITY uaac-prereq
+'<listitem xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+<para>
+ <link xlink:href="https://docs.cloudfoundry.org/uaa/uaa-user-management.html">The
+ Cloud Foundry <literal>uaa</literal> command line interface (UAAC)</link>.
+</para>
+<para>
+ On &sle; systems, ensure the <literal>ruby-devel</literal> and <literal>gcc-c++</literal>
+ packages have been installed before installing the <literal>cf-uaac</literal> gem.
+</para>
+<screen>&prompt.user;sudo zypper install ruby-devel gcc-c++</screen>
+</listitem>'>
+
+<!--ENTITY uaac-target......................................................-->
+
+<!ENTITY uaac-target
+'<step xmlns="http://docbook.org/ns/docbook">
+<para>
+ Use UAAC to target your <literal>uaa</literal> server:
+</para>
+<screen>&prompt.user;uaac target --skip-ssl-validation <replaceable>https://uaa.example.com:2793</replaceable></screen>
+</step>'>
+
+<!--ENTITY uaac-authenticate................................................-->
+
+<!ENTITY uaac-authenticate
+'<step xmlns="http://docbook.org/ns/docbook">
+<para>
+ Authenticate to the <literal>uaa</literal> server as
+ <literal>admin</literal> using the
+ <literal>UAA_ADMIN_CLIENT_SECRET</literal> set in your
+ <filename>scf-config-values.yaml</filename> file:
+</para>
+<screen>&prompt.user;uaac token client get admin -s <replaceable>password</replaceable></screen>
+</step>'>
+
+<!--ENTITY helm-search-suse.................................................-->
+
+<!ENTITY helm-search-suse
+'<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;helm search suse
+NAME                            VERSION DESCRIPTION                                                                 
+suse/cf                         &latestscfchart;  A Helm chart for SUSE Cloud Foundry                                           
+suse/cf-usb-sidecar-mysql       1.0.1   A Helm chart for SUSE Universal Service Broker ...                               
+suse/cf-usb-sidecar-postgres    1.0.1   A Helm chart for SUSE Universal Service Broker ...                                 
+suse/console                    &lateststratoschart;  A Helm chart for deploying Stratos UI Console
+
+suse/metrics                    1.0.0   A Helm chart for Stratos Metrics                                                       
+suse/minibroker                 0.2.0   A minibroker for your minikube                                                           
+suse/nginx-ingress              0.28.3  An nginx Ingress controller that uses ConfigMap...                                         
+suse/uaa                        &latestscfchart;  A Helm chart for SUSE UAA
+</screen>'>

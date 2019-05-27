@@ -45,7 +45,13 @@
    </para>
   </warning>
 
-<!--TODO insert table entity-->
+  <para>
+   The supported upgrade method is to install all upgrades, in order. Skipping
+   releases is not supported. This table matches the Helm chart versions to
+   each release:
+  </para>
+
+  &releases-table;
 
   <para>
    Do not make changes to pod counts when you upgrade. You may make sizing
@@ -72,22 +78,11 @@ Update Complete. ⎈ Happy Helming!⎈
 
 <screen>&prompt.user;helm list
 NAME            REVISION  UPDATED                  STATUS    CHART           NAMESPACE
-<replaceable>susecf-console</replaceable>  1         Tue Aug 14 11:53:28 2018 DEPLOYED  console-2.0.0   stratos  
-<replaceable>susecf-scf</replaceable>      1         Tue Aug 14 10:58:16 2018 DEPLOYED  cf-2.11.0       scf      
-<replaceable>susecf-uaa</replaceable>      1         Tue Aug 14 10:49:30 2018 DEPLOYED  uaa-2.11.0      uaa
-
-&prompt.user;helm search suse
-NAME                            VERSION DESCRIPTION
-suse/cf-opensuse                &latestscfchart;  A Helm chart for SUSE Cloud Foundry
-suse/uaa-opensuse               &latestuaachart;  A Helm chart for SUSE UAA
-suse/cf                         &latestscfchart;  A Helm chart for SUSE Cloud Foundry
-suse/cf-usb-sidecar-mysql       1.0.1   A Helm chart for SUSE Universal Service Broker ...
-suse/cf-usb-sidecar-postgres    1.0.1   A Helm chart for SUSE Universal Service Broker ...
-suse/console                    &lateststratoschart;   A Helm chart for deploying Stratos UI Console
-suse/metrics                    1.0.0   A Helm chart for Stratos Metrics
-suse/nginx-ingress              0.28.3  An nginx Ingress controller that uses ConfigMap...
-suse/uaa                        &latestuaachart;  A Helm chart for SUSE UAA
+<replaceable>susecf-console</replaceable>  1         Tue Aug 14 11:53:28 2018 DEPLOYED  console-2.3.0   stratos
+<replaceable>susecf-scf</replaceable>      1         Tue Aug 14 10:58:16 2018 DEPLOYED  cf-2.15.2       scf
+<replaceable>susecf-uaa</replaceable>      1         Tue Aug 14 10:49:30 2018 DEPLOYED  uaa-2.15.2      uaa
 </screen>
+&helm-search-suse;
 
   <para>
    View all charts in a release, and their versions:
@@ -95,6 +90,7 @@ suse/uaa                        &latestuaachart;  A Helm chart for SUSE UAA
 
 <screen>&prompt.user;helm search suse/uaa -l
 NAME            VERSION     DESCRIPTION              
+suse/uaa        &latestuaachart;      A Helm chart for SUSE UAA
 suse/uaa        2.15.2      A Helm chart for SUSE UAA
 suse/uaa        2.14.5      A Helm chart for SUSE UAA
 suse/uaa        2.13.3      A Helm chart for SUSE UAA
@@ -112,14 +108,7 @@ suse/uaa        2.7.0       A Helm chart for SUSE UAA
   </para>
 
   <important>
-   <title>Changes to Commands</title>
-   <para>
-    Take note of the new commands for extracting and using secrets and
-    certificates. If you are still on the &productname; 1.1 release, update
-    your <filename>scf-config-values.yaml</filename> file with the changes for
-    secrets handling and external IP addresses. (See
-    <xref linkend="sec.cap.configure-prod"/> for an example.)
-   </para>
+   &recreate-pods;
   </important>
 
   <para>
@@ -130,12 +119,9 @@ suse/uaa        2.7.0       A Helm chart for SUSE UAA
    upgrade <literal>uaa</literal>:
   </para>
 
-<screen>&prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa \
-    --values scf-config-values.yaml</screen>
-
-  <important>
-   &recreate-pods;
-  </important>
+<screen>&prompt.user;helm upgrade --force --recreate-pods <replaceable>susecf-uaa</replaceable> suse/uaa \
+--values scf-config-values.yaml
+</screen>
 
   <para>
    Then extract the <literal>uaa</literal> secret for <literal>scf</literal> to
@@ -155,23 +141,18 @@ suse/uaa        2.7.0       A Helm chart for SUSE UAA
    get pods --namespace scf'</command> then everything is all right.
   </para>
 
-<screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
---values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}"</screen>
-
-  <important>
-   &recreate-pods;
-  </important>
+<screen>&prompt.user;helm upgrade --force --recreate-pods <replaceable>susecf-scf</replaceable> suse/cf \
+--values scf-config-values.yaml \
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
+</screen>
 
   <para>
    Then upgrade Stratos:
   </para>
 
-<screen>&prompt.user;helm upgrade <replaceable>susecf-console</replaceable> suse/console \
- --values scf-config-values.yaml</screen>
-
-  <important>
-   &recreate-pods;
-  </important>
+<screen>&prompt.user;helm upgrade --force --recreate-pods <replaceable>susecf-console</replaceable> suse/console \
+--values scf-config-values.yaml
+</screen>
 
 <!-- Internal cf-usb broker broker endpoint URL change involving 1.3 -->
 

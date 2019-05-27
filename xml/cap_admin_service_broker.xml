@@ -22,6 +22,65 @@
   resources are called services. Services are created, used, and deleted as
   needed, and provisioned on demand.
  </para>
+
+ <sect1 xml:id="sec.cap.disable-service-broker">
+  <title>Enabling and Disabling Service Brokers</title>
+  
+  <para>
+   The service broker feature is enabled as part of a default &scf;
+   deployment. To disable it, use the <command>--set "enable.cf_usb=false"</command>
+   flag when running <command>helm install</command> or <command>helm upgrade</command>.
+  </para>
+
+  <para>
+   First fetch the <literal>uaa</literal> secret and certificate:
+  </para>
+
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+-o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+-o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"</screen>
+
+  <para>
+   If disabling the feature on an initial deployment, run the following command:
+  </para>
+
+<screen>&prompt.user;helm install suse/cf \
+--name <replaceable>susecf-scf</replaceable> \
+--namespace <replaceable>scf</replaceable> \
+--values scf-config-values.yaml \
+--set "secrets.UAA_CA_CERT=${CA_CERT}" \
+--set "enable.cf_usb=false"</screen>
+
+ <para>
+  If disabling the feature on an existing deployment, run the following command:
+ </para>
+
+<screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
+--values scf-config-values.yaml \
+--set "secrets.UAA_CA_CERT=${CA_CERT}" \
+--set "enable.cf_usb=false"</screen>
+
+ <para>
+  To enable the feature again, run <command>helm upgrade</command> with the
+  <command>--set "enable.cf_usb=true"</command> flag. Be sure to
+  pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>
+  first:
+ </para>
+
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+-o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+-o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+
+&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
+--values scf-config-values.yaml \
+--set "secrets.UAA_CA_CERT=${CA_CERT}" \
+--set "enable.cf_usb=true"</screen>
+
+ </sect1>
  <sect1 xml:id="sec.cap.prereqs-service-broker">
   <title>Prerequisites</title>
 
@@ -190,18 +249,7 @@ kube:
    &helm; repository):
   </para>
 
-<screen>&prompt.user;helm search suse
-NAME                            VERSION DESCRIPTION
-suse/cf-opensuse                &latestscfchart;  A Helm chart for SUSE Cloud Foundry
-suse/uaa-opensuse               &latestuaachart;  A Helm chart for SUSE UAA
-suse/cf                         &latestscfchart;  A Helm chart for SUSE Cloud Foundry
-suse/cf-usb-sidecar-mysql       1.0.1   A Helm chart for SUSE Universal Service Broker ...
-suse/cf-usb-sidecar-postgres    1.0.1   A Helm chart for SUSE Universal Service Broker ...
-suse/console                    &lateststratoschart;   A Helm chart for deploying Stratos UI Console
-suse/metrics                    1.0.0   A Helm chart for Stratos Metrics
-suse/nginx-ingress              0.28.3  An nginx Ingress controller that uses ConfigMap...
-suse/uaa                        &latestuaachart;  A Helm chart for SUSE UAA
-</screen>
+&helm-search-suse;
 
   <para>
    Create a namespace for your MySQL sidecar:

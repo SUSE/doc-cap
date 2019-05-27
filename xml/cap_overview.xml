@@ -21,6 +21,62 @@
  <sect1 xml:id="sec.cap.changes">
   <title>New in Version &productnumber;</title>
 
+  <itemizedlist>
+   <listitem>
+    <para>
+     &scf; has been updated to version 2.16.4:
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       A technology preview of Eirini is available.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       Added SLE15 stack.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       Added feature flags to enable roles such as <literal>autoscaler</literal>,
+       <literal>cf-usb</literal>, <literal>credhub</literal> and
+       <literal>eirini</literal>.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       Added Sync Integration Test Suite (SITS).
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       Added support for NGINX Ingress Controller with customizable Ingress via
+       user supplied annotations.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       Added .net-core buildpack (2.2.7).
+      </para>
+     </listitem>
+    </itemizedlist>
+   </listitem>
+   <listitem>
+    <para>
+     The Stratos UI has been updated to version 2.4:
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       For a full list of features and fixes see
+       <link xlink:href="https://github.com/SUSE/stratos/releases/tag/2.4.0"/>.
+      </para>
+     </listitem>
+    </itemizedlist>
+   </listitem>
+  </itemizedlist>
+
   <para>
    See all product manuals for &productname; 1.x at
    <link xlink:href="https://www.suse.com/documentation/cloud-application-platform-1/index.html">SUSE
@@ -51,8 +107,7 @@
   <para>
    &productname; is comprised of the &sle; builds of the <literal>uaa</literal>
    (User Account and Authentication) server, &scf;, the Stratos Web user
-   interface, and Stratos Metrics (scheduled for the &productname; 1.3
-   release).
+   interface, and Stratos Metrics.
   </para>
 
   <para>
