@@ -209,7 +209,7 @@
     <para>
      Update the kernel command line and GRUB then restart the virtual machines:
     </para>
-    <screen>&prompt.user;echo "$instance_names" | xargs -${args}{} gcloud compute ssh {} -- "sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0 cgroup_enable=memory swapaccount=1\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub &amp;&amp; sudo systemctl reboot -i"</screen>
+    <screen>&prompt.user;echo "$instance_names" | xargs -i{} gcloud compute ssh {} -- "sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0 cgroup_enable=memory swapaccount=1\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub &amp;&amp; sudo systemctl reboot -i"</screen>
    </step>
   </procedure>
  </sect1>
@@ -223,11 +223,13 @@
 <screen>&prompt.user;gcloud container clusters get-credentials --zone ${CLUSTER_ZONE:?required} ${CLUSTER_NAME:?required}</screen>
 
  </sect1>
- <sect1 xml:id="sec.cap.gke-tiller-service-account">
-  <title>Create &tiller; Service Account</title>
+ <sect1 xml:id="sec.cap.gke-helm-tiller">
+  <title>Helm and Tiller</title>
 
   <para>
-   You must create a &tiller; service account in order to give &tiller;
+   Install &helm; as decribed in
+   <link xlink:href="https://docs.helm.sh/using_helm/#installing-helm"/>.
+   Then create a &tiller; service account in order to give &tiller;
    sufficient permissions to make changes on your cluster.
   </para>
 
