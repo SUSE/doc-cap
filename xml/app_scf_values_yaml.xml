@@ -2085,7 +2085,7 @@ sizing:
   #
   # - uaa-create-user: Create the initial user in UAA
   #
-  # - configure-scf: Uses the cf CLI to configure SCF after it's online (things
+  # - configure-scf: Uses the cf CLI to configure SCF after it is online (things
   #   like proxy settings, service brokers, etc.)
   post_deployment_setup:
     # Node affinity rules can be specified here
