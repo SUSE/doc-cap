@@ -896,7 +896,7 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
    navigate to the URL specified in the <literal>routes</literal>
    field displayed at the end of the staging logs. For example, the
    application route could be
-   <replaceable>question2answer.btat.susecap.net</replaceable>. 
+   <replaceable>question2answer.example.com</replaceable>. 
   </para>
 
   <para>
