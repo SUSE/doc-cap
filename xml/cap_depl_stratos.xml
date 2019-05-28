@@ -391,7 +391,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
 <screen>&prompt.user;helm install suse/console \
     --name susecf-console \
     --namespace stratos \
-    --values scf-config-values.yaml \
+    --values scf-azure-values.yaml \
     --set services.loadbalanced=true \
     --set console.service.http.nodePort=8080
 </screen>
