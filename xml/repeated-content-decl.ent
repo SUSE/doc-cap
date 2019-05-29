@@ -286,3 +286,49 @@ suse/minibroker                 0.2.0   A minibroker for your minikube
 suse/nginx-ingress              0.28.3  An nginx Ingress controller that uses ConfigMap...                                         
 suse/uaa                        &latestscfchart;  A Helm chart for SUSE UAA
 </screen>'>
+
+<!--ENTITY chart-version-fields.............................................-->
+
+<!ENTITY chart-version-fields
+'<para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  There are slight differences in the way &cap; uses some &helm; chart fields
+  than what is defined in <link xlink:href="https://helm.sh/docs/developing_charts"/>.
+  Take note of the following fields:
+ </para>
+ <variablelist xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <varlistentry>
+   <term><literal>APP VERSION</literal> (<literal>appVersion</literal> in <filename>Chart.yaml</filename>)</term>
+   <listitem>
+    <para>
+     In &cap;, the <literal>APP VERSION</literal> field indicates the &cap;
+     release that a &helm; chart belongs to. This is in contrast to indicating
+     the version of the application as defined in
+     <link xlink:href="https://helm.sh/docs/developing_charts/#the-appversion-field"/>.
+     For example, in the <literal>suse/uaa</literal> &helm; chart, an
+     <literal>APP VERSION</literal> of 1.4 is in reference to &cap; release 1.4
+     and does not indicate <literal>uaa</literal> is version 1.4.
+    </para>
+   </listitem>
+  </varlistentry>
+  <varlistentry>
+   <term><literal>CHART VERSION</literal> (<literal>version</literal> in <filename>Chart.yaml</filename>)</term>
+   <listitem>
+    <para>
+     In &cap;, the <literal>CHART VERSION</literal> field indicates the &helm;
+     chart version, the same as defined in
+     <link xlink:href="https://helm.sh/docs/developing_charts/#charts-and-versioning"/>.
+     For &cap; &helm; charts, the chart version is also the release number of the
+     coresponding component. For example, in the <literal>suse/uaa</literal>
+     &helm; chart, a <literal>CHART VERSION</literal> of 2.16.4 also indicates
+     <literal>uaa</literal> is release 2.16.4.
+    </para>
+   </listitem>
+  </varlistentry>
+ </variablelist>'>
+
+<!--ENTITY chart-version-fields-note........................................-->
+<!ENTITY chart-version-fields-note
+'<note xmlns="http://docbook.org/ns/docbook">
+ <title>Usage of &helm; Chart Fields in &cap;</title>
+ &chart-version-fields;
+</note>'>
