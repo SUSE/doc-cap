@@ -22,8 +22,8 @@
   <link xlink:href="https://github.com/osbkit">Microsoft Azure team</link>. It
   provides a simple method to provision service brokers on Kubernetes clusters.
  </para>
- <warning>
-  <title>Do Not Use Minibroker on Production Systems</title>
+ <important>
+  <title>Minibroker Upstream Services</title>
   <para>
    The services deployed by Minibroker are sourced from the stable upstream
    charts repository, see
@@ -33,7 +33,7 @@
    Operators should inspect the charts and images exposed by the service plans
    before deciding to use them in a production environment.
   </para>
- </warning>
+ </important>
  <sect1 xml:id="sec.cap.minibroker-deployment">
   <title>Deploy Minibroker</title>
 
