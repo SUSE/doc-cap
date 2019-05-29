@@ -273,9 +273,9 @@
    You may create a minimal deployment on four &kube; nodes for testing.
    However, this is insufficient for a production deployment. A supported
    deployment includes &scf; installed on &suse; &caasp;, Amazon EKS, or Azure
-   AKS. You also need a storage backend such as &ses; or NFS, a DNS/DHCP
+   AKS. You also need a storage back-end such as &ses; or NFS, a DNS/DHCP
    server, and an Internet connection to download additional packages during
-   installation and ~10GB of &docker; images on each &kube; worker after
+   installation and ~10 GB of &docker; images on each &kube; worker after
    installation. (See <xref linkend="cha.cap.install-production"/>.)
   </para>
 
@@ -439,12 +439,12 @@
     <listitem>
      <para>
       &helm;, the &kube; package manager, which includes Tiller, the &helm;
-      server, and the <command>helm</command> command-line client.
+      server, and the <command>helm</command> command line client.
      </para>
     </listitem>
     <listitem>
      <para>
-      <command>kubectl</command>, the command-line client for &kube;.
+      <command>kubectl</command>, the command line client for &kube;.
      </para>
     </listitem>
     <listitem>
@@ -480,7 +480,7 @@
   </sect2>
 
   <sect2 xml:id="sec.cap.containers">
-   <title>&scf; containers</title>
+   <title>&scf; Containers</title>
    <para>
     <xref linkend="fig.cap.cap-containers"/> provides a look at &scf;'s
     containers.
@@ -692,7 +692,7 @@
   </sect2>
 
   <sect2 xml:id="sec.cap.service-diagram">
-   <title>&scf; service diagram</title>
+   <title>&scf; Service Diagram</title>
    <para>
     This simple service diagram illustrates how &scf; components communicate
     with each other (<xref linkend="fig.cap.simple-services"/>). See

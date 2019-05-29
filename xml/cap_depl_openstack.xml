@@ -38,22 +38,22 @@
   <itemizedlist>
    <listitem>
     <para>
-     8GB of memory per &caasp; dashboard and &kube; master nodes
+     8 GB of memory per &caasp; dashboard and &kube; master nodes
     </para>
    </listitem>
    <listitem>
     <para>
-     16GB of memory per &kube; worker
+     16 GB of memory per &kube; worker
     </para>
    </listitem>
    <listitem>
     <para>
-     40GB disk space per &caasp; dashboard and &kube; master nodes
+     40 GB disk space per &caasp; dashboard and &kube; master nodes
     </para>
    </listitem>
    <listitem>
     <para>
-     60GB disk space per &kube; worker
+     60 GB disk space per &kube; worker
     </para>
    </listitem>
    <listitem>

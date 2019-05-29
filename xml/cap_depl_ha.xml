@@ -79,7 +79,7 @@ config:
   HA: true
 </screen>
    <para>
-    Or, you may pass it as a command-line option when you are deploying with
+    Or, you may pass it as a command line option when you are deploying with
     &helm;, for example:
    </para>
 <screen>

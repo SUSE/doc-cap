@@ -21,9 +21,9 @@
  <para>
   You may set up a minimal deployment on four &kube; nodes for testing. This is
   not sufficient for a production deployment. A basic &productname; production
-  deployment requires at least eight hosts plus a storage backend: one &suse;
+  deployment requires at least eight hosts plus a storage back-end: one &suse;
   &caasp; admin server, three &kube; masters, three &kube; workers, a DNS/DHCP
-  server, and a storage backend such as &ses; or NFS. This is a bare minimum,
+  server, and a storage back-end such as &ses; or NFS. This is a bare minimum,
   and actual requirements are likely to be much larger, depending on your
   workloads. You also need an external workstation for administering your
   cluster. (See <xref linkend="sec.cap.requirements"/>.) You may optionally
@@ -59,16 +59,16 @@
     <term>Minimum Hardware Requirements</term>
     <listitem>
      <para>
-      8GB of memory per &caasp; dashboard and &kube; master nodes.
+      8 GB of memory per &caasp; dashboard and &kube; master nodes.
      </para>
      <para>
-      16GB of memory per &kube; worker.
+      16 GB of memory per &kube; worker.
      </para>
      <para>
-      40GB disk space per &caasp; dashboard and &kube; master nodes.
+      40 GB disk space per &caasp; dashboard and &kube; master nodes.
      </para>
      <para>
-      60GB disk space per &kube; worker.
+      60 GB disk space per &kube; worker.
      </para>
     </listitem>
    </varlistentry>
@@ -163,7 +163,7 @@
       Installation with AutoYaST</link>. Set up &caasp; with one admin node and
       at least three Kubernetes masters and three Kubernetes workers. You also
       need an Internet connection, as the installer downloads additional
-      packages, and the &kube; workers will each download ~10GB of Docker
+      packages, and the &kube; workers will each download ~10 GB of Docker
       images.
      </para>
      <figure xml:id="fig.cap.select-master-nodes">
@@ -255,7 +255,7 @@ d028551.example.com   Ready    &lt;none>    4h   v1.10.11
       </para>
      </warning>
      <para>
-      If the Linux distribution on your workstation doesn't provide the correct
+      If the Linux distribution on your workstation does not provide the correct
       &helm; version, or you are using some other platform, see the
       <link xlink:href="https://docs.helm.sh/using_helm/#quickstart"> &helm;
       Quickstart Guide</link> for installation instructions and basic usage
@@ -324,7 +324,7 @@ Happy Helming!</screen>
    store persistent data. Your available storage classes depend on which
    storage cluster you are using (&ses; users, see
    <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_admin/data/cha_admin_integration.html">&suse;
-   &caasp; Integration with SES</link>). After connecting your storage backend
+   &caasp; Integration with SES</link>). After connecting your storage back-end
    use <command>kubectl</command> to see your available storage classes. This
    example is for an NFS storage class:
   </para>
@@ -439,7 +439,7 @@ persistentvolumeclaim "test-sc-persistent" deleted</screen>
    usually relevant for production systems:
   </para>
   <itemizedlist>
-        <!-- Sorry but this section doesn't make sense to me-wouldn't DNS be managed
+        <!-- Sorry but this section does not make sense to me-wouldn't DNS be managed
         by the load balancer, removing the need for the external_ips 
         parameter? TODO Load balancers is a huge and complex topic,
         and it is on our roadmap to provide some guidance in enough depth to be useful.
@@ -596,7 +596,7 @@ secrets:
   </procedure>
  </sect1>
  <sect1 xml:id="sec.cap.addrepo-prod">
-  <title>Add the &kube; charts repository</title>
+  <title>Add the &kube; Charts Repository</title>
 
   <para>
    Download the &suse; &kube; charts repository with &helm;:
@@ -696,7 +696,7 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -</screen>
 <screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
 
   <para>
-   When all services are running use the &cf; command-line interface to log in
+   When all services are running use the &cf; command line interface to log in
    to &suse; &cf; to deploy and manage your applications. (See
    <xref linkend="sec.cap.cf-cli"/>)
   </para>

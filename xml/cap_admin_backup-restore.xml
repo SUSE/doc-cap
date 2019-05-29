@@ -16,7 +16,7 @@
   <title>Backup and Restore</title>
  </info>
  <sect1 xml:id="sec.cap.backup-restore-with-plugin">
-  <title>Backup and restore using cf-plugin-backup</title>
+  <title>Backup and Restore Using cf-plugin-backup</title>
 
   <para>
    <literal>cf-plugin-backup</literal> backs up and restores your Cloud
@@ -508,7 +508,8 @@
   </sect2>
  </sect1>
  <sect1 xml:id="sec.cap.backup-restore-of-raw-data">
-  <title>Disaster recovery in <literal>scf</literal> through raw data backup and restore</title>
+  <title>Disaster Recovery in <literal>scf</literal> through Raw Data Backup and
+   Restore</title>
 
   <para>
    A backup and restore of an existing <literal>scf</literal> deployment's raw
@@ -545,7 +546,7 @@
   </sect2>
 
   <sect2 xml:id="sec.cap.raw-data-scope">
-   <title>Scope of raw data backup and restore</title>
+   <title>Scope of Raw Data Backup and Restore</title>
    <para>
     The following lists the data that is included as part of the backup (and
     restore) procedure:
@@ -598,9 +599,9 @@
    </itemizedlist>
   </sect2>
   <sect2 xml:id="sec.cap.raw-data-backup-procedure">
-   <title>Performing a raw data backup</title>
+   <title>Performing a Raw Data Backup</title>
    <note>
-    <title>Restore to the same version</title>
+    <title>Restore to the Same Version</title>
     <para>
      This process is intended for backing up and restoring to a target
      deployment with the same version as the source deployment.
@@ -677,13 +678,13 @@
   </sect2>
 
   <sect2 xml:id="sec.cap.raw-data-restore-procedure">
-   <title>Performing a raw data restore</title>
+   <title>Performing a Raw Data Restore</title>
    <para>
     Perform the following steps to restore your backed up data to the target
     <literal>scf</literal> deployment.
    </para>
    <important>
-    <title>Ensure access to the correct <literal>scf</literal> deployment</title>
+    <title>Ensure Access to the Correct <literal>scf</literal> Deployment</title>
     <para>
      Working with multiple &kube; clusters simultaneously can be confusing.
      Ensure you are communicating with the desired cluster

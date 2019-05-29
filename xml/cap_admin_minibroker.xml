@@ -103,7 +103,7 @@ suse/minibroker             	0.2.0  	A minibroker for your minikube
   </procedure>
  </sect1>
  <sect1 xml:id="sec.cap.minibroker-environment-setup">
-  <title>Setting up the environment for Minibroker usage</title>
+  <title>Setting Up the Environment for Minibroker Usage</title>
 
   <procedure>
    <step>
@@ -128,7 +128,7 @@ suse/minibroker             	0.2.0  	A minibroker for your minikube
     </para>
 <screen>&prompt.user;cf create-service-broker <replaceable>minibroker</replaceable> <replaceable>username</replaceable> <replaceable>password</replaceable> http://minibroker-minibroker.minibroker.svc.cluster.local</screen>
     <para>
-     Once the service broker is ready, it can be seen on your deployment:
+     After the service broker is ready, it can be seen on your deployment:
     </para>
 <screen>&prompt.user;cf service-brokers
 Getting service brokers as admin...
@@ -278,7 +278,7 @@ minibroker-minibroker-5865f66bb8-6dxm7          2/2       Running            0  
   </procedure>
 
   <important>
-   <title>Database names for PostgreSQL and MariaDB instances</title>
+   <title>Database Names for PostgreSQL and MariaDB Instances</title>
    <para>
     By default, Minibroker creates PostgreSQL and MariaDB server instances
     without a named database. A named database is required for normal usage

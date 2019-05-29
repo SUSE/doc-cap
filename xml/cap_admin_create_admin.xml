@@ -39,7 +39,7 @@
 
  </sect1>
  <sect1 xml:id="sec.cap.create-admin-procedure">
-  <title>Creating an example &cap; cluster administrator</title>
+  <title>Creating an Example &cap; Cluster Administrator</title>
   <para>
    The following example demonstrates the steps required to create a new
    administrator user for your &cap; cluster. Note that creating administrator

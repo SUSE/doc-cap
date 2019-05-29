@@ -197,7 +197,7 @@ dotnet-core_buildpack   10         true      false    dotnet-core-buildpack-v2.0
 &prompt.user;cf push <replaceable>12factor</replaceable> -b <replaceable>ruby_buildpack_cached</replaceable>
     </screen>
     <note>
-     <title>Specifying a buildpack to use with your application</title>
+     <title>Specifying a Buildpack to Use with Your Application</title>
      <para>
       You can specify which buildpack is used to deploy your application
       through two methods:

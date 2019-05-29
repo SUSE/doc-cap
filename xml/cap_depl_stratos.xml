@@ -41,7 +41,7 @@
   </para>
 
   <para>
-   If you are using &ses; as your storage backend, copy the secret into the
+   If you are using &ses; as your storage back-end, copy the secret into the
    Stratos namespace:
   </para>
 
@@ -276,11 +276,11 @@ gp2scoped       kubernetes.io/aws-ebs   1d
 <screen>&prompt.user;watch -c 'kubectl get pods --namespace stratos'</screen>
 
   <para>
-   Obtain the hostname of the service exposed through the public load balancer:
+   Obtain the host name of the service exposed through the public load balancer:
   </para>
 <screen>&prompt.user;kubectl get service susecf-console-ui-ext --namespace stratos</screen>
   <para>
-   Use this hostname to create a CNAME record.
+   Use this host name to create a CNAME record.
   </para>
 
   <sect2 xml:id="sec.cap-stratos-eks-connect">

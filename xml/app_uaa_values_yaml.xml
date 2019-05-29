@@ -10,7 +10,7 @@
  xmlns:xi="http://www.w3.org/2001/XInclude"
  xmlns:xlink="http://www.w3.org/1999/xlink"
  version="5.0">
- <title>Complete suse/uaa values.yaml file</title>
+ <title>Complete suse/uaa values.yaml File</title>
 
  <para>
   This is the complete output of <literal>helm inspect suse/uaa</literal> for
@@ -165,23 +165,23 @@ env:
   # https://javamail.java.net/nonav/docs/api/com/sun/mail/smtp/package-summary.html
   SMTP_AUTH: "false"
 
-  # SMTP from address, for password reset emails etc.
+  # SMTP from address, for password reset e-mails etc.
   SMTP_FROM_ADDRESS: ~
 
-  # SMTP server host address, for password reset emails etc.
+  # SMTP server host address, for password reset e-mails etc.
   SMTP_HOST: ~
 
-  # SMTP server password, for password reset emails etc.
+  # SMTP server password, for password reset e-mails etc.
   SMTP_PASSWORD: ~
 
-  # SMTP server port, for password reset emails etc.
+  # SMTP server port, for password reset e-mails etc.
   SMTP_PORT: "25"
 
   # If true, send STARTTLS command before logging in to SMTP server. See
   # https://javamail.java.net/nonav/docs/api/com/sun/mail/smtp/package-summary.html
   SMTP_STARTTLS: "false"
 
-  # SMTP server username, for password reset emails etc.
+  # SMTP server username, for password reset e-mails etc.
   SMTP_USER: ~
 
   # The TCP port to report as the public port for the UAA server (root zone).

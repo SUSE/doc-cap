@@ -39,7 +39,7 @@
   <title>Prerequisites</title>
 
   <para>
-   Install <command>az</command>, the Azure command-line client, on your remote
+   Install <command>az</command>, the Azure command line client, on your remote
    administration machine. See
    <link xlink:href="https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest">
    Install Azure CLI 2.0</link> for instructions.
@@ -140,7 +140,7 @@ cap-aks</screen>
   </para>
 
   <tip>
-   <title>Use different names</title>
+   <title>Use Different Names</title>
    <para>
     Ensure each of your AKS clusters use unique resource group and managed
     cluster names, and not copy the examples, especially when your Azure
@@ -264,7 +264,7 @@ cap-aks</screen>
 
   <note>
    <para>
-    An OS disk size of at least 60GB must be specified using the
+    An OS disk size of at least 60 GB must be specified using the
     <command>--node-osdisk-size</command> flag.
    </para>
   </note>
@@ -405,7 +405,7 @@ done</screen>
 
  </sect1>
  <sect1 xml:id="sec.cap.addrepo-aks">
-  <title>Add the &kube; charts repository</title>
+  <title>Add the &kube; Charts Repository</title>
 
   <para>
    Download the &suse; &kube; charts repository with &helm;:
@@ -547,7 +547,7 @@ services:
    </para>
 <screen>&prompt.user;watch -c 'kubectl get pods --namespace uaa'</screen>
    <para>
-    Once the deployment completes, a &kube; service for <literal>uaa</literal>
+    After the deployment completes, a &kube; service for <literal>uaa</literal>
     will be exposed on an Azure load balancer that is automatically set up by
     AKS (named <literal>kubernetes</literal> in the resource group that hosts
     the worker node VMs).
@@ -640,7 +640,7 @@ uaa-uaa-public    LoadBalancer   10.0.67.56     40.85.188.67   2793:32034/TCP
    </para>
 <screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
    <para>
-    Once the deployment completes, a number of public services will be setup
+    After the deployment completes, a number of public services will be setup
     using a load balancer that has been configured with corresponding load
     balancing rules and probes as well as having the correct ports opened in
     Network Security Group.
