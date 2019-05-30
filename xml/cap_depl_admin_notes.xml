@@ -25,6 +25,10 @@
 &readmefirst;
 </sect1>
  <sect1>
+  <title>Usage of &helm; Chart Fields in &cap;</title>
+  &chart-version-fields;
+ </sect1>
+ <sect1>
   <title>Not Running/Completed Pods</title>
 &completed-pods;
 </sect1>
