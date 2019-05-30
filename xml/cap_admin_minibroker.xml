@@ -51,9 +51,9 @@ Hang tight while we grab the latest from your chart repositories...
 Update Complete. ⎈ Happy Helming!⎈
 
 &prompt.user;helm search suse
-NAME                        	VERSION	DESCRIPTION                                       
+NAME                            CHART VERSION   APP VERSION     DESCRIPTION
 ...
-suse/minibroker             	0.2.0  	A minibroker for your minikube                    
+suse/minibroker                 0.2.0                           A minibroker for your minikube
 ...
 </screen>
    </step>
