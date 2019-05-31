@@ -212,6 +212,29 @@
     <screen>&prompt.user;echo "$instance_names" | xargs -i{} gcloud compute ssh {} -- "sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0 cgroup_enable=memory swapaccount=1\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub &amp;&amp; sudo systemctl reboot -i"</screen>
    </step>
   </procedure>
+
+  <para>
+   In the event swap accounting is not successfully enabled on all nodes using
+   the previous procedure, perform the following on each node that requires swap
+   accounting to be enabled:
+  </para>
+
+  <procedure>
+   <step>
+    <para>
+     <command>ssh</command> into the node.
+    </para>
+<screen>&prompt.user;gcloud compute ssh INSTANCE</screen>
+   </step>
+   <step>
+    <para>
+     When inside the node, run the command to update the kernel command line and
+     GRUB, then restart the node.
+    </para>
+<screen>&prompt.user;sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0 cgroup_enable=memory swapaccount=1\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub &amp;&amp; sudo systemctl reboot -i</screen>
+   </step>
+  </procedure>
+
  </sect1>
  <sect1 xml:id="sec.cap.gke-kubeconfig">
   <title>Get <literal>kubeconfig</literal> File</title>
