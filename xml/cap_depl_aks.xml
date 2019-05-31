@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.depl-azure"
+<chapter version="5.0" xml:id="cha.cap.depl-aks"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -35,7 +35,7 @@
   any device in a network that has an IP address. In Azure they are called
   agent nodes. In this chapter we call them agent nodes or &kube; nodes.
  </para>
- <sect1 xml:id="sec.cap.prereqs-azure">
+ <sect1 xml:id="sec.cap.prereqs-aks">
   <title>Prerequisites</title>
 
   <para>
@@ -151,7 +151,7 @@ cap-aks</screen>
    </para>
   </tip>
 
-  <procedure xml:id="pro.envvars-azure">
+  <procedure xml:id="pro.envvars-aks">
    <step>
     <para>
      Create the resource group name:
@@ -199,7 +199,7 @@ cap-aks</screen>
      storage classes</link>) is recommended. Note
      <literal>managed-premium</literal> has been specified in the example
      <filename>scf-config-values.yaml</filename> used (see
-     <xref linkend="sec.cap.cap-on-azure"/>):
+     <xref linkend="sec.cap.cap-on-aks"/>):
     </para>
 <screen>&prompt.user;export NODEVMSIZE="<replaceable>Standard_DS4_v2</replaceable>"</screen>
    </step>
@@ -432,7 +432,7 @@ suse       https://kubernetes-charts.suse.com/
 &helm-search-suse;
 
  </sect1>
- <sect1 xml:id="sec.cap.cap-on-azure">
+ <sect1 xml:id="sec.cap.cap-on-aks">
      <title>Deploying &productname; with a Load Balancer</title>
   <para>
       This section describes how to deploy &productname; with a basic

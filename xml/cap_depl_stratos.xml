@@ -382,7 +382,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
 
   <para>
    Before deploying Stratos, ensure <literal>uaa</literal> and <literal>scf</literal>
-   have been successfully deployed on &aks; (see <xref linkend="cha.cap.depl-azure"/>).
+   have been successfully deployed on &aks; (see <xref linkend="cha.cap.depl-aks"/>).
   </para>
 
   <para>
