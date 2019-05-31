@@ -68,7 +68,7 @@
       40 GB disk space per &caasp; dashboard and &kube; master nodes.
      </para>
      <para>
-      60 GB disk space per &kube; worker.
+      80 GB disk space per &kube; worker.
      </para>
     </listitem>
    </varlistentry>
