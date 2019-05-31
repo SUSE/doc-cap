@@ -258,13 +258,13 @@ cap-aks</screen>
 <screen>&prompt.user;az aks create --resource-group $RGNAME --name $AKSNAME \
  --node-count $NODECOUNT --admin-username $ADMINUSERNAME \
  --ssh-key-value $SSHKEYVALUE --node-vm-size $NODEVMSIZE \
- --node-osdisk-size=60 --nodepool-name $NODEPOOLNAME \
+ --node-osdisk-size=80 --nodepool-name $NODEPOOLNAME \
  --kubernetes-version <replaceable>&aksnodeversion;</replaceable>
 </screen>
 
   <note>
    <para>
-    An OS disk size of at least 60 GB must be specified using the
+    An OS disk size of at least 80 GB must be specified using the
     <command>--node-osdisk-size</command> flag.
    </para>
   </note>
