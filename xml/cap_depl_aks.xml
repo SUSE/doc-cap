@@ -530,7 +530,7 @@ services:
 </screen>
 </sect2>
 
-  <sect2 xml:id="sec.cap.loadbalancer-azure-uaa">
+  <sect2 xml:id="sec.cap.aks-deploy-uaa">
    <title>Deploy <literal>uaa</literal></title>
    <para>
     Use &helm; to deploy the <literal>uaa</literal> server:
@@ -614,7 +614,7 @@ uaa-uaa-public    LoadBalancer   10.0.67.56     40.85.188.67   2793:32034/TCP
 </screen>
   </sect2>
 
-  <sect2 xml:id="sec.cap.loadbalancer-azure-scf">
+  <sect2 xml:id="sec.cap.aks-deploy-scf">
    <title>Deploy <literal>scf</literal></title>
    <para>
     Before deploying <literal>scf</literal>, ensure the DNS records for the
