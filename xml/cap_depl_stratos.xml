@@ -382,7 +382,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
 
   <para>
    Before deploying Stratos, ensure <literal>uaa</literal> and <literal>scf</literal>
-   have been successfully deployed on &aks; (see <xref linkend="cha.cap.depl-azure"/>).
+   have been successfully deployed on &aks; (see <xref linkend="cha.cap.depl-aks"/>).
   </para>
 
   <para>
@@ -391,7 +391,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
 <screen>&prompt.user;helm install suse/console \
     --name susecf-console \
     --namespace stratos \
-    --values scf-azure-values.yaml \
+    --values scf-config-values.yaml \
     --set services.loadbalanced=true \
     --set console.service.http.nodePort=8080
 </screen>

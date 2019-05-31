@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.depl-azure"
+<chapter version="5.0" xml:id="cha.cap.depl-aks"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -35,7 +35,7 @@
   any device in a network that has an IP address. In Azure they are called
   agent nodes. In this chapter we call them agent nodes or &kube; nodes.
  </para>
- <sect1 xml:id="sec.cap.prereqs-azure">
+ <sect1 xml:id="sec.cap.prereqs-aks">
   <title>Prerequisites</title>
 
   <para>
@@ -151,7 +151,7 @@ cap-aks</screen>
    </para>
   </tip>
 
-  <procedure xml:id="pro.envvars-azure">
+  <procedure xml:id="pro.envvars-aks">
    <step>
     <para>
      Create the resource group name:
@@ -198,8 +198,8 @@ cap-aks</screen>
      <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/azure-disks-dynamic-pv">Built in
      storage classes</link>) is recommended. Note
      <literal>managed-premium</literal> has been specified in the example
-     <filename>scf-azure-values.yaml</filename> used (see
-     <xref linkend="sec.cap.cap-on-azure"/>):
+     <filename>scf-config-values.yaml</filename> used (see
+     <xref linkend="sec.cap.cap-on-aks"/>):
     </para>
 <screen>&prompt.user;export NODEVMSIZE="<replaceable>Standard_DS4_v2</replaceable>"</screen>
    </step>
@@ -432,7 +432,7 @@ suse       https://kubernetes-charts.suse.com/
 &helm-search-suse;
 
  </sect1>
- <sect1 xml:id="sec.cap.cap-on-azure">
+ <sect1 xml:id="sec.cap.cap-on-aks">
      <title>Deploying &productname; with a Load Balancer</title>
   <para>
       This section describes how to deploy &productname; with a basic
@@ -479,7 +479,7 @@ reclaimPolicy: Delete</screen>
 </screen>
 <para>
     See <xref linkend="sec.cap.aks-config"/> for a complete example deployment 
-    configuration file, <filename>scf-azure-values.yaml</filename>.
+    configuration file, <filename>scf-config-values.yaml</filename>.
 </para>
 </sect2>
 <sect2 xml:id="sec.cap.aks-config">
@@ -491,14 +491,14 @@ reclaimPolicy: Delete</screen>
     created during deployment, and then create the necessary records.
 </para>
 <para>
-    The following file, <filename>scf-azure-values.yaml</filename>, provides a 
+    The following file, <filename>scf-config-values.yaml</filename>, provides a 
     complete example deployment configuration. Enter the fully-qualified domain 
     name (FQDN) that you intend to use for <literal>DOMAIN</literal> and 
     <literal>UAA_HOST</literal>.
 </para>
 <screen>
 ### example deployment configuration file
-### scf-azure-values.yaml
+### scf-config-values.yaml
 
 env:
   # the FQDN of your domain  
@@ -530,7 +530,7 @@ services:
 </screen>
 </sect2>
 
-  <sect2 xml:id="sec.cap.loadbalancer-azure-uaa">
+  <sect2 xml:id="sec.cap.aks-deploy-uaa">
    <title>Deploy <literal>uaa</literal></title>
    <para>
     Use &helm; to deploy the <literal>uaa</literal> server:
@@ -538,7 +538,7 @@ services:
 <screen>&prompt.user;helm install suse/uaa \
 --name <replaceable>susecf-uaa</replaceable> \
 --namespace <replaceable>uaa</replaceable> \
---values <replaceable>scf-azure-values.yaml</replaceable>
+--values <replaceable>scf-config-values.yaml</replaceable>
 </screen>
    <para>
     Wait until you have a successful <literal>uaa</literal> deployment before
@@ -614,7 +614,7 @@ uaa-uaa-public    LoadBalancer   10.0.67.56     40.85.188.67   2793:32034/TCP
 </screen>
   </sect2>
 
-  <sect2 xml:id="sec.cap.loadbalancer-azure-scf">
+  <sect2 xml:id="sec.cap.aks-deploy-scf">
    <title>Deploy <literal>scf</literal></title>
    <para>
     Before deploying <literal>scf</literal>, ensure the DNS records for the
@@ -632,7 +632,7 @@ uaa-uaa-public    LoadBalancer   10.0.67.56     40.85.188.67   2793:32034/TCP
 &prompt.user;helm install suse/cf \
 --name <replaceable>susecf-scf</replaceable> \
 --namespace scf \
---values scf-azure-values.yaml \
+--values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
    <para>
