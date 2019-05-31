@@ -198,7 +198,7 @@ cap-aks</screen>
      <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/azure-disks-dynamic-pv">Built in
      storage classes</link>) is recommended. Note
      <literal>managed-premium</literal> has been specified in the example
-     <filename>scf-azure-values.yaml</filename> used (see
+     <filename>scf-config-values.yaml</filename> used (see
      <xref linkend="sec.cap.cap-on-azure"/>):
     </para>
 <screen>&prompt.user;export NODEVMSIZE="<replaceable>Standard_DS4_v2</replaceable>"</screen>
@@ -479,7 +479,7 @@ reclaimPolicy: Delete</screen>
 </screen>
 <para>
     See <xref linkend="sec.cap.aks-config"/> for a complete example deployment 
-    configuration file, <filename>scf-azure-values.yaml</filename>.
+    configuration file, <filename>scf-config-values.yaml</filename>.
 </para>
 </sect2>
 <sect2 xml:id="sec.cap.aks-config">
@@ -491,14 +491,14 @@ reclaimPolicy: Delete</screen>
     created during deployment, and then create the necessary records.
 </para>
 <para>
-    The following file, <filename>scf-azure-values.yaml</filename>, provides a 
+    The following file, <filename>scf-config-values.yaml</filename>, provides a 
     complete example deployment configuration. Enter the fully-qualified domain 
     name (FQDN) that you intend to use for <literal>DOMAIN</literal> and 
     <literal>UAA_HOST</literal>.
 </para>
 <screen>
 ### example deployment configuration file
-### scf-azure-values.yaml
+### scf-config-values.yaml
 
 env:
   # the FQDN of your domain  
@@ -538,7 +538,7 @@ services:
 <screen>&prompt.user;helm install suse/uaa \
 --name <replaceable>susecf-uaa</replaceable> \
 --namespace <replaceable>uaa</replaceable> \
---values <replaceable>scf-azure-values.yaml</replaceable>
+--values <replaceable>scf-config-values.yaml</replaceable>
 </screen>
    <para>
     Wait until you have a successful <literal>uaa</literal> deployment before
@@ -632,7 +632,7 @@ uaa-uaa-public    LoadBalancer   10.0.67.56     40.85.188.67   2793:32034/TCP
 &prompt.user;helm install suse/cf \
 --name <replaceable>susecf-scf</replaceable> \
 --namespace scf \
---values scf-azure-values.yaml \
+--values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
    <para>
