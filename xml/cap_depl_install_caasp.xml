@@ -690,7 +690,7 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -</screen>
 --set "secrets.UAA_CA_CERT=${CA_CERT}"</screen>
 
   <para>
-   Now sit back and wait for the pods come online:
+   Now sit back and wait for the pods to come online:
   </para>
 
 <screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
