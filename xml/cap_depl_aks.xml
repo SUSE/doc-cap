@@ -922,7 +922,7 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
    process earlier in this chapter, swap accounting was enabled on all nodes. During the
    AKS cluster upgrade process, these existing nodes are deleted and replaced by new nodes,
    running a newer version of &kube;, but without swap accounting enabled. The procedure
-   below describes how to enable swap accounting on the new nodes added during a upgrade.
+   below describes how to enable swap accounting on the new nodes added during an upgrade.
   </para>
   <procedure>
    <step>
@@ -932,8 +932,8 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
     </para>
     <para>
      Modify the GRUB configuration of each node to enable swap accounting and then
-     reboot all nodes. <literal>RGNAME</literal> and <literal>AKSNAME</literal> will
-     be the values set earlier in this chapter and can also be obtained through
+     reboot all nodes. <literal>RGNAME</literal> and <literal>AKSNAME</literal> are
+     the values set earlier in this chapter and can also be obtained through
      the AKS web dashboard.
     </para>
 <screen>&prompt.user;export MCRGNAME=$(az aks show --resource-group $RGNAME --name $AKSNAME --query nodeResourceGroup -o json | jq -r '.')
