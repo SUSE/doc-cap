@@ -364,7 +364,6 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
 
   <procedure xml:id="pro.swap-account">
    <step>
-<!--<screen>&prompt.user;export MCRGNAME=$(az group list -o table | grep MC_"$RGNAME"_ | awk '{print $1}')</screen>-->
 <screen>&prompt.user;export MCRGNAME=$(az aks show --resource-group $RGNAME --name $AKSNAME --query nodeResourceGroup -o json | jq -r '.')</screen>
    </step>
    <step>
@@ -796,6 +795,16 @@ tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.
    Set up the service broker with your variables:
   </para>
 
+  <warning>
+   <title>Service Broker Installation Fails on AKS Cluster Running Kubernetes 1.11.8</title>
+   <para>
+    If installation of <literal>open-service-broker-azure</literal> is unsuccessful due to
+    <literal>Failed to pull image "osbapublicacr.azurecr.io/microsoft/azure-service-broker:v1.6.0</literal>,
+    upgrade your AKS cluster to &kube; 1.11.9. See <xref linkend="sec.cap.aks-kubernetes-upgrade"/> for
+    instructions.
+   </para>
+  </warning>
+
 <screen>
 &prompt.user;helm install azure/open-service-broker-azure \
 --name <replaceable>osba</replaceable> \
@@ -903,5 +912,47 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
    Press the button to prepare the database. When the database is ready,
    further verify by creating an initial user and posting some test questions.
   </para>
+ </sect1>
+ <sect1 xml:id="sec.cap.aks-kubernetes-upgrade">
+  <title>Upgrading An AKS Cluster and Additional Considerations</title>
+
+  <para>
+   When upgrading the &kube; version of your AKS cluster, be sure to enable swap
+   accounting as it is required by &cap;. As part of the initial AKS cluster creation
+   process earlier in this chapter, swap accounting was enabled on all nodes. During the
+   AKS cluster upgrade process, these existing nodes are deleted and replaced by new nodes,
+   running a newer version of &kube;, but without swap accounting enabled. The procedure
+   below describes how to enable swap accounting on the new nodes added during an upgrade.
+  </para>
+  <procedure>
+   <step>
+    <para>
+     Upgrade your AKS cluster by following the process described in
+     <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/upgrade-cluster"/>.
+    </para>
+    <para>
+     Modify the GRUB configuration of each node to enable swap accounting and then
+     reboot all nodes. <literal>RGNAME</literal> and <literal>AKSNAME</literal> are
+     the values set earlier in this chapter and can also be obtained through
+     the AKS web dashboard.
+    </para>
+<screen>&prompt.user;export MCRGNAME=$(az aks show --resource-group $RGNAME --name $AKSNAME --query nodeResourceGroup -o json | jq -r '.')
+
+&prompt.user;export VMNODES=$(az vm list --resource-group $MCRGNAME -o json | jq -r '.[] | select (.tags.poolName | contains("'$NODEPOOLNAME'")) | .name')
+
+&prompt.user;for i in $VMNODES
+ do
+   az vm run-command invoke -g $MCRGNAME -n $i --command-id RunShellScript --scripts \
+   "sudo sed -i -r 's|^(GRUB_CMDLINE_LINUX_DEFAULT=)\"(.*.)\"|\1\"\2 swapaccount=1\"|' \
+   /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub"
+   az vm restart -g $MCRGNAME -n $i
+done
+</screen>
+    <para>
+     After the nodes are rebooted, expect 15-60 minutes of additional &cap; downtime
+     as &cap; components resume.
+    </para>
+   </step>
+  </procedure>
  </sect1>
 </chapter>
