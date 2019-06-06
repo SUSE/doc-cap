@@ -67,8 +67,7 @@
    <para>
     Note the use of the "|" character which indicates the use of a literal
     scalar. See the
-    <link xlink:href="http://yaml.org/spec/1.2/spec.html#id2795688">YAML
-    spec</link> for more information.
+    <link xlink:href="http://yaml.org/spec/1.2/spec.html#id2795688"/> for more information.
    </para>
   </note>
 
