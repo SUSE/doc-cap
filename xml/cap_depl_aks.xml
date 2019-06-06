@@ -501,9 +501,9 @@ reclaimPolicy: Delete</screen>
 
 env:
   # the FQDN of your domain  
-  DOMAIN: <replaceable>autolb.example.com</replaceable>
+  DOMAIN: <replaceable>example.com</replaceable>
   # the UAA prefix is required
-  UAA_HOST: uaa.<replaceable>autolb.example.com</replaceable>
+  UAA_HOST: uaa.<replaceable>example.com</replaceable>
   UAA_PORT: 2793
   GARDEN_ROOTFS_DRIVER: "overlay-xfs"
 
@@ -576,7 +576,7 @@ uaa-uaa-public    LoadBalancer   10.0.67.56     40.85.188.67   2793:32034/TCP
        <listitem>
         <para>
          Using the example values, an A record for
-         <literal>uaa.autolb.example.com</literal> that points to
+         <literal>uaa.example.com</literal> that points to
          <replaceable>40.85.188.67</replaceable>
         </para>
        </listitem>
@@ -586,7 +586,7 @@ uaa-uaa-public    LoadBalancer   10.0.67.56     40.85.188.67   2793:32034/TCP
        <listitem>
         <para>
          Using the example values, an A record for
-         <literal>*.uaa.autolb.example.com</literal> that points to
+         <literal>*.uaa.example.com</literal> that points to
          <replaceable>40.85.188.67</replaceable>
         </para>
        </listitem>
@@ -603,13 +603,13 @@ uaa-uaa-public    LoadBalancer   10.0.67.56     40.85.188.67   2793:32034/TCP
     Use <command>curl</command> to verify you are able to connect to the
     <literal>uaa</literal> OAuth server on the DNS name configured:
    </para>
-<screen>&prompt.user;curl -k https://uaa.autolb.example.com:2793/.well-known/openid-configuration</screen>
+<screen>&prompt.user;curl -k https://uaa.example.com:2793/.well-known/openid-configuration</screen>
    <para>
     This should return a JSON object, as this abbreviated example shows:
    </para>
-<screen>{"issuer":"https://uaa.autolb.example.com:2793/oauth/token",
-"authorization_endpoint":"https://uaa.autolb.example.com:2793
-/oauth/authorize","token_endpoint":"https://uaa.autolb.example.com:2793/oauth/token"
+<screen>{"issuer":"https://uaa.example.com:2793/oauth/token",
+"authorization_endpoint":"https://uaa.example.com:2793
+/oauth/authorize","token_endpoint":"https://uaa.example.com:2793/oauth/token"
 </screen>
   </sect2>
 
@@ -671,7 +671,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.
        <listitem>
         <para>
          Using the example values, an A record for
-         <replaceable>autolb.example.com</replaceable> that points to
+         <replaceable>example.com</replaceable> that points to
          <replaceable>23.96.32.205</replaceable> would be created.
         </para>
        </listitem>
@@ -681,7 +681,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.
        <listitem>
         <para>
          Using the example values, an A record for
-         <replaceable>*.autolb.example.com</replaceable> that points to
+         <replaceable>*.example.com</replaceable> that points to
          <replaceable>23.96.32.205</replaceable> would be created.
         </para>
        </listitem>
@@ -698,7 +698,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.
        <listitem>
         <para>
          Using the example values, an A record for
-         <replaceable>ssh.autolb.example.com</replaceable> that points to
+         <replaceable>ssh.example.com</replaceable> that points to
          <replaceable>40.71.187.83</replaceable> would be created.
         </para>
        </listitem>
@@ -715,7 +715,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.
        <listitem>
         <para>
          Using the example values, an A record for
-         <replaceable>tcp.autolb.example.com</replaceable> that points to
+         <replaceable>tcp.example.com</replaceable> that points to
          <replaceable>23.96.46.98</replaceable> would be created.
         </para>
        </listitem>
@@ -732,7 +732,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.
     Your load balanced deployment of &cap; is now complete. Verify you can
     access the API endpoint:
    </para>
-<screen>&prompt.user;cf api --skip-ssl-validation https://api.autolb.example.com</screen>
+<screen>&prompt.user;cf api --skip-ssl-validation https://api.example.com</screen>
   </sect2>
  </sect1>
  <sect1 xml:id="sec.cap.azure-service-broker">
