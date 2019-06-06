@@ -37,9 +37,10 @@
   </listitem>
   <listitem>
    <para>
-    All traffic can be routed through ports 80 and 443 on the controller. The
-    Ingress routing rules will then manage the traffic flow to the appropriate
-    backend services.
+    All traffic can be routed through ports 80 and 443 on the controller. Tracking
+    different ports(for example, port 2793 for UAA, port (4)443 for Gorouter) is
+    no longer needed. The Ingress routing rules will then manage the traffic flow
+    to the appropriate backend services.
    </para>
   </listitem>
  </itemizedlist>
@@ -210,7 +211,7 @@ ingress:
      the Ingress controller certificate as the value of
      <command>--cacert</command>.
     </para>
-<screen>&prompt.user;curl --cacert <replaceable>INGRESS_CONTROLLER_CA_CERT</replaceable> <replaceable>https://uaa.example.com.com/.well-known/openid-configuration</replaceable></screen>
+<screen>&prompt.user;curl --cacert <replaceable>INGRESS_CONTROLLER_CA_CERT</replaceable> <replaceable>https://uaa.example.com/.well-known/openid-configuration</replaceable></screen>
    </step>
    <step>
     <para>
