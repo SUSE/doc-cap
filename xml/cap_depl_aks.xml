@@ -474,7 +474,7 @@ reclaimPolicy: Delete</screen>
 <screen>kube:
   storage_class:
     persistent: "persistent"
-    shared: "shared"
+    shared: "persistent"
 </screen>
 <para>
     See <xref linkend="sec.cap.aks-config"/> for a complete example deployment 
@@ -510,7 +510,7 @@ env:
 kube:
   storage_class:
     persistent: "persistent"
-    shared: "shared"
+    shared: "persistent"
 
   registry:
     hostname: "registry.suse.com"
