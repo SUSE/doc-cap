@@ -441,7 +441,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
 <screen>&prompt.user;kubectl get services --namespace uaa | grep elb</screen>
 
   <important>
-&completed-pods;
+&deployment-pod-status;
   </important>
  </sect1>
  <sect1 xml:id="sec.cap.install-scf-eks">

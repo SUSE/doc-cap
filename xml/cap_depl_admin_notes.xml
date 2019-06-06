@@ -29,8 +29,8 @@
   &chart-version-fields;
  </sect1>
  <sect1>
-  <title>Not Running/Completed Pods</title>
-&completed-pods;
+  <title>Status of Pods during Deployment</title>
+&deployment-pod-status;
 </sect1>
  <sect1>
   <title>Namespaces</title> 

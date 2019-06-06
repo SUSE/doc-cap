@@ -71,7 +71,7 @@ routing-api-0            0/1   Running   0         16h</screen>
   </para>
 
   <important>
-&completed-pods;
+&deployment-pod-status;
   </important>
  </sect1>
  <sect1 xml:id="sec.cap.rebuild.depl">

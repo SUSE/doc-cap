@@ -666,7 +666,7 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -</screen>
   </para>
 
   <important>
-&completed-pods;
+&deployment-pod-status;
   </important>
  </sect1>
  <sect1 xml:id="sec.cap.install-scf-prod">
