@@ -981,4 +981,117 @@ done
    </step>
   </procedure>
  </sect1>
+ <sect1 xml:id="sec.cap.aks-add-capacity">
+  <title>Expanding Capacity of a &cap; Deployment on &aks;</title>
+
+  <para>
+   If the current capacity of your &cap; deployment is insufficient for your
+   workloads, you can expand the capacity using the procedure in this section.
+  </para>
+
+  <para>
+   These instructions assume you have followed the procedure in
+   <xref linkend="cha.cap.depl-aks"/> and have a running &cap; deployment on
+   &aks;. The instructions below will use environment variables defined in
+   <xref linkend="sec.cap.create-aks-instance"/>.
+  </para>
+
+  <procedure>
+   <step>
+    <para>
+     Get the current number of &kube; nodes in the cluster.
+    </para>
+<screen>&prompt.user;export OLD_NODE_COUNT=$(kubectl get nodes -o json | jq '.items | length')</screen>
+   </step>
+   <step>
+    <para>
+     Set the number of &kube; nodes the cluster will be expanded to.
+    </para>
+<screen>&prompt.user;export NEW_NODE_COUNT=4</screen>
+   </step>
+   <step>
+    <para>
+     <!-- https://docs.microsoft.com/en-us/azure/aks/scale-cluster -->
+     Increase the &kube; node count in the cluster.
+    </para>
+<screen>&prompt.user;az aks scale --resource-group $RG_NAME --name $AKS_NAME \
+--node-count $NEW_NODE_COUNT \
+--nodepool-name $NODEPOOL_NAME
+</screen>
+   </step>
+   <step>
+    <para>
+     Verify the new nodes are in a <literal>Ready</literal> state before proceeding.
+    </para>
+<screen>&prompt.user;kubectl get nodes</screen>
+   </step>
+   <step>
+    <para>
+     Enable swap accounting on the new nodes.
+    </para>
+    <substeps>
+     <step>
+<screen>&prompt.user;export MC_RG_NAME=$(az aks show --resource-group $RG_NAME --name $AKS_NAME --query nodeResourceGroup -o json | jq -r '.')</screen>
+     </step>
+     <step>
+      <screen>&prompt.user;export NEW_VM_NODES=$(az vm list --resource-group $MC_RG_NAME -o json | jq -r '.[] | select (.tags.poolName | contains("'$NODEPOOL_NAME'")) |.name | if .[-1:] | tonumber > '$NEW_NODE_COUNT'-'$OLD_NODE_COUNT' then . else empty end ')</screen>
+     </step>
+     <step>
+<screen>&prompt.user;for i in $NEW_VM_NODES
+ do
+   az vm run-command invoke -g $MC_RG_NAME -n $i --command-id RunShellScript --scripts \
+   "sudo sed -i -r 's|^(GRUB_CMDLINE_LINUX_DEFAULT=)\"(.*.)\"|\1\"\2 swapaccount=1\"|' \
+   /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub"
+   az vm restart -g $MC_RG_NAME -n $i
+done
+</screen>
+     </step>
+     <step>
+      <para>
+       Verify the new nodes are in a <literal>Ready</literal> state before proceeding.
+      </para>
+<screen>&prompt.user;kubectl get nodes</screen>
+     </step>
+    </substeps>
+   </step>
+   <step>
+    <para>
+     Add or update the following in your
+     <filename>scf-config-values.yaml</filename> file to increase the number of
+     <literal>diego-cell</literal> in your &cap; deployment. Replace the
+     example value with the number required by your workflow.
+    </para>
+<screen>sizing:
+  diego_cell:
+    count: <replaceable>4</replaceable>
+</screen>
+   </step>
+   <step>
+    <para>
+     Pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>.
+    </para>
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+-o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+-o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+</screen>
+   </step>
+   <step>
+    <para>
+     Perform a <command>helm upgrade</command> to apply the change.
+    </para>
+<screen>&prompt.user;helm upgrade susecf-scf suse/cf \
+--values scf-config-values.yaml \
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
+</screen>
+   </step>
+   <step>
+    <para>
+     Monitor progress of the additional <literal>diego-cell</literal> pods:
+    </para>
+<screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
+   </step>
+  </procedure>
+ </sect1>
 </chapter>
