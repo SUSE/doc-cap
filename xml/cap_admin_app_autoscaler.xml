@@ -41,7 +41,7 @@
    </listitem>
    <listitem>
     <para>
-     The Cloud Foundry CLI AutoScaler Plug-in <link      xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler-cli-plugin"/>
+     The Cloud Foundry CLI AutoScaler Plug-in, see <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler-cli-plugin"/>
     </para>
     <para>
      The plugin can be installed by running the following command:
@@ -429,7 +429,7 @@
 
   <para>
    For an example that demonstrates defining multiple scaling rules in a single
-   policy, refer to this sample of a policy file <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/src/integration/fakePolicyWithSchedule.json"/>. The complete list of configurable policy values can be
+   policy, refer to the sample of a policy file at <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/src/integration/fakePolicyWithSchedule.json"/>. The complete list of configurable policy values can be
    found at
    <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/master/docs/Policy_definition.rst"/>.
   </para>
