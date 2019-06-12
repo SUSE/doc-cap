@@ -26,10 +26,10 @@
   <para>
    Start by creating a new directory for the CredHub client on your local
    workstation, then download and unpack the CredHub client. The following
-   example is for the 2.2.0 Linux release; see
+   example is for the 2.2.0 Linux release. For other platforms and current
+   releases, see the cloudfoundry-incubator/credhub-cli at 
    <link xlink:href="https://github.com/cloudfoundry-incubator/credhub-cli/releases">
-   cloudfoundry-incubator/credhub-cli </link> for other platforms and current
-   releases:
+    </link>
   </para>
 
 <screen>&prompt.user;mkdir <replaceable>chclient</replaceable>

@@ -23,12 +23,9 @@
 
  <para>
   See the upstream documentation at
-  <link xlink:href="https://kubernetes.io/docs/concepts/policy/pod-security-policy/">
-  Pod Security Policies</link>,
-  <link xlink:href="https://docs.cloudfoundry.org/concepts/roles.html"> Orgs,
-  Spaces, Roles, and Permissions</link>, and
-  <link xlink:href="https://docs.cloudfoundry.org/uaa/identity-providers.html#id-flow">
-  Identity Provider Workflow</link> for more information on understanding and
+  <link xlink:href="https://kubernetes.io/docs/concepts/policy/pod-security-policy/"/>,
+  <link xlink:href="https://docs.cloudfoundry.org/concepts/roles.html"/>, and
+  <link xlink:href="https://docs.cloudfoundry.org/uaa/identity-providers.html#id-flow"/> for more information on understanding and
   using PSPs.
  </para>
 

@@ -74,8 +74,7 @@
    <title>Installing the cf-plugin-backup</title>
    <para>
     Download the plugin from
-    <link xlink:href="https://github.com/SUSE/cf-plugin-backup/releases">
-    cf-plugin-backup/releases</link>.
+    <link xlink:href="https://github.com/SUSE/cf-plugin-backup/releases"/>.
    </para>
    <para>
     Then install it with <command>cf</command>, using the name of the plugin
@@ -565,7 +564,7 @@
      <para>
       The Cloud Controller Blobstore, which includes the types of binary large
       object (blob) files listed below. (See
-      <link xlink:href="https://docs.cloudfoundry.org/concepts/architecture/cloud-controller.html#blob-store">Blobstore</link>
+      <link xlink:href="https://docs.cloudfoundry.org/concepts/architecture/cloud-controller.html#blob-store"/>
       to learn more about each blob type.)
      </para>
      <itemizedlist>

@@ -115,27 +115,72 @@ agent.log</screen>
    <title>Example using the ELK Stack</title>
    <para>
     The ELK stack is an example of an external syslog server where log data can
-    be sent to for log management. The ELK stack consists of
-    <link xlink:href="https://www.elastic.co/products/elasticsearch">Elasticsearch</link>,
-    <link xlink:href="https://www.elastic.co/products/logstash">Logstash</link>,
-    and
-    <link xlink:href="https://www.elastic.co/products/kibana">Kibana</link>.
-   </para>
+    be sent to for log management. The ELK stack consists of:
+   </para>  
+   <variablelist>
+    <varlistentry>
+     <term><tag class="element">Elasticsearch</tag></term>
+     <listitem>
+      <para>
+       A tool for search and analytics. For more information, refer to
+       <link xlink:href="https://www.elastic.co/products/elasticsearch"/>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><tag class="element">Logstash</tag></term>
+     <listitem>
+      <para>
+       A tool for data processing. For more information, refer to
+       <link xlink:href="https://www.elastic.co/products/logstash"/>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><tag class="element">Kibana</tag>
+     </term>
+     <listitem>
+      <para>
+       A tool for data visualization. For more information, refer to
+       <link xlink:href="https://www.elastic.co/products/kibana"/>.
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+    
    <sect3 xml:id="sec.cap.log-elk-prerequisites">
     <title>Prerequisites</title>
     <para>
-     Java 8 is required by both
-     <link xlink:href="https://www.elastic.co/guide/en/elasticsearch/reference/current/setup.html#jvm-version">Elasticsearch</link>
-     and
-     <link xlink:href="https://www.elastic.co/guide/en/logstash/6.x/installing-logstash.html#installing-logstash">Logstash</link>.
-    </para>
+     Java 8 is required by:
+    </para> 
+     <variablelist>
+      <varlistentry>
+       <term><tag class="element">Elasticsearch</tag>
+       </term>
+       <listitem>
+        <para>
+         For more information, refer to
+         <link xlink:href="https://www.elastic.co/guide/en/elasticsearch/reference/current/setup.html#jvm-version"/>.
+        </para>
+       </listitem>
+      </varlistentry>  
+      <varlistentry>
+       <term><tag class="element">Logstash</tag></term>
+       <listitem>
+        <para>
+         For more information, refer to
+         <link xlink:href="https://www.elastic.co/guide/en/logstash/6.x/installing-logstash.html#installing-logstash"/>.
+        </para>
+       </listitem>
+      </varlistentry>
+     </variablelist>
    </sect3>
+   
    <sect3 xml:id="sec.cap.log-elasticsearch">
     <title>Installing and Configuring Elasticsearch</title>
     <para>
-     See
-     <link xlink:href="https://www.elastic.co/guide/en/elasticsearch/reference/current/_installation.html">installing
-     Elasticsearch</link> to find available installation methods.
+     For methods of installing Elasticsearch, refer to
+     <link xlink:href="https://www.elastic.co/guide/en/elasticsearch/reference/7.1/install-elasticsearch.html"/>.
     </para>
     <para>
      After installation, modify the config file
@@ -148,9 +193,8 @@ agent.log</screen>
    <sect3 xml:id="sec.cap.log-logstash">
     <title>Installing and Configuring Logstash</title>
     <para>
-     See
-     <link xlink:href="https://www.elastic.co/guide/en/logstash/current/installing-logstash.html">installing
-     Logstash</link> to find available installation methods.
+     For methods of installing Logstash, refer to
+     <link xlink:href="http://www.elastic.co/guide/en/logstash/7.1/installing-logstash.html"/>.
     </para>
     <para>
      After installation, create the configuration file
@@ -174,29 +218,26 @@ output {
 }
 	</screen>
     <para>
-     See
-     <link xlink:href="https://www.elastic.co/guide/en/logstash/current/input-plugins.html">input
-     plugins</link> and
-     <link xlink:href="https://www.elastic.co/guide/en/logstash/current/output-plugins.html">output
-     plugins</link> for additional configuration options as well as other
-     plugins available. For this example, we will demonstrate the flow of data
-     through the stack, but
-     <link xlink:href="https://www.elastic.co/guide/en/logstash/current/filter-plugins.html">filter
-     plugins</link> can also be specified to perform processing of the log
-     data.
+     Additional input plug-ins can be found at
+     <link xlink:href="https://www.elastic.co/guide/en/logstash/current/input-plugins.html"/>
+     and output plug-ins can be found at
+     <link xlink:href="https://www.elastic.co/guide/en/logstash/current/output-plugins.html"/>.
+     For this example, we will demonstrate the flow of data through the stack,
+     but filter plugins can also be specified to perform processing of the log
+     data. For more details about filter plug-ins, refer to
+     <link xlink:href="https://www.elastic.co/guide/en/logstash/current/filter-plugins.html"/>.
     </para>
    </sect3>
    <sect3 xml:id="sec.cap.log-kibana">
     <title>Installing and Configuring Kibana</title>
     <para>
-     See
-     <link xlink:href="https://www.elastic.co/guide/en/kibana/current/install.html">installing
-     Kibana</link> to find available installation methods.
+     For methods of installing Kibana, refer to
+     <link xlink:href="https://www.elastic.co/guide/en/kibana/7.1/install.html"/>.
     </para>
     <para>
-     No configuration changes are required at this point. Refer to the
-     <link xlink:href="https://www.elastic.co/guide/en/kibana/current/settings.html">configuring
-     settings</link> for additonal properties that you can specify in your
+     No configuration changes are required at this point. Refer to
+     <link xlink:href="https://www.elastic.co/guide/en/kibana/current/settings.html"/>
+     for additonal properties that can configured through the
      <filename>kibana.yml</filename> file.
     </para>
    </sect3>

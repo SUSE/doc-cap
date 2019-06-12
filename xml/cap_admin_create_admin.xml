@@ -58,8 +58,7 @@
     <para>
      Add the new user to the following groups to grant administrator privileges
      to the cluster (see
-     <link xlink:href="https://docs.cloudfoundry.org/concepts/architecture/uaa.html#uaa-scopes">
-     Scopes</link> for information on privileges provided by each group):
+     <link xlink:href="https://docs.cloudfoundry.org/concepts/architecture/uaa.html#uaa-scopes"/> for information on privileges provided by each group):
     </para>
 <screen>&prompt.user;uaac member add scim.write <replaceable>new-admin</replaceable> --zone <replaceable>scf</replaceable>
 
@@ -104,7 +103,7 @@
 Server error, status code: 403, error code: 10003, message: You are not authorized to perform the requested action
 </screen>
     <para>
-     See the <link xlink:href="https://docs.cloudfoundry.org/cf-cli/cf-help.html">Cloud Foundry CLI Reference Guide</link> for other administrator-specific commands that can be run to confirm sufficient permissions are provided.
+     See <link xlink:href="https://docs.cloudfoundry.org/cf-cli/cf-help.html"/> for other administrator-specific commands that can be run to confirm sufficient permissions are provided.
     </para>
    </step>
   </procedure>
