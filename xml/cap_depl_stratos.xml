@@ -127,14 +127,8 @@ stratos  1        1        3h
    created in <filename>scf-config-values.yaml</filename>.
   </para>
 
-  <figure xml:id="fig.cap.stratos-prod">
-   <title>Stratos UI Cloud Foundry Console</title>
-   <mediaobject>
-    <imageobject>
-     <imagedata fileref="stratos.png" format="PNG" width="75%"/>
-    </imageobject>
-   </mediaobject>
-  </figure>
+  <!-- Image of Stratos UI console -->
+  &stratos-figure;
 
   <sect2 xml:id="sec.cap-stratos-caasp-connect">
    <title>Connecting &susecaaspreg; to Stratos</title>
@@ -215,8 +209,16 @@ stratos  1        1        3h
      </para>
     </step>
    </procedure>
-  </sect2>
 
+   <figure xml:id="stratos-kubernetes-view-caasp.png">
+    <title>&kube; Environment Information on Stratos</title>
+    <mediaobject>
+     <imageobject>
+      <imagedata fileref="stratos-kubernetes-view-caasp.png" format="PNG" width="75%"/>
+     </imageobject>
+    </mediaobject>
+   </figure>
+  </sect2>
  </sect1>
          
  <sect1 xml:id="sec.cap.stratos-eks">
@@ -282,6 +284,9 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <para>
    Use this host name to create a CNAME record.
   </para>
+
+  <!-- Image of Stratos UI console -->
+  &stratos-figure;
 
   <sect2 xml:id="sec.cap-stratos-eks-connect">
    <title>Connecting &eks; to Stratos</title>
@@ -375,6 +380,10 @@ gp2scoped       kubernetes.io/aws-ebs   1d
      </para>
     </step>
    </procedure>
+
+   <!-- Image of Kubernetes information after connecting with Stratos -->
+   &stratos-kubernetes-figure;
+
   </sect2>
  </sect1>
  <sect1 xml:id="sec.cap.stratos-aks">
@@ -407,6 +416,9 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <para>
    Use this IP address to create an A record.
   </para>
+
+  <!-- Image of Stratos UI console -->
+  &stratos-figure;
 
   <sect2 xml:id="sec.cap-stratos-aks-connect">
    <title>Connecting &aks; to Stratos</title>
@@ -487,8 +499,11 @@ gp2scoped       kubernetes.io/aws-ebs   1d
      </para>
     </step>
    </procedure>
-  </sect2>
 
+   <!-- Image of Kubernetes information after connecting with Stratos -->
+   &stratos-kubernetes-figure;
+
+  </sect2>
  </sect1>
  <sect1 xml:id="sec.cap.stratos-gke">
   <title>Deploy Stratos on &gke;</title>
@@ -520,6 +535,9 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <para>
    Use this IP address to create an A record.
   </para>
+
+  <!-- Image of Stratos UI console -->
+  &stratos-figure;
 
   <sect2 xml:id="sec.cap-stratos-gke-connect">
    <title>Connecting &gke; to Stratos</title>
@@ -604,6 +622,9 @@ gp2scoped       kubernetes.io/aws-ebs   1d
      </para>
     </step>
    </procedure>
+
+   <!-- Image of Kubernetes information after connecting with Stratos -->
+   &stratos-kubernetes-figure;
   </sect2>
  </sect1>
  <sect1 xml:id="sec.cap.stratos-upgrade">
@@ -839,20 +860,44 @@ susecf-metrics-metrics-nginx   NodePort   172.28.107.209   10.86.101.115,172.28.
       On the <guimenu>Instances</guimenu> tab for an Application, the table
       should show an additional Cell column to indicate which Diego Cell the
       instance is running on. This should be clickable to navigate to a Cell
-      view showing Cell information and metrics
+      view showing Cell information and metrics.
      </para>
+     <figure xml:id="stratos-app-instances-metrics.png">
+      <title>Cell Column on Application Instance Tab after Connecting Stratos Metrics</title>
+      <mediaobject>
+       <imageobject>
+        <imagedata fileref="stratos-app-instances-metrics.png" format="PNG" width="75%"/>
+       </imageobject>
+      </mediaobject>
+     </figure>
     </listitem>
     <listitem>
      <para>
       On the view for an Application there should be a new Metrics tab that
-      shows Application metrics
+      shows Application metrics.
      </para>
+     <figure xml:id="stratos-app-metrics-tab.png">
+      <title>Application Metrics Tab after Connecting Stratos Metrics</title>
+      <mediaobject>
+       <imageobject>
+        <imagedata fileref="stratos-app-metrics-tab.png" format="PNG" width="75%"/>
+       </imageobject>
+      </mediaobject>
+     </figure>
     </listitem>
     <listitem>
      <para>
       On the Kubernetes views, views such as the Node view should show an
-      additional <guimenu>Metrics</guimenu> tab with metric information
+      additional <guimenu>Metrics</guimenu> tab with metric information.
      </para>
+     <figure xml:id="stratos-kubernetes-node-metrics.png">
+      <title>Node Metrics on the Stratos &kube; View</title>
+      <mediaobject>
+       <imageobject>
+        <imagedata fileref="stratos-kubernetes-node-metrics.png" format="PNG" width="75%"/>
+       </imageobject>
+      </mediaobject>
+     </figure>
     </listitem>
    </itemizedlist>
   </sect2>

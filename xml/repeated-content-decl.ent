@@ -326,8 +326,33 @@ suse/uaa                        &latestscfchart;          1.4             A Helm
  </variablelist>'>
 
 <!--ENTITY chart-version-fields-note........................................-->
+
 <!ENTITY chart-version-fields-note
 '<note xmlns="http://docbook.org/ns/docbook">
  <title>Usage of &helm; Chart Fields in &cap;</title>
  &chart-version-fields;
 </note>'>
+
+<!--ENTITY stratos-figure...................................................-->
+
+<!ENTITY stratos-figure
+'<figure xmlns="http://docbook.org/ns/docbook">
+ <title>Stratos UI Cloud Foundry Console</title>
+ <mediaobject>
+  <imageobject>
+   <imagedata fileref="stratos.png" format="PNG" width="75&percnt;"/>
+  </imageobject>
+ </mediaobject>
+</figure>'>
+
+<!--ENTITY stratos-kubernetes-figure........................................-->
+
+<!ENTITY stratos-kubernetes-figure
+'<figure xmlns="http://docbook.org/ns/docbook">
+ <title>&kube; Environment Information on Stratos</title>
+ <mediaobject>
+  <imageobject>
+   <imagedata fileref="stratos-kubernetes-view.png" format="PNG" width="75&percnt;"/>
+  </imageobject>
+ </mediaobject>
+</figure>'>
