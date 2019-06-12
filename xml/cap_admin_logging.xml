@@ -119,30 +119,39 @@ agent.log</screen>
    </para>  
    <variablelist>
     <varlistentry>
-     <term><tag class="element">Elasticsearch</tag>
-     </term>
+     <term><tag class="element">Elasticsearch</tag></term>
      <listitem>
       <para>
-       For more information, refer to <link xlink:href="https://www.elastic.co/products/elasticsearch"/>, 
+       A tool for search and analytics. For more information, refer to
+       <link xlink:href="https://www.elastic.co/products/elasticsearch"/>.
       </para>
      </listitem>
     </varlistentry>
-    
+    <varlistentry>
+     <term><tag class="element">Logstash</tag></term>
+     <listitem>
+      <para>
+       A tool for data processing. For more information, refer to
+       <link xlink:href="https://www.elastic.co/products/logstash"/>.
+      </para>
+     </listitem>
+    </varlistentry>
     <varlistentry>
      <term><tag class="element">Kibana</tag>
      </term>
      <listitem>
       <para>
-       For more information, refer to <link xlink:href="https://www.elastic.co/products/kibana"/>, 
+       A tool for data visualization. For more information, refer to
+       <link xlink:href="https://www.elastic.co/products/kibana"/>.
       </para>
      </listitem>
     </varlistentry>
-    </variablelist>
+   </variablelist>
     
    <sect3 xml:id="sec.cap.log-elk-prerequisites">
     <title>Prerequisites</title>
     <para>
-     Java 8 is required by both:
+     Java 8 is required by:
     </para> 
      <variablelist>
       <varlistentry>
@@ -150,27 +159,28 @@ agent.log</screen>
        </term>
        <listitem>
         <para>
-         For more information, refer to <link xlink:href="https://www.elastic.co/guide/en/elasticsearch/reference/current/setup.html#jvm-version"/> 
+         For more information, refer to
+         <link xlink:href="https://www.elastic.co/guide/en/elasticsearch/reference/current/setup.html#jvm-version"/>.
         </para>
        </listitem>
       </varlistentry>  
-      
-       <varlistentry>
-        <term><tag class="element">Logstash</tag>
-        </term>
-        <listitem>
-         <para>
-          For more information, refer to <link xlink:href="https://www.elastic.co/guide/en/logstash/6.x/installing-logstash.html#installing-logstash"/> 
-         </para>
-        </listitem>
-       </varlistentry>
+      <varlistentry>
+       <term><tag class="element">Logstash</tag></term>
+       <listitem>
+        <para>
+         For more information, refer to
+         <link xlink:href="https://www.elastic.co/guide/en/logstash/6.x/installing-logstash.html#installing-logstash"/>.
+        </para>
+       </listitem>
+      </varlistentry>
      </variablelist>
    </sect3>
    
    <sect3 xml:id="sec.cap.log-elasticsearch">
     <title>Installing and Configuring Elasticsearch</title>
     <para>
-     See installing Elasticsearch, at <link xlink:href="https://www.elastic.co/guide/en/elasticsearch/reference/current/_installation.html"/> to find available installation methods.
+     For methods of installing Elasticsearch, refer to
+     <link xlink:href="https://www.elastic.co/guide/en/elasticsearch/reference/7.1/install-elasticsearch.html"/>.
     </para>
     <para>
      After installation, modify the config file
@@ -183,7 +193,8 @@ agent.log</screen>
    <sect3 xml:id="sec.cap.log-logstash">
     <title>Installing and Configuring Logstash</title>
     <para>
-     See installing Logstash, at <link xlink:href="https://www.elastic.co/guide/en/logstash/current/installing-logstash.html"/> to find available installation methods.
+     For methods of installing Logstash, refer to
+     <link xlink:href="http://www.elastic.co/guide/en/logstash/7.1/installing-logstash.html"/>.
     </para>
     <para>
      After installation, create the configuration file
@@ -207,21 +218,26 @@ output {
 }
 	</screen>
     <para>
-     See input plugins, at <link xlink:href="https://www.elastic.co/guide/en/logstash/current/input-plugins.html"/> and output plugins, at 
-     <link xlink:href="https://www.elastic.co/guide/en/logstash/current/output-plugins.html"/> for additional configuration options as well as other
-     plugins available. For this example, we will demonstrate the flow of data
-     through the stack, but filter plugins can also be specified to perform processing of the log data. For more details about filter plugins, refer to 
-     <link xlink:href="https://www.elastic.co/guide/en/logstash/current/filter-plugins.html"/>
+     Additional input plug-ins can be found at
+     <link xlink:href="https://www.elastic.co/guide/en/logstash/current/input-plugins.html"/>
+     and output plug-ins can be found at
+     <link xlink:href="https://www.elastic.co/guide/en/logstash/current/output-plugins.html"/>.
+     For this example, we will demonstrate the flow of data through the stack,
+     but filter plugins can also be specified to perform processing of the log
+     data. For more details about filter plug-ins, refer to
+     <link xlink:href="https://www.elastic.co/guide/en/logstash/current/filter-plugins.html"/>.
     </para>
    </sect3>
    <sect3 xml:id="sec.cap.log-kibana">
     <title>Installing and Configuring Kibana</title>
     <para>
-     See installing Kibana, at <link xlink:href="https://www.elastic.co/guide/en/kibana/current/install.html"/> to find available installation methods.
+     For methods of installing Kibana, refer to
+     <link xlink:href="https://www.elastic.co/guide/en/kibana/7.1/install.html"/>.
     </para>
     <para>
-     No configuration changes are required at this point. Refer to the configuring
-     settings, at <link xlink:href="https://www.elastic.co/guide/en/kibana/current/settings.html"/> for additonal properties that you can specify in your
+     No configuration changes are required at this point. Refer to
+     <link xlink:href="https://www.elastic.co/guide/en/kibana/current/settings.html"/>
+     for additonal properties that can configured through the
      <filename>kibana.yml</filename> file.
     </para>
    </sect3>
