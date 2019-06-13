@@ -684,7 +684,7 @@ useLb: true</screen>
      <para>
       <literal>useLb</literal> is set to <literal>true</literal> if your &kube;
       deployment supports automatic configuration of a load balancer (for example,
-      AKS and EKS)
+      AKS, EKS, and GKE)
      </para>
     </listitem>
    </itemizedlist>
@@ -726,39 +726,67 @@ useLb: true</screen>
    <procedure>
     <step>
      <para>
-      Select Metrics from the <guimenu>Endpoint Type</guimenu> dropdown
+      Select Metrics from the <guimenu>Endpoint Type</guimenu> dropdown.
      </para>
     </step>
     <step>
      <para>
       Enter a memorable name for your environment in the
-      <guimenu>Name</guimenu> field
+      <guimenu>Name</guimenu> field.
      </para>
     </step>
     <step>
      <para>
-      Find the external endpoint Stratos Metrics is running on:
+      Enter the <guimenu>Endpoint Address</guimenu>. Use the following to find
+      the endpoint value.
      </para>
-<screen>&prompt.user;kubectl get service susecf-metrics-metrics-nginx --namespace metrics
+<screen>&prompt.user;kubectl get service susecf-metrics-metrics-nginx --namespace metrics</screen>
+     <itemizedlist>
+      <listitem>
+       <para>
+	For &aks;, &eks;, and &gke; deployments which use a load balancer, the
+	output will be similar to the following:
+       </para>
+<screen>
 NAME                           TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)         AGE
 susecf-metrics-metrics-nginx   LoadBalancer   10.0.202.180   52.170.253.229   443:30263/TCP   21h
 </screen>
-     <para>
-      Prepend <literal>https://</literal> to the endpoint of your
-      Stratos Metrics deployment and enter it into the
-      <guimenu>Endpoint Address</guimenu> field. In this example,
-      <literal>https://52.170.253.229</literal> will be used.
-     </para>
+       <para>
+        Preprend <literal>https://</literal> to the public IP of the load
+        balancer, and enter it into the <guimenu>Endpoint Address</guimenu>
+        field. Using the values from the example above,
+        <literal>https://52.170.253.229</literal> is entered as the endpoint
+        address.
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        For &caasp; deployments which do not use a load balancer, the output
+	will be similar to the following:
+       </para>
+<screen>
+NAME                           TYPE       CLUSTER-IP       EXTERNAL-IP               PORT(S)         AGE
+susecf-metrics-metrics-nginx   NodePort   172.28.107.209   10.86.101.115,172.28.0.31 443:30685/TCP   21h
+</screen>
+       <para>
+        Prepend <literal>https://</literal> to the external IP of your node,
+	followed by the <literal>nodePort</literal>, and enter it into the
+        <guimenu>Endpoint Address</guimenu> field. Using the values from the
+        example above, <literal>https://10.86.101.115:30685</literal> is entered
+        as the endpoint address.
+       </para>
+      </listitem>
+     </itemizedlist>
     </step>
     <step>
      <para>
       Check the <guimenu>Skip SSL validation for the endpoint</guimenu>
-      checkbox if using self-signed certificates
+      checkbox if using self-signed certificates.
      </para>
     </step>
     <step>
      <para>
-      Click <guimenu>Finish</guimenu>
+      Click <guimenu>Finish</guimenu>.
      </para>
     </step>
    </procedure>
@@ -773,26 +801,26 @@ susecf-metrics-metrics-nginx   LoadBalancer   10.0.202.180   52.170.253.229   44
    <procedure>
     <step>
      <para>
-      Click on <guimenu>Connect</guimenu> in the dropdown menu
+      Click on <guimenu>Connect</guimenu> in the dropdown menu.
      </para>
     </step>
     <step>
      <para>
       Enter the username for your Stratos Metrics instance. This will be the
       <literal>nginx.username</literal> defined in your
-      <filename>stratos-metrics-values.yaml</filename> file
+      <filename>stratos-metrics-values.yaml</filename> file.
      </para>
     </step>
     <step>
      <para>
       Enter the password for your Stratos Metrics instance. This will be the
       <literal>nginx.password</literal> defined in your 
-      <filename>stratos-metrics-values.yaml</filename> file
+      <filename>stratos-metrics-values.yaml</filename> file.
      </para>
     </step>
     <step>
      <para>
-      Click <guimenu>Connect</guimenu>
+      Click <guimenu>Connect</guimenu>.
      </para>
     </step>
    </procedure>
