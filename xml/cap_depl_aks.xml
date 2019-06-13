@@ -124,14 +124,17 @@
   <title>Create Resource Group and AKS Instance</title>
 
   <para>
-   Now you can create a new Azure resource group and AKS instance. Set the
-   required variables as environment variables, which helps to speed up the
-   setup, and to reduce errors. Verify your environment variables at any time
-   with <command>echo $<replaceable>VARNAME</replaceable></command>, for
-   example:
+   Now you can create a new Azure resource group and AKS instance. Define the
+   required variables as environment variables in a file, called
+   <filename>env.sh</filename>. This helps to speed up the setup, and to
+   reduce errors. Verify your environment variables at any time by using
+   the <command>source</command> to load the file, then running
+   <command>echo $<replaceable>VARNAME</replaceable></command>, for example:
   </para>
 
-<screen>&prompt.user;echo $RGNAME
+<screen>&prompt.user;source ./env.sh
+
+&prompt.user;echo $RG_NAME
 cap-aks</screen>
 
   <para>
@@ -151,28 +154,33 @@ cap-aks</screen>
    </para>
   </tip>
 
-  <procedure xml:id="pro.envvars-aks">
-   <step>
+  <para>
+   In <filename>env.sh</filename>, define the environment variables below.
+   Replace the example values with your own.
+  </para>
+
+  <itemizedlist>
+   <listitem>
     <para>
-     Create the resource group name:
+     Set a resource group name.
     </para>
-<screen>&prompt.user;export RGNAME="<replaceable>cap-aks</replaceable>"</screen>
-   </step>
-   <step>
+<screen>export RG_NAME="<replaceable>cap-aks</replaceable>"</screen>
+   </listitem>
+   <listitem>
     <para>
-     Create the AKS managed cluster name. Azure's default is to use the
+     Set an AKS managed cluster name. Azure's default is to use the
      resource group name, then prepend it with <literal>MC</literal> and append
      the location, for example <literal>MC_cap-aks_cap-aks_eastus</literal>.
      This example uses the creator's initials for the
-     <literal>AKSNAME</literal> environment variable, which will be mapped to
+     <literal>AKS_NAME</literal> environment variable, which will be mapped to
      the <command>az</command> command's <command>--name</command> option. The
      <command>--name</command> option is for creating arbitrary names for your
      AKS resources. This example will create a managed cluster named
      <literal>MC_cap-aks_cjs_eastus</literal>:
     </para>
-<screen>&prompt.user;export AKSNAME=<replaceable>cjs</replaceable></screen>
-   </step>
-   <step>
+<screen>&prompt.user;export AKS_NAME=<replaceable>cjs</replaceable></screen>
+   </listitem>
+   <listitem>
     <para>
      Set the Azure location. See
      <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/container-service-quotas">
@@ -182,14 +190,14 @@ cap-aks</screen>
  <literal>eastus</literal> in your <command>az</command> commands:
     </para>
 <screen>&prompt.user;export REGION="<replaceable>eastus</replaceable>"</screen>
-   </step>
-   <step>
+   </listitem>
+   <listitem>
     <para>
-     Set the Kubernetes agent node count. (&cap; requires a minimum of 3.)
+     Set the &kube; agent node count. (&cap; requires a minimum of 3.)
     </para>
-<screen>&prompt.user;export NODECOUNT="<replaceable>3</replaceable>"</screen>
-   </step>
-   <step>
+<screen>&prompt.user;export NODE_COUNT="<replaceable>3</replaceable>"</screen>
+   </listitem>
+   <listitem>
     <para>
      Set the virtual machine size (see
      <link xlink:href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-general">
@@ -201,45 +209,63 @@ cap-aks</screen>
      <filename>scf-config-values.yaml</filename> used (see
      <xref linkend="sec.cap.cap-on-aks"/>):
     </para>
-<screen>&prompt.user;export NODEVMSIZE="<replaceable>Standard_DS4_v2</replaceable>"</screen>
-   </step>
-   <step>
+<screen>&prompt.user;export NODE_VM_SIZE="<replaceable>Standard_DS4_v2</replaceable>"</screen>
+   </listitem>
+   <listitem>
     <para>
      Set the public SSH key name associated with your Azure account:
     </para>
-<screen>&prompt.user;export SSHKEYVALUE="<replaceable>~/.ssh/id_rsa.pub</replaceable>"</screen>
-   </step>
-   <step>
+<screen>&prompt.user;export SSH_KEY_VALUE="<replaceable>~/.ssh/id_rsa.pub</replaceable>"</screen>
+   </listitem>
+   <listitem>
     <para>
-     Create and set a new admin username:
+     Set a new admin username:
     </para>
-<screen>&prompt.user;export ADMINUSERNAME="<replaceable>scf-admin</replaceable>"</screen>
-   </step>
-   <step>
+<screen>&prompt.user;export ADMIN_USERNAME="<replaceable>scf-admin</replaceable>"</screen>
+   </listitem>
+   <listitem>
     <para>
      Create a unique nodepool name. The default is
      <literal>aks-nodepool</literal> followed by an auto-generated number, for
      example <literal>aks-nodepool1-39318075-2</literal>. You have the option
      to change <literal>nodepool1</literal> and create your own unique
-     identifier, for example, <literal>mypool</literal>:
+     identifier. For example, <literal>mypool</literal> results in
+     <literal>aks-mypool-39318075-2</literal>. Note that uppercase characters
+     are considered invalid in a nodepool name and should not be used.
     </para>
-<screen>&prompt.user;export NODEPOOLNAME="<replaceable>mypool</replaceable>"</screen>
-    <para>
-     Which results in something like <literal>aks-mypool-39318075-2</literal>.
-    </para>
-    <para>
-     Note that uppercase characters are considered invalid in a nodepool name and should
-     not be used.
-    </para>
-   </step>
-  </procedure>
+<screen>&prompt.user;export NODEPOOL_NAME="<replaceable>mypool</replaceable>"</screen>
+   </listitem>
+  </itemizedlist>
 
   <para>
-   Now that your environment variables are in place, create a new resource
-   group:
+   The below is an example <filename>env.sh</filename> file after all the
+   environment variables have been defined.
   </para>
 
-<screen>&prompt.user;az group create --name $RGNAME --location $REGION</screen>
+<screen>### example environment variable definition file
+### env.sh
+
+export RG_NAME="cap-aks"
+export AKS_NAME="cjs"
+export REGION="eastus"
+export NODE_COUNT="3"
+export NODE_VM_SIZE="Standard_DS4_v2"
+export SSH_KEY_VALUE="~/.ssh/id_rsa.pub"
+export ADMIN_USERNAME="scf-admin"
+export NODEPOOL_NAME="mypool"
+</screen>
+
+  <para>
+   Now that your environment variables are in place, load the file:
+  </para>
+
+<screen>&prompt.user;source ./env.sh</screen>
+
+  <para>
+   Create a new resource group:
+  </para>
+
+<screen>&prompt.user;az group create --name $RG_NAME --location $REGION</screen>
 
   <para>
    List the &kube; versions currently supported by AKS (see
@@ -255,10 +281,10 @@ cap-aks</screen>
    consistent deployments:
   </para>
 
-<screen>&prompt.user;az aks create --resource-group $RGNAME --name $AKSNAME \
- --node-count $NODECOUNT --admin-username $ADMINUSERNAME \
- --ssh-key-value $SSHKEYVALUE --node-vm-size $NODEVMSIZE \
- --node-osdisk-size=80 --nodepool-name $NODEPOOLNAME \
+<screen>&prompt.user;az aks create --resource-group $RG_NAME --name $AKS_NAME \
+ --node-count $NODE_COUNT --admin-username $ADMIN_USERNAME \
+ --ssh-key-value $SSH_KEY_VALUE --node-vm-size $NODE_VM_SIZE \
+ --node-osdisk-size=80 --nodepool-name $NODEPOOL_NAME \
  --kubernetes-version <replaceable>&aksnodeversion;</replaceable>
 </screen>
 
@@ -274,12 +300,12 @@ cap-aks</screen>
    <command>kubectl</command> credentials. The default behavior for <command>az
    aks get-credentials</command> is to merge the new credentials with the
    existing default configuration, and to set the new credentials as as the
-   current &kube; context. The context name is your AKSNAME value. You should
+   current &kube; context. The context name is your AKS_NAME value. You should
    first backup your current configuration, or move it to a different location,
    then fetch the new credentials:
   </para>
 
-<screen>&prompt.user;az aks get-credentials --resource-group $RGNAME --name $AKSNAME
+<screen>&prompt.user;az aks get-credentials --resource-group $RG_NAME --name $AKS_NAME
  Merged "cap-aks" as current context in /home/&exampleuser_plain;/.kube/config</screen>
 
   <para>
@@ -364,18 +390,18 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
 
   <procedure xml:id="pro.swap-account">
    <step>
-<screen>&prompt.user;export MCRGNAME=$(az aks show --resource-group $RGNAME --name $AKSNAME --query nodeResourceGroup -o json | jq -r '.')</screen>
+<screen>&prompt.user;export MC_RG_NAME=$(az aks show --resource-group $RG_NAME --name $AKS_NAME --query nodeResourceGroup -o json | jq -r '.')</screen>
    </step>
    <step>
-<screen>&prompt.user;export VMNODES=$(az vm list --resource-group $MCRGNAME -o json | jq -r '.[] | select (.tags.poolName | contains("'$NODEPOOLNAME'")) | .name')</screen>
+<screen>&prompt.user;export VM_NODES=$(az vm list --resource-group $MC_RG_NAME -o json | jq -r '.[] | select (.tags.poolName | contains("'$NODEPOOL_NAME'")) | .name')</screen>
    </step>
    <step>
-<screen>&prompt.user;for i in $VMNODES
+<screen>&prompt.user;for i in $VM_NODES
  do
-   az vm run-command invoke -g $MCRGNAME -n $i --command-id RunShellScript --scripts \
+   az vm run-command invoke -g $MC_RG_NAME -n $i --command-id RunShellScript --scripts \
    "sudo sed -i -r 's|^(GRUB_CMDLINE_LINUX_DEFAULT=)\"(.*.)\"|\1\"\2 swapaccount=1\"|' \
    /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub"
-   az vm restart -g $MCRGNAME -n $i
+   az vm restart -g $MC_RG_NAME -n $i
 done</screen>
    </step>
    <step>
@@ -748,15 +774,15 @@ tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.
    Start by extracting and setting a batch of environment variables:
   </para>
 
-<screen>&prompt.user;SBRGNAME=$(tr -dc 'a-zA-Z0-9' &lt; /dev/urandom | head -c 8)-service-broker
+<screen>&prompt.user;SBRG_NAME=$(tr -dc 'a-zA-Z0-9' &lt; /dev/urandom | head -c 8)-service-broker
       
 &prompt.user;REGION=<replaceable>eastus</replaceable>
 
 &prompt.user;export SUBSCRIPTION_ID=$(az account show | jq -r '.id')
 
-&prompt.user;az group create --name ${SBRGNAME} --location ${REGION}
+&prompt.user;az group create --name ${SBRG_NAME} --location ${REGION}
 
-&prompt.user;SERVICE_PRINCIPAL_INFO=$(az ad sp create-for-rbac --name ${SBRGNAME})
+&prompt.user;SERVICE_PRINCIPAL_INFO=$(az ad sp create-for-rbac --name ${SBRG_NAME})
 
 &prompt.user;TENANT_ID=$(echo ${SERVICE_PRINCIPAL_INFO} | jq -r '.tenant')
 
@@ -764,7 +790,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.
 
 &prompt.user;CLIENT_SECRET=$(echo ${SERVICE_PRINCIPAL_INFO} | jq -r '.password')
 
-&prompt.user;echo SBRGNAME=${SBRGNAME}
+&prompt.user;echo SBRG_NAME=${SBRGNAME}
 
 &prompt.user;echo REGION=${REGION}
 
@@ -861,7 +887,7 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
 &prompt.user;cf target -o "<replaceable>testorg</replaceable>" -s "<replaceable>scftest</replaceable>"
 
 &prompt.user;cf create-service azure-mysql-5-7 basic <replaceable>question2answer-db</replaceable> \
--c "{ \"location\": \"${REGION}\", \"resourceGroup\": \"${SBRGNAME}\", \"firewallRules\": [{\"name\": \
+-c "{ \"location\": \"${REGION}\", \"resourceGroup\": \"${SBRG_NAME}\", \"firewallRules\": [{\"name\": \
 \"AllowAll\", \"startIPAddress\":\"0.0.0.0\",\"endIPAddress\":\"255.255.255.255\"}]}"
 
 &prompt.user;cf service <replaceable>question2answer-db</replaceable> | grep status
@@ -876,9 +902,9 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
   </para>
 
 <screen>
-&prompt.user;az mysql server list --resource-group $SBRGNAME
+&prompt.user;az mysql server list --resource-group $SBRG_NAME
 
-&prompt.user;az mysql server update --resource-group $SBRGNAME \
+&prompt.user;az mysql server update --resource-group $SBRG_NAME \
 --name <replaceable>scftest</replaceable> --ssl-enforcement Disabled
 </screen>
 
@@ -932,20 +958,20 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
     </para>
     <para>
      Modify the GRUB configuration of each node to enable swap accounting and then
-     reboot all nodes. <literal>RGNAME</literal> and <literal>AKSNAME</literal> are
+     reboot all nodes. <literal>RG_NAME</literal> and <literal>AKS_NAME</literal> are
      the values set earlier in this chapter and can also be obtained through
      the AKS web dashboard.
     </para>
-<screen>&prompt.user;export MCRGNAME=$(az aks show --resource-group $RGNAME --name $AKSNAME --query nodeResourceGroup -o json | jq -r '.')
+<screen>&prompt.user;export MC_RG_NAME=$(az aks show --resource-group $RG_NAME --name $AKS_NAME --query nodeResourceGroup -o json | jq -r '.')
 
-&prompt.user;export VMNODES=$(az vm list --resource-group $MCRGNAME -o json | jq -r '.[] | select (.tags.poolName | contains("'$NODEPOOLNAME'")) | .name')
+&prompt.user;export VM_NODES=$(az vm list --resource-group $MC_RG_NAME -o json | jq -r '.[] | select (.tags.poolName | contains("'$NODEPOOL_NAME'")) | .name')
 
-&prompt.user;for i in $VMNODES
+&prompt.user;for i in $VM_NODES
  do
-   az vm run-command invoke -g $MCRGNAME -n $i --command-id RunShellScript --scripts \
+   az vm run-command invoke -g $MC_RG_NAME -n $i --command-id RunShellScript --scripts \
    "sudo sed -i -r 's|^(GRUB_CMDLINE_LINUX_DEFAULT=)\"(.*.)\"|\1\"\2 swapaccount=1\"|' \
    /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub"
-   az vm restart -g $MCRGNAME -n $i
+   az vm restart -g $MC_RG_NAME -n $i
 done
 </screen>
     <para>
