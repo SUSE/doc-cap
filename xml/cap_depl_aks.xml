@@ -432,7 +432,7 @@ suse       https://kubernetes-charts.suse.com/
 
  </sect1>
  <sect1 xml:id="sec.cap.cap-on-aks">
-     <title>Deploying &productname; with a Load Balancer</title>
+     <title>Deploying &productname;</title>
   <para>
       This section describes how to deploy &productname; with a basic
       AKS load balancer, how to set up the required storage class, and how
