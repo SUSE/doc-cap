@@ -701,4 +701,71 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -</screen>
    <xref linkend="sec.cap.cf-cli"/>)
   </para>
  </sect1>
+ <sect1 xml:id="sec.cap.caasp-add-capacity">
+  <title>Expanding Capacity of a &cap; Deployment on &susecaaspreg;</title>
+
+  <para>
+   If the current capacity of your &cap; deployment is insufficient for your
+   workloads, you can expand the capacity using the procedure in this section.
+  </para>
+
+  <para>
+   These instructions assume you have followed the procedure in
+   <xref linkend="cha.cap.install-production"/> and have a running &cap;
+   deployment on &susecaaspreg;.
+  </para>
+
+  <procedure>
+   <step>
+    <para>
+     Add additional nodes to your &susecaaspreg; cluster as described in
+     <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/singlehtml/book_caasp_admin/book_caasp_admin.html#sec.admin.nodes.add"/>.
+    </para>
+   </step>
+   <step>
+    <para>
+     Verify the new nodes are in a <literal>Ready</literal> state before proceeding.
+    </para>
+<screen>&prompt.user;kubectl get nodes</screen>
+   </step>
+   <step>
+    <para>
+     Add or update the following in your
+     <filename>scf-config-values.yaml</filename> file to increase the number of
+     <literal>diego-cell</literal> in your &cap; deployment. Replace the
+     example value with the number required by your workflow.
+    </para>
+<screen>sizing:
+  diego_cell:
+    count: <replaceable>4</replaceable>
+</screen>
+   </step>
+   <step>
+    <para>
+     Pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>.
+    </para>
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+-o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+-o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+</screen>
+   </step>
+   <step>
+    <para>
+     Perform a <command>helm upgrade</command> to apply the change.
+    </para>
+<screen>&prompt.user;helm upgrade susecf-scf suse/cf \
+--values scf-config-values.yaml \
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
+</screen>
+   </step>
+   <step>
+    <para>
+     Monitor progress of the additional <literal>diego-cell</literal> pods:
+    </para>
+<screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
+   </step>
+  </procedure>
+ </sect1>
 </chapter>
