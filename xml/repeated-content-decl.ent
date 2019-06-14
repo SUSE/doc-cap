@@ -10,12 +10,12 @@ found" errors
 ............................................................................-->
 
 
-<!--ENTITY completed-pods...................................................-->
+<!--ENTITY deployment-pod-status............................................-->
 
-<!ENTITY completed-pods 
+<!ENTITY deployment-pod-status
 '<variablelist xmlns="http://docbook.org/ns/docbook">
 <varlistentry>
-     <term>Some pods show not running</term>
+     <term>Some Pods Show as Not Running</term>
      <listitem>
       <para>
        Some <literal>uaa</literal> and <literal>scf</literal> pods perform only 
@@ -30,6 +30,26 @@ secret-generation-1-z4nlz   0/1       Completed
 &prompt.user;kubectl get pods --namespace scf
 secret-generation-1-m6k2h       0/1       Completed
 post-deployment-setup-1-hnpln   0/1       Completed</screen>      
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>Some Pods Terminate and Restart during Deployment</term>
+     <listitem>
+      <para>
+       When monitoring the status of a deployment, pods can be observed
+       transitioning from a <literal>Running</literal> state to a
+       <literal>Terminating</literal> state, then returning to a
+       <literal>Running</literal> again.
+      </para>
+      <para>
+       If a <literal>RESTARTS</literal> count of 0 is maintained during this
+       process, this is normal behavior and not due to failing pods. It is not
+       necessary to stop the deployment. During deployment, pods will modify
+       annotations on itself via the StatefulSet pod spec. In order to get the
+       correct annotations on the running pod, it is stopped and restarted. 
+       Under normal circumstances, this behavior should only result in a pod
+       restarting once.
+      </para>
      </listitem>
     </varlistentry>
 </variablelist>'>

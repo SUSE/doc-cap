@@ -440,6 +440,9 @@ services:
     <command>watch</command> command:
    </para>
 <screen>&prompt.user;watch -c 'kubectl get pods --namespace uaa'</screen>
+   <important>
+&deployment-pod-status;
+   </important>
    <para>
     Once the <literal>uaa</literal> deployment completes, a <literal>uaa</literal>
     service will be exposed on a load balancer public IP. The name of the service

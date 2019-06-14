@@ -571,6 +571,9 @@ services:
     <command>watch</command> command:
    </para>
 <screen>&prompt.user;watch -c 'kubectl get pods --namespace uaa'</screen>
+   <important>
+&deployment-pod-status;
+   </important>
    <para>
     After the deployment completes, a &kube; service for <literal>uaa</literal>
     will be exposed on an Azure load balancer that is automatically set up by
