@@ -349,12 +349,14 @@ suse       https://kubernetes-charts.suse.com/
   <para>
    This example creates a <literal>pd-ssd</literal>
    storage class for your cluster.  Create a file named
-   <filename>gke-persistent-sc.yaml</filename> with the following:
+   <filename>storage-class.yaml</filename> with the following:
   </para>
 <screen>---
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
   labels:
     addonmanager.kubernetes.io/mode: EnsureExists
     kubernetes.io/cluster-service: "true"
@@ -367,7 +369,7 @@ reclaimPolicy: Delete
   <para>
    Create the new storage class using the manifest defined:
   </para>
-<screen>&prompt.user;kubectl create -f <replaceable>gke-persistent-sc.yaml</replaceable></screen>
+<screen>&prompt.user;kubectl create -f <replaceable>storage-class.yaml</replaceable></screen>
   <para>
    Specify the newly created created storage class, called <literal>persistent</literal>,
    as the value for <literal>kube.storage_class.persistent</literal> in your
