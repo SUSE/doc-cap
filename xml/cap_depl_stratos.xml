@@ -46,8 +46,7 @@
   </para>
 
 <screen>&prompt.user;kubectl get secret ceph-secret-admin -o json --namespace default | \
-sed 's/"namespace": "default"/"namespace": "stratos"/' | \
-kubectl create -f -</screen>
+sed 's/"namespace": "default"/"namespace": "stratos"/' | kubectl create -f -</screen>
 
   <para>
    You should already have the Stratos charts when you downloaded the SUSE
@@ -709,6 +708,13 @@ useLb: true</screen>
      </para>
     </listitem>
    </itemizedlist>
+   <para>
+    If you are using &ses;, you must copy the Ceph admin secret to the
+    <literal>metrics</literal> namespace:
+   </para>
+<screen>&prompt.user;kubectl get secret ceph-secret-admin -o json --namespace default | \
+sed 's/"namespace": "default"/"namespace": "metrics"/' | kubectl create -f -
+</screen>
    <para>
     Install Metrics with:
    </para>
