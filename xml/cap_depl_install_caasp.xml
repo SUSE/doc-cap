@@ -336,7 +336,7 @@ persistent   nfs           10d
 
   <para>
    Creating a default storage class is useful for a number of scenarios, such
-   as using MiniBroker. When your storage class is already created, run the
+   as using Minibroker. When your storage class is already created, run the
    following command (substituting the name of your storage class) to make it
    the default:
   </para>
