@@ -412,60 +412,8 @@ done</screen>
    </step>
   </procedure>
  </sect1>
- <sect1 xml:id="sec.cap.aks-dns">
-  <title>DNS Configuration</title>
-
-  <para>
-   This section provides an overview of the domain and sub-domains that require
-   A records to be set up for. The process is described in more detail in the
-   deployment section.
-  </para>
-
-  <para>
-   The following table lists the required domain and sub-domains, using
-   <literal>example.com</literal> as the example domain:
-  </para>
-
-&dns-tables;
-
- </sect1>
- <sect1 xml:id="sec.cap.addrepo-aks">
-  <title>Add the &kube; Charts Repository</title>
-
-  <para>
-   Download the &suse; &kube; charts repository with &helm;:
-  </para>
-
-<screen>&prompt.user;helm repo add <replaceable>suse</replaceable> https://kubernetes-charts.suse.com/</screen>
-
-  <para>
-   You may replace the example <replaceable>suse</replaceable> name with any
-   name. Verify with <command>helm</command>:
-  </para>
-
-<screen>&prompt.user;helm repo list
-NAME       URL
-stable     https://kubernetes-charts.storage.googleapis.com    
-local      http://127.0.0.1:8879/charts                        
-suse       https://kubernetes-charts.suse.com/                 
-</screen>
-
-  <para>
-   List your chart names, as you will need these for some operations:
-  </para>
-
-&helm-search-suse;
-
- </sect1>
- <sect1 xml:id="sec.cap.cap-on-aks">
-     <title>Deploying &productname;</title>
-  <para>
-      This section describes how to deploy &productname; with a basic
-      AKS load balancer, how to set up the required storage class, and how
-      to configure your DNS records.
-  </para>
-<sect2 xml:id="sec.cap.aks-storage">
-    <title>Create a Storage Class</title>
+ <sect1 xml:id="sec.cap.aks-storage">
+  <title>Default Storage Class</title>
   <para>
    This example creates a <literal>managed-premium</literal> (see
    <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/azure-disks-dynamic-pv"/>)
@@ -504,25 +452,43 @@ reclaimPolicy: Delete</screen>
     persistent: "persistent"
     shared: "persistent"
 </screen>
-<para>
-    See <xref linkend="sec.cap.aks-config"/> for a complete example deployment 
-    configuration file, <filename>scf-config-values.yaml</filename>.
-</para>
-</sect2>
-<sect2 xml:id="sec.cap.aks-config">
-    <title>Deployment Configuration</title>
-<para>
-    It is not necessary to create any DNS records before deploying 
-    <literal>uaa</literal>. Instead, after <literal>uaa</literal>
-    is running you will find the load balancer IP address that was automatically 
-    created during deployment, and then create the necessary records.
-</para>
-<para>
-    The following file, <filename>scf-config-values.yaml</filename>, provides a 
-    complete example deployment configuration. Enter the fully-qualified domain 
-    name (FQDN) that you intend to use for <literal>DOMAIN</literal> and 
-    <literal>UAA_HOST</literal>.
-</para>
+  <para>
+   See <xref linkend="sec.cap.aks-config"/> for a complete example deployment
+   configuration file, <filename>scf-config-values.yaml</filename>.
+  </para>
+ </sect1>
+
+ <sect1 xml:id="sec.cap.aks-dns">
+  <title>DNS Configuration</title>
+
+  <para>
+   This section provides an overview of the domain and sub-domains that require
+   A records to be set up for. The process is described in more detail in the
+   deployment section.
+  </para>
+
+  <para>
+   The following table lists the required domain and sub-domains, using
+   <literal>example.com</literal> as the example domain:
+  </para>
+
+&dns-tables;
+
+ </sect1>
+ <sect1 xml:id="sec.cap.aks-config">
+  <title>Deployment Configuration</title>
+  <para>
+   It is not necessary to create any DNS records before deploying
+   <literal>uaa</literal>. Instead, after <literal>uaa</literal>
+   is running you will find the load balancer IP address that was automatically
+   created during deployment, and then create the necessary records.
+  </para>
+  <para>
+   The following file, <filename>scf-config-values.yaml</filename>, provides a
+   complete example deployment configuration. Enter the fully-qualified domain
+   name (FQDN) that you intend to use for <literal>DOMAIN</literal> and
+   <literal>UAA_HOST</literal>.
+  </para>
 <screen>
 ### example deployment configuration file
 ### scf-config-values.yaml
@@ -555,7 +521,42 @@ secrets:
 services:
   loadbalanced: true
 </screen>
-</sect2>
+ </sect1>
+
+ <sect1 xml:id="sec.cap.addrepo-aks">
+  <title>Add the &kube; Charts Repository</title>
+
+  <para>
+   Download the &suse; &kube; charts repository with &helm;:
+  </para>
+
+<screen>&prompt.user;helm repo add <replaceable>suse</replaceable> https://kubernetes-charts.suse.com/</screen>
+
+  <para>
+   You may replace the example <replaceable>suse</replaceable> name with any
+   name. Verify with <command>helm</command>:
+  </para>
+
+<screen>&prompt.user;helm repo list
+NAME       URL
+stable     https://kubernetes-charts.storage.googleapis.com
+local      http://127.0.0.1:8879/charts
+suse       https://kubernetes-charts.suse.com/
+</screen>
+
+  <para>
+   List your chart names, as you will need these for some operations:
+  </para>
+
+&helm-search-suse;
+
+ </sect1>
+ <sect1 xml:id="sec.cap.cap-on-aks">
+  <title>Deploying &productname;</title>
+  <para>
+   This section describes how to deploy &productname; with a basic
+   AKS load balancer and how to configure your DNS records.
+  </para>
 
   <sect2 xml:id="sec.cap.aks-deploy-uaa">
    <title>Deploy <literal>uaa</literal></title>

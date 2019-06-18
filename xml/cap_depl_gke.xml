@@ -293,59 +293,8 @@ subjects:
    </step>
   </procedure>
  </sect1>
- <sect1 xml:id="sec.cap.gke-dns">
-  <title>DNS Configuration</title>
-
-  <para>
-   This section provides an overview of the domain and sub-domains that require
-   A records to be set up for. The process is described in more detail in the
-   deployment section.
-  </para>
-
-  <para>
-   The following table lists the required domain and sub-domains, using
-   <literal>example.com</literal> as the example domain:
-  </para>
-
-&dns-tables;
- </sect1>
-
- <sect1 xml:id="sec.cap.addrepo-gke">
-  <title>Add the &kube; charts repository</title>
-
-  <para>
-   Download the &suse; &kube; charts repository with &helm;:
-  </para>
-
-<screen>&prompt.user;helm repo add <replaceable>suse</replaceable> https://kubernetes-charts.suse.com/</screen>
-
-  <para>
-   You may replace the example <replaceable>suse</replaceable> name with any
-   name. Verify with <command>helm</command>:
-  </para>
-
-<screen>&prompt.user;helm repo list
-NAME       URL
-stable     https://kubernetes-charts.storage.googleapis.com    
-local      http://127.0.0.1:8879/charts                        
-suse       https://kubernetes-charts.suse.com/                 
-</screen>
-
-  <para>
-   List your chart names, as you will need these for some operations:
-  </para>
-
-&helm-search-suse;
-
- </sect1>
- <sect1 xml:id="sec.cap.cap-on-gke">
-  <title>Deploying &productname;</title>
-  <para>
-   This section describes how to deploy &productname; on &gke;, how to set up
-   the required storage class, and how to configure your DNS records.
-  </para>
-<sect2 xml:id="sec.cap.gke-storage">
-    <title>Create a Storage Class</title>
+ <sect1 xml:id="sec.cap.gke-storage">
+  <title>Default Storage Class</title>
   <para>
    This example creates a <literal>pd-ssd</literal>
    storage class for your cluster.  Create a file named
@@ -379,25 +328,42 @@ reclaimPolicy: Delete
   storage_class:
     persistent: "persistent"
 </screen>
-<para>
-    See <xref linkend="sec.cap.gke-config"/> for a complete example deployment 
-    configuration file, <filename>scf-config-values.yaml</filename>.
-</para>
-</sect2>
-<sect2 xml:id="sec.cap.gke-config">
-    <title>Deployment Configuration</title>
-<para>
-    It is not necessary to create any DNS records before deploying 
-    <literal>uaa</literal>. Instead, after <literal>uaa</literal>
-    is running you will find the load balancer IP address that was automatically 
-    created during deployment, and then create the necessary records.
-</para>
-<para>
-    The following file, <filename>scf-config-values.yaml</filename>, provides a 
-    complete example deployment configuration. Enter the fully-qualified domain 
-    name (FQDN) that you intend to use for <literal>DOMAIN</literal> and 
-    <literal>UAA_HOST</literal>.
-</para>
+  <para>
+   See <xref linkend="sec.cap.gke-config"/> for a complete example deployment
+   configuration file, <filename>scf-config-values.yaml</filename>.
+  </para>
+ </sect1>
+
+ <sect1 xml:id="sec.cap.gke-dns">
+  <title>DNS Configuration</title>
+
+  <para>
+   This section provides an overview of the domain and sub-domains that require
+   A records to be set up for. The process is described in more detail in the
+   deployment section.
+  </para>
+
+  <para>
+   The following table lists the required domain and sub-domains, using
+   <literal>example.com</literal> as the example domain:
+  </para>
+
+&dns-tables;
+ </sect1>
+ <sect1 xml:id="sec.cap.gke-config">
+  <title>Deployment Configuration</title>
+  <para>
+   It is not necessary to create any DNS records before deploying
+   <literal>uaa</literal>. Instead, after <literal>uaa</literal>
+   is running you will find the load balancer IP address that was automatically
+   created during deployment, and then create the necessary records.
+  </para>
+  <para>
+   The following file, <filename>scf-config-values.yaml</filename>, provides a
+   complete example deployment configuration. Enter the fully-qualified domain
+   name (FQDN) that you intend to use for <literal>DOMAIN</literal> and
+   <literal>UAA_HOST</literal>.
+  </para>
 <screen>
 ### example deployment configuration file
 ### scf-config-values.yaml
@@ -424,7 +390,42 @@ secrets:
 services:
   loadbalanced: true
 </screen>
-  </sect2>
+ </sect1>
+
+ <sect1 xml:id="sec.cap.addrepo-gke">
+  <title>Add the &kube; charts repository</title>
+
+  <para>
+   Download the &suse; &kube; charts repository with &helm;:
+  </para>
+
+<screen>&prompt.user;helm repo add <replaceable>suse</replaceable> https://kubernetes-charts.suse.com/</screen>
+
+  <para>
+   You may replace the example <replaceable>suse</replaceable> name with any
+   name. Verify with <command>helm</command>:
+  </para>
+
+<screen>&prompt.user;helm repo list
+NAME       URL
+stable     https://kubernetes-charts.storage.googleapis.com
+local      http://127.0.0.1:8879/charts
+suse       https://kubernetes-charts.suse.com/
+</screen>
+
+  <para>
+   List your chart names, as you will need these for some operations:
+  </para>
+
+&helm-search-suse;
+
+ </sect1>
+ <sect1 xml:id="sec.cap.cap-on-gke">
+  <title>Deploying &productname;</title>
+  <para>
+   This section describes how to deploy &productname; on &gke;, and how to
+   configure your DNS records.
+  </para>
 
   <sect2 xml:id="sec.cap.gke-deploy-uaa">
    <title>Deploy <literal>uaa</literal></title>
