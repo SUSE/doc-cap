@@ -514,8 +514,8 @@ persistentvolumeclaim "test-sc-persistent" deleted</screen>
    access to internal services.
 </para>   
   
-<screen>
-###scf-config-values.yaml
+<screen>### example deployment configuration file
+### scf-config-values.yaml
 
 env:
   # Enter the domain you created for your CAP cluster
