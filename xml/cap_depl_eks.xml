@@ -315,7 +315,10 @@ Custom TCP Rule    TCP          20000-20009     0.0.0.0/0       TCP Routing</scr
    for your configuration.
   </para>
 
-<screen>env:
+<screen>### example deployment configuration file
+### scf-config-values.yaml
+
+env:
   DOMAIN: <replaceable>example.com</replaceable>
   UAA_HOST: uaa.<replaceable>example.com</replaceable>
   UAA_PORT: 2793
