@@ -50,8 +50,7 @@
     <term>Preserve &helm; Value Changes during Upgrades</term>
     <listitem>
      <para>
-      During a <command>helm upgrade</command>, always ensure the
-      <command>--reuse-values</command> flag is specified and your
+      During a <command>helm upgrade</command>, always ensure your
       <filename>scf-config-values-yaml</filename> file is passed. This will
       preserve any previously set &helm; values while allowing additional
       &helm; value changes to be made.
@@ -180,7 +179,6 @@ suse/uaa        2.6.11                          A Helm chart for SUSE UAA
   </para>
 
 <screen>&prompt.user;helm upgrade --force --recreate-pods <replaceable>susecf-uaa</replaceable> suse/uaa \
---reuse-values \
 --values scf-config-values.yaml
 </screen>
 
@@ -204,7 +202,6 @@ suse/uaa        2.6.11                          A Helm chart for SUSE UAA
   </para>
 
 <screen>&prompt.user;helm upgrade --force --recreate-pods <replaceable>susecf-scf</replaceable> suse/cf \
---reuse-values \
 --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
@@ -214,7 +211,6 @@ suse/uaa        2.6.11                          A Helm chart for SUSE UAA
   </para>
 
 <screen>&prompt.user;helm upgrade --force --recreate-pods <replaceable>susecf-console</replaceable> suse/console \
---reuse-values \
 --values scf-config-values.yaml
 </screen>
 <!-- Internal cf-usb broker broker endpoint URL change involving 1.3 -->
