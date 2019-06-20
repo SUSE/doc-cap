@@ -1041,7 +1041,7 @@ done
 <screen>&prompt.user;export MC_RG_NAME=$(az aks show --resource-group $RG_NAME --name $AKS_NAME --query nodeResourceGroup -o json | jq -r '.')</screen>
      </step>
      <step>
-      <screen>&prompt.user;export NEW_VM_NODES=$(az vm list --resource-group $MC_RG_NAME -o json | jq -r '.[] | select (.tags.poolName | contains("'$NODEPOOL_NAME'")) |.name | if .[-1:] | tonumber > '$NEW_NODE_COUNT'-'$OLD_NODE_COUNT' then . else empty end ')</screen>
+      <screen>&prompt.user;export NEW_VM_NODES=$(az vm list --resource-group $MC_RG_NAME -o json | jq -r '.[] | select (.tags.poolName | contains("'$NODEPOOL_NAME'")) |.name | if .[-1:] | tonumber >= '$OLD_NODE_COUNT' then . else empty end ')</screen>
      </step>
      <step>
 <screen>&prompt.user;for i in $NEW_VM_NODES
