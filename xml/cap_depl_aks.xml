@@ -1011,9 +1011,10 @@ done
    </step>
    <step>
     <para>
-     Set the number of &kube; nodes the cluster will be expanded to.
+     Set the number of &kube; nodes the cluster will be expanded to. Replace the
+     example value with the number of nodes required for your workload.
     </para>
-<screen>&prompt.user;export NEW_NODE_COUNT=4</screen>
+<screen>&prompt.user;export NEW_NODE_COUNT=<replaceable>4</replaceable></screen>
    </step>
    <step>
     <para>
