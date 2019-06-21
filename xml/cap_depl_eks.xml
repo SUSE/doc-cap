@@ -348,7 +348,12 @@ secrets:
 
   # Create a very strong password, and protect it because it
   # provides root access to everything
-  UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable></screen>
+  UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
+</screen>
+
+  <!-- Explains usage of some Helm values used in the example/minimal values.yaml-->
+  &config-value-usage;
+
  </sect1>
  <sect1 xml:id="sec.cap.eks-deploy">
 <!-- maybe change some of the content in this section to an entity (cjs, feb

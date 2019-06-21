@@ -521,6 +521,10 @@ secrets:
 services:
   loadbalanced: true
 </screen>
+
+  <!-- Explains usage of some Helm values used in the example/minimal values.yaml-->
+  &config-value-usage;
+
  </sect1>
 
  <sect1 xml:id="sec.cap.addrepo-aks">

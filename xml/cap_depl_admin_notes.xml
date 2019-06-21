@@ -29,6 +29,10 @@
   &chart-version-fields;
  </sect1>
  <sect1>
+  <title>&helm; Values in <filename>scf-config-values.yaml</filename> </title>
+  &config-value-usage;
+ </sect1>
+ <sect1>
   <title>Status of Pods during Deployment</title>
 &deployment-pod-status;
 </sect1>
