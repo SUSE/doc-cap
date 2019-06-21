@@ -84,7 +84,7 @@ sed -n -e '/NOTES/,$p'</screen>
    <filename>scf-config-values.yaml</filename>:
   </para>
 
-<screen>&prompt.user;cf login --skip-ssl-validation  -a https://api.example.com 
+<screen>&prompt.user;cf login --skip-ssl-validation -a https://api.example.com
 API endpoint: https://api.example.com
 
 Email> admin
@@ -95,7 +95,7 @@ OK
 
 Targeted org system
 
-API endpoint:   https://api.example.com (API version: 2.101.0)
+API endpoint:   https://api.example.com (API version: 2.134.0)
 User:           admin
 Org:            system
 Space:          No space targeted, use 'cf target -s SPACE'</screen>
@@ -178,7 +178,8 @@ Please log in again</screen>
 
   <para>
    After you have set up a service broker (see
-   <xref linkend="cha.cap.depl-sbs"/>), create new services:
+   <xref linkend="cha.cap.minibroker"/> and <xref linkend="cha.cap.depl-sbs"/>),
+   create new services:
   </para>
 
 <screen>&prompt.user;cf create-service <replaceable>service-name</replaceable> <replaceable>default</replaceable> <replaceable>mydb</replaceable></screen>
@@ -194,6 +195,18 @@ Please log in again</screen>
    and changes to existing apps.
   </para>
 
-<screen> &prompt.user;cf push <replaceable>new-app</replaceable> -b <replaceable>buildpack</replaceable></screen>
+<screen>&prompt.user;cf push <replaceable>new-app</replaceable> -b <replaceable>buildpack</replaceable></screen>
+
+  <para>
+   If you need to debug your application or run one-off tasks, start an SSH
+   session into your application container.
+  </para>
+<screen>&prompt.user;cf ssh <replaceable>appname</replaceable></screen>
+
+  <para>
+   When the SSH connection is established, run the following to have the
+   environment match that of the application and its associated buildpack.
+  </para>
+<screen>&prompt.user;/tmp/lifecycle/shell</screen>
  </sect1>
 </chapter>
