@@ -376,3 +376,28 @@ suse/uaa                        &latestscfchart;          1.4             A Helm
   </imageobject>
  </mediaobject>
 </figure>'>
+
+<!--ENTITY config-value-usage...............................................-->
+
+<!ENTITY config-value-usage
+'<para xmlns="http://docbook.org/ns/docbook">
+  Take note of the following &helm; values when defining your
+  <filename>scf-config-values.yaml</filename> file.
+ </para>
+ <variablelist xmlns="http://docbook.org/ns/docbook">
+  <varlistentry>
+   <term>GARDEN_ROOTFS_DRIVER</term>
+   <listitem>
+    <para>
+     For &susecaaspreg; and other &kube; deployments where the nodes are based
+     on &sle;, the <literal>btrfs</literal> file system driver must be used. By
+     default, <literal>btrfs</literal> is selected as the default.
+    </para>
+    <para>
+     For &aks;, &eks;, &gke;, and other &kube; deployments where the nodes are
+     based on other operating systems, the <literal>overlay-xfs</literal>
+     file system driver must be used.
+    </para>
+   </listitem>
+  </varlistentry>
+ </variablelist>'>

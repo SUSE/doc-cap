@@ -546,7 +546,10 @@ secrets:
   # carefully as you would protect any root password
   CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
   UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
-  </screen>
+</screen>
+
+  <!-- Explains usage of some Helm values used in the example/minimal values.yaml-->
+  &config-value-usage;
 
   <important>
    <title>Protect UAA_ADMIN_CLIENT_SECRET</title>
