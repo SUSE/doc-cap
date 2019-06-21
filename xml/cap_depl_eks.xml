@@ -354,6 +354,9 @@ secrets:
   <!-- Explains usage of some Helm values used in the example/minimal values.yaml-->
   &config-value-usage;
 
+  <!-- Reiterates importance of this password -->
+  &protect-uaa-admin-secret;
+
  </sect1>
  <sect1 xml:id="sec.cap.eks-deploy">
 <!-- maybe change some of the content in this section to an entity (cjs, feb

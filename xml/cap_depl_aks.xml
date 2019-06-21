@@ -513,9 +513,11 @@ kube:
   organization: "cap"
 
 secrets:
-  # create very strong passwords, and protect them just as 
-  # carefully as you would protect any root passwords
+  # Create a very strong password for user 'admin'
   CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
+
+  # Create a very strong password, and protect it because it
+  # provides root access to everything
   UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
 
 services:
@@ -525,6 +527,8 @@ services:
   <!-- Explains usage of some Helm values used in the example/minimal values.yaml-->
   &config-value-usage;
 
+  <!-- Reiterates importance of this password -->
+  &protect-uaa-admin-secret;
  </sect1>
 
  <sect1 xml:id="sec.cap.addrepo-aks">
