@@ -207,44 +207,10 @@
 }</screen>
   </sect2>
  </sect1>
- <sect1 xml:id="sec.cap.eks-helm">
-  <title>The &helm; CLI and &tiller;</title>
 
-  <para>
-   Get the latest version of &helm;, and installation instructions, from the
-   <link xlink:href="https://docs.helm.sh/using_helm/#quickstart">&helm;
-   Quickstart Guide</link>. Then create a &tiller; service account to give
-   &tiller; sufficient permissions to make changes on your cluster. Create a
-   configuration file, which in this example is
-   <filename>rbac-config.yaml</filename>:
-  </para>
+ <!-- sect1 for helm client and tiller installation -->
+ &install-helm-tiller;
 
-<screen>apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: tiller
-  namespace: kube-system
----
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
-metadata:
-  name: tiller
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-  - kind: ServiceAccount
-    name: tiller
-    namespace: kube-system</screen>
-
-  <para>
-   Apply it to your cluster with these commands:
-  </para>
-
-<screen>&prompt.user;kubectl create -f rbac-config.yaml
-&prompt.user;helm init --service-account tiller</screen>
- </sect1>
  <sect1 xml:id="sec.cap.eks-storage-class">
   <title>Default Storage Class</title>
 

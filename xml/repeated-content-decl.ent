@@ -413,3 +413,19 @@ suse/uaa                        &latestscfchart;          1.4             A Helm
    as you would protect any root password.
   </para>
  </important>'>
+
+<!--ENTITY install-helm-tiller..............................................-->
+
+<!ENTITY install-helm-tiller
+'<sect1 xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Install &helm; Client and &tiller;</title>
+  <para>
+   Refer to the documentation at
+   <link xlink:href="https://docs.helm.sh/using_helm/#installing-helm"/>
+   to install the &helm; client, <literal>helm</literal>, on your remote
+   administration computer and &tiller;, the &helm; server component, on your
+   &kube; cluster. Ensure your installation is appropriately secured
+   according to your requirements as described in
+   <link xlink:href="https://helm.sh/docs/using_helm/#securing-your-helm-installation"/>.
+  </para>
+ </sect1>'>
