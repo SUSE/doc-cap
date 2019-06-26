@@ -459,55 +459,11 @@ suse            https://kubernetes-charts.suse.com/</screen>
   <title>Deploy <literal>scf</literal></title>
 
   <para>
-   Because of the way EKS runs health checks, &cap; requires an edit to one of
-   the <literal>scf</literal> &helm; chart's templates, and then after a successful
-   <literal>scf</literal> deployment remove a listening port from the Elastic
-   Load Balancer's listeners list.
-  </para>
-
-  <para>
-   Fetch and extract the <literal>scf</literal> &helm; chart:
-  </para>
-
-<screen>&prompt.user;helm fetch --untar suse/cf</screen>
-
-  <para>
-   In <filename>cf/templates/tcp-router.yaml</filename>, add the following to the
-   <literal>ports</literal> section of the
-   <literal>tcp-router-tcp-router-public</literal> definition:
-  </para>
-
-<screen>
-- name: "healthcheck"
-  port: 8080
-  protocol: "TCP"
-  targetPort: "healthcheck"
-</screen>
-
-  <para>
-   The section should look like this:
-  </para>
-
-<screen>
-    ports:
-    - name: "healthcheck"
-      port: 8080
-      protocol: "TCP"
-      targetPort: "healthcheck"
-    {{- range $port := until (int .Values.sizing.tcp_router.ports.tcp_route.count) }}
-    - name: "tcp-route-{{ $port }}"
-      port: {{ add 20000 $port }}
-      protocol: "TCP"
-      targetPort: "tcp-route-{{ $port }}"
-    {{- end }}
-    selector:
-      app.kubernetes.io/component: "tcp-router" 
-      </screen>
-
-  <para>
-   Now pass your <literal>uaa</literal> secret and certificate to
-   <literal>scf</literal>, then use &helm; to install &scf;
-   using the modified chart directory:
+   Before deploying <literal>scf</literal>, ensure the DNS records for the
+   <literal>uaa</literal> domains have been set up as specified in the
+   previous section. Next, pass your <literal>uaa</literal> secret and
+   certificate to <literal>scf</literal>, then use &helm; to deploy
+   <literal>scf</literal>:
   </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
@@ -516,11 +472,12 @@ suse            https://kubernetes-charts.suse.com/</screen>
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
 -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
-&prompt.user;helm install /path/to/cf \
+&prompt.user;helm install suse/cf \
 --name <replaceable>susecf-scf</replaceable> \
 --namespace scf \
 --values scf-config-values.yaml \
---set "secrets.UAA_CA_CERT=${CA_CERT}"</screen>
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
+</screen>
 
   <para>
    Sit back and wait for the pods to come online:
@@ -529,7 +486,27 @@ suse            https://kubernetes-charts.suse.com/</screen>
 <screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
 
   <para>
-   Remove port 8080 from the load balancer's listeners list:
+   Before traffic is routed to EKS load balancers, health checks are performed
+   on them. These health checks require access to ports on the
+   <literal>tcp-router</literal> service, which are only opened by request via
+   <command>cf map-route</command> and other associated commands.
+  </para>
+
+  <para>
+   Use <command>kubectl patch</command> to patch the
+   <literal>tcp-router</literal> service to expose a port to the EKS load
+   balancer so the health checks can be completed.
+  </para>
+
+<screen>&prompt.user;kubectl patch service tcp-router-tcp-router-public --namespace scf \
+--type strategic \
+--patch '{"spec": {"ports": [{"name": "healthcheck", "port": 8080}]}'
+</screen>
+
+  <para>
+   Remove port 8080 from the load balancer's listeners list. This ensures the
+   port is not exposed to external traffic while still allowing it to serve
+   as the port for health checks internally.
   </para>
 
 <screen>&prompt.user;aws elb delete-load-balancer-listeners \
@@ -538,7 +515,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
 </screen>
 
   <para>
-   Now health checks should operate correctly. When the status shows RUNNING
+   The health checks should now operate correctly. When the status shows RUNNING
    for all of the <literal>scf</literal> pods, create CNAMEs for the required
    domains. (See <xref linkend="sec.cap.eks.dns"/>) Use
    <command>kubectl</command> to find the service host names. These host names
