@@ -338,34 +338,9 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
    next steps.
   </para>
  </sect1>
- <sect1 xml:id="sec.cap.tiller-service">
-  <title>Create &tiller; Service Account</title>
 
-  <para>
-   You must create a &tiller; service account in order to give &tiller;
-   sufficient permissions to make changes on your cluster.
-  </para>
-
-  <para>
-   Run these <command>kubectl</command> commands to create your &tiller;
-   service account:
-  </para>
-
-<screen>&prompt.user;kubectl create serviceaccount tiller --namespace kube-system
- serviceaccount "tiller" created
-
-&prompt.user;kubectl create clusterrolebinding tiller \
---clusterrole cluster-admin \
---serviceaccount=kube-system:tiller
- clusterrolebinding.rbac.authorization.k8s.io "tiller" created
-
-&prompt.user;helm init --upgrade --service-account tiller
- $HELM_HOME has been configured at /home/&exampleuser_plain;/.helm.
-
- Tiller (the Helm server-side component) has been installed into your Kubernetes Cluster.
- Happy Helming!</screen>
-
- </sect1>
+ <!-- sect1 for helm client and tiller installation -->
+ &install-helm-tiller;
 
  <sect1 xml:id="sec.cap.psp">
   <title>Pod Security Policies</title>
