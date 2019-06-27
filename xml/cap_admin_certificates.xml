@@ -73,7 +73,7 @@
 
   <para>
    Certificates are installed to the <literal>uaa</literal> component by setting
-   the values <literal>UAA_SERVER_CERT</literal> and <literal>UAA_SERVER_KEY</literal>.
+   the values <literal>UAA_SERVER_CERT</literal> and <literal>UAA_SERVER_CERT_KEY</literal>.
    For example:
   </para>
 
@@ -89,7 +89,7 @@
     3xoI
     -----END CERTIFICATE-----
 
-  UAA_SERVER_KEY: |
+  UAA_SERVER_CERT_KEY: |
     -----BEGIN PRIVATE KEY-----
     MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDhRlcoZAVwUkg0
     sdExkBnPenhLG5FzQM3wm9t4erbSQulKjeFlBa9b0+RH6gbYDHh5+NyiL0L89txO
