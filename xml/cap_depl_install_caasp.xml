@@ -650,24 +650,15 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -</screen>
 --namespace uaa \
 --values scf-config-values.yaml</screen>
 
-  <para>
-   Wait until you have a successful <literal>uaa</literal> deployment before
-   going to the next steps, which you can monitor with the
-   <command>watch</command> command:
-  </para>
-
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace uaa'</screen>
+  &uaa-deploy-complete;
 
   <para>
-   When the status shows RUNNING for all of the <literal>uaa</literal> nodes,
-   proceed to deploying &suse; &cf;. Pressing <keycombo>
-   <keycap function="control"/> <keycap>C</keycap> </keycombo> stops the
-   <command>watch</command> command.
+   When the <literal>uaa</literal> completes, proceed to deploying &suse; &cf;. 
+   Pressing
+   <keycombo><keycap function="control"/> <keycap>C</keycap> </keycombo> stops
+   the <command>watch</command> command.
   </para>
 
-  <important>
-&deployment-pod-status;
-  </important>
  </sect1>
  <sect1 xml:id="sec.cap.install-scf-prod">
   <title>Deploy <literal>scf</literal></title>
@@ -689,14 +680,10 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -</screen>
 --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"</screen>
 
-  <para>
-   Now sit back and wait for the pods to come online:
-  </para>
-
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
+  &scf-deploy-complete;
 
   <para>
-   When all services are running use the &cf; command line interface to log in
+   When the deployment completes, use the &cf; command line interface to log in
    to &suse; &cf; to deploy and manage your applications. (See
    <xref linkend="sec.cap.cf-cli"/>)
   </para>

@@ -399,27 +399,18 @@ suse            https://kubernetes-charts.suse.com/</screen>
 --namespace uaa \
 --values scf-config-values.yaml</screen>
 
-  <para>
-   Wait until you have a successful <literal>uaa</literal> deployment before
-   going to the next steps, which you can monitor with the
-   <command>watch</command> command:
-  </para>
-
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace uaa'</screen>
+  &uaa-deploy-complete;
 
   <para>
-   When the status shows RUNNING for all of the <literal>uaa</literal> pods,
-   create CNAMEs for the required domains. (See
-   <xref linkend="sec.cap.eks.dns"/>.) Use <command>kubectl</command> to find
-   the service host names. These host names include the <literal>elb</literal>
-   sub-domain, so use this to get the correct results:
+   When <literal>uaa</literal> is finished deploying, create CNAMEs for the
+   required domains. (See <xref linkend="sec.cap.eks.dns"/>.) Use
+   <command>kubectl</command> to find the service host names. These host names
+   include the <literal>elb</literal> sub-domain, so use this to get the
+   correct results:
   </para>
 
 <screen>&prompt.user;kubectl get services --namespace uaa | grep elb</screen>
 
-  <important>
-&deployment-pod-status;
-  </important>
  </sect1>
  <sect1 xml:id="sec.cap.install-scf-eks">
   <title>Deploy <literal>scf</literal></title>
@@ -445,11 +436,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
 
-  <para>
-   Sit back and wait for the pods to come online:
-  </para>
-
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
+  &scf-deploy-complete;
 
   <para>
    Before traffic is routed to EKS load balancers, health checks are performed

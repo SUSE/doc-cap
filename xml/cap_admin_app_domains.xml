@@ -86,15 +86,11 @@
 --values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
 
-  <para>
-   Monitor the progess of the deployment:
-  </para>
-
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
+  &scf-deploy-complete;
 
   <para>
-   When all pods are in a ready state, do the following to confirm custom
-   application domains have been configured correctly.
+   When the <literal>scf</literal> is complete, do the following to confirm
+   custom application domains have been configured correctly.
   </para>
 
   <para>

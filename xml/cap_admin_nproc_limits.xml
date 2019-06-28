@@ -92,13 +92,7 @@
 --namespace uaa \
 --values scf-config-values.yaml
 </screen>
-    </step>
-    <step>
-     <para>
-      Wait until you have a successful <literal>uaa</literal> deployment before
-      going to the next steps, which you can monitor with the <command>watch</command> command:
-     </para>
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace uaa'</screen>
+     &uaa-deploy-complete;
     </step>
     <step>
      <para>

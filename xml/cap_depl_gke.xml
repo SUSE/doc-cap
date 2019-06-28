@@ -403,15 +403,7 @@ suse       https://kubernetes-charts.suse.com/
 --namespace <replaceable>uaa</replaceable> \
 --values <replaceable>scf-config-values.yaml</replaceable>
 </screen>
-   <para>
-    Wait until you have a successful <literal>uaa</literal> deployment before
-    going to the next steps. Monitor the progress using the
-    <command>watch</command> command:
-   </para>
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace uaa'</screen>
-   <important>
-&deployment-pod-status;
-   </important>
+   &uaa-deploy-complete;
    <para>
     Once the <literal>uaa</literal> deployment completes, a <literal>uaa</literal>
     service will be exposed on a load balancer public IP. The name of the service
@@ -491,10 +483,7 @@ uaa-uaa-public    LoadBalancer   10.0.67.56     35.197.11.229  2793:30206/TCP
 --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
-   <para>
-    Monitor the deployment progress using the <command>watch</command> command:
-   </para>
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
+   &scf-deploy-complete;
    <para>
     Once the deployment completes, a number of public services will be setup
     using load balancers that has been configured with corresponding load

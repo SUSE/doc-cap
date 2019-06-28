@@ -197,12 +197,7 @@ ingress:
 --namespace uaa \
 --values scf-config-values.yaml
 </screen>
-   </step>
-   <step>
-    <para>
-     Monitor the deployment progress using the <command>watch</command> command. 
-    </para>
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace uaa'</screen>
+    &uaa-deploy-complete;
    </step>
    <step>
     <para>
@@ -248,17 +243,12 @@ ingress:
 --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${INGRESS_CA_CERT}"
 </screen>
+    &scf-deploy-complete;
    </step>
    <step>
     <para>
-     Monitor the deployment progress using the <command>watch</command> command.
-    </para>
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
-   </step>
-   <step>
-    <para>
-     When all <literal>scf</literal> pods are up and ready, verify
-     you are able to login using the &cfcli;.
+     When the deployment completes, verify you are able to login using the
+     &cfcli;.
     </para>	
 <screen>&prompt.user;cf login https://api.example.com -u <replaceable>username</replaceable> -p <replaceable>password</replaceable></screen>
    </step>
