@@ -429,3 +429,106 @@ suse/uaa                        &latestscfchart;          1.4             A Helm
    <link xlink:href="https://helm.sh/docs/using_helm/#securing-your-helm-installation"/>.
   </para>
  </sect1>'>
+
+<!--ENTITY uaa-deploy-complete..............................................-->
+
+<!ENTITY uaa-deploy-complete
+'<para xmlns="http://docbook.org/ns/docbook">
+  Wait until you have a successful <literal>uaa</literal> deployment before
+  going to the next steps, which you can monitor with the
+  <command>watch</command> command:
+ </para>
+<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch -c &apos;kubectl get pods --namespace uaa&apos;</screen>
+ <para xmlns="http://docbook.org/ns/docbook">
+  When <literal>uaa</literal> is successfully deployed, the following is
+  observed:
+ </para>
+ <itemizedlist xmlns="http://docbook.org/ns/docbook">
+  <listitem>
+   <para>
+    For the <literal>secret-generation</literal> pod, the
+    <literal>STATUS</literal> is <literal>Completed</literal> and the
+    <literal>READY</literal> column is at <literal>0/1</literal>.
+   </para>
+  </listitem>
+  <listitem>
+   <para>
+    All other pods have a <literal>Running</literal> <literal>STATUS</literal>
+    and a <literal>READY</literal> value of <literal>n/n</literal>.
+   </para>
+  </listitem>
+ </itemizedlist>
+ <para xmlns="http://docbook.org/ns/docbook">
+  Press <keycombo><keycap function="control"/><keycap>C</keycap></keycombo> to
+  exit the <command>watch</command> command.
+ </para>
+'>
+
+<!--ENTITY scf-deploy-complete..............................................-->
+
+<!ENTITY scf-deploy-complete
+'<para xmlns="http://docbook.org/ns/docbook">
+  Wait until you have a successful <literal>scf</literal> deployment before
+  going to the next steps, which you can monitor with the
+  <command>watch</command> command:
+ </para>
+<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch -c &apos;kubectl get pods --namespace scf&apos;</screen>
+ <para xmlns="http://docbook.org/ns/docbook">
+  When <literal>scf</literal> is successfully deployed, the following is
+  observed:
+ </para>
+ <itemizedlist xmlns="http://docbook.org/ns/docbook">
+  <listitem>
+   <para>
+    For the <literal>secret-generation</literal> and
+    <literal>post-deployment-setup</literal> pods, the <literal>STATUS</literal>
+    is <literal>Completed</literal> and the <literal>READY</literal> column is
+    at <literal>0/1</literal>.
+   </para>
+  </listitem>
+  <listitem>
+   <para>
+    All other pods have a <literal>Running</literal> <literal>STATUS</literal>
+    and a <literal>READY</literal> value of <literal>n/n</literal>.
+   </para>
+  </listitem>
+ </itemizedlist>
+ <para xmlns="http://docbook.org/ns/docbook">
+  Press <keycombo><keycap function="control"/><keycap>C</keycap></keycombo> to
+  exit the <command>watch</command> command.
+ </para>
+'>
+
+<!--ENTITY stratos-deploy-complete..............................................-->
+
+<!ENTITY stratos-deploy-complete
+'<para xmlns="http://docbook.org/ns/docbook">
+  You can monitor the status of your <literal>stratos</literal> deployment with
+  the <command>watch</command> command:
+ </para>
+<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch -c &apos;kubectl get pods --namespace stratos&apos;</screen>
+ <para xmlns="http://docbook.org/ns/docbook">
+  When <literal>stratos</literal> is successfully deployed, the following is
+  observed:
+ </para>
+ <itemizedlist xmlns="http://docbook.org/ns/docbook">
+  <listitem>
+   <para>
+    For the <literal>volume-migration</literal> pod, the
+    <literal>STATUS</literal> is <literal>Completed</literal> and the
+    <literal>READY</literal> column is at <literal>0/1</literal>.
+   </para>
+  </listitem>
+  <listitem>
+   <para>
+    All other pods have a <literal>Running</literal> <literal>STATUS</literal>
+    and a <literal>READY</literal> value of <literal>n/n</literal>.
+   </para>
+  </listitem>
+ </itemizedlist>
+ <para xmlns="http://docbook.org/ns/docbook">
+  Press <keycombo><keycap function="control"/><keycap>C</keycap></keycombo> to
+  exit the <command>watch</command> command.
+ </para>
+'>
+

@@ -182,9 +182,10 @@ sizing:
 --values scf-config-values.yaml \
 --values uaa-sizing.yaml
 </screen>
+   &uaa-deploy-complete;
    <para>
-    When the status shows RUNNING for all of the <literal>uaa</literal> nodes,
-    deploy SCF with these commands:
+    When the <literal>uaa</literal> deployment completes, deploy SCF with these
+    commands:
    </para>
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
 -o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')

@@ -69,21 +69,11 @@ sed 's/"namespace": "default"/"namespace": "stratos"/' | kubectl create -f -</sc
     --values scf-config-values.yaml
 </screen>
 
-  <para>
-   Monitor progress:
-  </para>
-
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace stratos'
- Every 2.0s: kubectl get pods --namespace stratos
- 
-NAME                               READY     STATUS    RESTARTS   AGE
-console-0                          3/3       Running   0          30m
-console-mariadb-3697248891-5drf5   1/1       Running   0          30m</screen>
+  &stratos-deploy-complete;
 
   <para>
-   When all statuses show Ready, press <keycombo><keycap function="control"/>
-   <keycap>C</keycap></keycombo> to exit. Query with &helm; to view your
-   release information:
+   When the <literal>stratos</literal> deployment completes, query with &helm;
+   to view your release information:
   </para>
 
 <screen>&prompt.user;helm status susecf-console
@@ -271,10 +261,8 @@ gp2scoped       kubernetes.io/aws-ebs   1d
     --set services.loadbalanced=true \
     --set console.service.http.nodePort=8080
 </screen>
-  <para>
-    Monitor progress:
-  </para>
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace stratos'</screen>
+
+  &stratos-deploy-complete;
 
   <para>
    Obtain the host name of the service exposed through the public load balancer:
@@ -403,10 +391,8 @@ gp2scoped       kubernetes.io/aws-ebs   1d
     --set services.loadbalanced=true \
     --set console.service.http.nodePort=8080
 </screen>
-  <para>
-    Monitor progress:
-  </para>
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace stratos'</screen>
+
+  &stratos-deploy-complete;
 
   <para>
    Obtain the IP address of the service exposed through the public load balancer:
@@ -522,10 +508,8 @@ gp2scoped       kubernetes.io/aws-ebs   1d
     --set services.loadbalanced=true \
     --set console.service.http.nodePort=8080
 </screen>
-  <para>
-    Monitor progress:
-  </para>
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace stratos'</screen>
+
+  &stratos-deploy-complete;
 
   <para>
    Obtain the IP address of the service exposed through the public load balancer:

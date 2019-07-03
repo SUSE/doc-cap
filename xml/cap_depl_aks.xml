@@ -551,15 +551,7 @@ suse       https://kubernetes-charts.suse.com/
 --namespace <replaceable>uaa</replaceable> \
 --values <replaceable>scf-config-values.yaml</replaceable>
 </screen>
-   <para>
-    Wait until you have a successful <literal>uaa</literal> deployment before
-    going to the next steps. Monitor the progress using the
-    <command>watch</command> command:
-   </para>
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace uaa'</screen>
-   <important>
-&deployment-pod-status;
-   </important>
+   &uaa-deploy-complete;
    <para>
     After the deployment completes, a &kube; service for <literal>uaa</literal>
     will be exposed on an Azure load balancer that is automatically set up by
@@ -649,10 +641,7 @@ uaa-uaa-public    LoadBalancer   10.0.67.56     40.85.188.67   2793:32034/TCP
 --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
-   <para>
-    Monitor the deployment progress using the <command>watch</command> command:
-   </para>
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
+   &scf-deploy-complete;
    <para>
     After the deployment completes, a number of public services will be setup
     using a load balancer that has been configured with corresponding load
