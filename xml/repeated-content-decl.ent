@@ -499,7 +499,7 @@ suse/uaa                        &latestscfchart;          1.4             A Helm
  </para>
 '>
 
-<!--ENTITY stratos-deploy-complete..............................................-->
+<!--ENTITY stratos-deploy-complete..........................................-->
 
 <!ENTITY stratos-deploy-complete
 '<para xmlns="http://docbook.org/ns/docbook">
@@ -737,3 +737,64 @@ suse/uaa                        &latestscfchart;          1.4             A Helm
   </procedure>
  </warning>
 '>
+
+<!--ENTITY uaa-in-scf.......................................................-->
+
+<!ENTITY uaa-in-scf
+'<note xmlns="http://docbook.org/ns/docbook">
+  <title>Embedded <literal>uaa</literal> in <literal>scf</literal></title>
+  <para>
+   As of &cap; 1.4.1, <literal>uaa</literal> is included as an optional
+   feature of the <literal>scf</literal> &helm; chart. This simplifies the &cap;
+   deployment process as a separate installation and/or upgrade of
+   <literal>uaa</literal> is no longer a prerequisite to installing and/or
+   upgrading <literal>scf</literal>.
+  </para>
+  <para>
+   It is important to note that:
+  </para>
+  <itemizedlist>
+   <listitem>
+    <para>
+     This feature should only be used when <literal>uaa</literal> is not
+     shared with other projects.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     You <emphasis>cannot</emphasis> migrate from an existing external
+     <literal>uaa</literal> to an embedded one. In this situation, enabling
+     this feature during an upgrade will result in a single admin account.
+    </para>
+   </listitem>
+  </itemizedlist>
+  <para>
+   To enable this feature, add the following to your
+   <filename>scf-config-values.yaml</filename>.
+  </para>
+<screen>enable:
+  uaa: true
+</screen>
+  <para>
+   When deploying and/or upgrading <literal>scf</literal>, run
+   <command>helm install</command> and/or <command>helm upgrade</command> and
+   note that:
+  </para>
+  <itemizedlist>
+   <listitem>
+    <para>
+     Installing and/or upgrading <literal>uaa</literal> using
+     <command>helm install suse/uaa ...</command> and/or
+     <command>helm upgrade</command> is no longer required.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     It is no longer necessary to set the <literal>UAA_CA_CERT</literal>
+     parameter. Previously, this parameter was passed the
+     <literal>CA_CERT</literal> variable, which was assigned the CA certificate
+     of <literal>uaa</literal>.
+    </para>
+   </listitem>
+  </itemizedlist>
+ </note>'>

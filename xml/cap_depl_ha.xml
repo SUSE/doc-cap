@@ -105,6 +105,9 @@ config:
     deployment and requirements. Do not change the <literal>config.HA</literal>
     flag to <literal>true</literal> (see <xref linkend="sec.cap.ha-simple"/>.)
    </para>
+
+   &uaa-in-scf;
+
    <para>
     The first example is for the <literal>uaa</literal> namespace,
     <filename>uaa-sizing.yaml</filename>. The values specified are the minimum

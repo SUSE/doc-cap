@@ -388,6 +388,8 @@ suse            https://kubernetes-charts.suse.com/</screen>
  <sect1 xml:id="sec.cap.install-uaa-eks">
   <title>Deploy <literal>uaa</literal></title>
 
+  &uaa-in-scf;
+
   <para>
    Use &helm; to deploy the <literal>uaa</literal> (User Account and
    Authentication) server. You may create your own release
