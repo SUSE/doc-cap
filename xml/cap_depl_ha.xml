@@ -260,125 +260,84 @@ sizing:
    </para>
   </sect2>
  </sect1>
- <sect1 xml:id="sec.cap.ha-custom-availability-zone-handling">
-  <title>Handling Custom Availability Zone Information</title>
+ <sect1 xml:id="sec.cap.availability-zones">
+  <title>Availability Zones</title>
 
-  <sect2 xml:id="sec.cap.availability-zones">
-   <title>Availability Zones</title>
-   <para>
-    Availability Zones (AZ) are logical arrangements of compute nodes within a
-    region that provide isolation from each other. A deployment that is
-    distributed across multiple AZs can use this separation to increase
-    resiliency against downtime in the event a given zone experiences issues.
-    See
-    <link xlink:href="https://docs.cloudfoundry.org/concepts/high-availability.html#azs">
-    Availability Zones</link> for more information.
-   </para>
-  </sect2>
+  <para>
+   Availability Zones (AZ) are logical arrangements of compute nodes within a
+   region that provide isolation from each other. A deployment that is
+   distributed across multiple AZs can use this separation to increase
+   resiliency against downtime in the event a given zone experiences issues.
+  </para>
+  <para>
+   Refer to the following for platform-specific information about availability
+   zones:
+  </para>
+  <itemizedlist>
+   <listitem>
+    <para>
+     <link xlink:href="https://azure.microsoft.com/en-ca/updates/availability-zones-az-support-for-aks/"/>
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     <link xlink:href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html"/>
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     <link xlink:href="https://cloud.google.com/compute/docs/regions-zones/"/>
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     <link xlink:href="https://docs.cloudfoundry.org/concepts/high-availability.html#azs"/>
+    </para>
+   </listitem>
+  </itemizedlist>
 
-  <sect2 xml:id="sec.cap.enable-custom-availability-zone-handling">
-   <title>Enable Custom Availability Zone Information Handling</title>
+  <sect2 xml:id="sec.cap.availability-zone-handling">
+   <title>Availability Zone Information Handling</title>
    <para>
-    By default, handling of custom AZ information is disabled. To enable it,
-    provide a label name as a string to the <literal>AZ_LABEL_NAME</literal>
-    field in the <literal>env:</literal> section of your
-    <filename>scf-config-values.yaml</filename>:
-   </para>
-<screen>env:
-  AZ_LABEL_NAME: <replaceable>"zone-label"</replaceable>
-</screen>
-   <para>
-    If <literal>uaa</literal> is deployed, pass your <literal>uaa</literal>
-    secret and certificate to <literal>scf</literal>. Otherwise deploy
-    <literal>uaa</literal> first (See
-    <xref linkend="sec.cap.install-uaa-prod"/>), then proceed with this step:
-   </para>
-<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
---output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
-
-&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
---output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-</screen>
-   <para>
-    If this is an initial deployment, use <command>helm install</command> to
-    deploy <literal>scf</literal>:
-   </para>
-<screen>&prompt.user;helm install suse/cf \
---name susecf-scf \
---namespace scf \
---values scf-config-values.yaml \
---set "secrets.UAA_CA_CERT=${CA_CERT}"
-</screen>
-   <para>
-    If this is an existing deployment, use <command>helm upgrade</command> to
-    apply the change:
-   </para>
-<screen>&prompt.user;helm upgrade susecf-scf suse/cf \
---values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}"
-</screen>
-   <para>
-    Enabling this feature requires that the node-reader service account has
-    sufficient permissions. This can be provided through a configuration file
-    and <command>kubectl</command>.
+    In &cap;, availability zone handling is done using the
+    <literal>AZ_LABEL_NAME</literal> &helm; chart value. By default,
+    <literal>AZ_LABEL_NAME</literal> is set to
+    <literal>failure-domain.beta.kubernetes.io/zone</literal>, which is the
+    predefined &kube; label for availability zones. On most public cloud
+    providers, nodes will already have this label set and availability zone
+    support will work without further configuration. For on-premise
+    installations, it is recommended that nodes are labeled with the same label.
    </para>
    <para>
-    Create the configuration file, which in this example will be
-    <filename>node-reader.yaml</filename>:
+    Run the following to see the labels on your nodes.
    </para>
-<screen>kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: node-reader-clusterrole
-  labels:
-    rbac.authorization.k8s.io/aggregate-to-view: "true"
-rules:
-- apiGroups: [""]
-  resources: ["nodes"]
-  verbs: ["get", "list", "watch"]
-
----
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
-metadata:
-  name: node-reader-node-reader-clusterrole-binding
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: node-reader-clusterrole
-subjects:
-  - kind: ServiceAccount
-    name: node-reader
-    namespace: scf
-</screen>
+<screen>&prompt.user;kubectl get nodes --show-labels</screen>
    <para>
-    Apply it to your cluster:
+    To label a node, use <command>kubectl label nodes </command>. For example:
    </para>
-<screen>&prompt.user;kubectl create --filename node-reader.yaml</screen>
+<screen>&prompt.user;kubectl label nodes <replaceable>cap-worker-1</replaceable> <replaceable>failure-domain.beta.kubernetes.io/zone=zone-1</replaceable></screen>
    <para>
-    Next, get the names of the nodes in your cluster:
+    To see which node and availability zone a given
+    <literal>diego-cell</literal> pod is assigned to, refer to the following
+    example:
    </para>
-<screen>&prompt.user;kubectl get nodes
-NAME                         STATUS  ROLES     AGE  VERSION
-4a10db2c.infra.caasp.local   Ready   Master    4h   v1.9.8
-87c9e8ff.infra.caasp.local   Ready   &lt;none>    4h   v1.9.8
-34ce7eb0.infra.caasp.local   Ready   &lt;none>    4h   v1.9.8
-</screen>
+<screen>&prompt.user;kubectl logs <replaceable>diego-cell-0</replaceable> --namespace scf | grep ^AZ</screen>
    <para>
-    Set your chosen label on the worker nodes and specify an AZ:
+    For more information on the
+    <literal>failure-domain.beta.kubernetes.io/zone</literal> label, see
+    <link xlink:href="https://kubernetes.io/docs/reference/kubernetes-api/labels-annotations-taints/#failure-domainbetakubernetesiozone"/>.
    </para>
-<screen>&prompt.user;kubectl label nodes <replaceable>34ce7eb0.infra.caasp.local</replaceable> <replaceable>zone-label</replaceable>=<replaceable>availability-zone-1</replaceable></screen>
    <para>
-    Restart all <literal>diego-cell</literal> pods:
+    Note that due to a bug in &cap; 1.4 and earlier, this label was not working for <literal>AZ_LABEL_NAME</literal>.
    </para>
-<screen>&prompt.user;kubectl delete pod diego-cell-0 --namespace scf</screen>
-   <para>
-    Run the following and verify that similar output is received:
-   </para>
-<screen>&prompt.user;kubectl logs diego-cell-0 --namespace scf | grep ^AZ
-AZ: Configured <replaceable>zone-label</replaceable>
-AZ: Node...... <replaceable>34ce7eb0.infra.caasp.local</replaceable>
-AZ: Found..... <replaceable>availability-zone-1</replaceable>
-</screen>
+   <important>
+    <title>Performance with Availability Zones</title>
+    <para>
+     For the best performance, all availability zones should have a similar
+     number of nodes because app instances will be evenly distributed, so that
+     each zone has about the same number of instances.
+    </para>
+   </important>
   </sect2>
  </sect1>
 </chapter>
