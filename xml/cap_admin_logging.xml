@@ -71,7 +71,7 @@
         <filename>/var/vcap/sys/logs</filename>, at which point there will be
         subdirectories containing the log files for access.
        </para>
-<screen>&prompt.user;kubectl exec -it --namespace scf router-0 /bin/bash
+<screen>&prompt.user;kubectl exec --stdin --tty --namespace scf router-0 /bin/bash
 
 router/0:/# cd /var/vcap/sys/log
 

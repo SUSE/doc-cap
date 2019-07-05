@@ -37,10 +37,10 @@
   </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
--o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"</screen>
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"</screen>
 
   <para>
    If disabling the feature on an initial deployment, run the following command:
@@ -70,10 +70,10 @@
  </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
--o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
 &prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
@@ -173,17 +173,17 @@
   </para>
 
 <screen>&prompt.user;kubectl get pods --namespace uaa \
- -o jsonpath='{.items[*].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}'
+--output jsonpath='{.items[*].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}'
  <replaceable>secrets-2.8.0-1</replaceable>
 
-&prompt.user;kubectl get secret -n scf <replaceable>secrets-2.8.0-1</replaceable> -o jsonpath='{.data.internal-ca-cert}' | base64 -d
+&prompt.user;kubectl get secret --namespace scf <replaceable>secrets-2.8.0-1</replaceable> --output jsonpath='{.data.internal-ca-cert}' | base64 --decode
  -----BEGIN CERTIFICATE-----
  MIIE8jCCAtqgAwIBAgIUT/Yu/Sv4UHl5zHZYZKCy5RKJqmYwDQYJKoZIhvcNAQEN
  [...]
  xC8x/+zT0QkvcRJBio5gg670+25KJQ==
  -----END CERTIFICATE-----
  
-&prompt.user;kubectl get secret -n uaa <replaceable>secrets-2.8.0-1</replaceable> -o jsonpath='{.data.internal-ca-cert}' | base64 -d
+&prompt.user;kubectl get secret --namespace uaa <replaceable>secrets-2.8.0-1</replaceable> --output jsonpath='{.data.internal-ca-cert}' | base64 --decode
  -----BEGIN CERTIFICATE-----
  MIIE8jCCAtqgAwIBAgIUSI02lj0a0InLb/zMrjNgW5d8EygwDQYJKoZIhvcNAQEN
  [...]

@@ -235,7 +235,7 @@ parameters:
    Then apply the new storage class configuration with this command:
   </para>
 
-<screen>&prompt.user;kubectl create -f storage-class.yaml</screen>
+<screen>&prompt.user;kubectl create --filename storage-class.yaml</screen>
  </sect1>
  <sect1 xml:id="sec.cap.eks-secgroup-rules">
   <title>Security Group rules</title>
@@ -424,10 +424,10 @@ suse            https://kubernetes-charts.suse.com/</screen>
   </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
--o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
 &prompt.user;helm install suse/cf \
 --name <replaceable>susecf-scf</replaceable> \

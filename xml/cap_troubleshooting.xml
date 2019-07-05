@@ -174,7 +174,7 @@ namespace "scf" deleted</screen>
      List all of your running pods, their internal IP addresses, and which
      &kube; nodes they are running on:
     </para>
-<screen>&prompt.user;kubectl get pods --all-namespaces --output-wide</screen>
+<screen>&prompt.user;kubectl get pods --all-namespaces --output wide</screen>
    </listitem>
    <listitem>
     <para>
@@ -212,7 +212,7 @@ namespace "scf" deleted</screen>
     <para>
      List all containers in all namespaces, formatted for readability:
     </para>
-<screen>&prompt.user;kubectl get pods --all-namespaces -o jsonpath="{..image}" |\
+<screen>&prompt.user;kubectl get pods --all-namespaces --output jsonpath="{..image}" |\
 tr -s '[[:space:]]' '\n' |\
 sort |\
 uniq -c</screen>
@@ -222,8 +222,8 @@ uniq -c</screen>
      These two commands check node capacities, to verify that there are enough
      resources for the pods:
     </para>
-<screen>&prompt.user;kubectl get nodes -o yaml | grep '\sname\|cpu\|memory'
-&prompt.user;kubectl get nodes -o json | \
+<screen>&prompt.user;kubectl get nodes --output yaml | grep '\sname\|cpu\|memory'
+&prompt.user;kubectl get nodes --output json | \
 jq '.items[] | {name: .metadata.name, cap: .status.capacity}'</screen>
    </listitem>
   </itemizedlist>

@@ -45,8 +45,8 @@
    Stratos namespace:
   </para>
 
-<screen>&prompt.user;kubectl get secret ceph-secret-admin -o json --namespace default | \
-sed 's/"namespace": "default"/"namespace": "stratos"/' | kubectl create -f -</screen>
+<screen>&prompt.user;kubectl get secret ceph-secret-admin --output json --namespace default | \
+sed 's/"namespace": "default"/"namespace": "stratos"/' | kubectl create --filename -</screen>
 
   <para>
    You should already have the Stratos charts when you downloaded the SUSE
@@ -696,8 +696,8 @@ useLb: true</screen>
     If you are using &ses;, you must copy the Ceph admin secret to the
     <literal>metrics</literal> namespace:
    </para>
-<screen>&prompt.user;kubectl get secret ceph-secret-admin -o json --namespace default | \
-sed 's/"namespace": "default"/"namespace": "metrics"/' | kubectl create -f -
+<screen>&prompt.user;kubectl get secret ceph-secret-admin --output json --namespace default | \
+sed 's/"namespace": "default"/"namespace": "metrics"/' | kubectl create --filename -
 </screen>
    <para>
     Install Metrics with:
@@ -710,7 +710,7 @@ sed 's/"namespace": "default"/"namespace": "metrics"/' | kubectl create -f -
    <para>
     Monitor progress:
    </para>
-<screen>$ watch -c 'kubectl get pods --namespace metrics'</screen>
+<screen>$ watch --color 'kubectl get pods --namespace metrics'</screen>
    <para>
     When all statuses show <literal>Ready</literal>, press <keycombo>
     <keycap function="control"/> <keycap>C</keycap> </keycombo> to exit and to

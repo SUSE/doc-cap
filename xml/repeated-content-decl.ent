@@ -288,7 +288,7 @@ Before you start deploying &productname;, review the following documents:
  <literal>UAA_ADMIN_CLIENT_SECRET</literal> set in your
  <filename>scf-config-values.yaml</filename> file:
 </para>
-<screen>&prompt.user;uaac token client get admin -s <replaceable>password</replaceable></screen>
+<screen>&prompt.user;uaac token client get admin --secret <replaceable>password</replaceable></screen>
 </step>'>
 
 <!--ENTITY helm-search-suse.................................................-->
@@ -438,7 +438,7 @@ suse/uaa                        &latestscfchart;          1.4             A Helm
   going to the next steps, which you can monitor with the
   <command>watch</command> command:
  </para>
-<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch -c &apos;kubectl get pods --namespace uaa&apos;</screen>
+<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch --color &apos;kubectl get pods --namespace uaa&apos;</screen>
  <para xmlns="http://docbook.org/ns/docbook">
   When <literal>uaa</literal> is successfully deployed, the following is
   observed:
@@ -472,7 +472,7 @@ suse/uaa                        &latestscfchart;          1.4             A Helm
   going to the next steps, which you can monitor with the
   <command>watch</command> command:
  </para>
-<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch -c &apos;kubectl get pods --namespace scf&apos;</screen>
+<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch --color &apos;kubectl get pods --namespace scf&apos;</screen>
  <para xmlns="http://docbook.org/ns/docbook">
   When <literal>scf</literal> is successfully deployed, the following is
   observed:
@@ -506,7 +506,7 @@ suse/uaa                        &latestscfchart;          1.4             A Helm
   You can monitor the status of your <literal>stratos</literal> deployment with
   the <command>watch</command> command:
  </para>
-<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch -c &apos;kubectl get pods --namespace stratos&apos;</screen>
+<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch --color &apos;kubectl get pods --namespace stratos&apos;</screen>
  <para xmlns="http://docbook.org/ns/docbook">
   When <literal>stratos</literal> is successfully deployed, the following is
   observed:

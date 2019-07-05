@@ -60,7 +60,7 @@
         kubectl get pods --namespace scf
 
     to spot-check if everything is up and running, or
-        watch -c 'kubectl get pods --namespace scf'
+        watch --color 'kubectl get pods --namespace scf'
 
     to monitor continuously.</screen>
 
@@ -69,7 +69,7 @@
   </para>
 
 <screen>&prompt.user;helm status $(helm list | awk '/cf-([0-9]).([0-9]).*/{print$1}') | \
-sed -n -e '/NOTES/,$p'</screen>
+sed --quiet --expression '/NOTES/,$p'</screen>
 
   <para>
    You need to provide the API endpoint of your &productname; instance to log

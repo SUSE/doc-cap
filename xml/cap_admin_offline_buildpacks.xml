@@ -114,7 +114,7 @@
     <para>
      Build the latest released SUSE Ruby buildpack for the &sle; 15 stack:
     </para>
-<screen>&prompt.user;docker run -it --rm -v $PWD:/out splatform/cf-buildpack-packager <replaceable>SUSE</replaceable> <replaceable>ruby</replaceable> <replaceable>""</replaceable> <replaceable>sle15</replaceable></screen>
+<screen>&prompt.user;docker run --interactive --tty --rm -v $PWD:/out splatform/cf-buildpack-packager <replaceable>SUSE</replaceable> <replaceable>ruby</replaceable> <replaceable>""</replaceable> <replaceable>sle15</replaceable></screen>
    </step>
    <step>
     <para>

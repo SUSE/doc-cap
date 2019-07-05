@@ -149,7 +149,7 @@ NAME            REVISION  UPDATED                  STATUS    CHART           NAM
    View all charts in a release, and their versions:
   </para>
 
-<screen>&prompt.user;helm search suse/uaa -l
+<screen>&prompt.user;helm search suse/uaa --versions
 NAME            CHART VERSION   APP VERSION     DESCRIPTION
 suse/uaa        &latestuaachart;          1.4             A Helm chart for SUSE UAA
 suse/uaa        2.15.2          1.3.1           A Helm chart for SUSE UAA
@@ -174,7 +174,7 @@ suse/uaa        2.6.11                          A Helm chart for SUSE UAA
    Just like your initial installation, wait for each command to complete
    before running the next command. Monitor progress with the
    <command>watch</command> command for each namespace, for example
-   <command>watch -c 'kubectl get pods --namespace uaa'</command>. First
+   <command>watch --color 'kubectl get pods --namespace uaa'</command>. First
    upgrade <literal>uaa</literal>:
   </para>
 
@@ -189,15 +189,15 @@ suse/uaa        2.6.11                          A Helm chart for SUSE UAA
   </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
--o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"</screen>
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"</screen>
 
   <para>
    Upgrade <literal>scf</literal>, and note that if you see an error message
    like <literal>lost connection to pod Error: UPGRADE FAILED: transport is
-   closing</literal>, this is normal. If you can run <command>watch -c 'kubectl
+   closing</literal>, this is normal. If you can run <command>watch --color 'kubectl
    get pods --namespace scf'</command> then everything is all right.
   </para>
 
