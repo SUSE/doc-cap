@@ -65,7 +65,7 @@
    <literal>uaa</literal> namespace, progress can be monitored with:
   </para>
 
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace uaa'</screen>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace uaa'</screen>
  </sect1>
  <sect1 xml:id="sec.cap.configuration-change-other-examples">
   <title>Other Examples</title>

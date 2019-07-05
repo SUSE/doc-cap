@@ -51,10 +51,10 @@
   </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
--o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"</screen>
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"</screen>
 
   <para>
    If this is an initial deployment, use <command>helm install</command> to deploy
@@ -86,10 +86,10 @@
  </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
--o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
 &prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
@@ -137,7 +137,7 @@
 
 <screen>
 &prompt.user;SECRET="$(kubectl get secrets --namespace "${NAMESPACE}" | awk '/^secrets-/ { print $1 }')"
-&prompt.user;CH_SECRET="$(kubectl get secrets --namespace "${NAMESPACE}" "${SECRET}" -o jsonpath="{.data['uaa-clients-credhub-user-cli-secret']}"|base64 -d)"
+&prompt.user;CH_SECRET="$(kubectl get secrets --namespace "${NAMESPACE}" "${SECRET}" --output jsonpath="{.data['uaa-clients-credhub-user-cli-secret']}"|base64 --decode)"
 &prompt.user;CH_CLIENT=credhub_user_cli
 &prompt.user;echo Service ......@ $CH_SERVICE
 &prompt.user;echo CH cli Secret @ $CH_SECRET
@@ -157,10 +157,10 @@
   </para>
 
 <screen>
-&prompt.user;"${CH_CLI}" set -n FOX -t value -v 'fox over lazy dog'   
-&prompt.user;"${CH_CLI}" set -n DOG -t user -z dog -w fox
-&prompt.user;"${CH_CLI}" get -n FOX
-&prompt.user;"${CH_CLI}" get -n DOG
+&prompt.user;"${CH_CLI}" set --name FOX --type value --value 'fox over lazy dog'   
+&prompt.user;"${CH_CLI}" set --name DOG --type user --username dog --password fox
+&prompt.user;"${CH_CLI}" get --name FOX
+&prompt.user;"${CH_CLI}" get --name DOG
 </screen>
  </sect1>
 </chapter>

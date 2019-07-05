@@ -98,7 +98,7 @@ suse/minibroker                 0.2.0                           A minibroker for
      Monitor the deployment progress. Wait until all pods are in a ready state
      before proceeding:
     </para>
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace minibroker'</screen>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace minibroker'</screen>
    </step>
   </procedure>
  </sect1>
@@ -221,7 +221,7 @@ TIP:  Use 'cf marketplace -s SERVICE' to view descriptions of individual plans o
      pods with a randomly generated name that have been created in the
      <literal>minibroker</literal> namespace:
     </para>
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace minibroker'
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace minibroker'
 NAME                                            READY     STATUS             RESTARTS   AGE
 alternating-frog-redis-master-0                 1/1       Running            2          1h
 alternating-frog-redis-slave-7f7444978d-z86nr   1/1       Running            0          1h
@@ -265,9 +265,9 @@ minibroker-minibroker-5865f66bb8-6dxm7          2/2       Running            0  
      the Redis service:
     </para>
 <screen>&prompt.user;export APP=redis-example-app.example.com
-&prompt.user;curl -X GET $APP/foo
-&prompt.user;curl -X PUT $APP/foo -d 'data=bar'
-&prompt.user;curl -X GET $APP/foo
+&prompt.user;curl --request GET $APP/foo
+&prompt.user;curl --request PUT $APP/foo --data 'data=bar'
+&prompt.user;curl --request GET $APP/foo
 </screen>
     <para>
      The first <literal>GET</literal> will return <literal>key not

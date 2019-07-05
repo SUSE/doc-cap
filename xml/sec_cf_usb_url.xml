@@ -38,7 +38,7 @@
     Get the current <literal>cf-usb</literal> password. Use the name of the
     secret obtained in the first step:
    </para>
-<screen>&prompt.user;kubectl get secret --namespace scf <replaceable>secrets-2.14.5-1</replaceable> -o yaml | grep \\scf-usb-password: | cut -d: -f2 | base64 -id</screen>
+<screen>&prompt.user;kubectl get secret --namespace scf <replaceable>secrets-2.14.5-1</replaceable> --output yaml | grep \\scf-usb-password: | cut -d: -f2 | base64 -id</screen>
   </step>
   <step>
    <para>
@@ -72,7 +72,7 @@
     Get the current <literal>cf-usb</literal> password. Use the name of the
     secret obtained in the first step:
    </para>
-<screen>&prompt.user;kubectl get secret --namespace scf <replaceable>secrets-2.15.2-1</replaceable> -o yaml | grep \\scf-usb-password: | cut -d: -f2 | base64 -id</screen>
+<screen>&prompt.user;kubectl get secret --namespace scf <replaceable>secrets-2.15.2-1</replaceable> --output yaml | grep \\scf-usb-password: | cut -d: -f2 | base64 -id</screen>
   </step>
   <step>
    <para>

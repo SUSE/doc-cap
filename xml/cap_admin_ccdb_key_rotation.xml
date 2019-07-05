@@ -48,10 +48,10 @@ secrets:
     <literal>scf</literal>:
    </para>
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
--o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
    </screen>
   </step>
   <step>
@@ -78,7 +78,7 @@ secrets:
       Change the encryption key in the config file. No output should be
       produced:
      </para>
-<screen>&prompt.user;kubectl exec --namespace scf api-group-0 -- bash -c 'sed -i "/db_encryption_key:/c\\db_encryption_key: \"$(echo $CC_DB_ENCRYPTION_KEYS | jq -r .new_key)\"" /var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml'
+<screen>&prompt.user;kubectl exec --namespace scf api-group-0 -- bash -c 'sed --in-place "/db_encryption_key:/c\\db_encryption_key: \"$(echo $CC_DB_ENCRYPTION_KEYS | jq -r .new_key)\"" /var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml'
      </screen>
     </step>
     <step>
@@ -98,7 +98,7 @@ secrets:
     <literal>encryption_key_label</literal> is empty, the default generated key
     is still being used
    </para>
-<screen>&prompt.user;kubectl exec -it mysql-0 --namespace scf -- /bin/bash -c 'mysql -p${MYSQL_ADMIN_PASSWORD}'
+<screen>&prompt.user;kubectl exec --stdin --tty mysql-0 --namespace scf -- /bin/bash -c 'mysql -p${MYSQL_ADMIN_PASSWORD}'
 MariaDB [(none)]> select name, encrypted_environment_variables, encryption_key_label from ccdb.apps;
 +--------+--------------------------------------------------------------------------------------------------------------+----------------------+
 | name   | encrypted_environment_variables                                                                              | encryption_key_label |

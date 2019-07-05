@@ -113,7 +113,7 @@
    and <literal>Microsoft.ContainerService</literal> providers are enabled:
   </para>
 
-<screen>&prompt.user;az provider list | egrep -w 'Microsoft.Network|Microsoft.Storage|Microsoft.Compute|Microsoft.ContainerService'</screen>
+<screen>&prompt.user;az provider list | egrep --word-regexp 'Microsoft.Network|Microsoft.Storage|Microsoft.Compute|Microsoft.ContainerService'</screen>
 
   <para>
    If any of these are missing, enable them with the <command>az provider
@@ -365,18 +365,18 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
 
   <procedure xml:id="pro.swap-account">
    <step>
-<screen>&prompt.user;export MC_RG_NAME=$(az aks show --resource-group $RG_NAME --name $AKS_NAME --query nodeResourceGroup -o json | jq -r '.')</screen>
+<screen>&prompt.user;export MC_RG_NAME=$(az aks show --resource-group $RG_NAME --name $AKS_NAME --query nodeResourceGroup --output json | jq -r '.')</screen>
    </step>
    <step>
-<screen>&prompt.user;export VM_NODES=$(az vm list --resource-group $MC_RG_NAME -o json | jq -r '.[] | select (.tags.poolName | contains("'$NODEPOOL_NAME'")) | .name')</screen>
+<screen>&prompt.user;export VM_NODES=$(az vm list --resource-group $MC_RG_NAME --output json | jq -r '.[] | select (.tags.poolName | contains("'$NODEPOOL_NAME'")) | .name')</screen>
    </step>
    <step>
 <screen>&prompt.user;for i in $VM_NODES
  do
-   az vm run-command invoke -g $MC_RG_NAME -n $i --command-id RunShellScript --scripts \
-   "sudo sed -i -r 's|^(GRUB_CMDLINE_LINUX_DEFAULT=)\"(.*.)\"|\1\"\2 swapaccount=1\"|' \
+   az vm run-command invoke --resource-group $MC_RG_NAME --name $i --command-id RunShellScript --scripts \
+   "sudo sed --in-place --regexp-extended 's|^(GRUB_CMDLINE_LINUX_DEFAULT=)\"(.*.)\"|\1\"\2 swapaccount=1\"|' \
    /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub"
-   az vm restart -g $MC_RG_NAME -n $i
+   az vm restart --resource-group $MC_RG_NAME --name $i
 done</screen>
    </step>
    <step>
@@ -415,7 +415,7 @@ reclaimPolicy: Delete</screen>
    Then apply the new storage class configuration with this command:
   </para>
 
-<screen>&prompt.user;kubectl create -f storage-class.yaml</screen>
+<screen>&prompt.user;kubectl create --filename storage-class.yaml</screen>
   <para>
    Specify the newly created created storage class, called <literal>persistent</literal>,
    as the value for <literal>kube.storage_class.persistent</literal> in your
@@ -610,7 +610,7 @@ uaa-uaa-public    LoadBalancer   10.0.67.56     40.85.188.67   2793:32034/TCP
     Use <command>curl</command> to verify you are able to connect to the
     <literal>uaa</literal> OAuth server on the DNS name configured:
    </para>
-<screen>&prompt.user;curl -k https://uaa.example.com:2793/.well-known/openid-configuration</screen>
+<screen>&prompt.user;curl --insecure https://uaa.example.com:2793/.well-known/openid-configuration</screen>
    <para>
     This should return a JSON object, as this abbreviated example shows:
    </para>
@@ -630,10 +630,10 @@ uaa-uaa-public    LoadBalancer   10.0.67.56     40.85.188.67   2793:32034/TCP
     <literal>scf</literal>:
    </para>
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
--o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
 &prompt.user;helm install suse/cf \
 --name <replaceable>susecf-scf</replaceable> \
@@ -826,7 +826,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.
   <para>
    Monitor the progress:
   </para>
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace osba'</screen>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace osba'</screen>
   <para>
    When all pods are running, create the service broker in &scf; using the &cfcli;:
   </para>
@@ -834,7 +834,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.
 &prompt.user;cf login
 
 &prompt.user;cf create-service-broker <replaceable>azure</replaceable> $(kubectl get deployment osba-open-service-broker-azure \
---namespace osba -o jsonpath='{.spec.template.spec.containers[0].env[?(@.name == "BASIC_AUTH_USERNAME")].value}') $(kubectl get secret --namespace osba osba-open-service-broker-azure -o jsonpath='{.data.basic-auth-password}' | base64 -d) http://osba-open-service-broker-azure.osba
+--namespace osba --output jsonpath='{.spec.template.spec.containers[0].env[?(@.name == "BASIC_AUTH_USERNAME")].value}') $(kubectl get secret --namespace osba osba-open-service-broker-azure --output jsonpath='{.data.basic-auth-password}' | base64 --decode) http://osba-open-service-broker-azure.osba
 </screen>
 
   <para>
@@ -940,16 +940,16 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
      the values set earlier in this chapter and can also be obtained through
      the AKS web dashboard.
     </para>
-<screen>&prompt.user;export MC_RG_NAME=$(az aks show --resource-group $RG_NAME --name $AKS_NAME --query nodeResourceGroup -o json | jq -r '.')
+<screen>&prompt.user;export MC_RG_NAME=$(az aks show --resource-group $RG_NAME --name $AKS_NAME --query nodeResourceGroup --output json | jq -r '.')
 
-&prompt.user;export VM_NODES=$(az vm list --resource-group $MC_RG_NAME -o json | jq -r '.[] | select (.tags.poolName | contains("'$NODEPOOL_NAME'")) | .name')
+&prompt.user;export VM_NODES=$(az vm list --resource-group $MC_RG_NAME --output json | jq -r '.[] | select (.tags.poolName | contains("'$NODEPOOL_NAME'")) | .name')
 
 &prompt.user;for i in $VM_NODES
  do
-   az vm run-command invoke -g $MC_RG_NAME -n $i --command-id RunShellScript --scripts \
-   "sudo sed -i -r 's|^(GRUB_CMDLINE_LINUX_DEFAULT=)\"(.*.)\"|\1\"\2 swapaccount=1\"|' \
+   az vm run-command invoke --resource-group $MC_RG_NAME --name $i --command-id RunShellScript --scripts \
+   "sudo sed --in-place --regexp-extended 's|^(GRUB_CMDLINE_LINUX_DEFAULT=)\"(.*.)\"|\1\"\2 swapaccount=1\"|' \
    /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub"
-   az vm restart -g $MC_RG_NAME -n $i
+   az vm restart --resource-group $MC_RG_NAME --name $i
 done
 </screen>
     <para>
@@ -979,7 +979,7 @@ done
     <para>
      Get the current number of &kube; nodes in the cluster.
     </para>
-<screen>&prompt.user;export OLD_NODE_COUNT=$(kubectl get nodes -o json | jq '.items | length')</screen>
+<screen>&prompt.user;export OLD_NODE_COUNT=$(kubectl get nodes --output json | jq '.items | length')</screen>
    </step>
    <step>
     <para>
@@ -1010,18 +1010,18 @@ done
     </para>
     <substeps>
      <step>
-<screen>&prompt.user;export MC_RG_NAME=$(az aks show --resource-group $RG_NAME --name $AKS_NAME --query nodeResourceGroup -o json | jq -r '.')</screen>
+<screen>&prompt.user;export MC_RG_NAME=$(az aks show --resource-group $RG_NAME --name $AKS_NAME --query nodeResourceGroup --output json | jq -r '.')</screen>
      </step>
      <step>
-      <screen>&prompt.user;export NEW_VM_NODES=$(az vm list --resource-group $MC_RG_NAME -o json | jq -r '.[] | select (.tags.poolName | contains("'$NODEPOOL_NAME'")) |.name | if .[-1:] | tonumber >= '$OLD_NODE_COUNT' then . else empty end ')</screen>
+      <screen>&prompt.user;export NEW_VM_NODES=$(az vm list --resource-group $MC_RG_NAME --output json | jq -r '.[] | select (.tags.poolName | contains("'$NODEPOOL_NAME'")) |.name | if .[-1:] | tonumber >= '$OLD_NODE_COUNT' then . else empty end ')</screen>
      </step>
      <step>
 <screen>&prompt.user;for i in $NEW_VM_NODES
  do
-   az vm run-command invoke -g $MC_RG_NAME -n $i --command-id RunShellScript --scripts \
-   "sudo sed -i -r 's|^(GRUB_CMDLINE_LINUX_DEFAULT=)\"(.*.)\"|\1\"\2 swapaccount=1\"|' \
+   az vm run-command invoke --resource-group $MC_RG_NAME --name $i --command-id RunShellScript --scripts \
+   "sudo sed --in-place --regexp-extended 's|^(GRUB_CMDLINE_LINUX_DEFAULT=)\"(.*.)\"|\1\"\2 swapaccount=1\"|' \
    /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub"
-   az vm restart -g $MC_RG_NAME -n $i
+   az vm restart --resource-group $MC_RG_NAME --name $i
 done
 </screen>
      </step>
@@ -1050,10 +1050,10 @@ done
      Pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>.
     </para>
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
--o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 </screen>
    </step>
    <step>
@@ -1069,7 +1069,7 @@ done
     <para>
      Monitor progress of the additional <literal>diego-cell</literal> pods:
     </para>
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace scf'</screen>
    </step>
   </procedure>
  </sect1>

@@ -188,10 +188,10 @@ sizing:
     commands:
    </para>
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
- -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"    
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"    
 
 &prompt.user;helm install suse/cf \
 --name <replaceable>susecf-scf</replaceable> \
@@ -244,10 +244,10 @@ sizing:
 --values uaa-sizing.yaml 
 
 &prompt.user;SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
- -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"    
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"    
 
 &prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
@@ -294,10 +294,10 @@ sizing:
     <xref linkend="sec.cap.install-uaa-prod"/>), then proceed with this step:
    </para>
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
--o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 </screen>
    <para>
     If this is an initial deployment, use <command>helm install</command> to
@@ -353,7 +353,7 @@ subjects:
    <para>
     Apply it to your cluster:
    </para>
-<screen>&prompt.user;kubectl create -f node-reader.yaml</screen>
+<screen>&prompt.user;kubectl create --filename node-reader.yaml</screen>
    <para>
     Next, get the names of the nodes in your cluster:
    </para>

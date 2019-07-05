@@ -63,10 +63,10 @@
   </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
--o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
 &prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
@@ -82,10 +82,10 @@
   </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
--o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
 &prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
@@ -148,10 +148,10 @@
      Extract the <literal>uaa</literal> secret for <literal>scf</literal> to use:
     </para>
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
--o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 </screen>
    </step>
   </procedure>
@@ -181,7 +181,7 @@
     <para>
      Monitor the deployment progress. Wait until all pods are in a ready state before proceeding: 
     </para>
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace scf'</screen>
    </step>
    <step>
     <para>
@@ -197,7 +197,7 @@
     <para>
      Monitor the deployment progress and until all pods are in a ready state:
     </para>
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace scf'</screen>
    </step>
   </procedure>  
 
@@ -224,9 +224,9 @@
   </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace scf \
--o jsonpath='{.items[?(.metadata.name=="api-group-0")].spec.containers[?(.name=="api-group")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="api-group-0")].spec.containers[?(.name=="api-group")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
-&prompt.user;AS_PASSWORD="$(kubectl get secret $SECRET --namespace scf -o jsonpath="{.data['autoscaler-service-broker-password']}" | base64 --decode)"
+&prompt.user;AS_PASSWORD="$(kubectl get secret $SECRET --namespace scf --output jsonpath="{.data['autoscaler-service-broker-password']}" | base64 --decode)"
 
 &prompt.user;cf create-service-broker <replaceable>autoscaler</replaceable> username $AS_PASSWORD https://autoscalerservicebroker.<replaceable>example.com</replaceable>
 </screen>

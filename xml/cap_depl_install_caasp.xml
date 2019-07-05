@@ -389,7 +389,7 @@ spec:
    Create your persistent volume claim:
   </para>
 
-<screen>&prompt.user;kubectl create -f test-storage-class.yaml
+<screen>&prompt.user;kubectl create --filename test-storage-class.yaml
 persistentvolumeclaim "test-sc-persistent" created</screen>
 
   <para>
@@ -630,11 +630,11 @@ suse            https://kubernetes-charts.suse.com/</screen>
    <literal>uaa</literal> and <literal>scf</literal> namespaces:
   </para>
 
-<screen>&prompt.user;kubectl get secret ceph-secret-admin -o json --namespace default | \
-sed 's/"namespace": "default"/"namespace": "uaa"/' | kubectl create -f -
+<screen>&prompt.user;kubectl get secret ceph-secret-admin --output json --namespace default | \
+sed 's/"namespace": "default"/"namespace": "uaa"/' | kubectl create --filename -
 
-&prompt.user;kubectl get secret ceph-secret-admin -o json --namespace default | \
-sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -</screen>
+&prompt.user;kubectl get secret ceph-secret-admin --output json --namespace default | \
+sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create --filename -</screen>
  </sect1>
  <sect1 xml:id="sec.cap.install-uaa-prod">
   <title>Deploy <literal>uaa</literal></title>
@@ -669,10 +669,10 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -</screen>
   </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
--o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
 &prompt.user;helm install suse/cf \
 --name <replaceable>susecf-scf</replaceable> \
@@ -732,10 +732,10 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -</screen>
      Pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>.
     </para>
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
--o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 </screen>
    </step>
    <step>
@@ -751,7 +751,7 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create -f -</screen>
     <para>
      Monitor progress of the additional <literal>diego-cell</literal> pods:
     </para>
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace scf'</screen>
    </step>
   </procedure>
  </sect1>

@@ -209,7 +209,7 @@
     <para>
      Update the kernel command line and GRUB then restart the virtual machines:
     </para>
-    <screen>&prompt.user;echo "$instance_names" | xargs -i{} gcloud compute ssh {} -- "sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0 cgroup_enable=memory swapaccount=1\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub &amp;&amp; sudo systemctl reboot -i"</screen>
+    <screen>&prompt.user;echo "$instance_names" | xargs -i{} gcloud compute ssh {} -- "sudo sed --in-place 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0 cgroup_enable=memory swapaccount=1\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub &amp;&amp; sudo systemctl reboot -i"</screen>
    </step>
   </procedure>
 
@@ -231,7 +231,7 @@
      When inside the node, run the command to update the kernel command line and
      GRUB, then restart the node.
     </para>
-<screen>&prompt.user;sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0 cgroup_enable=memory swapaccount=1\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub &amp;&amp; sudo systemctl reboot -i</screen>
+<screen>&prompt.user;sudo sed --in-place 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0 cgroup_enable=memory swapaccount=1\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub &amp;&amp; sudo systemctl reboot -i</screen>
    </step>
   </procedure>
 
@@ -275,7 +275,7 @@ reclaimPolicy: Delete
   <para>
    Create the new storage class using the manifest defined:
   </para>
-<screen>&prompt.user;kubectl create -f <replaceable>storage-class.yaml</replaceable></screen>
+<screen>&prompt.user;kubectl create --filename <replaceable>storage-class.yaml</replaceable></screen>
   <para>
    Specify the newly created created storage class, called <literal>persistent</literal>,
    as the value for <literal>kube.storage_class.persistent</literal> in your
@@ -452,7 +452,7 @@ uaa-uaa-public    LoadBalancer   10.0.67.56     35.197.11.229  2793:30206/TCP
     Use <command>curl</command> to verify you are able to connect to the
     <literal>uaa</literal> OAuth server on the DNS name configured:
    </para>
-<screen>&prompt.user;curl -k https://uaa.example.com:2793/.well-known/openid-configuration</screen>
+<screen>&prompt.user;curl --insecure https://uaa.example.com:2793/.well-known/openid-configuration</screen>
    <para>
     This should return a JSON object, as this abbreviated example shows:
    </para>
@@ -472,10 +472,10 @@ uaa-uaa-public    LoadBalancer   10.0.67.56     35.197.11.229  2793:30206/TCP
     <literal>scf</literal>:
    </para>
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
--o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
 &prompt.user;helm install suse/cf \
 --name <replaceable>susecf-scf</replaceable> \
@@ -627,7 +627,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.23.241.17   35.197
       <para>
        Update the kernel command line and GRUB then restart the virtual machines.
       </para>
-<screen>&prompt.user;echo "$NEW_VM_NODES" | xargs -i{} gcloud compute ssh {} -- "sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0 cgroup_enable=memory swapaccount=1\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub &amp;&amp; sudo systemctl reboot -i"</screen>
+<screen>&prompt.user;echo "$NEW_VM_NODES" | xargs -i{} gcloud compute ssh {} -- "sudo sed --in-place 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0 cgroup_enable=memory swapaccount=1\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub &amp;&amp; sudo systemctl reboot -i"</screen>
      </step>
      <step>
       <para>
@@ -647,7 +647,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.23.241.17   35.197
          When inside the node, run the command to update the kernel command line
 	 and GRUB, then restart the node.
 	</para>
-<screen>&prompt.user;sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0 cgroup_enable=memory swapaccount=1\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub &amp;&amp; sudo systemctl reboot -i</screen>
+<screen>&prompt.user;sudo sed --in-place 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0 cgroup_enable=memory swapaccount=1\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub &amp;&amp; sudo systemctl reboot -i</screen>
        </step>
       </substeps>
      </step>
@@ -676,10 +676,10 @@ tcp-router-tcp-router-public                LoadBalancer   10.23.241.17   35.197
      Pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>.
     </para>
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
--o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 </screen>
    </step>
    <step>
@@ -695,7 +695,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.23.241.17   35.197
     <para>
      Monitor progress of the additional <literal>diego-cell</literal> pods:
     </para>
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace scf'</screen>
    </step>
   </procedure>
  </sect1>

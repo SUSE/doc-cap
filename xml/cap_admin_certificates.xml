@@ -226,10 +226,10 @@
      Pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>:
     </para>
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
--o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 </screen>
    </step>
    <step>
@@ -265,7 +265,7 @@
      going to the next steps, which you can monitor with the
      <command>watch</command> command:
     </para>
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace uaa'</screen>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace uaa'</screen>
    </step>
    <step>
     <para>
@@ -279,7 +279,7 @@
     <para>
      Monitor the deployment progress using the <command>watch</command> command:
     </para>
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace scf'</screen>
    </step>
   </procedure>
 
@@ -326,12 +326,12 @@
   </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
- -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
 &prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
- --values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}"</screen>
+--values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}"</screen>
  </sect1>
 </chapter>

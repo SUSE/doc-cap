@@ -615,7 +615,7 @@
      <para>
       Connect to the <literal>blobstore</literal> pod:
      </para>
-<screen>&prompt.user;kubectl exec -it blobstore-0 --namespace scf -- env /bin/bash</screen>
+<screen>&prompt.user;kubectl exec --stdin --tty blobstore-0 --namespace scf -- env /bin/bash</screen>
     </step>
     <step>
      <para>
@@ -654,7 +654,7 @@
       Begin by examining the configuration file for
       the<literal>current_key_label</literal> setting:
      </para>
-<screen>&prompt.user;kubectl exec -it --namespace scf api-group-0 -- bash -c "cat /var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml | grep -A 3 database_encryption"</screen>
+<screen>&prompt.user;kubectl exec --stdin --tty --namespace scf api-group-0 -- bash -c "cat /var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml | grep -A 3 database_encryption"</screen>
      <itemizedlist>
       <listitem>
        <para>
@@ -752,7 +752,7 @@ secrets:
       the domain name of the source deployment with the domain name of the
       target deployment.
      </para>
-<screen>&prompt.user;sed -i 's/old-example.com/new-example.com/g' /tmp/ccdb-src.sql</screen>
+<screen>&prompt.user;sed --in-place 's/old-example.com/new-example.com/g' /tmp/ccdb-src.sql</screen>
     </step>
     <step>
      <para>
@@ -760,7 +760,7 @@ secrets:
       <literal>cc-worker-0</literal>, and <literal>cc-clock-0</literal> pods:
      </para>
 <screen>&prompt.user;for n in api-group-0 cc-worker-0 cc-clock-0; do
-  kubectl exec -it --namespace scf $n -- bash -l -c 'monit stop all'
+  kubectl exec --stdin --tty --namespace scf $n -- bash -l -c 'monit stop all'
 done
 </screen>
     </step>
@@ -776,7 +776,7 @@ done
       Restore the contents of the archive created during the backup process to
       the <literal>blobstore</literal> pod:
      </para>
-<screen>&prompt.user;kubectl exec -it --namespace scf blobstore-0 -- bash -l -c 'monit stop all &amp;&amp; sleep 10 &amp;&amp; rm -rf /var/vcap/store/shared/* &amp;&amp; tar xvf blobstore-src.tgz &amp;&amp; monit start all &amp;&amp; rm blobstore-src.tgz'</screen>
+<screen>&prompt.user;kubectl exec --stdin --tty --namespace scf blobstore-0 -- bash -l -c 'monit stop all &amp;&amp; sleep 10 &amp;&amp; rm -rf /var/vcap/store/shared/* &amp;&amp; tar xvf blobstore-src.tgz &amp;&amp; monit start all &amp;&amp; rm blobstore-src.tgz'</screen>
     </step>
     <step>
      <para>
@@ -791,7 +791,7 @@ done
      <para>
       Restore the CCDB on the <literal>mysql</literal> pod:
      </para>
-<screen>&prompt.user;kubectl exec -i mysql-0 --namespace scf -- bash -c '/var/vcap/packages/mariadb/bin/mysql --defaults-file=/var/vcap/jobs/mysql/config/mylogin.cnf ccdb' &lt; /tmp/ccdb-src.sql</screen>
+<screen>&prompt.user;kubectl exec --stdin mysql-0 --namespace scf -- bash -c '/var/vcap/packages/mariadb/bin/mysql --defaults-file=/var/vcap/jobs/mysql/config/mylogin.cnf ccdb' &lt; /tmp/ccdb-src.sql</screen>
     </step>
     <step>
      <para>
@@ -799,7 +799,7 @@ done
       <literal>cc-worker-0</literal>, and <literal>cc-clock-0</literal> pods
      </para>
 <screen>&prompt.user;for n in api-group-0 cc-worker-0 cc-clock-0; do
-  kubectl exec -it --namespace scf $n -- bash -l -c 'monit start all'
+  kubectl exec --stdin --tty --namespace scf $n -- bash -l -c 'monit start all'
 done
 </screen>
     </step>
@@ -814,7 +814,7 @@ done
        <para>
         Change the encryption key in the config file:
        </para>
-<screen>&prompt.user;kubectl exec --namespace scf api-group-0 -- bash -c 'sed -i "/db_encryption_key:/c\\db_encryption_key: \"$(echo $CC_DB_ENCRYPTION_KEYS | jq -r .migrated_key)\"" /var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml'
+<screen>&prompt.user;kubectl exec --namespace scf api-group-0 -- bash -c 'sed --in-place "/db_encryption_key:/c\\db_encryption_key: \"$(echo $CC_DB_ENCRYPTION_KEYS | jq -r .migrated_key)\"" /var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml'
 </screen>
       </step>
       <step>

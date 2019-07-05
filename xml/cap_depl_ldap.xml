@@ -90,11 +90,11 @@
      has permissions to search the directory.
     </para>
 <screen>&prompt.user;uaac curl /identity-providers?rawConfig=true \
-    -X POST \
-    -k \
-    -H 'Content-Type: application/json' \
-    -H 'X-Identity-Zone-Subdomain: <replaceable>scf</replaceable>' \
-    -d '{
+    --request POST \
+    --insecure \
+    --header 'Content-Type: application/json' \
+    --header 'X-Identity-Zone-Subdomain: <replaceable>scf</replaceable>' \
+    --data '{
   "type" : "ldap",
   "config" : {
     "ldapProfileFile" : "ldap/ldap-search-and-bind.xml",
@@ -119,7 +119,7 @@
      <replaceable>scf</replaceable> zone. The output should now contain an entry for
      the <literal>ldap</literal> type.
     </para>
-<screen>&prompt.user;uaac curl /identity-providers -k -H "X-Identity-Zone-Id: <replaceable>scf</replaceable>"</screen>
+<screen>&prompt.user;uaac curl /identity-providers --insecure --header "X-Identity-Zone-Id: <replaceable>scf</replaceable>"</screen>
    </step>
    <step>
     <para>
@@ -201,19 +201,19 @@ User:           username@ldap.example.com
      Obtain the ID of your identity provider.
     </para>
 <screen>&prompt.user;uaac curl /identity-providers \
-    -k \
-    -H "Content-Type:application/json" \
-    -H "Accept:application/json" \
-    -H "X-Identity-Zone-Id:<replaceable>scf</replaceable>"</screen>
+    --insecure \
+    --header "Content-Type:application/json" \
+    --header "Accept:application/json" \
+    --header"X-Identity-Zone-Id:<replaceable>scf</replaceable>"</screen>
    </step>
    <step>
     <para>
      Delete the identity provider.
     </para>
 <screen>&prompt.user;uaac curl /identity-providers/<replaceable>IDENTITY_PROVIDER_ID</replaceable> \
-    -X DELETE \
-    -k \
-    -H "X-Identity-Zone-Id:<replaceable>scf</replaceable>"</screen>
+    --request DELETE \
+    --insecure \
+    --header "X-Identity-Zone-Id:<replaceable>scf</replaceable>"</screen>
    </step>
   </procedure>
  </sect1>

@@ -99,7 +99,7 @@
     <para>
      Monitor the progess of the deployment:
     </para>
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace ingress'</screen>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace ingress'</screen>
    </step>
    <step>
     <para>
@@ -300,7 +300,7 @@ ingress:
     <para>
      Monitor the deployment progress using the <command>watch</command> command.
     </para>
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace scf'</screen>
    </step>
   </procedure>
  </sect1>
