@@ -49,10 +49,10 @@
       The <command>kubectl logs</command> command
      </para>
      <para>
-      The following example retrieves the logs of the
+      The following example retrieves the logs of the <literal>router</literal> container of
       <literal>router-0</literal> pod in the <literal>scf</literal> namespace
      </para>
-<screen>&prompt.user;kubectl logs --namespace scf api-group-0</screen>
+<screen>&prompt.user;kubectl logs --namespace scf <replaceable>router-0</replaceable> <replaceable>router</replaceable></screen>
     </listitem>
     <listitem>
      <para>
