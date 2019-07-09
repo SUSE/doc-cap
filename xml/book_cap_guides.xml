@@ -56,7 +56,6 @@ Part: CAP Deployment Guide
   <xi:include href="cap_depl_eks.xml"/>
   <xi:include href="cap_depl_gke.xml"/>
   <xi:include href="cap_depl_openstack.xml"/>
-  <xi:include href="cap_depl_air_gap_registry.xml"/>
  </part>
 <!--============================================================================
 Part: CAP Administration Guide
