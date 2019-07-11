@@ -23,7 +23,11 @@
  <sect1>
   <title>README First</title>
 &readmefirst;
-</sect1>
+ </sect1>
+ <sect1>
+  <title>Important Changes</title>
+  &sle12-deprecation-note;
+ </sect1>
  <sect1>
   <title>Usage of &helm; Chart Fields in &cap;</title>
   &chart-version-fields;
