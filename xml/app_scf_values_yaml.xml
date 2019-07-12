@@ -17,11 +17,11 @@
   the current &productname; &productnumber; release.
  </para>
 
-<screen>apiVersion: 2.16.4+cf6.10.0.2.g5abdb16f
-appVersion: "1.4"
+<screen>apiVersion: 2.17.1+cf7.11.0.4.ga6c993eb
+appVersion: 1.4.1
 description: A Helm chart for SUSE Cloud Foundry
 name: cf
-version: 2.16.4
+version: 2.17.1
 
 ---
 ---
@@ -38,9 +38,7 @@ kube:
       soft: ""
   organization: "cap"
   psp:
-    nonprivileged: ~
-    privileged: ~
-    withsysresource: ~
+    default: ~
   registry:
     hostname: "registry.suse.com"
     username: ""
@@ -101,15 +99,6 @@ secrets:
 
   # PEM-encoded server key
   AUCTIONEER_SERVER_CERT_KEY: ~
-
-  # A PEM-encoded TLS certificate for clients to connect to the Autoscaler API.
-  # This includes the Autoscaler ApiServer and the Service Broker.
-  # This value uses a generated default.
-  AUTOSCALER_ASAPI_CLIENT_CERT: ~
-
-  # A PEM-encoded TLS key for clients to connect to the Autoscaler API. This
-  # includes the Autoscaler ApiServer and the Service Broker.
-  AUTOSCALER_ASAPI_CLIENT_CERT_KEY: ~
 
   # A PEM-encoded TLS certificate of the Autoscaler API public https server.
   # This includes the Autoscaler ApiServer and the Service Broker.
@@ -181,19 +170,6 @@ secrets:
 
   # A PEM-encoded TLS key of the Autoscaler Scheduler https server.
   AUTOSCALER_SCHEDULER_SERVER_CERT_KEY: ~
-
-  # The password for the Autoscaler Service Broker.
-  # This value uses a generated default.
-  AUTOSCALER_SERVICE_BROKER_PASSWORD: ~
-
-  # A PEM-encoded TLS certificate of the Autoscaler API https server. This
-  # includes the Autoscaler ApiServer and the Service Broker.
-  # This value uses a generated default.
-  AUTOSCALER_SERVICE_BROKER_SERVER_CERT: ~
-
-  # A PEM-encoded TLS key of the Autoscaler API https server. This includes the
-  # Autoscaler ApiServer and the Service Broker.
-  AUTOSCALER_SERVICE_BROKER_SERVER_CERT_KEY: ~
 
   # the uaa client secret used by Autoscaler.
   # This value uses a generated default.
@@ -339,6 +315,13 @@ secrets:
   # PEM-encoded CA key.
   INTERNAL_CA_CERT_KEY: ~
 
+  # PEM-encoded JWT certificate.
+  # This value uses a generated default.
+  JWT_SIGNING_CERT: ~
+
+  # PEM-encoded JWT signing key.
+  JWT_SIGNING_CERT_KEY: ~
+
   # PEM-encoded certificate.
   # This value uses a generated default.
   LOGGREGATOR_AGENT_CERT: ~
@@ -360,12 +343,26 @@ secrets:
   # PEM-encoded client key for loggregator forwarder authentication
   LOGGREGATOR_FORWARD_CERT_KEY: ~
 
+  # TLS cert for outgoing dropsonde connection
+  # This value uses a generated default.
+  LOGGREGATOR_OUTGOING_CERT: ~
+
+  # TLS key for outgoing dropsonde connection
+  LOGGREGATOR_OUTGOING_CERT_KEY: ~
+
   # PEM-encoded certificate.
   # This value uses a generated default.
   LOG_CACHE_CERT: ~
 
   # PEM-encoded key.
   LOG_CACHE_CERT_KEY: ~
+
+  # The TLS cert for the auth proxy.
+  # This value uses a generated default.
+  LOG_CACHE_CF_AUTH_PROXY_EXTERNAL_CERT: ~
+
+  # The TLS key for the auth proxy.
+  LOG_CACHE_CF_AUTH_PROXY_EXTERNAL_CERT_KEY: ~
 
   # PEM-encoded certificate.
   # This value uses a generated default.
@@ -474,6 +471,13 @@ secrets:
   #       -----END RSA PRIVATE KEY-----
   ROUTER_TLS_PEM: ~
 
+  # PEM-encoded certificate
+  # This value uses a generated default.
+  SAML_SERVICEPROVIDER_CERT: ~
+
+  # PEM-encoded key.
+  SAML_SERVICEPROVIDER_CERT_KEY: ~
+
   # The password for access to the uploader of staged droplets.
   # This value uses a generated default.
   STAGING_UPLOAD_PASSWORD: ~
@@ -517,16 +521,16 @@ secrets:
   # infra structure.
   TRAFFICCONTROLLER_CERT_KEY: ~
 
+  # The password for access to the UAA database.
+  # This value uses a generated default.
+  UAADB_PASSWORD: ~
+
   # The password of the admin client - a client named admin with uaa.admin as an
   # authority.
   UAA_ADMIN_CLIENT_SECRET: ~
 
   # The CA certificate for UAA
   UAA_CA_CERT: ~
-
-  # The password for UAA access by the Cloud Controller.
-  # This value uses a generated default.
-  UAA_CC_CLIENT_SECRET: ~
 
   # The password for UAA access by the Routing API.
   # This value uses a generated default.
@@ -539,6 +543,10 @@ secrets:
   # Used for fetching service key values from CredHub.
   # This value uses a generated default.
   UAA_CLIENTS_CC_SERVICE_KEY_CLIENT_SECRET: ~
+
+  # Client secret for the CF smoke tests job
+  # This value uses a generated default.
+  UAA_CLIENTS_CF_SMOKE_TESTS_CLIENT_SECRET: ~
 
   # The password for UAA access by the Universal Service Broker.
   # This value uses a generated default.
@@ -564,9 +572,9 @@ secrets:
   # This value uses a generated default.
   UAA_CLIENTS_GOROUTER_SECRET: ~
 
-  # The password for UAA access by the login client.
+  # The OAuth client secret used by the routing-api.
   # This value uses a generated default.
-  UAA_CLIENTS_LOGIN_SECRET: ~
+  UAA_CLIENTS_ROUTING_API_CLIENT_SECRET: ~
 
   # The password for UAA access by the task creating the cluster administrator
   # user
@@ -581,7 +589,19 @@ secrets:
   # This value uses a generated default.
   UAA_CLIENTS_TCP_ROUTER_SECRET: ~
 
+  # The server's ssl certificate. The default is a self-signed certificate and
+  # should always be replaced for production deployments.
+  # This value uses a generated default.
+  UAA_SERVER_CERT: ~
+
+  # The server's ssl private key. Only passphrase-less keys are supported.
+  UAA_SERVER_CERT_KEY: ~
+
 env:
+  # The number of times Ginkgo will run a CATS test before treating it as a
+  # failure. Individual failed runs will still be reported in the test output.
+  ACCEPTANCE_TEST_FLAKE_ATTEMPTS: "3"
+
   # The number of parallel test executors to spawn for Cloud Foundry acceptance
   # tests. The larger the number the higher the stress on the system.
   ACCEPTANCE_TEST_NODES: "4"
@@ -596,266 +616,18 @@ env:
   # Extra token expiry time while uploading big apps, in seconds.
   APP_TOKEN_UPLOAD_GRACE_PERIOD: "1200"
 
-  # The TTL of credential cache for the Autoscaler custom metrics, in seconds
-  AUTOSCALER_API_SERVER_CACHE_TTL: "600"
+  # The db address for the Autoscaler postgres database.
+  AUTOSCALER_DB_ADDRESS: "autoscaler-postgres-postgres.((KUBERNETES_NAMESPACE)).svc.((KUBERNETES_CLUSTER_DOMAIN))"
 
-  # Idle connection timeout for the Autoscaler API Server database, in seconds.
-  AUTOSCALER_API_SERVER_DB_CONFIG_IDLE_TIMEOUT: "100"
+  # The tcp port of postgres database serves on
+  AUTOSCALER_DB_PORT: "5432"
 
-  # The maximum number of connections to the Autoscaler API Server database.
-  AUTOSCALER_API_SERVER_DB_CONFIG_MAX_CONNECTIONS: "10"
-
-  # The minimum number of connections to the Autoscaler API Server database.
-  AUTOSCALER_API_SERVER_DB_CONFIG_MIN_CONNECTIONS: "0"
-
-  # The build version of Autoscaler. It should be defined when it is deployed to
-  # a product environment.
-  AUTOSCALER_API_SERVER_INFO_BUILD: "beta"
-
-  # The description of Autoscaler. It should be defined when it is deployed to a
-  # product environment.
-  AUTOSCALER_API_SERVER_INFO_DESCRIPTION: "autoscaler"
-
-  # The name of the Autoscaler API Server. It should be defined when it is
-  # deployed to a product environment.
-  AUTOSCALER_API_SERVER_INFO_NAME: "autoscalerapiserver"
-
-  # The support url of autoscaler where the users could find support
-  # information. It should be defined when it is deployed to a product
-  # environment.
-  AUTOSCALER_API_SERVER_INFO_SUPPORT_URL: ""
-
-  # The maximum age of a connection that can be reused for the Autoscaler
-  # appmetrics database.
-  AUTOSCALER_APPMETRICS_DB_CONNECTION_CONFIG_CONNECTION_MAX_LIFETIME: "60s"
-
-  # The maximum number of connections to the Autoscaler appmetrics database.
-  AUTOSCALER_APPMETRICS_DB_CONNECTION_CONFIG_MAX_IDLE_CONNECTIONS: "10"
-
-  # The minimum number of connections to the Autoscaler appmetrics database.
-  AUTOSCALER_APPMETRICS_DB_CONNECTION_CONFIG_MAX_OPEN_CONNECTIONS: "100"
-
-  # The maximum number of connections the Autoscaler postgres database server
-  # could serve.
-  AUTOSCALER_DATABASE_MAX_CONNECTIONS: "1000"
-
-  # The default breach duration for the Autoscaler Event Generator, in
-  # seconds.The breach duration means the App Autoscaler won’t take the
-  # desired adjustment until the application has been breaching the Autoscaler
-  # policy for a period longer than breach_duration_secs setting.
-  AUTOSCALER_DEFAULT_BREACH_DURATION_SECS: "300"
-
-  # The default cooldown duration between two scaling action for the Autoscaler
-  # Event Generator, in seconds.
-  AUTOSCALER_DEFAULT_COOLDOWN_SECS: "300"
-
-  # The default statistic window duration between two scaling action for the
-  # Autoscaler Event Generator, in seconds.
-  AUTOSCALER_DEFAULT_STAT_WINDOW_SECS: "300"
-
-  # The size of golang channel used by the Autoscaler Event Generator as a
-  # buffer to save metrics by batch.
-  AUTOSCALER_EVENT_GENERATOR_AGGREGATOR_APP_METRIC_CHANNEL_SIZE: "1000"
-
-  # The size of golang channel used by the Autoscaler Event Generator to
-  # exchange data.
-  AUTOSCALER_EVENT_GENERATOR_AGGREGATOR_APP_MONITOR_CHANNEL_SIZE: "200"
-
-  # The duration defines how long does Autoscaler Event Generator aggregate
-  # appmetrics.
-  AUTOSCALER_EVENT_GENERATOR_AGGREGATOR_EXECUTE_INTERVAL: "40s"
-
-  # The number of metricpollers in Autoscaler Event Generator.
-  AUTOSCALER_EVENT_GENERATOR_AGGREGATOR_METRIC_POLLER_COUNT: "20"
-
-  # The duration defines how long does the Autoscaler Event Generator reload
-  # data from policy database.
-  AUTOSCALER_EVENT_GENERATOR_AGGREGATOR_POLICY_POLLER_INTERVAL: "40s"
-
-  # The duration defines how long does the Autoscaler Event Generator save
-  # appmetrics to database by batch.
-  AUTOSCALER_EVENT_GENERATOR_AGGREGATOR_SAVE_INTERVAL: "5s"
-
-  # The initial exponential back off interval for the circuit breaker of the
-  # Autoscaler Event Generator.
-  AUTOSCALER_EVENT_GENERATOR_CIRCUIT_BREAKER_BACK_OFF_INITIAL_INTERVAL: "5m"
-
-  # The maximum exponential back off interval for the circuit breaker of the
-  # Autoscaler Event Generator.
-  AUTOSCALER_EVENT_GENERATOR_CIRCUIT_BREAKER_BACK_OFF_MAX_INTERVAL: "120m"
-
-  # The number of consecutive failure to trip the circuit down for the circuit
-  # breaker of the Autoscaler Event Generator.
-  AUTOSCALER_EVENT_GENERATOR_CIRCUIT_BREAKER_CONSECUTIVE_FAILURE_COUNT: "3"
-
-  # The duration defines how long does the Autoscaler Event Generator evaluate
-  # appmetrics.
-  AUTOSCALER_EVENT_GENERATOR_EVALUATOR_EVALUATION_MANAGER_EXECUTE_INTERVAL: "40s"
-
-  # The number of evaluators in the Autoscaler Event Generator.
-  AUTOSCALER_EVENT_GENERATOR_EVALUATOR_EVALUATOR_COUNT: "20"
-
-  # The size of golang channel used by the Autoscaler Event Generator App
-  # Evaluation Manager to pass triggers to evaluators.
-  AUTOSCALER_EVENT_GENERATOR_EVALUATOR_TRIGGER_ARRAY_CHANNEL_SIZE: "200"
-
-  # The maximum age of a connection that can be reused for the Autoscaler
-  # instance metrics database.
-  AUTOSCALER_INSTANCE_METRICS_DB_CONNECTION_CONFIG_CONNECTION_MAX_LIFETIME: "60s"
-
-  # The maximum number of idle connections to the Autoscaler instance metrics
-  # database.
-  AUTOSCALER_INSTANCE_METRICS_DB_CONNECTION_CONFIG_MAX_IDLE_CONNECTIONS: "10"
-
-  # The maximum number of connections to the Autoscaler instance metrics
-  # database.
-  AUTOSCALER_INSTANCE_METRICS_DB_CONNECTION_CONFIG_MAX_OPEN_CONNECTIONS: "100"
-
-  # The maximum age of a connection that can be reused for the Autoscaler lock
-  # database.
-  AUTOSCALER_LOCK_DB_CONNECTION_CONFIG_CONNECTION_MAX_LIFETIME: "60s"
-
-  # The maximum number of idle connections to the Autoscaler lock database.
-  AUTOSCALER_LOCK_DB_CONNECTION_CONFIG_MAX_IDLE_CONNECTIONS: "10"
-
-  # The maximum number of connections to the Autoscaler lock database.
-  AUTOSCALER_LOCK_DB_CONNECTION_CONFIG_MAX_OPEN_CONNECTIONS: "100"
-
-  # The duration defines how long does the Autoscaler Metrics Collector
-  # aggregate collected instance metrics.
-  AUTOSCALER_METRICS_COLLECTOR_COLLECTOR_COLLECT_INTERVAL: "30s"
-
-  # The duration defines how long does the Autoscaler Metrics Collector reload
-  # data from policy database.
-  AUTOSCALER_METRICS_COLLECTOR_COLLECTOR_REFRESH_INTERVAL: "60s"
-
-  # The duration defines how long does the Autoscaler Metrics Collector save
-  # instance metrics to database by batch.
-  AUTOSCALER_METRICS_COLLECTOR_COLLECTOR_SAVE_INTERVAL: "30s"
-
-  # The method type of the Autoscaler Metrics Collector to fetch metrics from
-  # cloudfoundry: polling or streaming.
-  AUTOSCALER_METRICS_COLLECTOR_COLLECT_METHOD: "streaming"
-
-  # The duration defines how many days of appmetrics data does the Autoscaler
-  # Operator kept for each pruning.
-  AUTOSCALER_OPERATOR_APP_METRICS_DB_CUTOFF_DAYS: "30"
-
-  # The duration between two pruning opertions for appmetrics database in the
-  # Autoscaler Operator.
-  AUTOSCALER_OPERATOR_APP_METRICS_DB_REFRESH_INTERVAL: "24h"
-
-  # The interval of synchronizing applications information between AutoScaler
-  # policy database and Cloudfoundry.
-  AUTOSCALER_OPERATOR_APP_SYNC_INTERVAL: "24h"
-
-  # Whether to enable the Autoscaler Operator's db lock. If there are more than
-  # one operators, the value should be true
-  AUTOSCALER_OPERATOR_ENABLE_DB_LOCK: "true"
-
-  # The duration defines how many days of instance metrics data does the
-  # Autoscaler Operator kept for each pruning.
-  AUTOSCALER_OPERATOR_INSTANCE_METRICS_DB_CUTOFF_DAYS: "30"
-
-  # The duration between two pruning opertions for instance metrics database in
-  # the Autoscaler Operator.
-  AUTOSCALER_OPERATOR_INSTANCE_METRICS_DB_REFRESH_INTERVAL: "24h"
-
-  # The interval for each Autoscaler Operator instance to retry to get database
-  # lock.
-  AUTOSCALER_OPERATOR_LOCK_RETRY_INTERVAL: "10s"
-
-  # The maximum duration of a Autoscaler Operator instance could hold the
-  # database lock.
-  AUTOSCALER_OPERATOR_LOCK_TTL: "15s"
-
-  # The duration defines how many days of the scaling history data does the
-  # Autoscaler Operator kept for each pruning.
-  AUTOSCALER_OPERATOR_SCALING_ENGINE_DB_CUTOFF_DAYS: "30"
-
-  # The duration between two pruning opertions for scalingengine database in the
-  # Autoscaler Operator.
-  AUTOSCALER_OPERATOR_SCALING_ENGINE_DB_FRESH_INTERVAL: "24h"
-
-  # The interval of synchronizing the Autoscaler Scaling Engine active schedules
-  # with Autoscaler Scheduler.
-  AUTOSCALER_OPERATOR_SCALING_ENGINE_SYNC_INTERVAL: "600s"
-
-  # The interval of synchronizing the Autoscaler Scheduler schedules with policy
-  # database.
-  AUTOSCALER_OPERATOR_SCHEDULER_SYNC_INTERVAL: "600s"
-
-  # The maximum age of a connection that can be reused for the Autoscaler policy
-  # database.
-  AUTOSCALER_POLICY_DB_CONNECTION_CONFIG_CONNECTION_MAX_LIFETIME: "60s"
-
-  # The maximum number of idle connections to the Autoscaler policy database.
-  AUTOSCALER_POLICY_DB_CONNECTION_CONFIG_MAX_IDLE_CONNECTIONS: "10"
-
-  # The maximum number of connections to the Autoscaler policy database.
-  AUTOSCALER_POLICY_DB_CONNECTION_CONFIG_MAX_OPEN_CONNECTIONS: "100"
-
-  # The maximum age of a connection that can be reused for the Autoscaler
-  # Scaling Engine database.
-  AUTOSCALER_SCALING_ENGINE_DB_CONNECTION_CONFIG_CONNECTION_MAX_LIFETIME: "60s"
-
-  # The maximum number of idle connections to the Autoscaler Scaling Engine
-  # database.
-  AUTOSCALER_SCALING_ENGINE_DB_CONNECTION_CONFIG_MAX_IDLE_CONNECTIONS: "10"
-
-  # The maximum number of connections to the Autoscaler Scaling Engine database.
-  AUTOSCALER_SCALING_ENGINE_DB_CONNECTION_CONFIG_MAX_OPEN_CONNECTIONS: "100"
-
-  # The time interval to emit health metrics for the Autoscaler Scaling Engine."
-  AUTOSCALER_SCALING_ENGINE_HEALTH_EMIT_INTERVAL: "15s"
-
-  # The lock number of the Autoscaler Scaling Engine to do synchronization for
-  # multiple scaling requests.
-  AUTOSCALER_SCALING_ENGINE_LOCK_SIZE: "32"
-
-  # The maximum age of a connection that can be reused for the Autoscaler
-  # Scheduler database.
-  AUTOSCALER_SCHEDULER_DB_CONNECTION_CONFIG_CONNECTION_MAX_LIFETIME: "60s"
-
-  # The maximum number of idle connections to the Autoscaler Scheduler database.
-  AUTOSCALER_SCHEDULER_DB_CONNECTION_CONFIG_MAX_IDLE_CONNECTIONS: "10"
-
-  # The maximum number of connections to the Autoscaler Scaling Engine database.
-  AUTOSCALER_SCHEDULER_DB_CONNECTION_CONFIG_MAX_OPEN_CONNECTIONS: "100"
-
-  # Rescheduling interval for quartz job for the Autoscaler Scheduler, in
-  # milliseconds.
-  AUTOSCALER_SCHEDULER_JOB_RESCHEDULE_INTERVAL_MILISECOND: "100"
-
-  # Maximum number of jobs can be re-scheduled in the Autoscaler Scheduler.
-  AUTOSCALER_SCHEDULER_JOB_RESCHEDULE_MAXCOUNT: "6"
-
-  # Maximum number of notification sent to Autoscaler Scaling Engine for job
-  # re-schedule.
-  AUTOSCALER_SCHEDULER_NOTIFICATION_RESCHEDULE_MAXCOUNT: "3"
-
-  # Idle connection timeout for the Autoscaler Service Broker database, in
-  # seconds.
-  AUTOSCALER_SERVICE_BROKER_DB_CONFIG_IDLE_TIMEOUT: "1000"
-
-  # The maximum number of connections to the Autoscaler Service Broker database.
-  AUTOSCALER_SERVICE_BROKER_DB_CONFIG_MAX_CONNECTIONS: "10"
-
-  # The minimum number of connections to the Autoscaler Service Broker database.
-  AUTOSCALER_SERVICE_BROKER_DB_CONFIG_MIN_CONNECTIONS: "0"
-
-  # The timeout in milliseconds for http request from Autoscaler Service Broker
-  # to other Autoscaler components.
-  AUTOSCALER_SERVICE_BROKER_HTTP_REQUEST_TIMEOUT: "5000"
-
-  # Whether Autoscaler is provided as a cloudfoundry service, default is false.
-  AUTOSCALER_SERVICE_OFFERING_ENABLED: "false"
+  # The role name of autoscaler postgres database
+  AUTOSCALER_DB_ROLE_NAME: "postgres"
 
   # The name of the metadata label to query on worker nodes to get AZ
-  # information. When set, the cells will query their worker node for AZ
-  # information and inject the result into cloudfoundry via the KUBE_AZ
-  # parameter. When left to the default no custom AZ processing is done.
-  AZ_LABEL_NAME: ""
+  # information.
+  AZ_LABEL_NAME: "failure-domain.beta.kubernetes.io/zone"
 
   # List of allow / deny rules for the blobstore internal server. Will be
   # followed by 'deny all'. Each entry must be follow by a semicolon.
@@ -885,7 +657,7 @@ env:
   CLUSTER_ADMIN_AUTHORITIES: "scim.write,scim.read,openid,cloud_controller.admin,clients.read,clients.write,doppler.firehose,routing.router_groups.read,routing.router_groups.write"
 
   # 'build' attribute in the /v2/info endpoint
-  CLUSTER_BUILD: "2.0.2"
+  CLUSTER_BUILD: "2.16.4"
 
   # 'description' attribute in the /v2/info endpoint
   CLUSTER_DESCRIPTION: "SUSE Cloud Foundry"
@@ -992,7 +764,7 @@ env:
   HTTP_PROXY: ~
 
   # A comma-separated whitelist of insecure Docker registries in the form of
-  # '[HOSTNAME|IP]:PORT'. Each registry must be quoted separately.
+  # '&lt;HOSTNAME|IP>:PORT'. Each registry must be quoted separately.
   #
   # Example: "\"docker-registry.example.com:80\", \"hello.example.org:443\""
   INSECURE_DOCKER_REGISTRIES: ""
@@ -1100,7 +872,7 @@ env:
   ROOTFS_TRUSTED_CERTS: ""
 
   # The algorithm used by the router to distribute requests for a route across
-  # back-ends. Supported values are round-robin and least-connection.
+  # backends. Supported values are round-robin and least-connection.
   ROUTER_BALANCING_ALGORITHM: "round-robin"
 
   # How to handle client certificates. Supported values are none, request, or
@@ -1126,11 +898,38 @@ env:
   # values are tcp, and udp. The default is tcp.
   SCF_LOG_PROTOCOL: "tcp"
 
+  # If true, authenticate against the SMTP server using AUTH command. See
+  # https://javamail.java.net/nonav/docs/api/com/sun/mail/smtp/package-summary.html
+  SMTP_AUTH: "false"
+
+  # SMTP from address, for password reset emails etc.
+  SMTP_FROM_ADDRESS: ~
+
+  # SMTP server host address, for password reset emails etc.
+  SMTP_HOST: ~
+
+  # SMTP server password, for password reset emails etc.
+  SMTP_PASSWORD: ~
+
+  # SMTP server port, for password reset emails etc.
+  SMTP_PORT: "25"
+
+  # If true, send STARTTLS command before logging in to SMTP server. See
+  # https://javamail.java.net/nonav/docs/api/com/sun/mail/smtp/package-summary.html
+  SMTP_STARTTLS: "false"
+
+  # SMTP server username, for password reset emails etc.
+  SMTP_USER: ~
+
   # Timeout for staging an app, in seconds.
   STAGING_TIMEOUT: "900"
 
   # Support contact information for the cluster
-  SUPPORT_ADDRESS: "support@example.com"
+  SUPPORT_ADDRESS: "https://scc.suse.com"
+
+  # The number of times Ginkgo will run a SITS test before treating it as a
+  # failure. Individual failed runs will still be reported in the test output.
+  SYNC_INTEGRATION_TESTS_FLAKE_ATTEMPTS: "3"
 
   # Regex for which SITS tests the test runner should focus on executing.
   SYNC_INTEGRATION_TESTS_FOCUS: ~
@@ -1157,6 +956,9 @@ env:
 
   # The tcp port the UAA server (root zone) listens on for requests.
   UAA_PORT: "2793"
+
+  # The TCP port to report as the public port for the UAA server (root zone).
+  UAA_PUBLIC_PORT: "2793"
 
   # Whether or not to use privileged containers for buildpack based
   # applications. Containers with a docker-image-based rootfs will continue to
@@ -1234,10 +1036,40 @@ sizing:
       request: 3800
       limit: ~
 
+  # The autoscaler-actors instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - authorize-internal-ca: Install both internal and UAA CA certificates
+  #
+  # Also: scheduler, scalingengine, operator, and bpm
+  autoscaler_actors:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # The autoscaler_actors instance group can be enabled by the autoscaler
+    # feature.
+    # It can scale between 1 and 3 instances.
+    # For high availability it needs at least 2 instances.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 2000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 2350
+      limit: ~
+
   # The autoscaler-api instance group contains the following jobs:
   #
   # - global-properties: Dummy BOSH job used to host global parameters that are
   #   required to configure SCF
+  #
+  # - authorize-internal-ca: Install both internal and UAA CA certificates
   #
   # - route_registrar: Used for registering routes
   #
@@ -1262,37 +1094,6 @@ sizing:
       request: 256
       limit: ~
 
-  # The autoscaler-eventgenerator instance group contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - authorize-internal-ca: Install both internal and UAA CA certificates
-  #
-  # Also: eventgenerator
-  autoscaler_eventgenerator:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The autoscaler_eventgenerator instance group can be enabled by the
-    # autoscaler feature.
-    # It can scale between 1 and 3 instances.
-    # For high availability it needs at least 2 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 2350
-      limit: ~
-
   # The autoscaler-metrics instance group contains the following jobs:
   #
   # - global-properties: Dummy BOSH job used to host global parameters that are
@@ -1300,13 +1101,10 @@ sizing:
   #
   # - authorize-internal-ca: Install both internal and UAA CA certificates
   #
-  # Also: metricscollector
+  # Also: metricscollector, eventgenerator, and bpm
   autoscaler_metrics:
     # Node affinity rules can be specified here
     affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
 
     # The autoscaler_metrics instance group can be enabled by the autoscaler
     # feature.
@@ -1321,38 +1119,7 @@ sizing:
 
     # Unit [MiB]
     memory:
-      request: 128
-      limit: ~
-
-  # The autoscaler-operator instance group contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - authorize-internal-ca: Install both internal and UAA CA certificates
-  #
-  # Also: operator
-  autoscaler_operator:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The autoscaler_operator instance group can be enabled by the autoscaler
-    # feature.
-    # It can scale between 1 and 3 instances.
-    # For high availability it needs at least 2 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 2350
+      request: 1024
       limit: ~
 
   # The autoscaler-postgres instance group contains the following jobs:
@@ -1366,9 +1133,6 @@ sizing:
   autoscaler_postgres:
     # Node affinity rules can be specified here
     affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
 
     # The autoscaler_postgres instance group can be enabled by the autoscaler
     # feature.
@@ -1386,98 +1150,6 @@ sizing:
     # Unit [MiB]
     memory:
       request: 1024
-      limit: ~
-
-  # The autoscaler-scalingengine instance group contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - authorize-internal-ca: Install both internal and UAA CA certificates
-  #
-  # Also: scalingengine
-  autoscaler_scalingengine:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The autoscaler_scalingengine instance group can be enabled by the
-    # autoscaler feature.
-    # It can scale between 1 and 3 instances.
-    # For high availability it needs at least 2 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 2350
-      limit: ~
-
-  # The autoscaler-scheduler instance group contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - authorize-internal-ca: Install both internal and UAA CA certificates
-  #
-  # Also: scheduler
-  autoscaler_scheduler:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
-
-    # The autoscaler_scheduler instance group can be enabled by the autoscaler
-    # feature.
-    # It can scale between 1 and 3 instances.
-    # For high availability it needs at least 2 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 2350
-      limit: ~
-
-  # The autoscaler-servicebroker instance group contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - authorize-internal-ca: Install both internal and UAA CA certificates
-  #
-  # - route_registrar: Used for registering routes
-  #
-  # Also: servicebroker and bpm
-  autoscaler_servicebroker:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # The autoscaler_servicebroker instance group can be enabled by the
-    # autoscaler feature.
-    # It can scale between 1 and 3 instances.
-    # For high availability it needs at least 2 instances.
-    count: 1
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 2350
       limit: ~
 
   # The bits instance group contains the following jobs:
@@ -1694,9 +1366,6 @@ sizing:
     # Node affinity rules can be specified here
     affinity: {}
 
-    # Additional privileges can be specified here
-    capabilities: []
-
     # The diego_api instance group can be disabled by the eirini feature.
     # It can scale between 1 and 3 instances.
     # For high availability it needs at least 2 instances.
@@ -1726,9 +1395,6 @@ sizing:
   diego_brain:
     # Node affinity rules can be specified here
     affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
 
     # The diego_brain instance group can be disabled by the eirini feature.
     # It can scale between 1 and 3 instances.
@@ -1761,8 +1427,8 @@ sizing:
   #   SCF patches for upstream bugs
   #
   # Also: rep, cfdot, route_emitter, garden, groot-btrfs,
-  # cflinuxfs3-rootfs-setup, cf-sle12-setup, cf-sle15-rootfs-setup, loggregator_agent,
-  # nfsv3driver
+  # cflinuxfs2-rootfs-setup, cflinuxfs3-rootfs-setup, cf-sle12-setup,
+  # sle15-rootfs-setup, nfsv3driver, and mapfs
   diego_cell:
     # Node affinity rules can be specified here
     affinity: {}
@@ -1796,9 +1462,6 @@ sizing:
   diego_ssh:
     # Node affinity rules can be specified here
     affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
 
     # The diego_ssh instance group can be disabled by the eirini feature.
     # It can scale between 1 and 3 instances.
@@ -1859,9 +1522,6 @@ sizing:
     # Node affinity rules can be specified here
     affinity: {}
 
-    # Additional privileges can be specified here
-    capabilities: []
-
     # The eirini instance group can be enabled by the eirini feature.
     # It cannot be scaled.
     count: 1
@@ -1890,9 +1550,6 @@ sizing:
   locket:
     # Node affinity rules can be specified here
     affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
 
     # The locket instance group can scale between 1 and 3 instances.
     # For high availability it needs at least 2 instances.
@@ -2003,9 +1660,6 @@ sizing:
     # Node affinity rules can be specified here
     affinity: {}
 
-    # Additional privileges can be specified here
-    capabilities: []
-
     # The mysql instance group can scale between 1 and 3 instances.
     # For high availability it needs at least 2 instances.
     count: 1
@@ -2085,14 +1739,11 @@ sizing:
   #
   # - uaa-create-user: Create the initial user in UAA
   #
-  # - configure-scf: Uses the cf CLI to configure SCF after it is online (things
+  # - configure-scf: Uses the cf CLI to configure SCF once it's online (things
   #   like proxy settings, service brokers, etc.)
   post_deployment_setup:
     # Node affinity rules can be specified here
     affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
 
     # The post_deployment_setup instance group cannot be scaled.
     count: 1
@@ -2116,9 +1767,9 @@ sizing:
   #
   # - gorouter: Gorouter maintains a dynamic routing table based on updates
   #   received from NATS and (when enabled) the Routing API. This routing table
-  #   maps URLs to back-ends. The router finds the URL in the routing table that
+  #   maps URLs to backends. The router finds the URL in the routing table that
   #   most closely matches the host header of the request and load balances
-  #   across the associated back-ends.
+  #   across the associated backends.
   #
   # Also: bpm
   router:
@@ -2171,9 +1822,6 @@ sizing:
   secret_generation:
     # Node affinity rules can be specified here
     affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
 
     # The secret_generation instance group cannot be scaled.
     count: 1
@@ -2244,11 +1892,46 @@ sizing:
       tcp_route:
         count: 9
 
+  # The uaa instance group contains the following jobs:
+  #
+  # - global-uaa-properties: Dummy BOSH job used to host global parameters that
+  #   are required to configure SCF / fissile
+  #
+  # - wait-for-database: This is a pre-start job to delay starting the rest of
+  #   the role until a database connection is ready. Currently it only checks
+  #   that a response can be obtained from the server, and not that it responds
+  #   intelligently.
+  #
+  #
+  # - uaa: The UAA is the identity management service for Cloud Foundry. It's
+  #   primary role is as an OAuth2 provider, issuing tokens for client
+  #   applications to use when they act on behalf of Cloud Foundry users. It can
+  #   also authenticate users with their Cloud Foundry credentials, and can act
+  #   as an SSO service using those credentials (or others). It has endpoints
+  #   for managing user accounts and for registering OAuth2 clients, as well as
+  #   various other management functions.
+  uaa:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # The uaa instance group can be enabled by the uaa feature.
+    # It can scale between 1 and 65535 instances.
+    # For high availability it needs at least 2 instances.
+    count: 1
+
+    # Unit [millicore]
+    cpu:
+      request: 2000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 2100
+      limit: ~
+
 enable:
   # The autoscaler feature enables these instance groups: autoscaler_postgres,
-  # autoscaler_api, autoscaler_metrics, autoscaler_scalingengine,
-  # autoscaler_scheduler, autoscaler_operator, autoscaler_servicebroker, and
-  # autoscaler_eventgenerator
+  # autoscaler_api, autoscaler_metrics, and autoscaler_actors
   autoscaler: false
 
   # The cf_usb feature enables these instance groups: cf_usb_group
@@ -2262,6 +1945,9 @@ enable:
   # diego_cell
   eirini: false
 
+  # The uaa feature enables these instance groups: uaa
+  uaa: false
+
 ingress:
   # ingress.annotations allows specifying custom ingress annotations that gets
   # merged to the default annotations.
@@ -2274,7 +1960,5 @@ ingress:
   # ingress.tls.crt and ingress.tls.key, when specified, are used by the TLS
   # secret for the Ingress resource.
   tls: {}
-
-
 </screen>
 </sect1>
