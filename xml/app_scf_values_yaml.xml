@@ -657,7 +657,7 @@ env:
   CLUSTER_ADMIN_AUTHORITIES: "scim.write,scim.read,openid,cloud_controller.admin,clients.read,clients.write,doppler.firehose,routing.router_groups.read,routing.router_groups.write"
 
   # 'build' attribute in the /v2/info endpoint
-  CLUSTER_BUILD: "2.16.4"
+  CLUSTER_BUILD: "2.17.1"
 
   # 'description' attribute in the /v2/info endpoint
   CLUSTER_DESCRIPTION: "SUSE Cloud Foundry"
