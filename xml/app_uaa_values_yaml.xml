@@ -17,11 +17,11 @@
   the current &productname; &productnumber; release.
  </para>
 
-<screen>apiVersion: 2.16.4+cf6.10.0.2.g5abdb16f
-appVersion: "1.4"
+<screen>apiVersion: 2.17.1+cf7.11.0.4.ga6c993eb
+appVersion: 1.4.1
 description: A Helm chart for SUSE UAA
 name: uaa
-version: 2.16.4
+version: 2.17.1
 
 ---
 ---
@@ -36,11 +36,11 @@ kube:
     nproc:
       hard: ""
       soft: ""
-  organization: "cap"
+  organization: "splatform"
   psp:
-    nonprivileged: ~
+    default: ~
   registry:
-    hostname: "registry.suse.com"
+    hostname: "staging.registry.howdoi.website"
     username: ""
     password: ""
 
@@ -165,23 +165,23 @@ env:
   # https://javamail.java.net/nonav/docs/api/com/sun/mail/smtp/package-summary.html
   SMTP_AUTH: "false"
 
-  # SMTP from address, for password reset e-mails etc.
+  # SMTP from address, for password reset emails etc.
   SMTP_FROM_ADDRESS: ~
 
-  # SMTP server host address, for password reset e-mails etc.
+  # SMTP server host address, for password reset emails etc.
   SMTP_HOST: ~
 
-  # SMTP server password, for password reset e-mails etc.
+  # SMTP server password, for password reset emails etc.
   SMTP_PASSWORD: ~
 
-  # SMTP server port, for password reset e-mails etc.
+  # SMTP server port, for password reset emails etc.
   SMTP_PORT: "25"
 
   # If true, send STARTTLS command before logging in to SMTP server. See
   # https://javamail.java.net/nonav/docs/api/com/sun/mail/smtp/package-summary.html
   SMTP_STARTTLS: "false"
 
-  # SMTP server username, for password reset e-mails etc.
+  # SMTP server username, for password reset emails etc.
   SMTP_USER: ~
 
   # The TCP port to report as the public port for the UAA server (root zone).
@@ -203,9 +203,6 @@ sizing:
   mysql:
     # Node affinity rules can be specified here
     affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
 
     # The mysql instance group can scale between 1 and 3 instances.
     # For high availability it needs at least 2 instances.
@@ -230,9 +227,6 @@ sizing:
   secret_generation:
     # Node affinity rules can be specified here
     affinity: {}
-
-    # Additional privileges can be specified here
-    capabilities: []
 
     # The secret_generation instance group cannot be scaled.
     count: 1
@@ -269,9 +263,6 @@ sizing:
     # Node affinity rules can be specified here
     affinity: {}
 
-    # Additional privileges can be specified here
-    capabilities: []
-
     # The uaa instance group can scale between 1 and 65535 instances.
     # For high availability it needs at least 2 instances.
     count: 1
@@ -299,7 +290,5 @@ ingress:
   # ingress.tls.crt and ingress.tls.key, when specified, are used by the TLS
   # secret for the Ingress resource.
   tls: {}
-
-
 </screen>
 </sect1>

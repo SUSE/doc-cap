@@ -24,56 +24,23 @@
   <itemizedlist>
    <listitem>
     <para>
-     &scf; has been updated to version 2.16.4:
+     &scf; has been updated to version &latestscfchart;:
     </para>
-    <itemizedlist>
-     <listitem>
-      <para>
-       A technology preview of Eirini is available.
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       Added SLE15 stack.
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       Added feature flags to enable roles such as <literal>autoscaler</literal>,
-       <literal>cf-usb</literal>, <literal>credhub</literal> and
-       <literal>eirini</literal>.
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       Added Sync Integration Test Suite (SITS).
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       Added support for NGINX Ingress Controller with customizable Ingress via
-       user supplied annotations.
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       Added .net-core buildpack (2.2.7).
-      </para>
-     </listitem>
-    </itemizedlist>
    </listitem>
    <listitem>
     <para>
-     The Stratos UI has been updated to version 2.4:
+     Added option to deploy <literal>uaa</literal> from the
+     <literal>scf</literal> &helm; chart. In new &cap; deployments that do not
+     require a separate <literal>uaa</literal> deployment, setting
+     <command>enable.uaa=true</command> in the &helm; values automatically
+     creates a <literal>uaa</literal> StatefulSet within the
+     <literal>scf</literal> deployment. This removes the manual step of copying
+     the <literal>UAA_CA_CERT</literal> during setup. In this configuration
+     <literal>uaa</literal> uses the same database as <literal>scf</literal>,
+     reducing the memory footprint of the cluster. This option should be left
+     as <literal>false</literal> (default) for upgrades of existing &cap;
+     clusters.
     </para>
-    <itemizedlist>
-     <listitem>
-      <para>
-       For a full list of features and fixes see
-       <link xlink:href="https://github.com/SUSE/stratos/releases/tag/2.4.0"/>.
-      </para>
-     </listitem>
-    </itemizedlist>
    </listitem>
   </itemizedlist>
 
