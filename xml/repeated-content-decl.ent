@@ -715,25 +715,19 @@ suse/uaa                        &latestscfchart;          1.4             A Helm
          <link xlink:href="https://apidocs.cloudfoundry.org/7.11.0/#stacks"/>
          for details.
         </para>
-        <procedure>
-         <step>
-          <para>
-           List all stacks then find the GUID of the <literal>sle12</literal>
-           <literal>cflinuxfs2</literal> stacks.
-          </para>
+        <para>
+         List all stacks then find the GUID of the <literal>sle12</literal>
+         <literal>cflinuxfs2</literal> stacks.
+        </para>
 <screen>&prompt.user;cf curl /v2/stacks</screen>
-         </step>
-         <step>
-          <para>
-           Delete the <literal>sle12</literal> and <literal>cflinuxfs2</literal>
-           stacks.
-          </para>
+        <para>
+         Delete the <literal>sle12</literal> and <literal>cflinuxfs2</literal>
+         stacks.
+        </para>
 <screen>&prompt.user;cf curl -X DELETE /v2/stacks/SLE12_STACK_GUID
 
 &prompt.user;cf curl -X DELETE /v2/stacks/CFLINUXFS2_STACK_GUID
 </screen>
-         </step>
-        </procedure>
        </step>
       </procedure>
      </listitem>
