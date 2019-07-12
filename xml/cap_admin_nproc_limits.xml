@@ -77,6 +77,8 @@
   <sect2 xml:id="sec.cap.new-deployment-apply-nproc">
    <title>New Deployments</title>
 
+   &uaa-in-scf;
+
    <para>
     For new &productname; deployments, follow the steps below to deploy
     &productname; with nproc limits configured:    
@@ -149,6 +151,8 @@ CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
  
   <sect2 xml:id="sec.cap.existing-deployment-apply-nproc">
    <title>Existing Deployments</title>
+
+   &uaa-in-scf;
 
    <para>
     For existing &productname; deployments, follow the steps below to redeploy

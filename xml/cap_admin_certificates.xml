@@ -203,6 +203,8 @@
    Once the certificate-related values have been set in your
    <filename>scf-config-values.yaml</filename>, deploy &productname;.
   </para>
+
+  &uaa-in-scf;
   
   <para>
    If this is an initial deployment, use <command>helm install</command> to
