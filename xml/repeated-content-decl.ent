@@ -204,13 +204,8 @@ Before you start deploying &productname;, review the following documents:
      </row>
     </thead>
     <tbody>
-     <row>
-      <entry>&productnumber; (current release)</entry>
-      <entry>&latestscfchart;</entry>
-      <entry>&lateststratoschart;</entry>
-     </row>
-     <row>
-      <entry>1.4</entry>
+    <row>
+      <entry>1.4 (current release)</entry>
       <entry>2.16.4</entry>
       <entry>2.4.0</entry>
      </row>
