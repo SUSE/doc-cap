@@ -532,3 +532,208 @@ suse/uaa                        &latestscfchart;          1.4             A Helm
  </para>
 '>
 
+<!--ENTITY sle12-deprecation-note...........................................-->
+
+<!ENTITY sle12-deprecation-note
+'<warning xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Deprecation of <literal>cflinuxfs2</literal> and <literal>sle12</literal> Stacks</title>
+  <para>
+   <literal>cf-deployment</literal> 7.11 is the final &cf; version that
+   supports the <literal>cflinuxfs2</literal> stack. The
+   <literal>cflinuxfs2</literal> and <literal>sle12</literal> stacks are
+   deprecated in favor of <literal>cflinuxfs3</literal> and
+   <literal>sle15</literal> respectively. Start planning to migrate applications
+   to those stacks for futureproofing, as these stacks will be removed in a
+   future release. The migration procedure is described below.
+  </para>
+  <procedure>
+   <step>
+    <para>
+     Migrate applications to the new stack using one of the methods listed. Note
+     that both methods will cause application downtime. Downtime can be avoided
+     by following a Blue-Green Deployment strategy. See
+     <link xlink:href="https://docs.cloudfoundry.org/devguide/deploy-apps/blue-green.html"/>
+     for details.
+    </para>
+    <para>
+     Note that stack association support is available as of &cfcli; v6.39.0.
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       Option 1 - Migrating applications using the Stack Auditor plugin.
+      </para>
+      <para>
+       Stack Auditor rebuilds the application onto the new stack without a
+       change in the application source code. If you want to move to a new stack
+       with updated code, please follow Option 2 below. For additional
+       information about the Stack Auditor plugin, see
+       <link xlink:href="https://docs.cloudfoundry.org/adminguide/stack-auditor.html"/>.
+      </para>
+      <procedure>
+       <step>
+        <para>
+         Install the Stack Auditor plugin for the &cfcli;. For instructions, see
+         <link xlink:href="https://docs.cloudfoundry.org/adminguide/stack-auditor.html#install"/>.
+        </para>
+       </step>
+       <step>
+        <para>
+         Identify the stack applications are using. The audit lists all 
+         applications in orgs you have access to. To list all applications in
+         your &cap; deployment, ensure you are logged in as a user with access
+         to all orgs.
+        </para>
+<screen>&prompt.user;cf audit-stack</screen>
+        <para>
+         For each application requiring migration, perform the steps below.
+        </para>
+       </step>
+       <step>
+        <para>
+         If necessary, switch to the org and space the application is deployed
+         to.
+        </para>
+<screen>&prompt.user;cf target ORG SPACE</screen>
+       </step>
+       <step>
+        <para>
+         Change the stack to <literal>sle15</literal>.
+        </para>
+<screen>&prompt.user;cf change-stack APP_NAME sle15</screen>
+       </step>
+       <step>
+        <para>
+         Identify all buildpacks associated with the <literal>sle12</literal>
+         and <literal>cflinuxfs2</literal> stacks.
+        </para>
+<screen>&prompt.user;cf buildpacks</screen>
+       </step>
+       <step>
+        <para>
+         Remove all buildpacks associated with the <literal>sle12</literal>
+         and <literal>cflinuxfs2</literal> stacks.
+        </para>
+<screen>&prompt.user;cf delete-buildpack BUILDPACK -s sle12
+
+&prompt.user;cf delete-buildpack BUILDPACK -s cflinuxfs2</screen>
+       </step>
+       <step>
+        <para>
+         Remove the <literal>sle12</literal> and <literal>cflinuxfs2</literal>
+         stacks.
+        </para>
+<screen>&prompt.user;cf delete-stack sle12
+
+&prompt.user;cf delete-stack cflinuxfs2</screen>
+       </step>
+      </procedure>
+     </listitem>
+     <listitem>
+      <para>
+       Option 2 - Migrating applications using the &cfcli;. 
+      </para>
+      <para>
+       Perform the following for all orgs and spaces in your &cap; deployment.
+       Ensure you are logged in as a user with access to all orgs.
+      </para>
+      <procedure>
+       <step>
+        <para>
+         Target an org and space.
+        </para>
+<screen>&prompt.user;cf target ORG SPACE</screen>
+       </step>
+       <step>
+        <para>
+         Identify the stack an applications in the org and space is using.
+        </para>
+<screen>&prompt.user;cf app APP_NAME</screen>
+       </step>
+       <step>
+        <para>
+         Re-push the app with the <literal>sle15</literal> stack using one of
+         the following methods.
+        </para>
+        <itemizedlist>
+         <listitem>
+          <para>
+           Push the application with the stack option, <command>-s</command>
+           passed.
+          </para>
+<screen>&prompt.user;cf push APP_NAME -s sle15</screen>
+         </listitem>
+         <listitem>
+          <procedure>
+           <step>
+            <para>
+             Update the application manifest file to include
+             <literal>stack: sle15</literal>. See
+             <link xlink:href="https://docs.cloudfoundry.org/devguide/deploy-apps/manifest-attributes.html#stack"/>
+             for details.
+            </para>
+<screen>---
+  ...
+  stack: sle15
+</screen>
+           </step>
+           <step>
+            <para>
+              Push the application.
+            </para>
+<screen>&prompt.user;cf push APP_NAME</screen>
+           </step>
+          </procedure>
+         </listitem>
+        </itemizedlist>
+       </step>
+       <step>
+        <para>
+         Identify all buildpacks associated with the <literal>sle12</literal>
+         and <literal>cflinuxfs2</literal> stacks.
+        </para>
+<screen>&prompt.user;cf buildpacks</screen>
+       </step>
+       <step>
+        <para>
+         Remove all buildpacks associated with the <literal>sle12</literal>
+         and <literal>cflinuxfs2</literal> stacks.
+        </para>
+<screen>&prompt.user;cf delete-buildpack BUILDPACK -s sle12
+
+&prompt.user;cf delete-buildpack BUILDPACK -s cflinuxfs2</screen>
+       </step>
+       <step>
+        <para>
+         Remove the <literal>sle12</literal> and <literal>cflinuxfs2</literal>
+         stacks using the CF API. See
+         <link xlink:href="https://apidocs.cloudfoundry.org/7.11.0/#stacks"/>
+         for details.
+        </para>
+        <substeps>
+         <step>
+          <para>
+           List all stacks then find the GUID of the <literal>sle12</literal>
+           <literal>cflinuxfs2</literal> stacks.
+          </para>
+<screen>&prompt.user;cf curl /v2/stacks</screen>
+         </step>
+         <step>
+          <para>
+           Delete the <literal>sle12</literal> and <literal>cflinuxfs2</literal>
+           stacks.
+          </para>
+<screen>&prompt.user;cf curl -X DELETE /v2/stacks/SLE12_STACK_GUID
+
+&prompt.user;cf curl -X DELETE /v2/stacks/CFLINUXFS2_STACK_GUID
+</screen>
+         </step>
+        </substeps>
+       </step>
+      </procedure>
+     </listitem>
+    </itemizedlist>
+   </step>
+  </procedure>
+ </warning>
+'>
