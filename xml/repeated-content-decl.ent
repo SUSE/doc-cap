@@ -715,7 +715,7 @@ suse/uaa                        &latestscfchart;          1.4             A Helm
          <link xlink:href="https://apidocs.cloudfoundry.org/7.11.0/#stacks"/>
          for details.
         </para>
-        <substeps>
+        <procedure>
          <step>
           <para>
            List all stacks then find the GUID of the <literal>sle12</literal>
@@ -733,7 +733,7 @@ suse/uaa                        &latestscfchart;          1.4             A Helm
 &prompt.user;cf curl -X DELETE /v2/stacks/CFLINUXFS2_STACK_GUID
 </screen>
          </step>
-        </substeps>
+        </procedure>
        </step>
       </procedure>
      </listitem>
