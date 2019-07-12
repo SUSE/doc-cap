@@ -4,11 +4,11 @@
 
 <!ENTITY productname    "&suse; Cloud Application Platform">
 <!ENTITY productnamereg "&suse;&reg; Cloud Application Platform">
-<!ENTITY productnumber  "1.4.1">
+<!ENTITY productnumber  "1.4">
 <!ENTITY github.url     "https://github.com/SUSE/doc-cap">
 <!ENTITY cap            "Cloud Application Platform">
-<!ENTITY latestuaachart "2.17.1">
-<!ENTITY latestscfchart "2.17.1">
+<!ENTITY latestuaachart "2.16.4">
+<!ENTITY latestscfchart "2.16.4">
 <!ENTITY lateststratoschart "2.4.0">
 <!ENTITY aksnodeversion "1.11.9">
 <!ENTITY cfcli        "cf CLI">
