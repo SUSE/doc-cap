@@ -95,13 +95,8 @@
    commercially-supported &sle; version.
   </para>
 
-  <para>
-   &scf; is designed to run on any Kubernetes cluster. This guide describes how
-   to deploy it on
-   <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_deployment/data/book_caasp_deployment.html">SUSE
-   Container as a Service (CaaS) Platform 3.0</link>, Microsoft Azure, and
-   Amazon EKS.
-  </para>
+  <!-- Any Kubernetes + platforms covered by guide -->
+  &deployment-platforms;
 
   <para>
    &productname; serves different but complementary purposes for operators and
@@ -243,7 +238,7 @@
    AKS. You also need a storage back-end such as &ses; or NFS, a DNS/DHCP
    server, and an Internet connection to download additional packages during
    installation and ~10 GB of &docker; images on each &kube; worker after
-   installation. (See <xref linkend="cha.cap.install-production"/>.)
+   installation. (See <xref linkend="cha.cap.depl-caasp"/>.)
   </para>
 
   <para>

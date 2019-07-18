@@ -9,7 +9,7 @@
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
  <info>
-  <title>Deploying &productname; on Google Kubernetes Engine (GKE)</title>
+  <title>Deploying &productname; on &gke-full; (GKE)</title>
   <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
    <dm:bugtracker></dm:bugtracker>
    <dm:translation>yes</dm:translation>
@@ -19,7 +19,7 @@
      &readmefirst;
  </important>
  <para>
-  &productname; supports deployment on Google Kubernetes Engine (GKE). This chapter describes the steps
+  &productname; supports deployment on &gke-full; (GKE). This chapter describes the steps
   to prepare a &productname; deployment on GKE using its integrated network load balancers. See
   <link xlink:href="https://cloud.google.com/kubernetes-engine/"/>
   for more information on GKE.
