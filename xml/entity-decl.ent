@@ -7,6 +7,7 @@
 <!ENTITY productnumber  "1.4.1">
 <!ENTITY github.url     "https://github.com/SUSE/doc-cap">
 <!ENTITY cap            "Cloud Application Platform">
+<!ENTITY kernel_version "3.19">
 <!ENTITY latestuaachart "2.17.1">
 <!ENTITY latestscfchart "2.17.1">
 <!ENTITY lateststratoschart "2.4.0">
