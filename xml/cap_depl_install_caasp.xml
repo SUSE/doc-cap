@@ -129,6 +129,9 @@
       &productname; is supported on &suse; &caasp; 3.x.
      </para>
      <para>
+      Ensure nodes use a mininum kernel version of &kernel_version;.
+     </para>
+     <para>
       After installing
       <link xlink:href=
       "https://www.suse.com/documentation/suse-caasp-2/">&caasp;

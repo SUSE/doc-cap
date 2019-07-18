@@ -110,6 +110,11 @@
    </listitem>
    <listitem>
     <para>
+     Ensure nodes use a mininum kernel version of &kernel_version;.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
      Has at least 80 GB local storage per node.
     </para>
    </listitem>

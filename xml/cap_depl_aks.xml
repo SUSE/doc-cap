@@ -62,6 +62,10 @@
   </para>
 
   <para>
+   Ensure nodes use a mininum kernel version of &kernel_version;.
+  </para>
+
+  <para>
    Note that 24 vCPUs are required for the minimal installation described in
    this guide. If your account only has the default 10 vCPUs available, you
    can request a quota increase by going to

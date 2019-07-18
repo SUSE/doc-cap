@@ -41,6 +41,10 @@
   </para>
 
   <para>
+   Ensure nodes use a mininum kernel version of &kernel_version;.
+  </para>
+
+  <para>
    Take note of special configurations that are required to successfully deploy
    &productname; on EKS in <xref linkend="sec.cap.install-scf-eks"/>.
   </para>

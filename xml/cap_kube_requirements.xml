@@ -31,6 +31,11 @@
    </listitem>
    <listitem>
     <para>
+     Nodes use a mininum kernel version of &kernel_version;.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
      Kernel parameter <literal>swapaccount=1</literal>
     </para>
    </listitem>
