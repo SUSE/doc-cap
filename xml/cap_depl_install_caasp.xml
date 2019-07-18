@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.install-production"
+<chapter version="5.0" xml:id="cha.cap.depl-caasp"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -703,7 +703,7 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create --filename -<
 
   <para>
    These instructions assume you have followed the procedure in
-   <xref linkend="cha.cap.install-production"/> and have a running &cap;
+   <xref linkend="cha.cap.depl-caasp"/> and have a running &cap;
    deployment on &susecaaspreg;.
   </para>
 

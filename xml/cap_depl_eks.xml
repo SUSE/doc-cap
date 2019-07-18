@@ -4,12 +4,12 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.eks"
+<chapter version="5.0" xml:id="cha.cap.depl-eks"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
  <info>
-  <title>Deploying &productname; on Amazon EKS</title>
+  <title>Deploying &productname; on &eks-full; (EKS)</title>
   <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
    <dm:bugtracker></dm:bugtracker>
    <dm:translation>yes</dm:translation>
@@ -19,7 +19,7 @@
      &readmefirst;
  </important>
  <para>
-  This chapter describes how to deploy &productname; on Amazon EKS, using
+  This chapter describes how to deploy &productname; on &eks-full; (EKS), using
   Amazon's Elastic Load Balancer to provide fault-tolerant access to your
   cluster.
  </para>
@@ -502,7 +502,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
     <listitem>
      <para>
       &cap; has been successfully deployed on Amazon EKS as described earlier
-      in this chapter (see <xref linkend="cha.cap.eks"/>)
+      in this chapter (see <xref linkend="cha.cap.depl-eks"/>)
      </para>
     </listitem>
     <listitem>

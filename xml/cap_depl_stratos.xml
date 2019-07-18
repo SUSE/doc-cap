@@ -31,7 +31,7 @@
       without an external load balancer, instead mapping a worker node to your
       &productname; domain as described in 
       <xref linkend="sec.cap.configure-prod"/>. These instructions assume you 
-      have followed the procedure in <xref linkend="cha.cap.install-production"/>, 
+      have followed the procedure in <xref linkend="cha.cap.depl-caasp"/>,
       have deployed <literal>uaa</literal> and <literal>scf</literal> successfully,
       and have created a default storage class.
       <!-- Hopefully an additional section describing how to deploy with a load 
@@ -215,7 +215,7 @@ stratos  1        1        3h
 
   <para>
    Before deploying Stratos, ensure <literal>uaa</literal> and <literal>scf</literal>
-   have been successfully deployed on &eks; (see <xref linkend="cha.cap.eks"/>).
+   have been successfully deployed on &eks; (see <xref linkend="cha.cap.depl-eks"/>).
   </para>
   <para>
    Configure a scoped storage class for your Stratos deployment. Create a configuration

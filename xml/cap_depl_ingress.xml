@@ -65,7 +65,7 @@
     <itemizedlist>
      <listitem>
       <para>
-       For &caasp;, see <xref linkend="cha.cap.install-production"/>
+       For &caasp;, see <xref linkend="cha.cap.depl-caasp"/>
       </para>
      </listitem>
      <listitem>
@@ -75,7 +75,7 @@
      </listitem>
      <listitem>
       <para>
-       For &eks;, see <xref linkend="cha.cap.eks"/>
+       For &eks;, see <xref linkend="cha.cap.depl-eks"/>
       </para>
      </listitem>
      <listitem>

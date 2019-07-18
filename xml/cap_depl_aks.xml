@@ -9,7 +9,7 @@
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
  <info>
-  <title>Deploying &productname; on Microsoft Azure Kubernetes Service (AKS)</title>
+  <title>Deploying &productname; on &aks-full; (AKS)</title>
   <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
    <dm:bugtracker></dm:bugtracker>
    <dm:translation>yes</dm:translation>
@@ -19,7 +19,7 @@
      &readmefirst;
  </important>
  <para>
-  &productname; supports deployment on Microsoft Azure Kubernetes Service
+  &productname; supports deployment on &aks-full;
   (AKS), Microsoft's managed &kube; service. This chapter describes the steps
   for preparing Azure for a &productname; deployment, with a basic Azure load
   balancer. Note that you will not create any DNS records until after
@@ -750,7 +750,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.
   <title>Configuring and Testing the Native &aks; Service Broker</title>
 
   <para>
-   &ms; &azureks; provides a service broker called the Open Service Broker for
+   &aks-full; provides a service broker called the Open Service Broker for
    Azure (see <link xlink:href="https://github.com/Azure/open-service-broker-azure"/>.
    This section describes how to use it with your &productname; deployment.
   </para>
