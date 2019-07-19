@@ -28,7 +28,7 @@
 
    <para>
       The steps in this section describe how to install Stratos on &susecaaspreg;
-      without an external load balancer, instead mapping a worker node to your
+      without an external load balancer, instead mapping the master node to your
       &productname; domain as described in 
       <xref linkend="sec.cap.configure-prod"/>. These instructions assume you 
       have followed the procedure in <xref linkend="cha.cap.depl-caasp"/>,
