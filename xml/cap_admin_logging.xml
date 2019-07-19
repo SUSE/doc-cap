@@ -309,5 +309,8 @@ output {
 <screen>&lt;15>1 2018-08-21T22:46:02.173445+00:00 api-group-0 vcap.cloud_controller_ng - - -  {"timestamp":1534891562.1731355,"message":"(0.006130s) SELECT * FROM `delayed_jobs` WHERE ((((`run_at` &lt;= '2018-08-21 22:46:02') AND (`locked_at` IS NULL)) OR (`locked_at` &lt; '2018-08-21 18:46:02') OR (`locked_by` = 'cc_api_worker.api.0.1')) AND (`failed_at` IS NULL) AND (`queue` IN ('cc-api-0'))) ORDER BY `priority` ASC, `run_at` ASC LIMIT 5","log_level":"debug2","source":"cc.background","data":{},"thread_id":47194852110160,"fiber_id":47194886034680,"process_id":3296,"file":"/var/vcap/packages/cloud_controller_ng/cloud_controller_ng/vendor/bundle/ruby/2.4.0/gems/sequel-4.49.0/lib/sequel/database/logging.rb","lineno":88,"method":"block in log_each"}</screen>
    </listitem>
   </itemizedlist>
+  <literallayout>2018-08-21T22:46:02.173445+00:00 api-group-0 vcap.cloud_controller_ng - - -  {"timestamp":1534891562.1731355,"message":"(0.006130s) SELECT * FROM `delayed_jobs` WHERE ((((`run_at` &lt;= '2018-08-21 22:46:02') AND (`locked_at` IS NULL)) OR (`locked_at` &lt; '2018-08-21 18:46:02') OR (`locked_by` = 'cc_api_worker.api.0.1')) AND (`failed_at` IS NULL) AND (`queue` IN ('cc-api-0'))) ORDER BY `priority` ASC, `run_at` ASC LIMIT 5","log_level":"debug2","source":"cc.background","data":{},"thread_id":47194852110160,"fiber_id":47194886034680,"process_id":3296,"file":"/var/vcap/packages/cloud_controller_ng/cloud_controller_ng/vendor/bundle/ruby/2.4.0/gems/sequel-4.49.0/lib/sequel/database/logging.rb","lineno":88,"method":"block in log_each"}
+
+  </literallayout>
  </sect1>
 </chapter>
