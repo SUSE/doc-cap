@@ -27,6 +27,7 @@
      &scf; has been updated to version &latestscfchart;:
     </para>
    </listitem>
+   <!--
    <listitem>
     <para>
      Added option to deploy <literal>uaa</literal> from the
@@ -42,6 +43,7 @@
      clusters.
     </para>
    </listitem>
+   -->
   </itemizedlist>
 
   <para>
