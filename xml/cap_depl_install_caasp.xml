@@ -100,7 +100,7 @@
       </listitem>
       <listitem>
        <para>
-        Traffic inside of &productname; resolves to a &kube; worker node in
+        Traffic inside of &productname; resolves to a &kube; master node in
         that dedicated domain.
        </para>
       </listitem>
@@ -509,11 +509,11 @@ persistentvolumeclaim "test-sc-persistent" deleted</screen>
   <para>
    The example <filename>scf-config-values.yaml</filename> file is for a simple
    deployment without an ingress controller or external load balancer. Instead, 
-   assign one worker node an external IP address, and map this to the domain 
+   assign the master node an external IP address, and map this to the domain 
    name to provide external access to the cluster. The 
    <literal>external_ips</literal> parameter needs 
    this address to provide access to the Stratos Web interface and other public
-   servers, and it needs the internal IP addresses of the worker nodes to provide 
+   servers, and it also needs the internal IP addresses of the master node to provide 
    access to internal services.
 </para>   
   
@@ -529,7 +529,8 @@ env:
   UAA_PORT: 2793
 
 kube:
-  external_ips: ["<replaceable>&kubeip;</replaceable>", "<replaceable>&subnetI;</replaceable>", "<replaceable>&subnetII;</replaceable>", "<replaceable>&subnetIII;</replaceable>"]
+  # Specify the master node's external IP and internal IP
+  external_ips: ["<replaceable>&kubeip;</replaceable>", "<replaceable>&subnetI;</replaceable>"]
 
   storage_class:
     persistent: <replaceable>"persistent"</replaceable>
