@@ -459,7 +459,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
 
 <screen>&prompt.user;kubectl patch service tcp-router-tcp-router-public --namespace scf \
 --type strategic \
---patch '{"spec": {"ports": [{"name": "healthcheck", "port": 8080}]}'
+--patch '{"spec": {"ports": [{"name": "healthcheck", "port": 8080}]}}'
 </screen>
 
   <para>
