@@ -543,8 +543,8 @@ suse/uaa                        &latestscfchart;          1.4             A Helm
 '<warning xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
   <title>Deprecation of <literal>cflinuxfs2</literal> and <literal>sle12</literal> Stacks</title>
   <para>
-   <literal>cf-deployment</literal> 7.11 is the final &cf; version that
-   supports the <literal>cflinuxfs2</literal> stack. The
+   <literal>cf-deployment</literal> 7.11, part of &cap; 1.4.1, is the final &cf;
+   version that supports the <literal>cflinuxfs2</literal> stack. The
    <literal>cflinuxfs2</literal> and <literal>sle12</literal> stacks are
    deprecated in favor of <literal>cflinuxfs3</literal> and
    <literal>sle15</literal> respectively. Start planning to migrate applications
