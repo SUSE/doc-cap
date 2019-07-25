@@ -233,7 +233,9 @@ metadata:
     kubernetes.io/cluster-service: "true"
 provisioner: kubernetes.io/aws-ebs
 parameters:
-  type: gp2</screen>
+  type: gp2
+allowVolumeExpansion: true
+</screen>
 
   <para>
    Then apply the new storage class configuration with this command:
@@ -756,4 +758,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
    </procedure>
   </sect2>
  </sect1>
+
+ <!-- sect1 for PV resizing -->
+ &resize-persistent-volume;
 </chapter>

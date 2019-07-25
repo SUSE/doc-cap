@@ -828,3 +828,160 @@ suse/uaa                        &latestscfchart;          1.4             A Helm
    </para>
   </listitem>
  </itemizedlist>'>
+
+<!--ENTITY resize-persistent-volume.........................................-->
+
+<!ENTITY resize-persistent-volume
+'<sect1 xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Resizing Persistent Volumes</title>
+  <para>
+   Depending on your workloads, the default persistent volume (PV) sizes of your
+   &cap; deployment may be insufficient. This section describes the process to
+   resize a persistent volume in your &cap; deployment, by modifying the
+   persistent volumes claim (PVC) object.
+  </para>
+  <para>
+   Note that PVs can only be expanded, but cannot be shrunk.
+   shrunk.
+  </para>
+  <sect2>
+   <title>Prerequisites</title>
+   <para>
+    The following are required in order to use the process below to resize a PV.
+   </para>
+   <itemizedlist>
+    <listitem>
+     <para>
+      &kube; 1.11 or newer.
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      The volume being expanded is among the list of supported volume types.
+      Refer to the list at
+      <link xlink:href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#expanding-persistent-volumes-claims"/>
+     </para>
+    </listitem>
+   </itemizedlist>
+  </sect2>
+  <sect2>
+   <title>Example Procedure</title>
+   <para>
+    The following describes the process required to resize a PV, using the PV and PVC associated with <literal>uaa</literal>&apos;s
+    <literal>mysql</literal> as an example.
+   </para>
+   <procedure>
+    <step>
+     <para>
+      Find the storage class and PVC associated with the PV being expanded. In This example, the storage class is called <literal>persistent</literal> and the PVC is called <literal>mysql-data-mysql-0</literal>.
+     </para>
+<screen>&prompt.user;kubectl get persistentvolume</screen>
+    </step>
+    <step>
+     <para>
+      Verify whether the storage class has
+      <literal>allowVolumeExpansion</literal> set to <literal>true</literal>.
+      If it does not, run the following command to update the storage class.
+     </para>
+<screen>&prompt.user;kubectl get storageclass <replaceable>persistent</replaceable> --output json</screen>
+     <para>
+      If it does not, run the below command to update the storage class.
+     </para>
+<screen>&prompt.user;kubectl patch storageclass <replaceable>persistent</replaceable> \
+--patch &apos;{"allowVolumeExpansion": true}&apos;
+</screen>
+    </step>
+    <step>
+     <para>
+      Cordon all nodes in your cluster.
+     </para>
+     <substeps>
+      <step>
+<screen>&prompt.user;export VM_NODES=$(kubectl get nodes -o name)</screen>
+      </step>
+      <step>
+<screen>&prompt.user;for i in $VM_NODES
+ do
+  kubectl cordon `echo "${i//node\/}"`
+done
+</screen>
+      </step>
+     </substeps>
+    </step>
+    <step>
+     <para>
+      Increase the storage size of the PVC object associated with the PV being
+      expanded.
+     </para>
+<screen>&prompt.user;kubectl patch persistentvolumeclaim --namespace <replaceable>uaa</replaceable> <replaceable>mysql-data-mysql-0</replaceable> \
+--patch &apos;{"spec": {"resources": {"requests": {"storage": "25Gi"}}}}&apos;
+</screen>
+    </step>
+    <step>
+     <para>
+      List all pods that use the PVC, in any namespace.
+     </para>
+<screen>&prompt.user;kubectl get pods --all-namespaces --output=json | jq -c &apos;.items[] | {name: .metadata.name, namespace: .metadata.namespace, claimName: .spec |  select( has ("volumes") ).volumes[] | select( has ("persistentVolumeClaim") ).persistentVolumeClaim.claimName }&apos;
+</screen>
+    </step>
+    <step>
+     <para>
+      Restart all pods that use the PVC.
+     </para>
+<screen>&prompt.user;kubectl delete pod <replaceable>mysql-0</replaceable> --namespace <replaceable>uaa</replaceable>
+</screen>
+    </step>
+    <step>
+     <para>
+      Run <command>kubectl describe persistentvolumeclaim</command> and monitor the <literal>status.conditions</literal> field.
+     </para>
+<screen>&prompt.user;watch &apos;kubectl get persistentvolumeclaim --namespace <replaceable>uaa</replaceable> <replaceable>mysql-data-mysql-0</replaceable> --output json&apos;
+</screen>
+     <para>
+      When the following is observed, press
+      <keycombo><keycap function="control"/><keycap>C</keycap></keycombo> to
+      exit the <command>watch</command> command and proceed to the next step.
+     </para>
+     <itemizedlist>
+      <listitem>
+       <para>
+        <literal>status.conditions.message</literal> is
+       </para>
+<screen>message: Waiting for user to (re-)start a pod to finish file system resize of volume on node.</screen>
+      </listitem>
+      <listitem>
+       <para>
+         <literal>status.conditions.type</literal> is
+       </para>
+<screen>type: FileSystemResizePending</screen>
+      </listitem>
+     </itemizedlist>
+    </step>
+    <step>
+     <para>
+      Uncordon all nodes in your cluster.
+     </para>
+<screen>&prompt.user;for i in $VM_NODES
+ do
+  kubectl uncordon `echo "${i//node\/}"`
+done
+</screen>
+    </step>
+    <step>
+     <para>
+      Wait for the resize to finish. Verify the storage size values match for
+      <literal>status.capacity.storage</literal> and
+      <literal>spec.resources.requests.storage</literal>.
+     </para>
+<screen>&prompt.user;watch &apos;kubectl get persistentvolumeclaim --namespace <replaceable>uaa</replaceable> <replaceable>mysql-data-mysql-0</replaceable> --output json&apos;
+</screen>
+    </step>
+    <step>
+     <para>
+      Also verify the storage size in the pod itself is updated.
+     </para>
+<screen>&prompt.user;kubectl --namespace <replaceable>uaa</replaceable> exec <replaceable>mysql-0</replaceable> -- df --human-readable</screen>
+    </step>
+   </procedure>
+  </sect2>
+ </sect1>'>
