@@ -289,7 +289,7 @@ Before you start deploying &productname;, review the following documents:
 <!ENTITY uaac-target
 '<step xmlns="http://docbook.org/ns/docbook">
 <para>
- Use UAAC to target your <literal>uaa</literal> server:
+ Use UAAC to target your <literal>uaa</literal> server.
 </para>
 <screen>&prompt.user;uaac target --skip-ssl-validation <replaceable>https://uaa.example.com:2793</replaceable></screen>
 </step>'>
@@ -302,7 +302,7 @@ Before you start deploying &productname;, review the following documents:
  Authenticate to the <literal>uaa</literal> server as
  <literal>admin</literal> using the
  <literal>UAA_ADMIN_CLIENT_SECRET</literal> set in your
- <filename>scf-config-values.yaml</filename> file:
+ <filename>scf-config-values.yaml</filename> file.
 </para>
 <screen>&prompt.user;uaac token client get admin --secret <replaceable>password</replaceable></screen>
 </step>'>
