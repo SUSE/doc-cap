@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.depl-aks"
+<chapter version="5.0" xml:id="cha-cap-depl-aks"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -35,7 +35,7 @@
   any device in a network that has an IP address. In Azure they are called
   agent nodes. In this chapter we call them agent nodes or &kube; nodes.
  </para>
- <sect1 xml:id="sec.cap.prereqs-aks">
+ <sect1 xml:id="sec-cap-prereqs-aks">
   <title>Prerequisites</title>
 
   <para>
@@ -124,7 +124,7 @@
    register --name <replaceable>provider</replaceable></command> command.
   </para>
  </sect1>
- <sect1 xml:id="sec.cap.create-aks-instance">
+ <sect1 xml:id="sec-cap-create-aks-instance">
   <title>Create Resource Group and AKS Instance</title>
 
   <para>
@@ -211,7 +211,7 @@ cap-aks</screen>
      storage classes</link>) is recommended. Note
      <literal>managed-premium</literal> has been specified in the example
      <filename>scf-config-values.yaml</filename> used (see
-     <xref linkend="sec.cap.cap-on-aks"/>):
+     <xref linkend="sec-cap-cap-on-aks"/>):
     </para>
 <screen>&prompt.user;export NODE_VM_SIZE="<replaceable>Standard_DS4_v2</replaceable>"</screen>
    </listitem>
@@ -346,17 +346,17 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
  <!-- sect1 for helm client and tiller installation -->
  &install-helm-tiller;
 
- <sect1 xml:id="sec.cap.psp">
+ <sect1 xml:id="sec-cap-psp">
   <title>Pod Security Policies</title>
 
   <para>
    Role-based access control (RBAC) is enabled by default on AKS. &productname;
    1.3.1 and later do not need to be configured manually. Older &cap; releases
-   require manual PSP configuration; see <xref linkend="app.psps"/> for
+   require manual PSP configuration; see <xref linkend="app-psps"/> for
    instructions.
   </para>
  </sect1>
- <sect1 xml:id="sec.cap.swap-accounting">
+ <sect1 xml:id="sec-cap-swap-accounting">
   <title>Enable Swap Accounting</title>
 
   <para>
@@ -367,7 +367,7 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
    machines.
   </para>
 
-  <procedure xml:id="pro.swap-account">
+  <procedure xml:id="pro-swap-account">
    <step>
 <screen>&prompt.user;export MC_RG_NAME=$(az aks show --resource-group $RG_NAME --name $AKS_NAME --query nodeResourceGroup --output json | jq -r '.')</screen>
    </step>
@@ -391,7 +391,7 @@ done</screen>
    </step>
   </procedure>
  </sect1>
- <sect1 xml:id="sec.cap.aks-storage">
+ <sect1 xml:id="sec-cap-aks-storage">
   <title>Default Storage Class</title>
   <para>
    This example creates a <literal>managed-premium</literal> (see
@@ -432,12 +432,12 @@ reclaimPolicy: Delete</screen>
     shared: "persistent"
 </screen>
   <para>
-   See <xref linkend="sec.cap.aks-config"/> for a complete example deployment
+   See <xref linkend="sec-cap-aks-config"/> for a complete example deployment
    configuration file, <filename>scf-config-values.yaml</filename>.
   </para>
  </sect1>
 
- <sect1 xml:id="sec.cap.aks-dns">
+ <sect1 xml:id="sec-cap-aks-dns">
   <title>DNS Configuration</title>
 
   <para>
@@ -454,7 +454,7 @@ reclaimPolicy: Delete</screen>
 &dns-tables;
 
  </sect1>
- <sect1 xml:id="sec.cap.aks-config">
+ <sect1 xml:id="sec-cap-aks-config">
   <title>Deployment Configuration</title>
   <para>
    It is not necessary to create any DNS records before deploying
@@ -510,7 +510,7 @@ services:
   &protect-uaa-admin-secret;
  </sect1>
 
- <sect1 xml:id="sec.cap.addrepo-aks">
+ <sect1 xml:id="sec-cap-addrepo-aks">
   <title>Add the &kube; Charts Repository</title>
 
   <para>
@@ -538,14 +538,14 @@ suse       https://kubernetes-charts.suse.com/
 &helm-search-suse;
 
  </sect1>
- <sect1 xml:id="sec.cap.cap-on-aks">
+ <sect1 xml:id="sec-cap-cap-on-aks">
   <title>Deploying &productname;</title>
   <para>
    This section describes how to deploy &productname; with a basic
    AKS load balancer and how to configure your DNS records.
   </para>
 
-  <sect2 xml:id="sec.cap.aks-deploy-uaa">
+  <sect2 xml:id="sec-cap-aks-deploy-uaa">
    <title>Deploy <literal>uaa</literal></title>
 
    <!-- &uaa-in-scf; -->
@@ -627,7 +627,7 @@ uaa-uaa-public    LoadBalancer   10.0.67.56     40.85.188.67   2793:32034/TCP
 </screen>
   </sect2>
 
-  <sect2 xml:id="sec.cap.aks-deploy-scf">
+  <sect2 xml:id="sec-cap-aks-deploy-scf">
    <title>Deploy <literal>scf</literal></title>
    <para>
     Before deploying <literal>scf</literal>, ensure the DNS records for the
@@ -746,7 +746,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.
 <screen>&prompt.user;cf api --skip-ssl-validation https://api.example.com</screen>
   </sect2>
  </sect1>
- <sect1 xml:id="sec.cap.azure-service-broker">
+ <sect1 xml:id="sec-cap-azure-service-broker">
   <title>Configuring and Testing the Native &aks; Service Broker</title>
 
   <para>
@@ -811,7 +811,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.
    <para>
     If installation of <literal>open-service-broker-azure</literal> is unsuccessful due to
     <literal>Failed to pull image "osbapublicacr.azurecr.io/microsoft/azure-service-broker:v1.6.0</literal>,
-    upgrade your AKS cluster to &kube; 1.11.9. See <xref linkend="sec.cap.aks-kubernetes-upgrade"/> for
+    upgrade your AKS cluster to &kube; 1.11.9. See <xref linkend="sec-cap-aks-kubernetes-upgrade"/> for
     instructions.
    </para>
   </warning>
@@ -924,7 +924,7 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
    further verify by creating an initial user and posting some test questions.
   </para>
  </sect1>
- <sect1 xml:id="sec.cap.aks-kubernetes-upgrade">
+ <sect1 xml:id="sec-cap-aks-kubernetes-upgrade">
   <title>Upgrading An AKS Cluster and Additional Considerations</title>
 
   <para>
@@ -966,7 +966,7 @@ done
    </step>
   </procedure>
  </sect1>
- <sect1 xml:id="sec.cap.aks-add-capacity">
+ <sect1 xml:id="sec-cap-aks-add-capacity">
   <title>Expanding Capacity of a &cap; Deployment on &aks;</title>
 
   <para>
@@ -976,9 +976,9 @@ done
 
   <para>
    These instructions assume you have followed the procedure in
-   <xref linkend="cha.cap.depl-aks"/> and have a running &cap; deployment on
+   <xref linkend="cha-cap-depl-aks"/> and have a running &cap; deployment on
    &aks;. The instructions below will use environment variables defined in
-   <xref linkend="sec.cap.create-aks-instance"/>.
+   <xref linkend="sec-cap-create-aks-instance"/>.
   </para>
 
   <procedure>

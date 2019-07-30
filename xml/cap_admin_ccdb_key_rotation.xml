@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.ccdb-secret-rotation"
+<chapter version="5.0" xml:id="cha-cap-ccdb-secret-rotation"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -117,7 +117,7 @@ MariaDB [(none)]> select name, encrypted_environment_variables, encryption_key_l
    </para>
   </step>
  </procedure>
- <sect1 xml:id="sec.cap.ccdb-tables">
+ <sect1 xml:id="sec-cap-ccdb-tables">
   <title>Tables with Encrypted Information</title>
 
   <para>
@@ -215,7 +215,7 @@ MariaDB [(none)]> select name, encrypted_environment_variables, encryption_key_l
    </varlistentry>
   </variablelist>
 
-  <sect2 xml:id="sec.cap.ccdb-update-existing-table-data">
+  <sect2 xml:id="sec-cap-ccdb-update-existing-table-data">
    <title>Update Existing Data with New Encryption Key</title>
    <para>
     To ensure the encryption key is updated for existing data, the command (or

@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.depl-caasp"
+<chapter version="5.0" xml:id="cha-cap-depl-caasp"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -26,7 +26,7 @@
   server, and a storage back-end such as &ses; or NFS. This is a bare minimum,
   and actual requirements are likely to be much larger, depending on your
   workloads. You also need an external workstation for administering your
-  cluster. (See <xref linkend="sec.cap.requirements"/>.) You may optionally
+  cluster. (See <xref linkend="sec-cap-requirements"/>.) You may optionally
   make your &productname; instance highly-available.
  </para>
  <note>
@@ -42,9 +42,9 @@
  <para>
   The optional &ha; example in this chapter provides HA only for the
   &productname; cluster, and not for &caasp; or &ses;. See
-  <xref linkend="sec.cap.ha-prod"/>.
+  <xref linkend="sec-cap-ha-prod"/>.
  </para>
- <sect1 xml:id="sec.cap.prereqs-prod">
+ <sect1 xml:id="sec-cap-prereqs-prod">
   <title>Prerequisites</title>
 
   <para>
@@ -83,7 +83,7 @@
       <listitem>
        <para>
         The &kube; cluster has a dedicated domain and required subdomains (see
-        <xref linkend="cha.cap.depl.notes"/>).
+        <xref linkend="cha-cap-depl-notes"/>).
        </para>
       </listitem>
       <listitem>
@@ -141,7 +141,7 @@
       3</link> and logging into the Velum Web interface, check the box to
       install Tiller (&helm;'s server component).
      </para>
-     <figure xml:id="fig.cap.install-tiller-prod">
+     <figure xml:id="fig-cap-install-tiller-prod">
       <title>Install Tiller</title>
       <mediaobject>
        <imageobject>
@@ -169,7 +169,7 @@
       packages, and the &kube; workers will each download ~10 GB of Docker
       images.
      </para>
-     <figure xml:id="fig.cap.select-master-nodes">
+     <figure xml:id="fig-cap-select-master-nodes">
       <title>Assigning Roles to Nodes</title>
       <mediaobject>
        <imageobject>
@@ -284,7 +284,7 @@ Happy Helming!</screen>
    </varlistentry>
   </variablelist>
  </sect1>
- <sect1 xml:id="sec.cap.psps">
+ <sect1 xml:id="sec-cap-psps">
   <title>Pod Security Policy</title>
 
   <para>
@@ -314,12 +314,12 @@ Happy Helming!</screen>
   <para>
    &productname; &productnumber; includes the necessary PSP configurations in
    the &helm; charts to run on &suse; &caasp;, and are set up automatically
-   without requiring manual configuration. See <xref linkend="app.psps"/> for
+   without requiring manual configuration. See <xref linkend="app-psps"/> for
    instructions on applying the necessary PSPs manually on older &cap;
    releases.
   </para>
  </sect1>
- <sect1 xml:id="sec.cap.storageclass-prod">
+ <sect1 xml:id="sec-cap-storageclass-prod">
   <title>Choose Storage Class</title>
 
   <para>
@@ -353,13 +353,13 @@ persistent (default)   nfs           10d
 </screen>
 
   <para>
-   See <xref linkend="sec.cap.configure-prod"/> to learn where to configure
+   See <xref linkend="sec-cap-configure-prod"/> to learn where to configure
    your storage class for &productname;. See the &kube; document
    <link xlink:href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">Persistent
    Volumes</link> for detailed information on storage classes.
   </para>
  </sect1>
- <sect1 xml:id="sec.cap.teststorageclass-prod">
+ <sect1 xml:id="sec-cap-teststorageclass-prod">
   <title>Test Storage Class</title>
 
   <para>
@@ -426,13 +426,13 @@ persistentvolumeclaim "test-sc-persistent" deleted</screen>
 
 <screen>&prompt.user;kubectl delete pvc/test-sc-persistent --grace-period=0</screen>
  </sect1>
- <sect1 xml:id="sec.cap.configure-prod">
+ <sect1 xml:id="sec-cap-configure-prod">
   <title>Configure the &productname; Production Deployment</title>
 
   <para>
    Create a configuration file on your workstation for &helm; to use. In this
    example it is called <filename>scf-config-values.yaml</filename>. (See
-   <xref linkend="app.psps"/> for configuration instructions for releases older
+   <xref linkend="app-psps"/> for configuration instructions for releases older
    than 1.3.1.)
   </para>
 
@@ -493,7 +493,7 @@ persistentvolumeclaim "test-sc-persistent" deleted</screen>
      <title>External Log Host</title>
      <para>
       For information about using an external log host, see
-      <xref linkend="sec.cap.log-external"/>.
+      <xref linkend="sec-cap-log-external"/>.
      </para>
     </formalpara>
    </listitem>
@@ -561,7 +561,7 @@ secrets:
   &protect-uaa-admin-secret;
 
  </sect1>
- <sect1 xml:id="sec.cap.helm-deploy-prod">
+ <sect1 xml:id="sec-cap-helm-deploy-prod">
   <title>Deploy with &helm;</title>
 
   <para>
@@ -574,32 +574,32 @@ secrets:
     <para>
      Download the &suse; &kube; charts repository
      (<xref
-     linkend="sec.cap.addrepo-prod" />)
+     linkend="sec-cap-addrepo-prod" />)
     </para>
    </step>
    <step>
     <para>
      Copy the storage secret of your storage cluster to the
      <literal>uaa</literal> and <literal>scf</literal> namespaces
-     (<xref linkend="sec.cap.copy-secret-prod" />)
+     (<xref linkend="sec-cap-copy-secret-prod" />)
     </para>
    </step>
    <step>
     <para>
      Deploy <literal>uaa</literal>
-     (<xref linkend="sec.cap.install-uaa-prod" />)
+     (<xref linkend="sec-cap-install-uaa-prod" />)
     </para>
    </step>
    <step>
     <para>
      Copy the <literal>uaa</literal> secret and certificate to the
      <literal>scf</literal> namespace, deploy <literal>scf</literal>
-     (<xref linkend="sec.cap.install-scf-prod" />)
+     (<xref linkend="sec-cap-install-scf-prod" />)
     </para>
    </step>
   </procedure>
  </sect1>
- <sect1 xml:id="sec.cap.addrepo-prod">
+ <sect1 xml:id="sec-cap-addrepo-prod">
   <title>Add the &kube; Charts Repository</title>
 
   <para>
@@ -626,7 +626,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
 &helm-search-suse;
  
 </sect1>
- <sect1 xml:id="sec.cap.copy-secret-prod">
+ <sect1 xml:id="sec-cap-copy-secret-prod">
   <title>Copy &ses; Secret</title>
 
   <para>
@@ -640,7 +640,7 @@ sed 's/"namespace": "default"/"namespace": "uaa"/' | kubectl create --filename -
 &prompt.user;kubectl get secret ceph-secret-admin --output json --namespace default | \
 sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create --filename -</screen>
  </sect1>
- <sect1 xml:id="sec.cap.install-uaa-prod">
+ <sect1 xml:id="sec-cap-install-uaa-prod">
   <title>Deploy <literal>uaa</literal></title>
 
   <!-- &uaa-in-scf; -->
@@ -666,7 +666,7 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create --filename -<
   </para>
 
  </sect1>
- <sect1 xml:id="sec.cap.install-scf-prod">
+ <sect1 xml:id="sec-cap-install-scf-prod">
   <title>Deploy <literal>scf</literal></title>
 
   <para>
@@ -691,10 +691,10 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create --filename -<
   <para>
    When the deployment completes, use the &cf; command line interface to log in
    to &suse; &cf; to deploy and manage your applications. (See
-   <xref linkend="sec.cap.cf-cli"/>)
+   <xref linkend="sec-cap-cf-cli"/>)
   </para>
  </sect1>
- <sect1 xml:id="sec.cap.caasp-add-capacity">
+ <sect1 xml:id="sec-cap-caasp-add-capacity">
   <title>Expanding Capacity of a &cap; Deployment on &susecaaspreg;</title>
 
   <para>
@@ -704,7 +704,7 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create --filename -<
 
   <para>
    These instructions assume you have followed the procedure in
-   <xref linkend="cha.cap.depl-caasp"/> and have a running &cap;
+   <xref linkend="cha-cap-depl-caasp"/> and have a running &cap;
    deployment on &susecaaspreg;.
   </para>
 

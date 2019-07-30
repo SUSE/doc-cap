@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.configuration-changes"
+<chapter version="5.0" xml:id="cha-cap-configuration-changes"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -28,10 +28,10 @@
    configuration changes as well as perform version upgrades to &cap;. A change
    to the pod count configuration should not be applied simultaneously with a
    version upgrade. Sizing changes should be made separately, either before or
-   after, from a version upgrade (see <xref linkend="sec.cap.ha-prod"/>).
+   after, from a version upgrade (see <xref linkend="sec-cap-ha-prod"/>).
   </para>
  </warning>
- <sect1 xml:id="sec.cap.configuration-change-example">
+ <sect1 xml:id="sec-cap-configuration-change-example">
   <title>Configuration Change Example</title>
 
   <para>
@@ -67,7 +67,7 @@
 
 <screen>&prompt.user;watch --color 'kubectl get pods --namespace uaa'</screen>
  </sect1>
- <sect1 xml:id="sec.cap.configuration-change-other-examples">
+ <sect1 xml:id="sec-cap-configuration-change-other-examples">
   <title>Other Examples</title>
 
   <para>
@@ -78,18 +78,18 @@
   <itemizedlist>
    <listitem>
     <para>
-     Cluster sizing changes (see <xref linkend="sec.cap.ha-prod-upgrade"/>)
+     Cluster sizing changes (see <xref linkend="sec-cap-ha-prod-upgrade"/>)
     </para>
    </listitem>
    <listitem>
     <para>
-     Secrets rotation (see <xref linkend="sec.cap.secrets-rotation"/>)
+     Secrets rotation (see <xref linkend="sec-cap-secrets-rotation"/>)
     </para>
    </listitem>
    <listitem>
     <para>
      Enabling additional services (see
-     <xref linkend="sec.cap.enable-app-autoscaler"/>)
+     <xref linkend="sec-cap-enable-app-autoscaler"/>)
     </para>
    </listitem>
   </itemizedlist>

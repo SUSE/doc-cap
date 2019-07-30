@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.depl-sbs"
+<chapter version="5.0" xml:id="cha-cap-depl-sbs"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -23,7 +23,7 @@
   needed, and provisioned on demand.
  </para>
 
- <sect1 xml:id="sec.cap.disable-service-broker">
+ <sect1 xml:id="sec-cap-disable-service-broker">
   <title>Enabling and Disabling Service Brokers</title>
   
   <para>
@@ -81,7 +81,7 @@
 --set "enable.cf_usb=true"</screen>
 
  </sect1>
- <sect1 xml:id="sec.cap.prereqs-service-broker">
+ <sect1 xml:id="sec-cap-prereqs-service-broker">
   <title>Prerequisites</title>
 
   <para>
@@ -161,7 +161,7 @@
    applying the PSP, proceed to configuring and deploying your service broker.
   </para>
  </sect1>
- <sect1 xml:id="sec.cap.configure-service-broker">
+ <sect1 xml:id="sec-cap-configure-service-broker">
   <title>Configuring the MySQL Deployment</title>
 
   <para>
@@ -209,7 +209,7 @@
   SERVICE_MYSQL_PASS: <replaceable>mysql-admin-password</replaceable>
 
   # CAP access credentials, from your original deployment configuration 
-  # (see <xref linkend="sec.cap.configure-prod"/>)
+  # (see <xref linkend="sec-cap-configure-prod"/>)
   CF_ADMIN_USER: <replaceable>admin</replaceable>
   CF_ADMIN_PASSWORD: <replaceable>password</replaceable>
   CF_DOMAIN: <replaceable>example.com</replaceable>
@@ -240,12 +240,12 @@ kube:
     username: ""
     password: ""</screen>
  </sect1>
- <sect1 xml:id="sec.cap.configure-mysql">
+ <sect1 xml:id="sec-cap-configure-mysql">
   <title>Deploying the MySQL Chart</title>
 
   <para>
    &productname; includes charts for MySQL and PostgreSQL (see
-   <xref linkend="sec.cap.addrepo-prod"/> for information on managing your
+   <xref linkend="sec-cap-addrepo-prod"/> for information on managing your
    &helm; repository):
   </para>
 
@@ -296,7 +296,7 @@ kube:
    </para>
   </warning>
  </sect1>
- <sect1 xml:id="sec.cap.deploy-mysql">
+ <sect1 xml:id="sec-cap-deploy-mysql">
   <title>Create and Bind a MySQL Service</title>
 
   <para>
@@ -316,7 +316,7 @@ kube:
 
 <screen>&prompt.user;cf bind-service <replaceable>my_application service_instance_name</replaceable></screen>
  </sect1>
- <sect1 xml:id="sec.cap.configure-postgresql">
+ <sect1 xml:id="sec-cap-configure-postgresql">
   <title>Deploying the PostgreSQL Chart</title>
 
   <para>
@@ -337,7 +337,7 @@ kube:
   SERVICE_POSTGRESQL_SSLMODE: disable
   
   # CAP access credentials, from your original deployment configuration 
-  # (see <xref linkend="sec.cap.configure-prod"/>)
+  # (see <xref linkend="sec-cap-configure-prod"/>)
   CF_ADMIN_USER: <replaceable>admin</replaceable>
   CF_ADMIN_PASSWORD: <replaceable>password</replaceable>
   CF_DOMAIN: <replaceable>example.com</replaceable>
@@ -388,7 +388,7 @@ kube:
    Then follow the same steps as for the MySQL chart.
   </para>
  </sect1>
- <sect1 xml:id="sec.cap.remove-sidecars">
+ <sect1 xml:id="sec-cap-remove-sidecars">
   <title>Removing Service Broker Sidecar Deployments</title>
 
   <para>
@@ -448,7 +448,7 @@ mysql-service  1        Mon May 21 11:40:11 2018  DEPLOYED  cf-usb-sidecar-mysql
    </listitem>
   </itemizedlist>
  </sect1>
- <sect1 xml:id="sec.cap.service-broker-upgrades">
+ <sect1 xml:id="sec-cap-service-broker-upgrades">
   <title>Upgrade Notes</title>
 
 <!-- Internal cf-usb broker broker endpoint URL change involving 1.3 -->

@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.credhub"
+<chapter version="5.0" xml:id="cha-cap-credhub"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -20,7 +20,7 @@
   CredHub instance, a CredHub service on your cluster, then apply the steps in
   this chapter to connect &productname;.
  </para>
- <sect1 xml:id="sec.cap.credhub">
+ <sect1 xml:id="sec-cap-credhub">
   <title>Installing the CredHub Client</title>
 
   <para>
@@ -38,7 +38,7 @@
 &prompt.user;tar zxf credhub-linux-2.2.0.tgz
 </screen>
  </sect1>
- <sect1 xml:id="sec.cap.credhub-enable">
+ <sect1 xml:id="sec-cap-credhub-enable">
   <title>Enabling and Disabling CredHub</title>
 
   <para>
@@ -96,7 +96,7 @@
 --set "secrets.UAA_CA_CERT=${CA_CERT}" \
 --set "enable.credhub=false"</screen>
  </sect1>
- <sect1 xml:id="sec.cap.credhub-upgrade-considerations">
+ <sect1 xml:id="sec-cap-credhub-upgrade-considerations">
   <title>Upgrade Considerations</title>
 
   <para>
@@ -117,7 +117,7 @@
     count: 1</screen>
 
  </sect1>
- <sect1 xml:id="sec.cap.credhub-connect">
+ <sect1 xml:id="sec-cap-credhub-connect">
   <title>Connecting to the CredHub Service</title>
 
   <para>

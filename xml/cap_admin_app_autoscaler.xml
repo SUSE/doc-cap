@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.app-autoscaler"
+<chapter version="5.0" xml:id="cha-cap-app-autoscaler"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -19,9 +19,9 @@
   The App-AutoScaler service is used for automatically managing an
   application's instance count when deployed on &scf;. The scaling behavior is
   determined by a set of criteria defined in a policy (See
-  <xref linkend="sec.cap.app-autoscaler-policies"/>).
+  <xref linkend="sec-cap-app-autoscaler-policies"/>).
  </para>
- <sect1 xml:id="sec.cap.app-autoscaler-prereqs">
+ <sect1 xml:id="sec-cap-app-autoscaler-prereqs">
   <title>Prerequisites</title>
 
   <para>
@@ -50,7 +50,7 @@
    </listitem>
   </itemizedlist>
  </sect1>
- <sect1 xml:id="sec.cap.enable-app-autoscaler">
+ <sect1 xml:id="sec-cap-enable-app-autoscaler">
   <title>Enabling and Disabling the App-AutoScaler Service</title>
 
   <para>
@@ -94,7 +94,7 @@
 </screen>
 
  </sect1>
- <sect1 xml:id="sec.cap.app-autoscaler-upgrade-considerations">
+ <sect1 xml:id="sec-cap-app-autoscaler-upgrade-considerations">
   <title>Upgrade Considerations</title>
 
   <para>
@@ -214,7 +214,7 @@
 --set sizing.autoscaler_postgres.disk_sizes.postgres_data=100
 </screen>
  </sect1>
- <sect1 xml:id="sec.cap.app-autoscaler-usage">
+ <sect1 xml:id="sec-cap-app-autoscaler-usage">
   <title>Using the App-AutoScaler Service</title>
 
   <para>
@@ -250,7 +250,7 @@
 
   <para>
    Bind the service instance to an application and attach a policy (See
-   <xref linkend="sec.cap.app-autoscaler-policies"/>):
+   <xref linkend="sec-cap-app-autoscaler-policies"/>):
   </para>
 
 <screen>&prompt.user;cf bind-service <replaceable>my_application</replaceable> <replaceable>service_instance_name</replaceable>
@@ -284,11 +284,11 @@
   <para>
    Once an instance of the App-AutoScaler service has been created and bound to
    an app, it can be managed using the &cfcli; with the App-AutoScaler plugin
-   (See <xref linkend="sec.cap.app-autoscaler-cli"/>) or using the
-   App-AutoScaler API (See <xref linkend="sec.cap.app-autoscaler-api"/>).
+   (See <xref linkend="sec-cap-app-autoscaler-cli"/>) or using the
+   App-AutoScaler API (See <xref linkend="sec-cap-app-autoscaler-api"/>).
   </para>
 
-  <sect2 xml:id="sec.cap.app-autoscaler-cli">
+  <sect2 xml:id="sec-cap-app-autoscaler-cli">
    <title>The App-AutoScaler &cfcli; Plugin</title>
    <para>
     The App-AutoScaler plugin is used for managing the service with your
@@ -346,7 +346,7 @@
    </variablelist>
   </sect2>
 
-  <sect2 xml:id="sec.cap.app-autoscaler-api">
+  <sect2 xml:id="sec-cap-app-autoscaler-api">
    <title>App-AutoScaler API</title>
    <para>
     The App-AutoScaler service provides a
@@ -387,7 +387,7 @@
    </itemizedlist>
   </sect2>
  </sect1>
- <sect1 xml:id="sec.cap.app-autoscaler-policies">
+ <sect1 xml:id="sec-cap-app-autoscaler-policies">
   <title>Policies</title>
 
   <para>
@@ -395,7 +395,7 @@
    maximum instance count, and the rules used to determine when the number of
    application instances is scaled up or down. These rules are categorized into
    two types, scheduled scaling and dynamic scaling. (See
-   <xref linkend="sec.cap.app-autoscaler-scaling-types"/>). Multiple scaling
+   <xref linkend="sec-cap-app-autoscaler-scaling-types"/>). Multiple scaling
    rules can be specified in a policy, but App-AutoScaler does not detect or
    handle conflicts that may occur. Ensure there are no conflicting rules to
    avoid unintended scaling behavior.
@@ -434,7 +434,7 @@
    <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/master/docs/Policy_definition.rst"/>.
   </para>
 
-  <sect2 xml:id="sec.cap.app-autoscaler-scaling-types">
+  <sect2 xml:id="sec-cap-app-autoscaler-scaling-types">
    <title>Scaling Types</title>
    <variablelist>
     <varlistentry>

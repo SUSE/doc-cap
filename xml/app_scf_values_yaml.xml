@@ -5,7 +5,7 @@
     %entities;
 ]>
 <sect1
- xml:id="app.scf.values.yaml" 
+ xml:id="app-scf-values-yaml" 
  xmlns="http://docbook.org/ns/docbook"
  xmlns:xi="http://www.w3.org/2001/XInclude"
  xmlns:xlink="http://www.w3.org/1999/xlink"

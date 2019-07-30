@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.install-stratos"
+<chapter version="5.0" xml:id="cha-cap-install-stratos"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -23,15 +23,15 @@
    of the <literal>uaa</literal> and <literal>scf</literal> pods are running.
   </para>
  
- <sect1 xml:id="sec.cap.stratos-prod">
+ <sect1 xml:id="sec-cap-stratos-prod">
   <title>Deploy Stratos on &susecaaspreg;</title>
 
    <para>
       The steps in this section describe how to install Stratos on &susecaaspreg;
       without an external load balancer, instead mapping the master node to your
       &productname; domain as described in 
-      <xref linkend="sec.cap.configure-prod"/>. These instructions assume you 
-      have followed the procedure in <xref linkend="cha.cap.depl-caasp"/>,
+      <xref linkend="sec-cap-configure-prod"/>. These instructions assume you 
+      have followed the procedure in <xref linkend="cha-cap-depl-caasp"/>,
       have deployed <literal>uaa</literal> and <literal>scf</literal> successfully,
       and have created a default storage class.
       <!-- Hopefully an additional section describing how to deploy with a load 
@@ -50,7 +50,7 @@ sed 's/"namespace": "default"/"namespace": "stratos"/' | kubectl create --filena
 
   <para>
    You should already have the Stratos charts when you downloaded the SUSE
-   charts repository (see <xref linkend="sec.cap.addrepo-prod"/>). Search your
+   charts repository (see <xref linkend="sec-cap-addrepo-prod"/>). Search your
    &helm; repository to verify that you have the <literal>suse/console</literal> 
    chart:
   </para>
@@ -119,7 +119,7 @@ stratos  1        1        3h
   <!-- Image of Stratos UI console -->
   &stratos-figure;
 
-  <sect2 xml:id="sec.cap-stratos-caasp-connect">
+  <sect2 xml:id="sec-cap-stratos-caasp-connect">
    <title>Connecting &susecaaspreg; to Stratos</title>
 
    <para>
@@ -199,7 +199,7 @@ stratos  1        1        3h
     </step>
    </procedure>
 
-   <figure xml:id="stratos-kubernetes-view-caasp.png">
+   <figure xml:id="stratos-kubernetes-view-caasp-png">
     <title>&kube; Environment Information on Stratos</title>
     <mediaobject>
      <imageobject>
@@ -210,12 +210,12 @@ stratos  1        1        3h
   </sect2>
  </sect1>
          
- <sect1 xml:id="sec.cap.stratos-eks">
+ <sect1 xml:id="sec-cap-stratos-eks">
   <title>Deploy Stratos on &eks;</title>
 
   <para>
    Before deploying Stratos, ensure <literal>uaa</literal> and <literal>scf</literal>
-   have been successfully deployed on &eks; (see <xref linkend="cha.cap.depl-eks"/>).
+   have been successfully deployed on &eks; (see <xref linkend="cha-cap-depl-eks"/>).
   </para>
   <para>
    Configure a scoped storage class for your Stratos deployment. Create a configuration
@@ -275,7 +275,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <!-- Image of Stratos UI console -->
   &stratos-figure;
 
-  <sect2 xml:id="sec.cap-stratos-eks-connect">
+  <sect2 xml:id="sec-cap-stratos-eks-connect">
    <title>Connecting &eks; to Stratos</title>
 
    <para>
@@ -373,12 +373,12 @@ gp2scoped       kubernetes.io/aws-ebs   1d
 
   </sect2>
  </sect1>
- <sect1 xml:id="sec.cap.stratos-aks">
+ <sect1 xml:id="sec-cap-stratos-aks">
   <title>Deploy Stratos on &aks;</title>
 
   <para>
    Before deploying Stratos, ensure <literal>uaa</literal> and <literal>scf</literal>
-   have been successfully deployed on &aks; (see <xref linkend="cha.cap.depl-aks"/>).
+   have been successfully deployed on &aks; (see <xref linkend="cha-cap-depl-aks"/>).
   </para>
 
   <para>
@@ -405,7 +405,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <!-- Image of Stratos UI console -->
   &stratos-figure;
 
-  <sect2 xml:id="sec.cap-stratos-aks-connect">
+  <sect2 xml:id="sec-cap-stratos-aks-connect">
    <title>Connecting &aks; to Stratos</title>
 
    <para>
@@ -490,12 +490,12 @@ gp2scoped       kubernetes.io/aws-ebs   1d
 
   </sect2>
  </sect1>
- <sect1 xml:id="sec.cap.stratos-gke">
+ <sect1 xml:id="sec-cap-stratos-gke">
   <title>Deploy Stratos on &gke;</title>
 
   <para>
    Before deploying Stratos, ensure <literal>uaa</literal> and <literal>scf</literal>
-   have been successfully deployed on &gke; (see <xref linkend="cha.cap.depl-gke"/>).
+   have been successfully deployed on &gke; (see <xref linkend="cha-cap-depl-gke"/>).
   </para>
 
   <para>
@@ -522,7 +522,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <!-- Image of Stratos UI console -->
   &stratos-figure;
 
-  <sect2 xml:id="sec.cap-stratos-gke-connect">
+  <sect2 xml:id="sec-cap-stratos-gke-connect">
    <title>Connecting &gke; to Stratos</title>
 
    <para>
@@ -610,17 +610,17 @@ gp2scoped       kubernetes.io/aws-ebs   1d
    &stratos-kubernetes-figure;
   </sect2>
  </sect1>
- <sect1 xml:id="sec.cap.stratos-upgrade">
+ <sect1 xml:id="sec-cap-stratos-upgrade">
   <title>Upgrading Stratos</title>
 
   <para>
    For instructions to upgrade Stratos, follow the process described in
-   <xref linkend="cha.cap.upgrade"/>. Take note that <literal>uaa</literal> and
+   <xref linkend="cha-cap-upgrade"/>. Take note that <literal>uaa</literal> and
    <literal>scf</literal>, other components along with Stratos that make up a
    &cap; release, are upgraded prior to upgrading Stratos.
   </para>
  </sect1>
- <sect1 xml:id="sec.cap.stratos-metrics">
+ <sect1 xml:id="sec-cap-stratos-metrics">
   <title>Stratos Metrics</title>
 
   <para>
@@ -629,7 +629,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
    Foundry and Kubernetes.
   </para>
 
-  <sect2 xml:id="sec.cap.stratos-metrics-install">
+  <sect2 xml:id="sec-cap-stratos-metrics-install">
    <title>Install Stratos Metrics with &helm;</title>
    <para>
     In order to display metrics data with Stratos, you need to deploy the
@@ -718,7 +718,7 @@ sed 's/"namespace": "default"/"namespace": "metrics"/' | kubectl create --filena
    </para>
   </sect2>
 
-  <sect2 xml:id="sec.cap.stratos-metrics-connect">
+  <sect2 xml:id="sec-cap-stratos-metrics-connect">
    <title>Connecting Stratos Metrics</title>
    <para>
     When Stratos Metrics is connected to Stratos, additional views are enabled
@@ -852,7 +852,7 @@ susecf-metrics-metrics-nginx   NodePort   172.28.107.209   10.86.101.115,172.28.
       instance is running on. This should be clickable to navigate to a Cell
       view showing Cell information and metrics.
      </para>
-     <figure xml:id="stratos-app-instances-metrics.png">
+     <figure xml:id="stratos-app-instances-metrics-png">
       <title>Cell Column on Application Instance Tab after Connecting Stratos Metrics</title>
       <mediaobject>
        <imageobject>
@@ -866,7 +866,7 @@ susecf-metrics-metrics-nginx   NodePort   172.28.107.209   10.86.101.115,172.28.
       On the view for an Application there should be a new Metrics tab that
       shows Application metrics.
      </para>
-     <figure xml:id="stratos-app-metrics-tab.png">
+     <figure xml:id="stratos-app-metrics-tab-png">
       <title>Application Metrics Tab after Connecting Stratos Metrics</title>
       <mediaobject>
        <imageobject>
@@ -880,7 +880,7 @@ susecf-metrics-metrics-nginx   NodePort   172.28.107.209   10.86.101.115,172.28.
       On the Kubernetes views, views such as the Node view should show an
       additional <guimenu>Metrics</guimenu> tab with metric information.
      </para>
-     <figure xml:id="stratos-kubernetes-node-metrics.png">
+     <figure xml:id="stratos-kubernetes-node-metrics-png">
       <title>Node Metrics on the Stratos &kube; View</title>
       <mediaobject>
        <imageobject>

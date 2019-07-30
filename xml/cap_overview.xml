@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.overview"
+<chapter version="5.0" xml:id="cha-cap-overview"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -18,7 +18,7 @@
 <!--references-->
 <!--https://www.slideshare.net/NETWAYS/osdc-2018-highly-available-cloud-foundry-on-kubernetes-by-cornelius-schumacher -->
 <!-- https://github.com/SUSE/cloudfoundry/wiki/Documentation-for-Security-Review#service-architecture-diagram -->
- <sect1 xml:id="sec.cap.changes">
+ <sect1 xml:id="sec-cap-changes">
   <title>New in Version &productnumber;</title>
 
   <itemizedlist>
@@ -60,7 +60,7 @@
    </para>
   </tip>
  </sect1>
- <sect1 xml:id="sec.cap.overview">
+ <sect1 xml:id="sec-cap-overview">
   <title>&productname; Overview</title>
 
   <para>
@@ -208,7 +208,7 @@
    and configurations which are deployed to &kube; clusters using &helm;.
   </para>
  </sect1>
- <sect1 xml:id="sec.cap.requirements">
+ <sect1 xml:id="sec-cap-requirements">
   <title>Minimum Requirements</title>
 
   <para>
@@ -240,7 +240,7 @@
    AKS. You also need a storage back-end such as &ses; or NFS, a DNS/DHCP
    server, and an Internet connection to download additional packages during
    installation and ~10 GB of &docker; images on each &kube; worker after
-   installation. (See <xref linkend="cha.cap.depl-caasp"/>.)
+   installation. (See <xref linkend="cha-cap-depl-caasp"/>.)
   </para>
 
   <para>
@@ -251,13 +251,13 @@
    Specs</link> for details. &suse; &caasp; requires a minimum of four hosts:
    one admin and three &kube; nodes. &scf; is then deployed on the &kube;
    nodes. Four &caasp; nodes are not sufficient for a production deployment.
-   <xref linkend="fig.cap.min-prod-arch"/> describes a minimal production
+   <xref linkend="fig-cap-min-prod-arch"/> describes a minimal production
    deployment with &scf; deployed on a &kube; cluster containing three &kube;
    masters and three workers, plus an ingress controller, administration
    workstation, DNS/DHCP server, and a &ses; cluster.
   </para>
 
-  <figure xml:id="fig.cap.min-prod-arch">
+  <figure xml:id="fig-cap-min-prod-arch">
    <title>Minimal Example Production Deployment</title>
    <mediaobject>
     <imageobject role="fo">
@@ -283,12 +283,12 @@
    creating and managing your own.)
   </para>
  </sect1>
- <sect1 xml:id="sec.cap.architecture">
+ <sect1 xml:id="sec-cap-architecture">
   <title>&productname; Architecture</title>
 
   <para>
    The following figures illustrate the main structural concepts of
-   &productname;. <xref linkend="fig.cap.cloud-101"/> shows a comparison of the
+   &productname;. <xref linkend="fig-cap-cloud-101"/> shows a comparison of the
    basic cloud platforms:
   </para>
 
@@ -320,7 +320,7 @@
    PaaS.
   </para>
 
-  <figure xml:id="fig.cap.cloud-101">
+  <figure xml:id="fig-cap-cloud-101">
    <title>Cloud Platform Comparisons</title>
    <mediaobject>
     <imageobject role="fo">
@@ -335,11 +335,11 @@
   </figure>
 
   <para>
-   <xref linkend="fig.cap.containerized"/> illustrates how &suse; &caasp; and
+   <xref linkend="fig-cap-containerized"/> illustrates how &suse; &caasp; and
    &productname; containerize the platform itself.
   </para>
 
-  <figure xml:id="fig.cap.containerized">
+  <figure xml:id="fig-cap-containerized">
    <title>Containerized Platforms</title>
    <mediaobject>
     <imageobject role="fo">
@@ -355,13 +355,13 @@
   </figure>
 
   <para>
-   <xref linkend="fig.cap.stack"/> shows the relationships of the major
+   <xref linkend="fig-cap-stack"/> shows the relationships of the major
    components of the software stack. &productname; runs on &kube;, which in
    turn runs on multiple platforms, from bare metal to various cloud stacks.
    Your applications run on &productname; and provide services.
   </para>
 
-  <figure xml:id="fig.cap.stack">
+  <figure xml:id="fig-cap-stack">
    <title>&productname; Stack</title>
    <mediaobject>
     <imageobject role="fo">
@@ -376,7 +376,7 @@
    </mediaobject>
   </figure>
 
-  <sect2 xml:id="sec.cap.components">
+  <sect2 xml:id="sec-cap-components">
    <title>&scf; Components</title>
    <para>
     &scf; is comprised of developer and administrator clients, trusted download
@@ -443,13 +443,13 @@
    </itemizedlist>
   </sect2>
 
-  <sect2 xml:id="sec.cap.containers">
+  <sect2 xml:id="sec-cap-containers">
    <title>&scf; Containers</title>
    <para>
-    <xref linkend="fig.cap.cap-containers"/> provides a look at &scf;'s
+    <xref linkend="fig-cap-cap-containers"/> provides a look at &scf;'s
     containers.
    </para>
-   <figure xml:id="fig.cap.cap-containers">
+   <figure xml:id="fig-cap-cap-containers">
     <title>&scf; Containers, Grouped by Function</title>
     <mediaobject>
      <imageobject role="fo">
@@ -655,14 +655,14 @@
    </variablelist>
   </sect2>
 
-  <sect2 xml:id="sec.cap.service-diagram">
+  <sect2 xml:id="sec-cap-service-diagram">
    <title>&scf; Service Diagram</title>
    <para>
     This simple service diagram illustrates how &scf; components communicate
-    with each other (<xref linkend="fig.cap.simple-services"/>). See
-    <xref linkend="fig.cap.detailed-services"/> for a more detailed view.
+    with each other (<xref linkend="fig-cap-simple-services"/>). See
+    <xref linkend="fig-cap-detailed-services"/> for a more detailed view.
    </para>
-   <figure xml:id="fig.cap.simple-services">
+   <figure xml:id="fig-cap-simple-services">
     <title>Simple Services Diagram</title>
     <mediaobject>
      <imageobject role="fo">
@@ -793,14 +793,14 @@
    </informaltable>
   </sect2>
 
-  <sect2 xml:id="sec.cap.services-detailed">
+  <sect2 xml:id="sec-cap-services-detailed">
    <title>Detailed Services Diagram</title>
    <para>
-    <xref linkend="fig.cap.detailed-services"/> presents a more detailed view
+    <xref linkend="fig-cap-detailed-services"/> presents a more detailed view
     of &scf; services and how they interact with each other. Services labeled
     in red are unencrypted, while services labeled in green run over HTTPS.
    </para>
-   <figure xml:id="fig.cap.detailed-services">
+   <figure xml:id="fig-cap-detailed-services">
     <title>Detailed Services Diagram</title>
     <mediaobject>
      <imageobject role="fo">

@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.custom-app-domains"
+<chapter version="5.0" xml:id="cha-cap-custom-app-domains"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -31,7 +31,7 @@
   This chapter describes the changes required to allow applications to use a
   separate domain.
  </para>
- <sect1 xml:id="sec.cap.customizing-app-domains">
+ <sect1 xml:id="sec-cap-customizing-app-domains">
   <title>Customizing Application Domains</title>
 
   <para>
@@ -55,7 +55,7 @@
    If <literal>uaa</literal> is deployed, pass your <literal>uaa</literal>
    secret and certificate to <literal>scf</literal>. Otherwise deploy
    <literal>uaa</literal> first (See
-   <xref linkend="sec.cap.install-uaa-prod"/>), then proceed with this step:
+   <xref linkend="sec-cap-install-uaa-prod"/>), then proceed with this step:
   </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \

@@ -83,7 +83,7 @@ have a maximum length of 36 characters.
     does not remove generated secrets from the <literal>scf</literal> and 
     <literal>uaa</literal> namespaces as it is 
     not aware of them. These leftover secrets may cause deployment failures. See 
-    <xref linkend="sec.cap.rebuild.depl"/> for more information.
+    <xref linkend="sec-cap-rebuild-depl"/> for more information.
       </para>
      </listitem>
     </varlistentry>
@@ -106,7 +106,7 @@ Before you start deploying &productname;, review the following documents:
         </para>
                 <para>
             Read
-         <xref linkend="cha.cap.depl.notes"/>
+         <xref linkend="cha-cap-depl-notes"/>
         </para>
      </listitem>
      </varlistentry>
@@ -814,17 +814,17 @@ suse/uaa                        &latestscfchart;          1.4             A Helm
   </listitem>
   <listitem>
    <para>
-    &aks-full;. For details, see <xref linkend="cha.cap.depl-aks"/>.
+    &aks-full;. For details, see <xref linkend="cha-cap-depl-aks"/>.
    </para>
   </listitem>
   <listitem>
    <para>
-    &eks-full;. For details, see <xref linkend="cha.cap.depl-eks"/>.
+    &eks-full;. For details, see <xref linkend="cha-cap-depl-eks"/>.
    </para>
   </listitem>
   <listitem>
    <para>
-    &gke-full; For details, see <xref linkend="cha.cap.depl-gke"/>.
+    &gke-full; For details, see <xref linkend="cha-cap-depl-gke"/>.
    </para>
   </listitem>
  </itemizedlist>'>
