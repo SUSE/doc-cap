@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.ha"
+<chapter version="5.0" xml:id="cha-cap-ha"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -15,7 +15,7 @@
    <dm:translation>yes</dm:translation>
   </dm:docmanager>
  </info>
- <sect1 xml:id="sec.cap.ha-prod">
+ <sect1 xml:id="sec-cap-ha-prod">
   <title>Configuring &cap; for &ha;</title>
 
   <para>
@@ -25,7 +25,7 @@
    is to create custom configuration files with your own custom values.
   </para>
 
-  <sect2 xml:id="sec.cap.ha-defaults">
+  <sect2 xml:id="sec-cap-ha-defaults">
    <title>Finding Default and Allowable Sizing Values</title>
    <para>
     The <literal>sizing:</literal> section in the &helm;
@@ -57,12 +57,12 @@ perl -ne '/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail|scal
 218:    count: 1</screen>
    <para>
     The default <filename>values.yaml</filename> files are also included in
-    this guide at <xref linkend="app.uaa.values.yaml"/> and
-    <xref linkend="app.scf.values.yaml"/>. .
+    this guide at <xref linkend="app-uaa-values-yaml"/> and
+    <xref linkend="app-scf-values-yaml"/>.
    </para>
   </sect2>
 
-  <sect2 xml:id="sec.cap.ha-simple">
+  <sect2 xml:id="sec-cap-ha-simple">
    <title>Simple &ha; Configuration</title>
    <important>   
 &fresh-namespace;
@@ -96,14 +96,14 @@ config:
    </para>
   </sect2>
 
-  <sect2 xml:id="sec.cap.ha-custom">
+  <sect2 xml:id="sec-cap-ha-custom">
    <title>Example Custom &ha; Configurations</title>
    <para>
     The following two example &ha; configuration files are for the
     <literal>uaa</literal> and <literal>scf</literal> namespaces. The example
     values are not meant to be copied, as these depend on your particular
     deployment and requirements. Do not change the <literal>config.HA</literal>
-    flag to <literal>true</literal> (see <xref linkend="sec.cap.ha-simple"/>.)
+    flag to <literal>true</literal> (see <xref linkend="sec-cap-ha-simple"/>.)
    </para>
 
    <!-- &uaa-in-scf; -->
@@ -174,8 +174,8 @@ sizing:
 </important>
    <para>
     After creating your configuration files, follow the steps in
-    <xref linkend="sec.cap.configure-prod"/> until you get to
-    <xref linkend="sec.cap.install-uaa-prod"/>. Then deploy
+    <xref linkend="sec-cap-configure-prod"/> until you get to
+    <xref linkend="sec-cap-install-uaa-prod"/>. Then deploy
     <literal>uaa</literal> with this command:
    </para>
 <screen>    
@@ -235,7 +235,7 @@ sizing:
    </para>
   </sect2>
 
-  <sect2 xml:id="sec.cap.ha-prod-upgrade">
+  <sect2 xml:id="sec-cap-ha-prod-upgrade">
    <title>Upgrading a non-&ha; Deployment to &ha;</title>
    <para>
     You may make a non-&ha; deployment highly available by upgrading with
@@ -263,7 +263,7 @@ sizing:
    </para>
   </sect2>
  </sect1>
- <sect1 xml:id="sec.cap.availability-zones">
+ <sect1 xml:id="sec-cap-availability-zones">
   <title>Availability Zones</title>
 
   <para>
@@ -299,7 +299,7 @@ sizing:
    </listitem>
   </itemizedlist>
 
-  <sect2 xml:id="sec.cap.availability-zone-handling">
+  <sect2 xml:id="sec-cap-availability-zone-handling">
    <title>Availability Zone Information Handling</title>
    <para>
     In &cap;, availability zone handling is done using the

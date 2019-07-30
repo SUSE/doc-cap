@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.create-admin-user"
+<chapter version="5.0" xml:id="cha-cap-create-admin-user"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -19,7 +19,7 @@
   This chapter provides an overview on how to create additional
   administrators for your &cap; cluster.
  </para>
- <sect1 xml:id="sec.cap.create-admin-prereqs">
+ <sect1 xml:id="sec-cap-create-admin-prereqs">
   <title>Prerequisites</title>
 
   <para>
@@ -31,14 +31,14 @@
    <listitem>
     <para>
      The Cloud Foundry command line interface (&cfcli;). (See
-     <xref linkend="sec.cap.cf-cli"/>.)
+     <xref linkend="sec-cap-cf-cli"/>.)
     </para>
    </listitem>
    &uaac-prereq;
   </itemizedlist>
 
  </sect1>
- <sect1 xml:id="sec.cap.create-admin-procedure">
+ <sect1 xml:id="sec-cap-create-admin-procedure">
   <title>Creating an Example &cap; Cluster Administrator</title>
   <para>
    The following example demonstrates the steps required to create a new

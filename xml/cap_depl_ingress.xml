@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.ingress"
+<chapter version="5.0" xml:id="cha-cap-ingress"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -51,7 +51,7 @@
   compatibility with &cap; is not supported.
  </para>
 
- <sect1 xml:id="sec.cap.deploy-ingress-controller">
+ <sect1 xml:id="sec-cap-deploy-ingress-controller">
   <title>Deploying NGINX Ingress Controller</title>
 
   <procedure>
@@ -65,22 +65,22 @@
     <itemizedlist>
      <listitem>
       <para>
-       For &caasp;, see <xref linkend="cha.cap.depl-caasp"/>
+       For &caasp;, see <xref linkend="cha-cap-depl-caasp"/>
       </para>
      </listitem>
      <listitem>
       <para>
-       For &aks;, see <xref linkend="cha.cap.depl-aks"/>
+       For &aks;, see <xref linkend="cha-cap-depl-aks"/>
       </para>
      </listitem>
      <listitem>
       <para>
-       For &eks;, see <xref linkend="cha.cap.depl-eks"/>
+       For &eks;, see <xref linkend="cha-cap-depl-eks"/>
       </para>
      </listitem>
      <listitem>
       <para>
-       For &gke;, see <xref linkend="cha.cap.depl-gke"/>
+       For &gke;, see <xref linkend="cha-cap-depl-gke"/>
       </para>
      </listitem>
     </itemizedlist>
@@ -255,7 +255,7 @@ ingress:
   </procedure>
  </sect1>
  
- <sect1 xml:id="sec.cap.ingress-body-size">
+ <sect1 xml:id="sec-cap-ingress-body-size">
   <title>Changing the Max Body Size</title>
 
   <para>

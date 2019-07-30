@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.depl.troubleshooting"
+<chapter version="5.0" xml:id="cha-cap-depl-troubleshooting"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -22,7 +22,7 @@
   release must deploy successfully, with no failed pods, before deploying the
   next release.
  </para>
- <sect1  xml:id="sec.cap.tbl.supportconfig">
+ <sect1  xml:id="sec-cap-tbl-supportconfig">
   <title>Using Supportconfig</title>
 
   <para>
@@ -39,7 +39,7 @@
    learn more.
   </para>
  </sect1>
- <sect1 xml:id="sec.cap.tbl.toolong">
+ <sect1 xml:id="sec-cap-tbl-toolong">
   <title>Deployment Is Taking Too Long</title>
 
   <para>
@@ -74,7 +74,7 @@ routing-api-0            0/1   Running   0         16h</screen>
 &deployment-pod-status;
   </important>
  </sect1>
- <sect1 xml:id="sec.cap.rebuild.depl">
+ <sect1 xml:id="sec-cap-rebuild-depl">
   <title>Deleting and Rebuilding a Deployment</title>
 
   <para>
@@ -142,7 +142,7 @@ namespace "scf" deleted</screen>
    Then you can start over. Be sure to create new release and namespace names.
   </para>
  </sect1>
- <sect1 xml:id="sec.cap.kubectl.queries">
+ <sect1 xml:id="sec-cap-kubectl-queries">
   <title>Querying with Kubectl</title>
 
   <para>

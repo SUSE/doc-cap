@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.minibroker"
+<chapter version="5.0" xml:id="cha-cap-minibroker"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -34,7 +34,7 @@
    before deciding to use them in a production environment.
   </para>
  </important>
- <sect1 xml:id="sec.cap.minibroker-deployment">
+ <sect1 xml:id="sec-cap-minibroker-deployment">
   <title>Deploy Minibroker</title>
 
   <procedure>
@@ -102,7 +102,7 @@ suse/minibroker                 0.2.0                           A minibroker for
    </step>
   </procedure>
  </sect1>
- <sect1 xml:id="sec.cap.minibroker-environment-setup">
+ <sect1 xml:id="sec-cap-minibroker-environment-setup">
   <title>Setting Up the Environment for Minibroker Usage</title>
 
   <procedure>
@@ -230,7 +230,7 @@ minibroker-minibroker-5865f66bb8-6dxm7          2/2       Running            0  
    </step>
   </procedure>
  </sect1>
- <sect1 xml:id="sec.cap.minibroker-application-usage">
+ <sect1 xml:id="sec-cap-minibroker-application-usage">
   <title>Using Minibroker with Applications</title>
 
   <para>

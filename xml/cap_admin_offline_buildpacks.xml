@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.offline-buildpacks"
+<chapter version="5.0" xml:id="cha-cap-offline-buildpacks"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -33,7 +33,7 @@
   longer required. This has the benefit of providing improved staging
   performance and allows for staging to take place on air-gapped environments.
  </para>
- <sect1 xml:id="sec.cap.create-offline-buildpack">
+ <sect1 xml:id="sec-cap-create-offline-buildpack">
   <title>Creating an Offline Buildpack</title>
 
   <para>

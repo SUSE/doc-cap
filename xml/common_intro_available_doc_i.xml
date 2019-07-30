@@ -35,7 +35,7 @@
 
  <variablelist>
   <varlistentry os="sles;sled">
-   <term><xref linkend="book.cap.guides"/></term>
+   <term><xref linkend="book-cap-guides"/></term>
    <listitem>
     <para>
      The &productname; guide is a comprehensive guide providing deployment,

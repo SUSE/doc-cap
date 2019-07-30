@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.logging"
+<chapter version="5.0" xml:id="cha-cap-logging"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -90,7 +90,7 @@ agent.log</screen>
    </itemizedlist>
   </listitem>
  </itemizedlist>
- <sect1 xml:id="sec.cap.log-external">
+ <sect1 xml:id="sec-cap-log-external">
   <title>Logging to an External Syslog Server</title>
 
   <para>
@@ -98,7 +98,7 @@ agent.log</screen>
    where additional processing and analysis can be performed.
   </para>
 
-  <sect2 xml:id="sec.cap.log-configuring">
+  <sect2 xml:id="sec-cap-log-configuring">
    <title>Configuring &cap;</title>
    <para>
     In your <filename>scf-config-values.yaml</filename> file add the following
@@ -111,7 +111,7 @@ agent.log</screen>
   SCF_LOG_PROTOCOL: "tcp"</screen>
   </sect2>
 
-  <sect2 xml:id="sec.cap.log-elk">
+  <sect2 xml:id="sec-cap-log-elk">
    <title>Example using the ELK Stack</title>
    <para>
     The ELK stack is an example of an external syslog server where log data can
@@ -148,7 +148,7 @@ agent.log</screen>
     </varlistentry>
    </variablelist>
 
-   <sect3 xml:id="sec.cap.log-elk-prerequisites">
+   <sect3 xml:id="sec-cap-log-elk-prerequisites">
     <title>Prerequisites</title>
     <para>
      Java 8 is required by:
@@ -176,7 +176,7 @@ agent.log</screen>
      </variablelist>
    </sect3>
 
-   <sect3 xml:id="sec.cap.log-elasticsearch">
+   <sect3 xml:id="sec-cap-log-elasticsearch">
     <title>Installing and Configuring Elasticsearch</title>
     <para>
      For methods of installing Elasticsearch, refer to
@@ -190,7 +190,7 @@ agent.log</screen>
 <screen>network.host: localhost
 	</screen>
    </sect3>
-   <sect3 xml:id="sec.cap.log-logstash">
+   <sect3 xml:id="sec-cap-log-logstash">
     <title>Installing and Configuring Logstash</title>
     <para>
      For methods of installing Logstash, refer to
@@ -228,7 +228,7 @@ output {
      <link xlink:href="https://www.elastic.co/guide/en/logstash/current/filter-plugins.html"/>.
     </para>
    </sect3>
-   <sect3 xml:id="sec.cap.log-kibana">
+   <sect3 xml:id="sec-cap-log-kibana">
     <title>Installing and Configuring Kibana</title>
     <para>
      For methods of installing Kibana, refer to
@@ -243,7 +243,7 @@ output {
    </sect3>
   </sect2>
  </sect1>
- <sect1 xml:id="sec.cap.log-levels">
+ <sect1 xml:id="sec-cap-log-levels">
   <title>Log Levels</title>
 
   <para>

@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.depl-gke"
+<chapter version="5.0" xml:id="cha-cap-depl-gke"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -24,7 +24,7 @@
   <link xlink:href="https://cloud.google.com/kubernetes-engine/"/>
   for more information on GKE.
  </para>
- <sect1 xml:id="sec.cap.prereqs-gke">
+ <sect1 xml:id="sec-cap-prereqs-gke">
   <title>Prerequisites</title>
 
   <para>
@@ -69,7 +69,7 @@
    </listitem>
   </itemizedlist>
  </sect1>
- <sect1 xml:id="sec.cap.create-gke-cluster">
+ <sect1 xml:id="sec-cap-create-gke-cluster">
   <title>Creating a GKE cluster</title>
 
   <para>
@@ -172,7 +172,7 @@
       <para>
        Specify <command>--no-enable-autoupgrade</command> to disable
        automatic upgrades as this affects the swap accounting changes
-       that will be made (see <xref linkend="sec.cap.gke-swap-accounting"/>).
+       that will be made (see <xref linkend="sec-cap-gke-swap-accounting"/>).
       </para>
      </listitem>
      <listitem>
@@ -187,7 +187,7 @@
    </step>
   </procedure>
  </sect1>
- <sect1 xml:id="sec.cap.gke-swap-accounting">
+ <sect1 xml:id="sec-cap-gke-swap-accounting">
   <title>Enable Swap Accounting</title>
 
   <para>
@@ -197,7 +197,7 @@
    correctly.
   </para>
 
-  <procedure xml:id="pro.gke-swap-account">
+  <procedure xml:id="pro-gke-swap-account">
    <step>
     <para>
      Get the node instance names:
@@ -241,7 +241,7 @@
   </procedure>
 
  </sect1>
- <sect1 xml:id="sec.cap.gke-kubeconfig">
+ <sect1 xml:id="sec-cap-gke-kubeconfig">
   <title>Get <literal>kubeconfig</literal> File</title>
 
   <para>
@@ -255,7 +255,7 @@
  <!-- sect1 for helm client and tiller installation -->
  &install-helm-tiller;
 
- <sect1 xml:id="sec.cap.gke-storage">
+ <sect1 xml:id="sec-cap-gke-storage">
   <title>Default Storage Class</title>
   <para>
    This example creates a <literal>pd-ssd</literal>
@@ -291,12 +291,12 @@ reclaimPolicy: Delete
     persistent: "persistent"
 </screen>
   <para>
-   See <xref linkend="sec.cap.gke-config"/> for a complete example deployment
+   See <xref linkend="sec-cap-gke-config"/> for a complete example deployment
    configuration file, <filename>scf-config-values.yaml</filename>.
   </para>
  </sect1>
 
- <sect1 xml:id="sec.cap.gke-dns">
+ <sect1 xml:id="sec-cap-gke-dns">
   <title>DNS Configuration</title>
 
   <para>
@@ -312,7 +312,7 @@ reclaimPolicy: Delete
 
 &dns-tables;
  </sect1>
- <sect1 xml:id="sec.cap.gke-config">
+ <sect1 xml:id="sec-cap-gke-config">
   <title>Deployment Configuration</title>
   <para>
    It is not necessary to create any DNS records before deploying
@@ -363,7 +363,7 @@ services:
 
  </sect1>
 
- <sect1 xml:id="sec.cap.addrepo-gke">
+ <sect1 xml:id="sec-cap-addrepo-gke">
   <title>Add the &kube; charts repository</title>
 
   <para>
@@ -391,14 +391,14 @@ suse       https://kubernetes-charts.suse.com/
 &helm-search-suse;
 
  </sect1>
- <sect1 xml:id="sec.cap.cap-on-gke">
+ <sect1 xml:id="sec-cap-cap-on-gke">
   <title>Deploying &productname;</title>
   <para>
    This section describes how to deploy &productname; on &gke;, and how to
    configure your DNS records.
   </para>
 
-  <sect2 xml:id="sec.cap.gke-deploy-uaa">
+  <sect2 xml:id="sec-cap-gke-deploy-uaa">
    <title>Deploy <literal>uaa</literal></title>
 
    <!-- &uaa-in-scf; -->
@@ -470,7 +470,7 @@ uaa-uaa-public    LoadBalancer   10.0.67.56     35.197.11.229  2793:30206/TCP
 </screen>
   </sect2>
 
-  <sect2 xml:id="sec.cap.gke-deploy-scf">
+  <sect2 xml:id="sec-cap-gke-deploy-scf">
    <title>Deploy <literal>scf</literal></title>
    <para>
     Before deploying <literal>scf</literal>, ensure the DNS records for the
@@ -582,7 +582,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.23.241.17   35.197
 <screen>&prompt.user;cf api --skip-ssl-validation https://api.example.com</screen>
   </sect2>
  </sect1>
- <sect1 xml:id="sec.cap.gke-add-capacity">
+ <sect1 xml:id="sec-cap-gke-add-capacity">
   <title>Expanding Capacity of a &cap; Deployment on &gke;</title>
 
   <para>
@@ -592,9 +592,9 @@ tcp-router-tcp-router-public                LoadBalancer   10.23.241.17   35.197
 
   <para>
    These instructions assume you have followed the procedure in
-   <xref linkend="cha.cap.depl-gke"/> and have a running &cap; deployment on
+   <xref linkend="cha-cap-depl-gke"/> and have a running &cap; deployment on
    &aks;. The instructions below will use environment variables defined in
-   <xref linkend="sec.cap.create-gke-cluster"/>.
+   <xref linkend="sec-cap-create-gke-cluster"/>.
   </para>
 
   <procedure>

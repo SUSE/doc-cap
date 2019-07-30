@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.depl-eks"
+<chapter version="5.0" xml:id="cha-cap-depl-eks"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -23,7 +23,7 @@
   Amazon's Elastic Load Balancer to provide fault-tolerant access to your
   cluster.
  </para>
- <sect1 xml:id="sec.cap.eks-prereqs">
+ <sect1 xml:id="sec-cap-eks-prereqs">
   <title>Prerequisites</title>
 
   <para>
@@ -46,22 +46,22 @@
 
   <para>
    Take note of special configurations that are required to successfully deploy
-   &productname; on EKS in <xref linkend="sec.cap.install-scf-eks"/>.
+   &productname; on EKS in <xref linkend="sec-cap-install-scf-eks"/>.
   </para>
 
   <para>
-   <xref linkend="sec.cap.eks-iam"/> provides guidance on configuring Identity
+   <xref linkend="sec-cap-eks-iam"/> provides guidance on configuring Identity
    and Access Management (IAM) for your users.
   </para>
  </sect1>
- <sect1 xml:id="sec.cap.eks-iam">
+ <sect1 xml:id="sec-cap-eks-iam">
   <title>IAM Requirements for EKS</title>
 
   <para>
    These IAM policies provide sufficient access to use EKS.
   </para>
 
-  <sect2 xml:id="sec.cap.eks-unscoped">
+  <sect2 xml:id="sec-cap-eks-unscoped">
    <title>Unscoped Operations</title>
    <para>
     Some of these permissions are very broad. They are difficult to scope
@@ -121,7 +121,7 @@
 }</screen>
   </sect2>
 
-  <sect2 xml:id="sec.cap.eks-scoped">
+  <sect2 xml:id="sec-cap-eks-scoped">
    <title>Scoped Operations</title>
    <para>
     These policies deal with sensitive access controls, such as passing roles
@@ -215,7 +215,7 @@
  <!-- sect1 for helm client and tiller installation -->
  &install-helm-tiller;
 
- <sect1 xml:id="sec.cap.eks-storage-class">
+ <sect1 xml:id="sec-cap-eks-storage-class">
   <title>Default Storage Class</title>
 
   <para>
@@ -241,7 +241,7 @@ parameters:
 
 <screen>&prompt.user;kubectl create --filename storage-class.yaml</screen>
  </sect1>
- <sect1 xml:id="sec.cap.eks-secgroup-rules">
+ <sect1 xml:id="sec-cap-eks-secgroup-rules">
   <title>Security Group rules</title>
 
   <para>
@@ -257,7 +257,7 @@ Custom TCP Rule    TCP          4443            0.0.0.0/0       CAP WSS
 Custom TCP Rule    TCP          443             0.0.0.0/0       CAP HTTPS
 Custom TCP Rule    TCP          20000-20009     0.0.0.0/0       TCP Routing</screen>
  </sect1>
- <sect1 xml:id="sec.cap.eks.dns">
+ <sect1 xml:id="sec-cap-eks-dns">
   <title>DNS Configuration</title>
 
   <para>
@@ -277,7 +277,7 @@ Custom TCP Rule    TCP          20000-20009     0.0.0.0/0       TCP Routing</scr
 &dns-tables;
 
  </sect1>
- <sect1 xml:id="sec.cap.eks-configuration">
+ <sect1 xml:id="sec-cap-eks-configuration">
   <title>Deployment Configuration</title>
 
   <para>
@@ -328,7 +328,7 @@ secrets:
   &protect-uaa-admin-secret;
 
  </sect1>
- <sect1 xml:id="sec.cap.eks-deploy">
+ <sect1 xml:id="sec-cap-eks-deploy">
 <!-- maybe change some of the content in this section to an entity (cjs, feb
       12 2019_-->
 
@@ -344,25 +344,25 @@ secrets:
     <para>
      Download the &suse; &kube; charts repository
      (<xref
-     linkend="sec.cap.addrepo-eks"/>)
+     linkend="sec-cap-addrepo-eks"/>)
     </para>
    </step>
    <step>
     <para>
      Deploy <literal>uaa</literal>, then create appropriate CNAMEs
-     (<xref linkend="sec.cap.install-uaa-eks"/>)
+     (<xref linkend="sec-cap-install-uaa-eks"/>)
     </para>
    </step>
    <step>
     <para>
      Copy the <literal>uaa</literal> secret and certificate to the
      <literal>scf</literal> namespace, deploy <literal>scf</literal>, create
-     CNAMES (<xref linkend="sec.cap.install-scf-eks"/>)
+     CNAMES (<xref linkend="sec-cap-install-scf-eks"/>)
     </para>
    </step>
   </procedure>
  </sect1>
- <sect1 xml:id="sec.cap.addrepo-eks">
+ <sect1 xml:id="sec-cap-addrepo-eks">
   <title>Add the &kube; Charts Repository</title>
 
   <para>
@@ -389,7 +389,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
 &helm-search-suse;
 
  </sect1>
- <sect1 xml:id="sec.cap.install-uaa-eks">
+ <sect1 xml:id="sec-cap-install-uaa-eks">
   <title>Deploy <literal>uaa</literal></title>
 
   <!-- &uaa-in-scf; -->
@@ -409,7 +409,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
 
   <para>
    When <literal>uaa</literal> is finished deploying, create CNAMEs for the
-   required domains. (See <xref linkend="sec.cap.eks.dns"/>.) Use
+   required domains. (See <xref linkend="sec-cap-eks-dns"/>.) Use
    <command>kubectl</command> to find the service host names. These host names
    include the <literal>elb</literal> sub-domain, so use this to get the
    correct results:
@@ -418,7 +418,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
 <screen>&prompt.user;kubectl get services --namespace uaa | grep elb</screen>
 
  </sect1>
- <sect1 xml:id="sec.cap.install-scf-eks">
+ <sect1 xml:id="sec-cap-install-scf-eks">
   <title>Deploy <literal>scf</literal></title>
 
   <para>
@@ -476,7 +476,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
   <para>
    The health checks should now operate correctly. When the status shows RUNNING
    for all of the <literal>scf</literal> pods, create CNAMEs for the required
-   domains. (See <xref linkend="sec.cap.eks.dns"/>) Use
+   domains. (See <xref linkend="sec-cap-eks-dns"/>) Use
    <command>kubectl</command> to find the service host names. These host names
    include the <literal>elb</literal> sub-domain, so use this to get the
    correct results:
@@ -484,7 +484,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
 
 <screen>&prompt.user;kubectl get services --namespace scf | grep elb</screen>
  </sect1>
- <sect1 xml:id="sec.cap.aws-service-broker">
+ <sect1 xml:id="sec-cap-aws-service-broker">
   <title>Deploying and Using the AWS Service Broker</title>
 
   <para>
@@ -493,7 +493,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
    &suse; &cap;.
   </para>
 
-  <sect2 xml:id="sec.cap.aws-service-broker-prereqs">
+  <sect2 xml:id="sec-cap-aws-service-broker-prereqs">
    <title>Prerequisites</title>
    <para>
     Deploying and using the AWS Service Broker requires the following:
@@ -502,7 +502,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
     <listitem>
      <para>
       &cap; has been successfully deployed on Amazon EKS as described earlier
-      in this chapter (see <xref linkend="cha.cap.depl-eks"/>)
+      in this chapter (see <xref linkend="cha-cap-depl-eks"/>)
      </para>
     </listitem>
     <listitem>
@@ -529,7 +529,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
    </itemizedlist>
   </sect2>
 
-  <sect2 xml:id="sec.cap.aws-service-broker-setup">
+  <sect2 xml:id="sec-cap-aws-service-broker-setup">
    <title>Setup</title>
    <procedure>
     <step>
@@ -632,7 +632,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
       should not be installed (for example <command>--set
       deployClusterServiceBroker=false</command>). Ensure an account and role
       with adequate IAM rights is chosen (see
-      <xref linkend="sec.cap.aws-service-broker-prereqs"/>:
+      <xref linkend="sec-cap-aws-service-broker-prereqs"/>:
      </para>
 <screen>&prompt.user;helm install aws-sb/aws-servicebroker \
 	     --name aws-servicebroker \
@@ -717,7 +717,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
    </procedure>
   </sect2>
 
-  <sect2 xml:id="sec.cap.aws-service-broker-cleanup">
+  <sect2 xml:id="sec-cap-aws-service-broker-cleanup">
    <title>Cleanup</title>
    <para>
     When the AWS Service Broker and its services are no longer required,

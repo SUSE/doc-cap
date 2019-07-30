@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.depl-air-gap-registry"
+<chapter version="5.0" xml:id="cha-cap-depl-air-gap-registry"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -29,7 +29,7 @@
   This chapter describes how to load your registry with the necessary images to
   deploy &cap; in an air gapped environment.
  </para>
- <sect1 xml:id="sec.cap.prereqs-air-gap-registry">
+ <sect1 xml:id="sec-cap-prereqs-air-gap-registry">
   <title>Prerequisites</title>
 
   <para>
@@ -54,7 +54,7 @@
   </itemizedlist>
 
  </sect1>
- <sect1 xml:id="sec.cap.air-gap-registry">
+ <sect1 xml:id="sec-cap-air-gap-registry">
   <title>Mirror Images to Registry</title>
   <para>
    All the &cap; &helm; charts include an <filename>imagelist.txt</filename>

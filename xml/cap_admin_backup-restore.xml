@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.backup-restore"
+<chapter version="5.0" xml:id="cha-cap-backup-restore"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -15,13 +15,13 @@
   </dm:docmanager>
   <title>Backup and Restore</title>
  </info>
- <sect1 xml:id="sec.cap.backup-restore-with-plugin">
+ <sect1 xml:id="sec-cap-backup-restore-with-plugin">
   <title>Backup and Restore Using cf-plugin-backup</title>
 
   <para>
    <literal>cf-plugin-backup</literal> backs up and restores your Cloud
    Controller Database (CCDB), using the &cf; command line interface (&cfcli;).
-   (See <xref linkend="sec.cap.cf-cli"/>.)
+   (See <xref linkend="sec-cap-cf-cli"/>.)
   </para>
 
   <para>
@@ -70,7 +70,7 @@
    </listitem>
   </itemizedlist>
 
-  <sect2 xml:id="sec.cap.install-backup-restore-plugin">
+  <sect2 xml:id="sec-cap-install-backup-restore-plugin">
    <title>Installing the cf-plugin-backup</title>
    <para>
     Download the plugin from
@@ -104,7 +104,7 @@
  Use 'cf repo-plugins' to list plugins in registered repos available to install.</screen>
   </sect2>
 
-  <sect2 xml:id="sec.cap.using-backup-restore-plugin">
+  <sect2 xml:id="sec-cap-using-backup-restore-plugin">
    <title>Using cf-plugin-backup</title>
    <para>
     The plugin has three commands:
@@ -167,7 +167,7 @@
    </para>
   </sect2>
 
-  <sect2 xml:id="sec.cap.backup-restore-plugin-scope">
+  <sect2 xml:id="sec-cap-backup-restore-plugin-scope">
    <title>Scope of Backup</title>
    <para>
     The following table lists the scope of the
@@ -506,7 +506,7 @@
    </variablelist>
   </sect2>
  </sect1>
- <sect1 xml:id="sec.cap.backup-restore-of-raw-data">
+ <sect1 xml:id="sec-cap-backup-restore-of-raw-data">
   <title>Disaster Recovery in <literal>scf</literal> through Raw Data Backup and
    Restore</title>
 
@@ -519,7 +519,7 @@
    solution.
   </para>
 
-  <sect2 xml:id="sec.cap.raw-data-prerequisites">
+  <sect2 xml:id="sec-cap-raw-data-prerequisites">
    <title>Prerequisites</title>
    <para>
     In order to complete a raw data backup and restore it is required to have:
@@ -537,14 +537,14 @@
       Access to a new deployment of <literal>scf</literal> (deployed with a
       <filename>scf-config-values.yaml</filename> configured according to
       <xref linkend="prepare-config-for-new-cluster"/> of
-      <xref linkend="sec.cap.raw-data-restore-procedure"/>) to perform the
+      <xref linkend="sec-cap-raw-data-restore-procedure"/>) to perform the
       restore to
      </para>
     </listitem>
    </itemizedlist>
   </sect2>
 
-  <sect2 xml:id="sec.cap.raw-data-scope">
+  <sect2 xml:id="sec-cap-raw-data-scope">
    <title>Scope of Raw Data Backup and Restore</title>
    <para>
     The following lists the data that is included as part of the backup (and
@@ -556,7 +556,7 @@
      <para>
       The Cloud Controller Database (CCDB). In addition to what is encompassed
       by the CCDB listed in
-      <xref linkend="sec.cap.backup-restore-plugin-scope"/>, this will include
+      <xref linkend="sec-cap-backup-restore-plugin-scope"/>, this will include
       service data as well.
      </para>
     </listitem>
@@ -597,7 +597,7 @@
     </listitem>
    </itemizedlist>
   </sect2>
-  <sect2 xml:id="sec.cap.raw-data-backup-procedure">
+  <sect2 xml:id="sec-cap-raw-data-backup-procedure">
    <title>Performing a Raw Data Backup</title>
    <note>
     <title>Restore to the Same Version</title>
@@ -620,7 +620,7 @@
     <step>
      <para>
       Create an archive of the blobstore directory to preserve all needed files
-      (see the Cloud Controller Blobstore content of <xref linkend="sec.cap.raw-data-scope"/>) then disconnect from the pod:
+      (see the Cloud Controller Blobstore content of <xref linkend="sec-cap-raw-data-scope"/>) then disconnect from the pod:
      </para>
 <screen>&prompt.user;tar cfvz <replaceable>blobstore-src.tgz</replaceable> /var/vcap/store/shared</screen>
 <screen>&prompt.user;exit</screen>
@@ -676,7 +676,7 @@
    </procedure>
   </sect2>
 
-  <sect2 xml:id="sec.cap.raw-data-restore-procedure">
+  <sect2 xml:id="sec-cap-raw-data-restore-procedure">
    <title>Performing a Raw Data Restore</title>
    <para>
     Perform the following steps to restore your backed up data to the target
@@ -700,7 +700,7 @@
       How the encryption key(s) will be prepared in your
       <filename>scf-config-values.yaml</filename> depends on the result of
       <xref linkend="get-encryption-key"/> in
-      <xref linkend="sec.cap.raw-data-backup-procedure"/>
+      <xref linkend="sec-cap-raw-data-backup-procedure"/>
      </para>
      <itemizedlist>
       <listitem>
@@ -742,7 +742,7 @@ secrets:
     <step>
      <para>
       Deploy a non-high-availability configuration of <literal>scf</literal>
-      (see <xref linkend="sec.cap.install-scf-prod"/>) and wait until all pods
+      (see <xref linkend="sec-cap-install-scf-prod"/>) and wait until all pods
       are ready before proceeding.
      </para>
     </step>

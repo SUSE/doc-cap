@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.upgrade"
+<chapter version="5.0" xml:id="cha-cap-upgrade"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -25,7 +25,7 @@
    published at
    <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/1/"/>.
  </para>
- <sect1 xml:id="sec.cap.upgrade-considerations">
+ <sect1 xml:id="sec-cap-upgrade-considerations">
   <title>Important Considerations</title>
 
   <para>
@@ -41,7 +41,7 @@
       &cap; only supports upgrading releases in sequential order. If there are
       any intermediate releases between your current release and your target
       release, they must be installed. Skipping
-      releases is not supported. See <xref linkend="sec.cap.skipped-release"/>
+      releases is not supported. See <xref linkend="sec-cap-skipped-release"/>
       for more information.
      </para>
     </listitem>
@@ -92,7 +92,7 @@
       immediately previous release. But there is no way to guarantee such
       compatibility for future upgrades. One way to address this is to perform a
       full raw data backup and restore. (See
-      <xref linkend="sec.cap.backup-restore-of-raw-data"/>)
+      <xref linkend="sec-cap-backup-restore-of-raw-data"/>)
      </para>
     </listitem>
    </varlistentry>
@@ -101,14 +101,14 @@
     <listitem>
      <para>
       If sizing changes need to be mader, make the change either before or after
-      an upgrade. See <xref linkend="sec.cap.ha-prod"/>.
+      an upgrade. See <xref linkend="sec-cap-ha-prod"/>.
      </para>
     </listitem>
    </varlistentry>
   </variablelist>
  </sect1>
 
- <sect1 xml:id="sec.cap.update">
+ <sect1 xml:id="sec-cap-update">
   <title>Upgrading &productname;</title>
 
   <para>
@@ -168,7 +168,7 @@ suse/uaa        2.6.11                          A Helm chart for SUSE UAA
    Verify the latest release is the next sequential release from your
    currently-installed release. If it is, proceed with the commands below to
    perform the upgrade. If any releases have been missed, see
-   <xref linkend="sec.cap.skipped-release"/>.
+   <xref linkend="sec-cap-skipped-release"/>.
   </para>
 
   <para>
@@ -218,7 +218,7 @@ suse/uaa        2.6.11                          A Helm chart for SUSE UAA
 
   <xi:include href="sec_cf_usb_url.xml"/>
  </sect1>
- <sect1 xml:id="sec.cap.skipped-release">
+ <sect1 xml:id="sec-cap-skipped-release">
   <title>Installing Skipped Releases</title>
 
   <para>
