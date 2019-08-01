@@ -40,17 +40,10 @@
      <xref linkend="sec-cap-cf-cli"/>.)
     </para>
    </listitem>
-   <listitem>
-    <para>
-     <link xlink:href="https://docs.cloudfoundry.org/uaa/uaa-user-management.html">The
-     Cloud Foundry <literal>uaa</literal> command line interface (UAAC)</link>.
-    </para>
-    <para>
-     On &sle; systems, ensure the <literal>ruby-devel</literal> and <literal>gcc-c++</literal>
-     packages have been installed before installing the <literal>cf-uaac</literal> gem.
-    </para>
-    <screen>&prompt.user;sudo zypper install ruby-devel gcc-c++</screen>
-   </listitem>
+
+   <!-- listitem Links to UAAC and describes install -->
+   &uaac-prereq;
+
    <listitem>
     <para>
      An LDAP server and the credentials for a user/service account with
