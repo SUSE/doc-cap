@@ -100,7 +100,7 @@
     OULPS8fbHefNiSvZTNVKwj8=
     -----END PRIVATE KEY-----
 </screen>
- 
+
   <para>
    Certificates are installed to the <literal>scf</literal> component by setting
    the values <literal>ROUTER_SSL_CERT</literal> and <literal>ROUTER_SSL_KEY</literal>.
@@ -205,7 +205,7 @@
   </para>
 
   <!-- &uaa-in-scf; -->
-  
+
   <para>
    If this is an initial deployment, use <command>helm install</command> to
    deploy <literal>uaa</literal> and <literal>scf</literal>:

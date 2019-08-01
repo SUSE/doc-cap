@@ -97,7 +97,7 @@ Part: Troubleshooting
   <xi:include href="cap_troubleshooting.xml"/>
  </part>
 <!--============================================================================
-Appendices                                                            
+Appendices
 ==============================================================================-->
  <xi:include href="appendix.xml"/>
  <xi:include href="common_legal.xml"/>

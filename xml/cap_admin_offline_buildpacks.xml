@@ -164,8 +164,8 @@ Creating buildpack <replaceable>ruby_buildpack_cached</replaceable>...
 OK
 
 Uploading buildpack <replaceable>ruby_buildpack_cached</replaceable>...
-Done uploading               
-OK    
+Done uploading
+OK
     </screen>
    </step>
    <step>

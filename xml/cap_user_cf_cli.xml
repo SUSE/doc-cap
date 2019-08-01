@@ -89,7 +89,7 @@ API endpoint: https://api.example.com
 
 Email> admin
 
-Password> 
+Password>
 Authenticating...
 OK
 
@@ -123,8 +123,8 @@ Space:          No space targeted, use 'cf target -s SPACE'</screen>
 
 <screen>&prompt.user;cf passwd
 Current Password>
-New Password> 
-Verify Password> 
+New Password>
+Verify Password>
 Changing password...
 OK
 Please log in again</screen>

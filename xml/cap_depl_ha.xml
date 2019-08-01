@@ -64,7 +64,7 @@ perl -ne '/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail|scal
 
   <sect2 xml:id="sec-cap-ha-simple">
    <title>Simple &ha; Configuration</title>
-   <important>   
+   <important>
 &fresh-namespace;
 </important>
    <para>
@@ -85,7 +85,7 @@ config:
 <screen>
 &prompt.user;helm install suse/uaa \
  --name susecf-uaa \
- --namespace uaa \ 
+ --namespace uaa \
  --values scf-config-values.yaml \
  --set config.HA=true
 </screen>
@@ -178,10 +178,10 @@ sizing:
     <xref linkend="sec-cap-install-uaa-prod"/>. Then deploy
     <literal>uaa</literal> with this command:
    </para>
-<screen>    
+<screen>
 &prompt.user;helm install suse/uaa \
 --name <replaceable>susecf-uaa</replaceable> \
---namespace uaa \ 
+--namespace uaa \
 --values scf-config-values.yaml \
 --values uaa-sizing.yaml
 </screen>
@@ -194,7 +194,7 @@ sizing:
 --output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
---output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"    
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
 &prompt.user;helm install suse/cf \
 --name <replaceable>susecf-scf</replaceable> \
@@ -244,13 +244,13 @@ sizing:
 <screen>
 &prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa \
 --values scf-config-values.yaml \
---values uaa-sizing.yaml 
+--values uaa-sizing.yaml
 
 &prompt.user;SECRET=$(kubectl get pods --namespace uaa \
 --output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
---output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"    
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
 &prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \

@@ -1,11 +1,11 @@
 <!--...........................................................................
-This file contains entities for repeated content entities, for re-printing 
-content in multiple locations rather than using xrefs, so that users do not have 
-to skip around so much. This works just like copy-paste, so be mindful of 
+This file contains entities for repeated content entities, for re-printing
+content in multiple locations rather than using xrefs, so that users do not have
+to skip around so much. This works just like copy-paste, so be mindful of
 sections, titles, and paragraphs
 
 Use xmlns="http://docbook.org/ns/docbook" on the first occurrence of every
-parent formatting tag in each entity, to avoid "Namespace default prefix was not 
+parent formatting tag in each entity, to avoid "Namespace default prefix was not
 found" errors
 ............................................................................-->
 
@@ -18,10 +18,10 @@ found" errors
      <term>Some Pods Show as Not Running</term>
      <listitem>
       <para>
-       Some <literal>uaa</literal> and <literal>scf</literal> pods perform only 
-       deployment tasks, and it is normal for them to show as unready and 
-       <literal>Completed</literal> after they have completed their tasks, as 
-       these examples show: 
+       Some <literal>uaa</literal> and <literal>scf</literal> pods perform only
+       deployment tasks, and it is normal for them to show as unready and
+       <literal>Completed</literal> after they have completed their tasks, as
+       these examples show:
       </para>
 <screen>
 &prompt.user;kubectl get pods --namespace uaa
@@ -29,7 +29,7 @@ secret-generation-1-z4nlz   0/1       Completed
 
 &prompt.user;kubectl get pods --namespace scf
 secret-generation-1-m6k2h       0/1       Completed
-post-deployment-setup-1-hnpln   0/1       Completed</screen>      
+post-deployment-setup-1-hnpln   0/1       Completed</screen>
      </listitem>
     </varlistentry>
     <varlistentry>
@@ -46,7 +46,7 @@ post-deployment-setup-1-hnpln   0/1       Completed</screen>
        process, this is normal behavior and not due to failing pods. It is not
        necessary to stop the deployment. During deployment, pods will modify
        annotations on itself via the StatefulSet pod spec. In order to get the
-       correct annotations on the running pod, it is stopped and restarted. 
+       correct annotations on the running pod, it is stopped and restarted.
        Under normal circumstances, this behavior should only result in a pod
        restarting once.
       </para>
@@ -56,13 +56,13 @@ post-deployment-setup-1-hnpln   0/1       Completed</screen>
 
 <!--ENTITY namespace-length ................................................-->
 
-<!ENTITY namespace-length 
+<!ENTITY namespace-length
 '<variablelist xmlns="http://docbook.org/ns/docbook">
 <varlistentry>
      <term>Length of release names</term>
      <listitem>
       <para>
-       Release names (for example, when you run <command>helm install --name</command>) 
+       Release names (for example, when you run <command>helm install --name</command>)
 have a maximum length of 36 characters.
       </para>
      </listitem>
@@ -77,17 +77,17 @@ have a maximum length of 36 characters.
      <term>Always install to a fresh namespace</term>
      <listitem>
       <para>
-    If you are not creating a fresh &productname; installation, but have deleted 
-    a previous deployment and are starting over, you must create new namespaces. 
-    Do not re-use your old namespaces. The <command>helm delete</command> command 
-    does not remove generated secrets from the <literal>scf</literal> and 
-    <literal>uaa</literal> namespaces as it is 
-    not aware of them. These leftover secrets may cause deployment failures. See 
+    If you are not creating a fresh &productname; installation, but have deleted
+    a previous deployment and are starting over, you must create new namespaces.
+    Do not re-use your old namespaces. The <command>helm delete</command> command
+    does not remove generated secrets from the <literal>scf</literal> and
+    <literal>uaa</literal> namespaces as it is
+    not aware of them. These leftover secrets may cause deployment failures. See
     <xref linkend="sec-cap-rebuild-depl"/> for more information.
       </para>
      </listitem>
     </varlistentry>
-</variablelist>'>    
+</variablelist>'>
 
 <!--ENTITY readmefirst......................................................-->
 
@@ -111,7 +111,7 @@ Before you start deploying &productname;, review the following documents:
      </listitem>
      </varlistentry>
      </variablelist>'>
-     
+
 <!--ENTITY dns-tables.......................................................-->
 
 <!ENTITY dns-tables
@@ -184,7 +184,7 @@ Before you start deploying &productname;, review the following documents:
     </tbody>
    </tgroup>
   </informaltable>
-  
+
   <para xmlns="http://docbook.org/ns/docbook">
    <literal>uaa-uaa-public</literal> is in the <literal>uaa</literal>
    namespace, and the rest are in the <literal>scf</literal> namespace.
@@ -192,7 +192,7 @@ Before you start deploying &productname;, review the following documents:
 
 <!--ENTITY releases-table...................................................-->
 
-<!ENTITY releases-table    
+<!ENTITY releases-table
 '<!-- TODO remember to keep this table updated -->
     <informaltable xmlns="http://docbook.org/ns/docbook">
    <tgroup cols="3">
@@ -256,7 +256,7 @@ Before you start deploying &productname;, review the following documents:
      </row>
     </tbody>
    </tgroup>
-   </informaltable>'> 
+   </informaltable>'>
 
 <!--ENTITY uaac-prereq......................................................-->
 
@@ -300,13 +300,13 @@ Before you start deploying &productname;, review the following documents:
 
 <!ENTITY helm-search-suse
 '<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;helm search suse
-NAME                            CHART VERSION   APP VERSION     DESCRIPTION 
-suse/cf                         &latestscfchart;          1.4             A Helm chart for SUSE Cloud Foundry                         
+NAME                            CHART VERSION   APP VERSION     DESCRIPTION
+suse/cf                         &latestscfchart;          1.4             A Helm chart for SUSE Cloud Foundry
 suse/cf-usb-sidecar-mysql       1.0.1                           A Helm chart for SUSE Universal Service Broker Sidecar fo...
 suse/cf-usb-sidecar-postgres    1.0.1                           A Helm chart for SUSE Universal Service Broker Sidecar fo...
-suse/console                    &lateststratoschart;           &lateststratoschart;           A Helm chart for deploying Stratos UI Console               
-suse/metrics                    1.0.0           1.0.0           A Helm chart for Stratos Metrics                            
-suse/minibroker                 0.2.0                           A minibroker for your minikube                              
+suse/console                    &lateststratoschart;           &lateststratoschart;           A Helm chart for deploying Stratos UI Console
+suse/metrics                    1.0.0           1.0.0           A Helm chart for Stratos Metrics
+suse/minibroker                 0.2.0                           A minibroker for your minikube
 suse/nginx-ingress              0.28.4          0.15.0          An nginx Ingress controller that uses ConfigMap to store ...
 suse/uaa                        &latestscfchart;          1.4             A Helm chart for SUSE UAA
 </screen>'>
@@ -594,7 +594,7 @@ suse/uaa                        &latestscfchart;          1.4             A Helm
        </step>
        <step>
         <para>
-         Identify the stack applications are using. The audit lists all 
+         Identify the stack applications are using. The audit lists all
          applications in orgs you have access to. To list all applications in
          your &cap; deployment, ensure you are logged in as a user with access
          to all orgs.
@@ -646,7 +646,7 @@ suse/uaa                        &latestscfchart;          1.4             A Helm
      </listitem>
      <listitem>
       <para>
-       Option 2 - Migrating applications using the &cfcli;. 
+       Option 2 - Migrating applications using the &cfcli;.
       </para>
       <para>
        Perform the following for all orgs and spaces in your &cap; deployment.

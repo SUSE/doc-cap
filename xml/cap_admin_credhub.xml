@@ -27,7 +27,7 @@
    Start by creating a new directory for the CredHub client on your local
    workstation, then download and unpack the CredHub client. The following
    example is for the 2.2.0 Linux release. For other platforms and current
-   releases, see the cloudfoundry-incubator/credhub-cli at 
+   releases, see the cloudfoundry-incubator/credhub-cli at
    <link xlink:href="https://github.com/cloudfoundry-incubator/credhub-cli/releases">
     </link>
   </para>
@@ -58,7 +58,7 @@
 
   <para>
    If this is an initial deployment, use <command>helm install</command> to deploy
-   <literal>scf</literal> with CredHub enabled:  
+   <literal>scf</literal> with CredHub enabled:
   </para>
 
 <screen>&prompt.user;helm install suse/cf \
@@ -112,7 +112,7 @@
    file can be removed:
   </para>
 
-<screen>sizing:   
+<screen>sizing:
   credhub_user:
     count: 1</screen>
 
@@ -127,7 +127,7 @@
   </para>
 
 <screen>&prompt.user;CH_CLI=~/.chclient/credhub
-&prompt.user;CH_SERVICE=<replaceable>https://credhub.example.com</replaceable>    
+&prompt.user;CH_SERVICE=<replaceable>https://credhub.example.com</replaceable>
 &prompt.user;NAMESPACE=<replaceable>scf</replaceable>
 </screen>
 
@@ -157,7 +157,7 @@
   </para>
 
 <screen>
-&prompt.user;"${CH_CLI}" set --name FOX --type value --value 'fox over lazy dog'   
+&prompt.user;"${CH_CLI}" set --name FOX --type value --value 'fox over lazy dog'
 &prompt.user;"${CH_CLI}" set --name DOG --type user --username dog --password fox
 &prompt.user;"${CH_CLI}" get --name FOX
 &prompt.user;"${CH_CLI}" get --name DOG

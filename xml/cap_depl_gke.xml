@@ -34,7 +34,7 @@
   <itemizedlist>
    <listitem>
     <para>
-     The <literal>gcloud</literal> command line interface. See <link xlink:href="https://cloud.google.com/sdk/gcloud/"/> for more information and download instructions. 
+     The <literal>gcloud</literal> command line interface. See <link xlink:href="https://cloud.google.com/sdk/gcloud/"/> for more information and download instructions.
     </para>
    </listitem>
    <listitem>
@@ -332,7 +332,7 @@ allowVolumeExpansion: true
 ### scf-config-values.yaml
 
 env:
-  # the FQDN of your domain  
+  # the FQDN of your domain
   DOMAIN: <replaceable>example.com</replaceable>
   # the UAA prefix is required
   UAA_HOST: uaa.<replaceable>example.com</replaceable>

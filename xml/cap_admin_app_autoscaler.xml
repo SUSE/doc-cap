@@ -131,13 +131,13 @@
    </step>
    <step>
     <para>
-     Get the most recent &helm; charts: 
+     Get the most recent &helm; charts:
     </para>
 <screen>&prompt.user;helm repo update</screen>
    </step>
    <step>
     <para>
-     Upgrade <literal>uaa</literal>: 
+     Upgrade <literal>uaa</literal>:
     </para>
 <screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
 --values scf-config-values.yaml
@@ -179,7 +179,7 @@
    </step>
    <step>
     <para>
-     Monitor the deployment progress. Wait until all pods are in a ready state before proceeding: 
+     Monitor the deployment progress. Wait until all pods are in a ready state before proceeding:
     </para>
 <screen>&prompt.user;watch --color 'kubectl get pods --namespace scf'</screen>
    </step>
@@ -199,7 +199,7 @@
     </para>
 <screen>&prompt.user;watch --color 'kubectl get pods --namespace scf'</screen>
    </step>
-  </procedure>  
+  </procedure>
 
   <para>
    The second method is to pass the
@@ -254,7 +254,7 @@
   </para>
 
 <screen>&prompt.user;cf bind-service <replaceable>my_application</replaceable> <replaceable>service_instance_name</replaceable>
-&prompt.user;cf attach-autoscaling-policy <replaceable>my_application</replaceable> <replaceable>my-policy.json</replaceable>  
+&prompt.user;cf attach-autoscaling-policy <replaceable>my_application</replaceable> <replaceable>my-policy.json</replaceable>
 </screen>
 
   <para>
@@ -296,7 +296,7 @@
    </para>
    <variablelist>
     <varlistentry>
-     <term>autoscaling-api</term> 
+     <term>autoscaling-api</term>
      <listitem>
       <para>
        Set or view AutoScaler service API endpoint. See <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler-cli-plugin#cf-autoscaling-api"/> for more information.

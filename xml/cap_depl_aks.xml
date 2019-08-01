@@ -273,7 +273,7 @@ export NODEPOOL_NAME="mypool"
 
   <para>
    List the &kube; versions currently supported by AKS (see
-   <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/supported-kubernetes-versions"/> 
+   <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/supported-kubernetes-versions"/>
    for more information on the AKS version support policy):
   </para>
 
@@ -281,7 +281,7 @@ export NODEPOOL_NAME="mypool"
 </screen>
 
   <para>
-   Create a new AKS managed cluster, and specify the &kube; version for 
+   Create a new AKS managed cluster, and specify the &kube; version for
    consistent deployments:
   </para>
 
@@ -475,7 +475,7 @@ allowVolumeExpansion: true
 ### scf-config-values.yaml
 
 env:
-  # the FQDN of your domain  
+  # the FQDN of your domain
   DOMAIN: <replaceable>example.com</replaceable>
   # the UAA prefix is required
   UAA_HOST: uaa.<replaceable>example.com</replaceable>
@@ -762,7 +762,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.
   </para>
 
 <screen>&prompt.user;SBRG_NAME=$(tr -dc 'a-zA-Z0-9' &lt; /dev/urandom | head -c 8)-service-broker
-      
+
 &prompt.user;REGION=<replaceable>eastus</replaceable>
 
 &prompt.user;export SUBSCRIPTION_ID=$(az account show | jq -r '.id')
@@ -789,7 +789,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.
   </para>
 
 <screen>&prompt.user;helm repo add svc-cat https://svc-catalog-charts.storage.googleapis.com
-        
+
 &prompt.user;helm repo update
 
 &prompt.user;helm install svc-cat/catalog --name catalog \
@@ -918,7 +918,7 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
    navigate to the URL specified in the <literal>routes</literal>
    field displayed at the end of the staging logs. For example, the
    application route could be
-   <replaceable>question2answer.example.com</replaceable>. 
+   <replaceable>question2answer.example.com</replaceable>.
   </para>
 
   <para>
