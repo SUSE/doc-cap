@@ -247,7 +247,8 @@ d028551.example.com   Ready    &lt;none>    4h   v1.10.11
       is &helm;'s server, which is installed on your &kube; cluster.
      </para>
      <para>
-      &helm; client version 2.9 or higher is required.
+      &helm; client version 2.9 or higher is required. Compatibility between
+      &cap; and &helm; 3 is not supported.
      </para>
      <warning>
       <title>Initialize Only the &helm; Client</title>
