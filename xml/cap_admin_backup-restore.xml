@@ -557,7 +557,7 @@
       The Cloud Controller Database (CCDB). In addition to what is encompassed
       by the CCDB listed in
       <xref linkend="sec-cap-backup-restore-plugin-scope"/>, this will include
-      service data as well.
+      service binding data as well.
      </para>
     </listitem>
     <listitem>
