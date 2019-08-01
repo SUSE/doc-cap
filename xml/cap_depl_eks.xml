@@ -294,13 +294,13 @@ env:
   DOMAIN: <replaceable>example.com</replaceable>
   UAA_HOST: uaa.<replaceable>example.com</replaceable>
   UAA_PORT: 2793
-  
+
   GARDEN_ROOTFS_DRIVER: overlay-xfs
   GARDEN_APPARMOR_PROFILE: ""
-  
+
 services:
   loadbalanced: true
-  
+
 kube:
   storage_class:
     # Change the value to the storage class you use
@@ -313,7 +313,7 @@ kube:
     username: ""
     password: ""
   organization: "cap"
-  
+
 secrets:
   # Create a very strong password for user 'admin'
   CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
@@ -379,9 +379,9 @@ secrets:
   </para>
 
 <screen>&prompt.user;helm repo list
-NAME            URL                                             
+NAME            URL
 stable          https://kubernetes-charts.storage.googleapis.com
-local           http://127.0.0.1:8879/charts                    
+local           http://127.0.0.1:8879/charts
 suse            https://kubernetes-charts.suse.com/</screen>
 
   <para>

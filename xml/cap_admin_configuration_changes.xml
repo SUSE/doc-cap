@@ -48,7 +48,7 @@
   </para>
 
 <screen>env:
-  LOG_LEVEL: "debug2" 
+  LOG_LEVEL: "debug2"
 </screen>
 
   <para>

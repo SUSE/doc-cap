@@ -25,7 +25,7 @@
 
  <sect1 xml:id="sec-cap-disable-service-broker">
   <title>Enabling and Disabling Service Brokers</title>
-  
+
   <para>
    The service broker feature is enabled as part of a default &scf;
    deployment. To disable it, use the <command>--set "enable.cf_usb=false"</command>
@@ -182,7 +182,7 @@
  [...]
  xC8x/+zT0QkvcRJBio5gg670+25KJQ==
  -----END CERTIFICATE-----
- 
+
 &prompt.user;kubectl get secret --namespace uaa <replaceable>secrets-2.8.0-1</replaceable> --output jsonpath='{.data.internal-ca-cert}' | base64 --decode
  -----BEGIN CERTIFICATE-----
  MIIE8jCCAtqgAwIBAgIUSI02lj0a0InLb/zMrjNgW5d8EygwDQYJKoZIhvcNAQEN
@@ -208,15 +208,15 @@
   SERVICE_MYSQL_USER: <replaceable>mysql-admin-user</replaceable>
   SERVICE_MYSQL_PASS: <replaceable>mysql-admin-password</replaceable>
 
-  # CAP access credentials, from your original deployment configuration 
+  # CAP access credentials, from your original deployment configuration
   # (see <xref linkend="sec-cap-configure-prod"/>)
   CF_ADMIN_USER: <replaceable>admin</replaceable>
   CF_ADMIN_PASSWORD: <replaceable>password</replaceable>
   CF_DOMAIN: <replaceable>example.com</replaceable>
-  
+
   # Copy the certificates you extracted above, as shown in these
   # abbreviated examples, prefaced with the pipe character
-  
+
   # SCF cert
   CF_CA_CERT: |
     -----BEGIN CERTIFICATE-----
@@ -224,7 +224,7 @@
     [...]
     xC8x/+zT0QkvcRJBio5gg670+25KJQ==
     -----END CERTIFICATE-----
-   
+
   # UAA cert
   UAA_CA_CERT: |
     -----BEGIN CERTIFICATE-----
@@ -232,10 +232,10 @@
     [...]
     to2GI8rPMb9W9fd2WwUXGEHTc+PqTg==
     -----END CERTIFICATE-----
-    
+
 kube:
   organization: "cap"
-  registry: 
+  registry:
     hostname: "registry.suse.com"
     username: ""
     password: ""</screen>
@@ -331,20 +331,20 @@ kube:
   SERVICE_POSTGRESQL_PORT: 5432
   SERVICE_POSTGRESQL_USER: <replaceable>pgsql-admin-user</replaceable>
   SERVICE_POSTGRESQL_PASS: <replaceable>pgsql-admin-password</replaceable>
-  
+
   # The SSL connection mode when connecting to the database.  For a list of
   # valid values, please see <link xlink:href="https://godoc.org/github.com/lib/pq"/>
   SERVICE_POSTGRESQL_SSLMODE: disable
-  
-  # CAP access credentials, from your original deployment configuration 
+
+  # CAP access credentials, from your original deployment configuration
   # (see <xref linkend="sec-cap-configure-prod"/>)
   CF_ADMIN_USER: <replaceable>admin</replaceable>
   CF_ADMIN_PASSWORD: <replaceable>password</replaceable>
   CF_DOMAIN: <replaceable>example.com</replaceable>
-  
+
   # Copy the certificates you extracted above, as shown in these
   # abbreviated examples, prefaced with the pipe character
-  
+
   # SCF certificate
   CF_CA_CERT: |
     -----BEGIN CERTIFICATE-----
@@ -352,7 +352,7 @@ kube:
     [...]
     xC8x/+zT0QkvcRJBio5gg670+25KJQ==
     -----END CERTIFICATE-----
-   
+
   # UAA certificate
   UAA_CA_CERT: |
     ----BEGIN CERTIFICATE-----
@@ -360,9 +360,9 @@ kube:
     [...]
     to2GI8rPMb9W9fd2WwUXGEHTc+PqTg==
     -----END CERTIFICATE-----
-   
-  SERVICE_TYPE: postgres   
-    
+
+  SERVICE_TYPE: postgres
+
 kube:
   organization: "cap"
   registry:

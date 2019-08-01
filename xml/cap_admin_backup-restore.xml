@@ -83,7 +83,7 @@
 <screen>&prompt.user;cf install-plugin <replaceable>cf-plugin-backup-1.0.8.0.g9e8438e.linux-amd64</replaceable>
  Attention: Plugins are binaries written by potentially untrusted authors.
  Install and use plugins at your own risk.
- Do you want to install the plugin 
+ Do you want to install the plugin
  backup-plugin/cf-plugin-backup-1.0.8.0.g9e8438e.linux-amd64? [yN]: y
  Installing plugin backup...
  OK
@@ -96,9 +96,9 @@
 
  plugin   version   command name      command help
  backup   1.0.8     backup-info       Show information about the current snapshot
- backup   1.0.8     backup-restore    Restore the CloudFoundry state from a 
+ backup   1.0.8     backup-restore    Restore the CloudFoundry state from a
   backup created with the snapshot command
- backup   1.0.8     backup-snapshot   Create a new CloudFoundry backup snapshot 
+ backup   1.0.8     backup-snapshot   Create a new CloudFoundry backup snapshot
   to a local file
 
  Use 'cf repo-plugins' to list plugins in registered repos available to install.</screen>
@@ -139,7 +139,7 @@
     Create a backup of your &productname; data and applications. The command
     outputs progress messages until it is completed:
    </para>
-<screen>&prompt.user;cf backup-snapshot   
+<screen>&prompt.user;cf backup-snapshot
  2018/08/18 12:48:27 Retrieving resource /v2/quota_definitions
  2018/08/18 12:48:30 org quota definitions done
  2018/08/18 12:48:30 Retrieving resource /v2/space_quota_definitions

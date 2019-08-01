@@ -41,12 +41,12 @@
 &deployment-pod-status;
 </sect1>
  <sect1>
-  <title>Namespaces</title> 
+  <title>Namespaces</title>
 &namespace-length;
 &fresh-namespace;
 </sect1>
  <sect1>
-  <title>DNS Management</title> 
+  <title>DNS Management</title>
 
   <para>
    The following tables list the minimum DNS requirements to run &productname;, using

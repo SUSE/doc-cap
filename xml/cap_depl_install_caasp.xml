@@ -267,16 +267,16 @@ d028551.example.com   Ready    &lt;none>    4h   v1.10.11
       directory. Then initialize the client only:
      </para>
 <screen>&prompt.user;helm init --client-only
-Creating /home/&exampleuser_plain;/.helm 
-Creating /home/&exampleuser_plain;/.helm/repository 
-Creating /home/&exampleuser_plain;/.helm/repository/cache 
-Creating /home/&exampleuser_plain;/.helm/repository/local 
-Creating /home/&exampleuser_plain;/.helm/plugins 
-Creating /home/&exampleuser_plain;/.helm/starters 
-Creating /home/&exampleuser_plain;/.helm/cache/archive 
-Creating /home/&exampleuser_plain;/.helm/repository/repositories.yaml 
-Adding stable repo with URL: https://kubernetes-charts.storage.googleapis.com 
-Adding local repo with URL: http://127.0.0.1:8879/charts 
+Creating /home/&exampleuser_plain;/.helm
+Creating /home/&exampleuser_plain;/.helm/repository
+Creating /home/&exampleuser_plain;/.helm/repository/cache
+Creating /home/&exampleuser_plain;/.helm/repository/local
+Creating /home/&exampleuser_plain;/.helm/plugins
+Creating /home/&exampleuser_plain;/.helm/starters
+Creating /home/&exampleuser_plain;/.helm/cache/archive
+Creating /home/&exampleuser_plain;/.helm/repository/repositories.yaml
+Adding stable repo with URL: https://kubernetes-charts.storage.googleapis.com
+Adding local repo with URL: http://127.0.0.1:8879/charts
 $HELM_HOME has been configured at /home/&exampleuser_plain;/.helm.
 Not installing &tiller; due to 'client-only' flag having been set
 Happy Helming!</screen>
@@ -334,7 +334,7 @@ Happy Helming!</screen>
 
 <screen>&prompt.user;kubectl get storageclass
 NAME         PROVISIONER   AGE
-persistent   nfs           10d    
+persistent   nfs           10d
     </screen>
 
   <para>
@@ -346,7 +346,7 @@ persistent   nfs           10d
 
 <screen>&prompt.user;kubectl patch storageclass <replaceable>persistent</replaceable> \
  -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
-    
+
 &prompt.user;kubectl get storageclass
 NAME                   PROVISIONER   AGE
 persistent (default)   nfs           10d
@@ -443,40 +443,40 @@ persistentvolumeclaim "test-sc-persistent" deleted</screen>
   </para>
   <itemizedlist>
         <!-- Sorry but this section does not make sense to me-wouldn't DNS be managed
-        by the load balancer, removing the need for the external_ips 
+        by the load balancer, removing the need for the external_ips
         parameter? TODO Load balancers is a huge and complex topic,
         and it is on our roadmap to provide some guidance in enough depth to be useful.
         We'll come back to this.
-        cjs, 11 april 2019-->        
+        cjs, 11 april 2019-->
 <!--   <listitem>
    <formalpara>
-    
+
      <title>Hardware Load Balancer</title>
      <para>
       If you are using a hardware load balancer, assign one or more of the worker
       nodes an external IP address. To provide external access to the
-      cluster, map these IP addresses to the domain name. Then 
+      cluster, map these IP addresses to the domain name. Then
      </para>
     </formalpara>
     <para>
-     To provide access to the Stratos Web interface and other public services 
+     To provide access to the Stratos Web interface and other public services
      use this IP address as the value of <literal>external_ips</literal>.
      <literal>external_ips</literal> also needs the internal IP addresses of
      the worker nodes to provide access to internal services.
     </para>
         </listitem> -->
  <listitem>
-   <formalpara>    
+   <formalpara>
      <title>Load Balancers</title>
      <para>
-         Production deployments usually include some kind of load balancer. 
+         Production deployments usually include some kind of load balancer.
          Running &productname; on &suse; &caasp; provides the flexibility to
-         structure your network nearly any way you need to. This guide does not 
-         describe how to set up a load balancer or name services, as these depend 
-         on your requirements and existing network architecture. 
+         structure your network nearly any way you need to. This guide does not
+         describe how to set up a load balancer or name services, as these depend
+         on your requirements and existing network architecture.
      </para>
          </formalpara>
-        </listitem>        
+        </listitem>
    <listitem>
     <formalpara>
      <title>Ingress Controller</title>
@@ -499,7 +499,7 @@ persistentvolumeclaim "test-sc-persistent" deleted</screen>
    </listitem>
   </itemizedlist>
 
-<!--  We will address this in our future load balancer section. 
+<!--  We will address this in our future load balancer section.
   cjs, 4 april 2019-->
 <!--  <para>
    This example configuration file for a cluster set up to use a hardware
@@ -508,22 +508,22 @@ persistentvolumeclaim "test-sc-persistent" deleted</screen>
   </para>  -->
   <para>
    The example <filename>scf-config-values.yaml</filename> file is for a simple
-   deployment without an ingress controller or external load balancer. Instead, 
-   assign the master node an external IP address, and map this to the domain 
-   name to provide external access to the cluster. The 
-   <literal>external_ips</literal> parameter needs 
+   deployment without an ingress controller or external load balancer. Instead,
+   assign the master node an external IP address, and map this to the domain
+   name to provide external access to the cluster. The
+   <literal>external_ips</literal> parameter needs
    this address to provide access to the Stratos Web interface and other public
-   servers, and it also needs the internal IP addresses of the master node to provide 
+   servers, and it also needs the internal IP addresses of the master node to provide
    access to internal services.
-</para>   
-  
+</para>
+
 <screen>### example deployment configuration file
 ### scf-config-values.yaml
 
 env:
   # Enter the domain you created for your CAP cluster
   DOMAIN: <replaceable>&exampledomain;</replaceable>
-    
+
   # <literal>uaa</literal> host and port
   UAA_HOST: uaa.<replaceable>&exampledomain;</replaceable>
   UAA_PORT: 2793
@@ -535,7 +535,7 @@ kube:
   storage_class:
     persistent: <replaceable>"persistent"</replaceable>
     shared: "shared"
-        
+
   # The registry the images will be fetched from.
   # The values below should work for
   # a default installation from the SUSE registry.
@@ -614,17 +614,17 @@ secrets:
   </para>
 
 <screen>&prompt.user;helm repo list
-NAME            URL                                             
+NAME            URL
 stable          https://kubernetes-charts.storage.googleapis.com
-local           http://127.0.0.1:8879/charts                    
+local           http://127.0.0.1:8879/charts
 suse            https://kubernetes-charts.suse.com/</screen>
 
   <para>
    List your chart names, as you will need these for some operations:
   </para>
-  
+
 &helm-search-suse;
- 
+
 </sect1>
  <sect1 xml:id="sec-cap-copy-secret-prod">
   <title>Copy &ses; Secret</title>
@@ -659,7 +659,7 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create --filename -<
   &uaa-deploy-complete;
 
   <para>
-   When the <literal>uaa</literal> completes, proceed to deploying &suse; &cf;. 
+   When the <literal>uaa</literal> completes, proceed to deploying &suse; &cf;.
    Pressing
    <keycombo><keycap function="control"/> <keycap>C</keycap> </keycombo> stops
    the <command>watch</command> command.

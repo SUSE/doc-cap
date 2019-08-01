@@ -15,27 +15,27 @@
    <dm:translation>yes</dm:translation>
   </dm:docmanager>
  </info>
- 
+
    <para>
-   The Stratos user interface (UI) is a modern web-based management application 
-   for Cloud Foundry. It provides a graphical management console for both 
-   developers and system administrators. Install Stratos with &helm; after all 
+   The Stratos user interface (UI) is a modern web-based management application
+   for Cloud Foundry. It provides a graphical management console for both
+   developers and system administrators. Install Stratos with &helm; after all
    of the <literal>uaa</literal> and <literal>scf</literal> pods are running.
   </para>
- 
+
  <sect1 xml:id="sec-cap-stratos-prod">
   <title>Deploy Stratos on &susecaaspreg;</title>
 
    <para>
       The steps in this section describe how to install Stratos on &susecaaspreg;
       without an external load balancer, instead mapping the master node to your
-      &productname; domain as described in 
-      <xref linkend="sec-cap-configure-prod"/>. These instructions assume you 
+      &productname; domain as described in
+      <xref linkend="sec-cap-configure-prod"/>. These instructions assume you
       have followed the procedure in <xref linkend="cha-cap-depl-caasp"/>,
       have deployed <literal>uaa</literal> and <literal>scf</literal> successfully,
       and have created a default storage class.
-      <!-- Hopefully an additional section describing how to deploy with a load 
-      balancer will actually be written. cjs april 1 2019 "See 
+      <!-- Hopefully an additional section describing how to deploy with a load
+      balancer will actually be written. cjs april 1 2019 "See
       TODO to learn how to configure
       Stratos to use an external load balancer."-->
   </para>
@@ -51,14 +51,14 @@ sed 's/"namespace": "default"/"namespace": "stratos"/' | kubectl create --filena
   <para>
    You should already have the Stratos charts when you downloaded the SUSE
    charts repository (see <xref linkend="sec-cap-addrepo-prod"/>). Search your
-   &helm; repository to verify that you have the <literal>suse/console</literal> 
+   &helm; repository to verify that you have the <literal>suse/console</literal>
    chart:
   </para>
 
-&helm-search-suse;  
+&helm-search-suse;
 
  <para>
-     Use &helm; to install Stratos, using the same 
+     Use &helm; to install Stratos, using the same
      <filename>scf-config-values.yaml</filename> configuration file you used to
      deploy<literal>uaa</literal> and <literal>scf</literal>:
   </para>
@@ -108,9 +108,9 @@ stratos  1        1        3h
 </screen>
 
   <para>
-  Find the external IP address with 
+  Find the external IP address with
   <command>kubectl get service susecf-console-ui-ext --namespace stratos</command> to access your new Stratos Web console, for example https://10.86.101.115:8443, or use the
-          domain you created for it, and its port, for example 
+          domain you created for it, and its port, for example
           https://example.com:8443. Wade through the nag screens about the self-signed
    certificates and log in as <literal>admin</literal> with the password you
    created in <filename>scf-config-values.yaml</filename>.
@@ -178,7 +178,7 @@ stratos  1        1        3h
     </step>
     <step>
      <para>
-      Activate the <guimenu>Connect to my-endpoint now (optional).</guimenu> check box. 
+      Activate the <guimenu>Connect to my-endpoint now (optional).</guimenu> check box.
      </para>
     </step>
     <step>
@@ -209,7 +209,7 @@ stratos  1        1        3h
    </figure>
   </sect2>
  </sect1>
-         
+
  <sect1 xml:id="sec-cap-stratos-eks">
   <title>Deploy Stratos on &eks;</title>
 
@@ -334,7 +334,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
     </step>
     <step>
      <para>
-      Activate the <guimenu>Connect to my-endpoint now (optional).</guimenu> check box. 
+      Activate the <guimenu>Connect to my-endpoint now (optional).</guimenu> check box.
      </para>
     </step>
     <step>
@@ -464,7 +464,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
     </step>
     <step>
      <para>
-      Activate the <guimenu>Connect to my-endpoint now (optional).</guimenu> check box. 
+      Activate the <guimenu>Connect to my-endpoint now (optional).</guimenu> check box.
      </para>
     </step>
     <step>
@@ -581,7 +581,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
     </step>
     <step>
      <para>
-      Activate the <guimenu>Connect to my-endpoint now (optional).</guimenu> check box. 
+      Activate the <guimenu>Connect to my-endpoint now (optional).</guimenu> check box.
      </para>
     </step>
     <step>
@@ -825,7 +825,7 @@ susecf-metrics-metrics-nginx   NodePort   172.28.107.209   10.86.101.115,172.28.
     <step>
      <para>
       Enter the password for your Stratos Metrics instance. This will be the
-      <literal>nginx.password</literal> defined in your 
+      <literal>nginx.password</literal> defined in your
       <filename>stratos-metrics-values.yaml</filename> file.
      </para>
     </step>

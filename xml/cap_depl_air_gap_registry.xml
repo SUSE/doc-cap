@@ -23,7 +23,7 @@
   through &helm;. These images are hosted on a Docker registry at
   <literal>registry.suse.com</literal>. In an air gapped environment,
   <literal>registry.suse.com</literal> will not be accessible. You will need to
-  create a registry, and populate it will the images used by &cap;. 
+  create a registry, and populate it will the images used by &cap;.
  </para>
  <para>
   This chapter describes how to load your registry with the necessary images to
@@ -35,7 +35,7 @@
   <para>
    The following prerequisites are required:
   </para>
-  
+
   <itemizedlist>
    <listitem>
     <para>
@@ -126,7 +126,7 @@ mirror cf-usb-sidecar-postgres
    </listitem>
   </itemizedlist>
   <para>
-   Before deploying &cap; using <command>helm install</command>, ensure the 
+   Before deploying &cap; using <command>helm install</command>, ensure the
    following in your
    <filename>scf-config-values.yaml</filename> has been updated to point to your
    registry, and not <literal>registry.suse.com</literal>.

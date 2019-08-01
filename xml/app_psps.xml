@@ -70,7 +70,7 @@ spec:
     - vsphereVolume
   allowedFlexVolumes: []
   # hostPath volumes are not allowed; pathPrefix must still be specified
-  allowedHostPaths:      
+  allowedHostPaths:
     - pathPrefix: /opt/kubernetes-hostpath-volumes
   readOnlyRootFilesystem: false
   # Users and groups
