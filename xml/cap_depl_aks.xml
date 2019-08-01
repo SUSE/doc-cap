@@ -413,7 +413,9 @@ parameters:
   kind: Managed
   storageaccounttype: Premium_LRS
 provisioner: kubernetes.io/azure-disk
-reclaimPolicy: Delete</screen>
+reclaimPolicy: Delete
+allowVolumeExpansion: true
+</screen>
 
   <para>
    Then apply the new storage class configuration with this command:
@@ -966,6 +968,10 @@ done
    </step>
   </procedure>
  </sect1>
+
+ <!-- sect1 for PV resizing -->
+ &resize-persistent-volume;
+
  <sect1 xml:id="sec-cap-aks-add-capacity">
   <title>Expanding Capacity of a &cap; Deployment on &aks;</title>
 

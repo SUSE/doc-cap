@@ -276,6 +276,7 @@ parameters:
   type: pd-ssd
 provisioner: kubernetes.io/gce-pd
 reclaimPolicy: Delete
+allowVolumeExpansion: true
 </screen>
   <para>
    Create the new storage class using the manifest defined:
@@ -582,6 +583,10 @@ tcp-router-tcp-router-public                LoadBalancer   10.23.241.17   35.197
 <screen>&prompt.user;cf api --skip-ssl-validation https://api.example.com</screen>
   </sect2>
  </sect1>
+
+ <!-- sect1 for PV resizing -->
+ &resize-persistent-volume;
+
  <sect1 xml:id="sec-cap-gke-add-capacity">
   <title>Expanding Capacity of a &cap; Deployment on &gke;</title>
 
