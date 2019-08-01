@@ -258,6 +258,17 @@ Before you start deploying &productname;, review the following documents:
    </tgroup>
    </informaltable>'>
 
+<!--ENTITY cfcli-prereq.....................................................-->
+
+<!ENTITY cfcli-prereq
+'<listitem xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+<para>
+ The &cf; command line interface (&cfcli;). See
+ <link xlink:href="https://docs.cloudfoundry.org/cf-cli/"/> for installation
+ instructions and documentation.
+</para>
+</listitem>'>
+
 <!--ENTITY uaac-prereq......................................................-->
 
 <!ENTITY uaac-prereq

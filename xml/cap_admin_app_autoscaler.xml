@@ -34,11 +34,10 @@
      A running deployment of <literal>scf</literal>
     </para>
    </listitem>
-   <listitem>
-    <para>
-     The Cloud Foundry command line interface (cf CLI), see <link xlink:href="https://docs.cloudfoundry.org/cf-cli/"/>
-    </para>
-   </listitem>
+
+   <!-- listitem Links to CF CLI -->
+   &cfcli-prereq;
+
    <listitem>
     <para>
      The Cloud Foundry CLI AutoScaler Plug-in, see <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler-cli-plugin"/>

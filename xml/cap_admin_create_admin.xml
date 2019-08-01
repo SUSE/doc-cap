@@ -28,12 +28,8 @@
   </para>
 
   <itemizedlist>
-   <listitem>
-    <para>
-     The Cloud Foundry command line interface (&cfcli;). (See
-     <xref linkend="sec-cap-cf-cli"/>.)
-    </para>
-   </listitem>
+   <!-- listitem Links to CF CLI -->
+   &cfcli-prereq;
 
    <!-- listitem Links to UAAC and describes install -->
    &uaac-prereq;
