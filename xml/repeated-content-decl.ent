@@ -425,12 +425,22 @@ suse/uaa                        &latestscfchart;          1.4             A Helm
 '<sect1 xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
   <title>Install &helm; Client and &tiller;</title>
   <para>
-   Refer to the documentation at
-   <link xlink:href="https://docs.helm.sh/using_helm/#installing-helm"/>
-   to install the &helm; client, <literal>helm</literal>, on your remote
-   administration computer and &tiller;, the &helm; server component, on your
-   &kube; cluster. Ensure your installation is appropriately secured
-   according to your requirements as described in
+   &helm; is a &kube; package manager. It consists of a client and server
+   component, both of which are required in order to install and manage &cap;.
+  </para>
+  <para>
+   The &helm; client, <literal>helm</literal>, can be installed on your remote
+   administration computer by referring to the documentation at
+   <link xlink:href="https://docs.helm.sh/using_helm/#installing-helm"/>. Usage
+   with &cap; requires &helm; 2 and/or iterations of its minor releases.
+   Compatibility between &cap; and &helm; 3 is not supported.
+  </para>
+  <para>
+   &tiller;, the &helm; server component, needs to be installed on your &kube;
+   cluster. Follow the instructions at
+   <link xlink:href="https://helm.sh/docs/using_helm/#installing-tiller"/> to
+   install &tiller; with a service account and ensure your installation is
+   appropriately secured according to your requirements as described in
    <link xlink:href="https://helm.sh/docs/using_helm/#securing-your-helm-installation"/>.
   </para>
  </sect1>'>
