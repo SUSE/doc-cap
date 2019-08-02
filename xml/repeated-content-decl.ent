@@ -1088,3 +1088,65 @@ done
 <!ENTITY watch-scf
 '<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch --color &apos;kubectl get pods --namespace scf&apos;
 </screen>'>
+
+<!--ENTITY min-deploy-note..................................................-->
+
+<!ENTITY min-deploy-note
+'<important xmlns="http://docbook.org/ns/docbook">
+  <para>
+   The prerequisites and configurations described is this chapter only reflect
+   the requirements for a minimal &productname; deployment. For a more
+   production-ready environment, consider incoporating the following features:
+  </para>
+  <variablelist>
+   <varlistentry>
+    <term>Stratos Web Console</term>
+    <listitem>
+     <para>
+      For details, see <xref linkend="cha-cap-install-stratos"/>.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>High Availability</term>
+    <listitem>
+     <para>
+      For details, see <xref linkend="cha-cap-ha"/>.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>LDAP Integration</term>
+    <listitem>
+     <para>
+      For details, see <xref linkend="cha-cap-ldap"/>.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>External Log Server Integration</term>
+    <listitem>
+     <para>
+      For details, see <xref linkend="cha-cap-logging"/>.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>Managing Certificates</term>
+    <listitem>
+     <para>
+      For details, see <xref linkend="cha-cap-certificates"/>.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>Other Features</term>
+    <listitem>
+     <para>
+      Refer to the Administration Guide at
+      <xref linkend="part-cap-administration"/> for additional features.
+     </para>
+    </listitem>
+   </varlistentry>
+  </variablelist>
+ </important>'>

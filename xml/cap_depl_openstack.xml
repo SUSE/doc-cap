@@ -75,6 +75,9 @@
     </para>
    </listitem>
   </itemizedlist>
+
+  &min-deploy-note;
+
  </sect1>
  <sect1 xml:id="sec-cap-setup-openstack">
   <title>Create a New OpenStack Project</title>
