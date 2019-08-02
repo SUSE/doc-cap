@@ -27,7 +27,8 @@
   and actual requirements are likely to be much larger, depending on your
   workloads. You also need an external workstation for administering your
   cluster. (See <xref linkend="sec-cap-requirements"/>.) You may optionally
-  make your &productname; instance highly-available.
+  make your &productname; cluster highly-available. See
+  <xref linkend="sec-cap-ha-prod"/>.
  </para>
  <note>
   <title>Remote Administration</title>
@@ -39,11 +40,6 @@
    hosts.
   </para>
  </note>
- <para>
-  The optional &ha; example in this chapter provides HA only for the
-  &productname; cluster, and not for &caasp; or &ses;. See
-  <xref linkend="sec-cap-ha-prod"/>.
- </para>
  <sect1 xml:id="sec-cap-prereqs-prod">
   <title>Prerequisites</title>
 
