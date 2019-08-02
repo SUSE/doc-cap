@@ -742,8 +742,7 @@ secrets:
     <step>
      <para>
       Deploy a non-high-availability configuration of <literal>scf</literal>
-      (see <xref linkend="sec-cap-install-scf-prod"/>) and wait until all pods
-      are ready before proceeding.
+      and wait until all pods are ready before proceeding.
      </para>
     </step>
     <step>
