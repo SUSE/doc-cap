@@ -65,8 +65,8 @@ perl -ne '/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail|scal
   <sect2 xml:id="sec-cap-ha-simple">
    <title>Simple &ha; Configuration</title>
    <important>
-&fresh-namespace;
-</important>
+    &fresh-namespace;
+    </important>
    <para>
     The simplest way to make your &productname; deployment highly available is
     to set <literal>HA</literal> to <literal>true</literal> in your deployment
@@ -111,12 +111,14 @@ config:
    <para>
     The first example is for the <literal>uaa</literal> namespace,
     <filename>uaa-sizing.yaml</filename>. The values specified are the minimum
-    required for a &ha; deployment (that is equivalent to setting
-    <literal>config.HA</literal> to true):
+    required for a &ha; deployment, equivalent to setting
+    <literal>config.HA</literal> to true.
    </para>
 <screen>
 sizing:
   mysql:
+    count: 3
+  mysql_proxy:
     count: 2
   uaa:
     count: 2
@@ -124,9 +126,8 @@ sizing:
    <para>
     The second example is for <literal>scf</literal>,
     <filename>scf-sizing.yaml</filename>. The values specified are the minimum
-    required for a &ha; deployment (that is equivalent to setting
-    <literal>config.HA</literal> to true), except for
-    <literal>diego-cell</literal> which includes additional instances:
+    required for a &ha; deployment, equivalent to setting
+    <literal>config.HA</literal> to true.
    </para>
 <screen>
 sizing:
@@ -147,7 +148,7 @@ sizing:
   diego_brain:
     count: 2
   diego_cell:
-    count: 6
+    count: 3
   diego_ssh:
     count: 2
   doppler:
@@ -158,7 +159,11 @@ sizing:
     count: 2
   log_cache_scheduler:
     count: 2
+  loggregator_agent:
+    count: 2
   mysql:
+    count: 3
+  mysql_proxy:
     count: 2
   nats:
     count: 2
@@ -173,10 +178,15 @@ sizing:
   tcp_router:
     count: 2
 </screen>
-   <important>
-&fresh-namespace;
-</important>
    <para>
+    When using custom sizing configurations, take note that the
+    <literal>mysql</literal> instance group, for both <literal>uaa</literal> and
+    <literal>scf</literal>, must have have an odd number of instances.
+   </para>
+   <important>
+    &fresh-namespace;
+   </important>
+  <para>
     After creating your configuration files, follow the steps in
     <xref linkend="sec-cap-configure-prod"/> until you get to
     <xref linkend="sec-cap-install-uaa-prod"/>. Then deploy
