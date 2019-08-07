@@ -430,7 +430,7 @@
    For an example that demonstrates defining multiple scaling rules in a single
    policy, refer to the sample of a policy file at <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/src/integration/fakePolicyWithSchedule.json"/>. The complete list of configurable policy values can be
    found at
-   <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/master/docs/Policy_definition.rst"/>.
+   <link xlink:href="https://github.com/cloudfoundry/app-autoscaler/blob/master/docs/policy.md"/>.
   </para>
 
   <sect2 xml:id="sec-cap-app-autoscaler-scaling-types">
