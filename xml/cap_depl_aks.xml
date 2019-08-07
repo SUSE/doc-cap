@@ -560,7 +560,7 @@ suse       https://kubernetes-charts.suse.com/
   <sect2 xml:id="sec-cap-aks-deploy-uaa">
    <title>Deploy <literal>uaa</literal></title>
 
-   <!-- &uaa-in-scf; -->
+   &uaa-in-scf;
 
    <para>
     Use &helm; to deploy the <literal>uaa</literal> server:

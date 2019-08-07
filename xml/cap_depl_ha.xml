@@ -106,7 +106,7 @@ config:
     flag to <literal>true</literal> (see <xref linkend="sec-cap-ha-simple"/>.)
    </para>
 
-   <!-- &uaa-in-scf; -->
+   &uaa-in-scf;
 
    <para>
     The first example is for the <literal>uaa</literal> namespace,
