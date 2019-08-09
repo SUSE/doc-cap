@@ -27,32 +27,52 @@
   <title>Prerequisites</title>
 
   <para>
-   You need an <link xlink:href="https://aws.amazon.com/">Amazon EKS
-   account</link>. See
-   <link xlink:href="https://docs.aws.amazon.com/eks/latest/userguide/getting-started.html">Getting
-   Started with Amazon EKS</link> for instructions on creating a &kube; cluster
-   for your &productname; deployment.
+   The following are required to deploy and use &productname; on EKS:
   </para>
 
-  <para>
-   When you create your cluster, use node sizes that are at least
-   <literal>t2.large</literal>. The <literal>NodeVolumeSize</literal> must be a
-   minimum of 80 GB.
-  </para>
+  <itemizedlist>
+   <listitem>
+    <para>
+     An Amazon AWS account. For details, refer to
+     <link xlink:href="https://aws.amazon.com/"/>.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Create an &eks; cluster by following the instructions at
+     <link xlink:href="https://docs.aws.amazon.com/eks/latest/userguide/getting-started.html"/>.
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       When you create your cluster, use node sizes that are at least
+       <literal>t2.large</literal>
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       The <literal>NodeVolumeSize</literal> must be a minimum of &node-size; GB.
+      </para>
+     </listitem>
+     <listitem>
+      <!-- para -->
+      &kernel-prereq;
+     </listitem>
+    </itemizedlist>
+   </listitem>
+   <listitem>
+    <para>
+     Identity and Access Management (IAM) is configured for your users. See
+     <xref linkend="sec-cap-eks-iam"/> for guidance.
+    </para>
+   </listitem>
 
-  <para>
-   Ensure nodes use a mininum kernel version of &kernel_version;.
-  </para>
+   <!-- listitems: Install steps and links -->
+   &cfcli-prereq;
+   &kubectl-prereq;
+   &curl-prereq;
+  </itemizedlist>
 
-  <para>
-   Take note of special configurations that are required to successfully deploy
-   &productname; on EKS in <xref linkend="sec-cap-install-scf-eks"/>.
-  </para>
-
-  <para>
-   <xref linkend="sec-cap-eks-iam"/> provides guidance on configuring Identity
-   and Access Management (IAM) for your users.
-  </para>
  </sect1>
  <sect1 xml:id="sec-cap-eks-iam">
   <title>IAM Requirements for EKS</title>
@@ -418,6 +438,19 @@ suse            https://kubernetes-charts.suse.com/</screen>
   </para>
 
 <screen>&prompt.user;kubectl get services --namespace uaa | grep elb</screen>
+
+  <para>
+   Use <command>curl</command> to verify you are able to connect to the
+   <literal>uaa</literal> OAuth server on the DNS name configured:
+  </para>
+<screen>&prompt.user;curl --insecure https://uaa.example.com:2793/.well-known/openid-configuration</screen>
+  <para>
+   This should return a JSON object, as this abbreviated example shows:
+  </para>
+<screen>{"issuer":"https://uaa.example.com:2793/oauth/token",
+"authorization_endpoint":"https://uaa.example.com:2793
+/oauth/authorize","token_endpoint":"https://uaa.example.com:2793/oauth/token"
+</screen>
 
  </sect1>
  <sect1 xml:id="sec-cap-install-scf-eks">

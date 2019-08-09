@@ -64,7 +64,7 @@
       40 GB disk space per &caasp; dashboard and &kube; master nodes.
      </para>
      <para>
-      80 GB disk space per &kube; worker.
+      &node-size; GB disk space per &kube; worker.
      </para>
     </listitem>
    </varlistentry>
@@ -124,9 +124,8 @@
      <para>
       &productname; is supported on &suse; &caasp; 3.x.
      </para>
-     <para>
-      Ensure nodes use a mininum kernel version of &kernel_version;.
-     </para>
+     <!-- para -->
+     &kernel-prereq;
      <para>
       After installing
       <link xlink:href=

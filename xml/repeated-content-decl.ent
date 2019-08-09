@@ -263,19 +263,84 @@ Before you start deploying &productname;, review the following documents:
 <!ENTITY cfcli-prereq
 '<listitem xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
 <para>
- The &cf; command line interface (&cfcli;). See
- <link xlink:href="https://docs.cloudfoundry.org/cf-cli/"/> for installation
- instructions and documentation.
+ <command>cf</command>, the &cf; command line interface. For more information,
+ see <link xlink:href="https://docs.cloudfoundry.org/cf-cli/"/>.
+</para>
+<para>
+ For &sle; and &opensuse; systems, install using <command>zypper</command>.
+</para>
+<screen>&prompt.user;sudo zypper install cf-cli</screen>
+<para>
+ For other systems, follow the instructions at
+ <link xlink:href="https://docs.cloudfoundry.org/cf-cli/install-go-cli.html"/>.
 </para>
 </listitem>'>
+
+<!--ENTITY kubectl-prereq...................................................-->
+
+<!ENTITY kubectl-prereq
+'<listitem xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+<para>
+ <command>kubectl</command>, the &kube; command line tool. For more
+ information, refer to
+ <link xlink:href="https://kubernetes.io/docs/reference/kubectl/overview/"/>.
+</para>
+<para>
+ For &slea; 12 SP3 or 15 systems, install the package
+ <package>kubernetes-client</package> from the <emphasis>Public Cloud</emphasis>
+ module.
+</para>
+<para>
+ For other systems, follow the instructions at
+ <link xlink:href="https://kubernetes.io/docs/tasks/tools/install-kubectl/"/>.
+</para>
+</listitem>'>
+
+<!--ENTITY jq-prereq........................................................-->
+
+<!ENTITY jq-prereq
+'<listitem xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+<para>
+ <command>jq</command>, a command line JSON processor. See
+ <link xlink:href="https://stedolan.github.io/jq/"/> for more information and
+ installation instructions.
+</para>
+</listitem>'>
+
+<!--ENTITY curl-prereq......................................................-->
+
+<!ENTITY curl-prereq
+'<listitem xmlns="http://docbook.org/ns/docbook">
+<para>
+ <command>curl</command>, the Client URL (cURL) command line tool.
+</para>
+</listitem>'>
+
+<!--ENTITY sed-prereq.......................................................-->
+
+<!ENTITY sed-prereq
+'<listitem xmlns="http://docbook.org/ns/docbook">
+<para>
+ <command>sed</command>, the stream editor.
+</para>
+</listitem>'>
+
+<!--ENTITY kernel-prereq....................................................-->
+
+<!ENTITY kernel-prereq
+'<para xmlns="http://docbook.org/ns/docbook">
+ Ensure nodes use a mininum kernel version of &kernel_version;.
+</para>'>
 
 <!--ENTITY uaac-prereq......................................................-->
 
 <!ENTITY uaac-prereq
 '<listitem xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
 <para>
- <link xlink:href="https://docs.cloudfoundry.org/uaa/uaa-user-management.html">The
- Cloud Foundry <literal>uaa</literal> command line interface (UAAC)</link>.
+ <command>uaac</command>, the &cf; <literal>uaa</literal> command line client
+ (UAAC). See
+ <link xlink:href="https://docs.cloudfoundry.org/uaa/uaa-user-management.html"/>
+ for more information and installation instructions.
 </para>
 <para>
  On &sle; systems, ensure the <literal>ruby-devel</literal> and <literal>gcc-c++</literal>

@@ -28,18 +28,22 @@
   <title>Prerequisites</title>
 
   <para>
-   The following are required to complete the deployment of &productname; on GKE:
+   The following are required to deploy and use &productname; on GKE:
   </para>
 
   <itemizedlist>
    <listitem>
     <para>
-     The <literal>gcloud</literal> command line interface. See <link xlink:href="https://cloud.google.com/sdk/gcloud/"/> for more information and download instructions.
+     <command>gcloud</command>, the primary command line interface to Google
+     Cloud Platform. See
+     <link xlink:href="https://cloud.google.com/sdk/gcloud/"/> for more
+     information and installation instructions.
     </para>
    </listitem>
    <listitem>
     <para>
-     A Google Cloud Platform (GCP) user account or a service account with the following IAM roles:
+     A Google Cloud Platform (GCP) user account or a service account with the
+     following IAM roles:
     </para>
     <itemizedlist>
      <listitem>
@@ -62,11 +66,13 @@
      </listitem>
     </itemizedlist>
    </listitem>
-   <listitem>
-    <para>
-     The &kube; command line tool, <literal>kubectl</literal>.
-    </para>
-   </listitem>
+
+   <!-- listitems: Install steps and links -->
+   &cfcli-prereq;
+   &kubectl-prereq;
+   &jq-prereq;
+   &curl-prereq;
+   &sed-prereq;
   </itemizedlist>
  </sect1>
  <sect1 xml:id="sec-cap-create-gke-cluster">
@@ -109,13 +115,12 @@
     </para>
    </listitem>
    <listitem>
-    <para>
-     Ensure nodes use a mininum kernel version of &kernel_version;.
-    </para>
+    <!-- para -->
+    &kernel-prereq;
    </listitem>
    <listitem>
     <para>
-     Has at least 80 GB local storage per node.
+     Has at least &node-size; GB local storage per node.
     </para>
    </listitem>
    <listitem>

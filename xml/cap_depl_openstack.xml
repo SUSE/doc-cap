@@ -53,13 +53,12 @@
    </listitem>
    <listitem>
     <para>
-     80 GB disk space per &kube; worker
+     &node-size; GB disk space per &kube; worker
     </para>
    </listitem>
    <listitem>
-    <para>
-     Ensure nodes use a mininum kernel version of &kernel_version;.
-    </para>
+    <!-- para -->
+    &kernel-prereq;
    </listitem>
    <listitem>
     <para>
