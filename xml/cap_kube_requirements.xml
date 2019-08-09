@@ -30,9 +30,8 @@
     </para>
    </listitem>
    <listitem>
-    <para>
-     Nodes use a mininum kernel version of &kernel_version;.
-    </para>
+    <!-- para -->
+    &kernel-prereq;
    </listitem>
    <listitem>
     <para>

@@ -39,38 +39,48 @@
   <title>Prerequisites</title>
 
   <para>
-   Install <command>az</command>, the Azure command line client, on your remote
-   administration machine. See
-   <link xlink:href="https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest">
-   Install Azure CLI 2.0</link> for instructions.
+   The following are required to deploy and use &productname; on AKS:
   </para>
 
-  <para>
-   See the
-   <link xlink:href="https://docs.microsoft.com/en-us/cli/azure/reference-index?view=azure-cli-latest">
-   Azure CLI 2.0 Reference</link> for a complete <command>az</command> command
-   reference.
-  </para>
+  <itemizedlist>
+   <listitem>
+    <para>
+     <command>az</command>, the Azure command line client. See
+     <link xlink:href="https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest"/>
+     for more information and installation instructions.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     A &ms; Azure account. For details, refer to
+     <link xlink:href="https://azure.microsoft.com"/>.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     The name of the SSH key that is attached to your Azure account.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Your Azure account as sufficient quota. The minimal installation described
+     in this chapter require 24 vCPUs. If your account has insufficient quota,
+     you can request a quota increase by going to
+     <link xlink:href="https://docs.microsoft.com/en-us/azure/azure-supportability/resource-manager-core-quotas-request"/>.
+    </para>
+   </listitem>
+   <listitem>
+    <!-- para -->
+    &kernel-prereq;
+   </listitem>
 
-  <para>
-   You also need the <command>kubectl</command>, <command>curl</command>,
-   <command>sed</command>, and <command>jq</command> commands, &helm; 2.9 or
-   newer, and the name of the SSH key that is attached to your Azure account.
-   (Get &helm; from
-   <link xlink:href="https://github.com/helm/helm/releases">Helm
-   Releases</link>.)
-  </para>
-
-  <para>
-   Ensure nodes use a mininum kernel version of &kernel_version;.
-  </para>
-
-  <para>
-   Note that 24 vCPUs are required for the minimal installation described in
-   this guide. If your account only has the default 10 vCPUs available, you
-   can request a quota increase by going to
-   <link xlink:href="https://docs.microsoft.com/en-us/azure/azure-supportability/resource-manager-core-quotas-request"/>.
-  </para>
+   <!-- listitems: Install steps and links -->
+   &cfcli-prereq;
+   &kubectl-prereq;
+   &jq-prereq;
+   &curl-prereq;
+   &sed-prereq;
+  </itemizedlist>
 
   <para>
    Log in to your Azure Account:
@@ -288,13 +298,13 @@ export NODEPOOL_NAME="mypool"
 <screen>&prompt.user;az aks create --resource-group $RG_NAME --name $AKS_NAME \
  --node-count $NODE_COUNT --admin-username $ADMIN_USERNAME \
  --ssh-key-value $SSH_KEY_VALUE --node-vm-size $NODE_VM_SIZE \
- --node-osdisk-size=80 --nodepool-name $NODEPOOL_NAME \
+ --node-osdisk-size=&node-size; --nodepool-name $NODEPOOL_NAME \
  --kubernetes-version <replaceable>&aksnodeversion;</replaceable>
 </screen>
 
   <note>
    <para>
-    An OS disk size of at least 80 GB must be specified using the
+    An OS disk size of at least &node-size; GB must be specified using the
     <command>--node-osdisk-size</command> flag.
    </para>
   </note>
