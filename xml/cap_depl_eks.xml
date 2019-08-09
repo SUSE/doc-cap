@@ -639,6 +639,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
 <screen>&prompt.user;openssl req -newkey rsa:4096 -keyout tls.key.encrypted -out tls.req -days 365 \
   -passout pass:<replaceable>1234</replaceable> \
   -subj '/CN=aws-servicebroker.'${BROKER_NAMESPACE} -batch \
+  -subj '/CN=aws-servicebroker-aws-servicebroker.aws-sb.svc.cluster.local' -batch
   &lt;/dev/null
 </screen>
       </step>
@@ -671,21 +672,33 @@ suse            https://kubernetes-charts.suse.com/</screen>
      </para>
 <screen>&prompt.user;helm install aws-sb/aws-servicebroker \
 	     --name aws-servicebroker \
-	     --namespace ${BROKER_NAMESPACE} \
-	     --version 1.0.0-beta.3 \
-	     --set aws.secretkey=$aws_access_key \
-	     --set aws.accesskeyid=$aws_key_id \
+	     --namespace $BROKER_NAMESPACE \
+	     --version 1.0.1 \
+	     --set aws.secretkey=$AWS_ACCESS_KEY \
+	     --set aws.accesskeyid=$AWS_KEY_ID \
 	     --set deployClusterServiceBroker=false \
 	     --set tls.cert="$(base64 -w0 tls.pem)" \
 	     --set tls.key="$(base64 -w0 tls.key)" \
-	     --set-string aws.targetaccountid=${AWS_TARGET_ACCOUNT_ID} \
-	     --set aws.targetrolename=${AWS_TARGET_ROLE_NAME} \
+	     --set-string aws.targetaccountid=$AWS_TARGET_ACCOUNT_ID \
+	     --set aws.targetrolename=$AWS_TARGET_ROLE_NAME \
 	     --set aws.tablename=awssb \
-	     --set aws.vpcid=$vpcid \
-	     --set aws.region=$aws_region \
+	     --set aws.vpcid=$VPC_ID \
+	     --set aws.region=$AWS_REGION \
 	     --set authenticate=false
 </screen>
-    </step>
+     <para>
+      To find the values of <option>aws.targetaccoundid</option>, <option>
+      aws.targetrolename</option>, and <option>vpcId</option> run the following
+      command.
+     </para>
+<screen>&prompt.user;aws eks describe-cluster --name $CLUSTER_NAME</screen>
+     <para>
+      For <option>aws.targetaccoundid</option> and <option>aws.targetrolename
+      </option>, examine the <literal>cluster.roleArn</literal> field. For
+      <option>vpcId</option>, refer to the
+      <literal>cluster.resourcesVpcConfig.vpcId</literal> field.
+     </para>
+   </step>
     <step>
      <para>
       Log into your &cap; deployment. Select an organization and space to work
@@ -707,7 +720,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
       username and password parameters are only used as dummy values to pass to
       the <command>cf</command> command:
      </para>
-<screen>&prompt.user;cf create-service-broker aws-servicebroker <replaceable>username</replaceable> <replaceable>password</replaceable>  https://aws-servicebroker.${BROKER_NAMESPACE}</screen>
+<screen>&prompt.user;cf create-service-broker aws-servicebroker <replaceable>username</replaceable> <replaceable>password</replaceable> https://aws-servicebroker-aws-servicebroker.aws-sb.svc.cluster.local</screen>
     </step>
     <step>
      <para>
@@ -740,12 +753,13 @@ suse            https://kubernetes-charts.suse.com/</screen>
   "BackupRetentionPeriod": 0,
   "MasterUsername": "master",
   "DBInstanceClass": "db.t2.micro",
+  "EngineVersion": "5.7.17",
   "PubliclyAccessible": "true",
-  "region": "${AWS_REGION}",
+  "region": "$AWS_REGION",
   "StorageEncrypted": "false",
-  "VpcId": "${AWS_VPC}",
-  "target_account_id": "${AWS_TARGET_ACCOUNT_ID}",
-  "target_role_name": "${AWS_TARGET_ROLE_NAME}"
+  "VpcId": "$VPC_ID",
+  "target_account_id": "$AWS_TARGET_ACCOUNT_ID",
+  "target_role_name": "$AWS_TARGET_ROLE_NAME"
 }'
      </screen>
     </step>
