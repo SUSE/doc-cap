@@ -34,16 +34,9 @@
   <itemizedlist>
    <listitem>
     <para>
-     <command>gcloud</command>, the primary command line interface to Google
-     Cloud Platform. See
-     <link xlink:href="https://cloud.google.com/sdk/gcloud/"/> for more
-     information and installation instructions.
-    </para>
-   </listitem>
-   <listitem>
-    <para>
      A Google Cloud Platform (GCP) user account or a service account with the
-     following IAM roles:
+     following IAM roles. If you do not have an account, visit
+     <link xlink:href="https://console.cloud.google.com/"/> to create one.
     </para>
     <itemizedlist>
      <listitem>
@@ -65,6 +58,23 @@
       </para>
      </listitem>
     </itemizedlist>
+   </listitem>
+   <listitem>
+    <para>
+     Access to a GCP project with the Kubernetes Engine API enabled. If a
+     project needs to be created, refer to
+     <link xlink:href="https://cloud.google.com/apis/docs/getting-started#creating_a_google_project"/>.
+     To enable access to the API, refer to
+     <link xlink:href="https://cloud.google.com/apis/docs/getting-started#enabling_apis"/>.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     <command>gcloud</command>, the primary command line interface to Google
+     Cloud Platform. See
+     <link xlink:href="https://cloud.google.com/sdk/gcloud/"/> for more
+     information and installation instructions.
+    </para>
    </listitem>
 
    <!-- listitems: Install steps and links -->
