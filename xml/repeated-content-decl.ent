@@ -271,6 +271,11 @@ Before you start deploying &productname;, review the following documents:
 </para>
 <screen>&prompt.user;sudo zypper install cf-cli</screen>
 <para>
+ For &slea;, ensure the &productname; Tools Module has been added. Add the
+ module using &yast; or &suseconnect;.
+</para>
+<screen>&prompt.user;SUSEConnect --product sle-module-cap-tools/15.1/x86_64</screen>
+<para>
  For other systems, follow the instructions at
  <link xlink:href="https://docs.cloudfoundry.org/cf-cli/install-go-cli.html"/>.
 </para>
