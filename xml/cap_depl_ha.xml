@@ -140,7 +140,7 @@ sizing:
     count: 2
   cc_worker:
     count: 2
-  cf_usb:
+  cf_usb_group:
     count: 2
   diego_api:
     count: 2
@@ -152,7 +152,11 @@ sizing:
     count: 2
   doppler:
     count: 2
+  locket:
+    count: 2
   log-api:
+    count: 2
+  log_cache_scheduler:
     count: 2
   mysql:
     count: 2
