@@ -210,6 +210,11 @@ Before you start deploying &productname;, review the following documents:
       <entry>&lateststratoschart;</entry>
      </row>
      <row>
+      <entry>1.4.1</entry>
+      <entry>2.17.1</entry>
+      <entry>2.4.0</entry>
+     </row>
+     <row>
       <entry>1.4</entry>
       <entry>2.16.4</entry>
       <entry>2.4.0</entry>
@@ -382,14 +387,14 @@ Before you start deploying &productname;, review the following documents:
 <!ENTITY helm-search-suse
 '<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;helm search suse
 NAME                            CHART VERSION   APP VERSION     DESCRIPTION
-suse/cf                         &latestscfchart;          1.4             A Helm chart for SUSE Cloud Foundry
+suse/cf                         &latestscfchart;          &productnumber;             A Helm chart for SUSE Cloud Foundry
 suse/cf-usb-sidecar-mysql       1.0.1                           A Helm chart for SUSE Universal Service Broker Sidecar fo...
 suse/cf-usb-sidecar-postgres    1.0.1                           A Helm chart for SUSE Universal Service Broker Sidecar fo...
 suse/console                    &lateststratoschart;           &lateststratoschart;           A Helm chart for deploying Stratos UI Console
 suse/metrics                    1.0.0           1.0.0           A Helm chart for Stratos Metrics
 suse/minibroker                 0.2.0                           A minibroker for your minikube
 suse/nginx-ingress              0.28.4          0.15.0          An nginx Ingress controller that uses ConfigMap to store ...
-suse/uaa                        &latestscfchart;          1.4             A Helm chart for SUSE UAA
+suse/uaa                        &latestscfchart;          &productnumber;             A Helm chart for SUSE UAA
 </screen>'>
 
 <!--ENTITY chart-version-fields.............................................-->
