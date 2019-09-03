@@ -1076,3 +1076,15 @@ done
    </procedure>
   </sect2>
  </sect1>'>
+
+<!--ENTITY watch-uaa............................................-->
+
+<!ENTITY watch-uaa
+'<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch --color &apos;kubectl get pods --namespace uaa&apos;
+</screen>'>
+
+<!--ENTITY watch-scf............................................-->
+
+<!ENTITY watch-scf
+'<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch --color &apos;kubectl get pods --namespace scf&apos;
+</screen>'>
