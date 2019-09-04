@@ -25,6 +25,24 @@
    is to create custom configuration files with your own custom values.
   </para>
 
+  <sect2 xml:id="sec-cap-ha-prereqs">
+   <title>Prerequisites</title>
+   <itemizedlist>
+    <listitem>
+     <para>
+      A running deployment of &productname; where the database roles,
+      <literal>mysql</literal>, are single availability for both
+      <literal>uaa</literal> and <literal>scf</literal>. By starting with single
+      availability <literal>mysql</literal> roles then transitioning to high
+      availability <literal>mysql</literal> roles, it allows other resources
+      dependent on the database to come up properly. It is not recommended for
+      initial deployments of &productname; to have the <literal>mysql</literal>
+      roles in high availability mode.
+     </para>
+    </listitem>
+   </itemizedlist>
+  </sect2>
+
   <sect2 xml:id="sec-cap-ha-defaults">
    <title>Finding Default and Allowable Sizing Values</title>
    <para>
@@ -83,11 +101,20 @@ config:
     &helm;, for example:
    </para>
 <screen>
-&prompt.user;helm install suse/uaa \
- --name susecf-uaa \
- --namespace uaa \
- --values scf-config-values.yaml \
- --set config.HA=true
+&prompt.user;helm upgrade susecf-uaa suse/uaa \
+--values scf-config-values.yaml \
+--set config.HA=true
+
+&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+
+&prompt.user;helm upgrade susecf-scf suse/cf \
+--values scf-config-values.yaml \
+--set config.HA=true \
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
    <para>
     This changes all roles with a default size of 1 to the minimum required for
@@ -179,19 +206,17 @@ sizing:
    <para>
     After creating your configuration files, follow the steps in
     <xref linkend="sec-cap-configure-prod"/> until you get to
-    <xref linkend="sec-cap-install-uaa-prod"/>. Then deploy
+    <xref linkend="sec-cap-install-uaa-prod"/>. Then upgrade
     <literal>uaa</literal> with this command:
    </para>
 <screen>
-&prompt.user;helm install suse/uaa \
---name <replaceable>susecf-uaa</replaceable> \
---namespace uaa \
+&prompt.user;helm upgrade susecf-uaa suse/uaa \
 --values scf-config-values.yaml \
 --values uaa-sizing.yaml
 </screen>
    &uaa-deploy-complete;
    <para>
-    When the <literal>uaa</literal> deployment completes, deploy SCF with these
+    When the <literal>uaa</literal> deployment completes, upgrade SCF with these
     commands:
    </para>
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
@@ -200,9 +225,7 @@ sizing:
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
 --output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
-&prompt.user;helm install suse/cf \
---name <replaceable>susecf-scf</replaceable> \
---namespace scf \
+&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
 --values scf-sizing.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
@@ -236,34 +259,6 @@ sizing:
     Some roles follow an active/passive scaling model, meaning all pods except
     the active one will be shown as NOT READY by &kube;. This is appropriate
     and expected behavior.
-   </para>
-  </sect2>
-
-  <sect2 xml:id="sec-cap-ha-prod-upgrade">
-   <title>Upgrading a non-&ha; Deployment to &ha;</title>
-   <para>
-    You may make a non-&ha; deployment highly available by upgrading with
-    &helm;:
-   </para>
-<screen>
-&prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa \
---values scf-config-values.yaml \
---values uaa-sizing.yaml
-
-&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
---output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
-
-&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
---output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-
-&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
---values scf-config-values.yaml \
---values scf-sizing.yaml \
---set "secrets.UAA_CA_CERT=${CA_CERT}"
-</screen>
-   <para>
-    This may take a long time, and your cluster will be unavailable until the
-    upgrade is complete.
    </para>
   </sect2>
  </sect1>
