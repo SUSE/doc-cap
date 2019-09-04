@@ -457,7 +457,7 @@ persistentvolumeclaim "test-sc-persistent" deleted</screen>
     <para>
      To provide access to the Stratos Web interface and other public services
      use this IP address as the value of <literal>external_ips</literal>.
-     <literal>external_ips</literal> also needs the internal IP addresses of
+     <literal>external_ips</literal> also needs the internal IP address of
      the worker nodes to provide access to internal services.
     </para>
         </listitem> -->
