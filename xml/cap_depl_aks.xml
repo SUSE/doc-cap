@@ -82,6 +82,8 @@
    &sed-prereq;
   </itemizedlist>
 
+  &min-deploy-note;
+
   <para>
    Log in to your Azure Account:
   </para>

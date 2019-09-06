@@ -279,6 +279,8 @@ Happy Helming!</screen>
     </listitem>
    </varlistentry>
   </variablelist>
+
+  &min-deploy-note;
  </sect1>
  <sect1 xml:id="sec-cap-psps">
   <title>Pod Security Policy</title>

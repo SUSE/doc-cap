@@ -73,6 +73,8 @@
    &curl-prereq;
   </itemizedlist>
 
+  &min-deploy-note;
+
  </sect1>
  <sect1 xml:id="sec-cap-eks-iam">
   <title>IAM Requirements for EKS</title>
