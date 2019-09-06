@@ -84,6 +84,9 @@
    &curl-prereq;
    &sed-prereq;
   </itemizedlist>
+
+  &min-deploy-note;
+
  </sect1>
  <sect1 xml:id="sec-cap-create-gke-cluster">
   <title>Creating a GKE cluster</title>
