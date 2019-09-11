@@ -892,30 +892,25 @@ suse/uaa                        &latestscfchart;          1.4             A Helm
 <!--ENTITY deployment-platforms.............................................-->
 
 <!ENTITY deployment-platforms
-'<para xmlns="http://docbook.org/ns/docbook">
-  &cap; is designed to run on any Kubernetes cluster. This guide describes how
-  to deploy it on:
- </para>
- <itemizedlist xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+'<itemizedlist xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
   <listitem>
    <para>
-    SUSE Container as a Service (CaaS) Platform 3.0. For details, see
-    <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_deployment/data/book_caasp_deployment.html"/>.
+    For &susecaaspreg;, see <xref linkend="cha-cap-depl-caasp"/>.
    </para>
   </listitem>
   <listitem>
    <para>
-    &aks-full;. For details, see <xref linkend="cha-cap-depl-aks"/>.
+    For &aks-full;, see <xref linkend="cha-cap-depl-aks"/>.
    </para>
   </listitem>
   <listitem>
    <para>
-    &eks-full;. For details, see <xref linkend="cha-cap-depl-eks"/>.
+    For &eks-full;, see <xref linkend="cha-cap-depl-eks"/>.
    </para>
   </listitem>
   <listitem>
    <para>
-    &gke-full; For details, see <xref linkend="cha-cap-depl-gke"/>.
+    For &gke-full;, see <xref linkend="cha-cap-depl-gke"/>.
    </para>
   </listitem>
  </itemizedlist>'>
