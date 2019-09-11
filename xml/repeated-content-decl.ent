@@ -633,19 +633,25 @@ suse/uaa                        &latestscfchart;          &productnumber;       
  </para>
 '>
 
-<!--ENTITY sle12-deprecation-note...........................................-->
+<!--ENTITY stack-deprecation-note...........................................-->
 
-<!ENTITY sle12-deprecation-note
+<!ENTITY stack-deprecation-note
 '<warning xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
   <title>Deprecation of <literal>cflinuxfs2</literal> and <literal>sle12</literal> Stacks</title>
   <para>
-   <literal>cf-deployment</literal> 7.11, part of &cap; 1.4.1, is the final &cf;
-   version that supports the <literal>cflinuxfs2</literal> stack. The
-   <literal>cflinuxfs2</literal> and <literal>sle12</literal> stacks are
-   deprecated in favor of <literal>cflinuxfs3</literal> and
-   <literal>sle15</literal> respectively. Start planning to migrate applications
-   to those stacks for futureproofing, as these stacks will be removed in a
-   future release. The migration procedure is described below.
+   As of &scf; 2.18.0, since our <literal>cf-deployment</literal> version is 9.5
+   , the <literal>cflinuxfs2</literal> stack is no longer supported, as was
+   advised in &scf; 2.17.1 or &cap; 1.4.1. The <literal>cflinuxfs2</literal>
+   buildpack is no longer shipped, but if you are upgrading from an earlier
+   version, <literal>cflinuxfs2</literal> will not be removed. However, for
+   migration purposes, we encourage all admins to move to
+   <literal>cflinuxfs3</literal> or <literal>sle15</literal> as newer buildpacks
+   will not work with the deprecated <literal>cflinuxfs2</literal>. If you still
+   want to use the older stack, you will need to build an older version of a
+   buildpack to continue for the application to work, but you will be
+   unsupported. (If you are running on <literal>sle12</literal>, we will be
+   retiring that stack in a future version so start planning your migration to
+   <literal>sle15</literal>. The procedure is described below.)
   </para>
   <procedure>
    <step>
