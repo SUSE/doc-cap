@@ -25,12 +25,30 @@
    method is to create custom configuration files with your own sizing values.
   </para>
 
+  <sect2 xml:id="sec-cap-ha-prereqs">
+   <title>Prerequisites</title>
+   <itemizedlist>
+    <listitem>
+     <para>
+      A running deployment of &productname; where the database roles,
+      <literal>mysql</literal>, are single availability for both
+      <literal>uaa</literal> and <literal>scf</literal>. By starting with single
+      availability <literal>mysql</literal> roles then transitioning to high
+      availability <literal>mysql</literal> roles, it allows other resources
+      dependent on the database to come up properly. It is not recommended for
+      initial deployments of &productname; to have the <literal>mysql</literal>
+      roles in high availability mode.
+     </para>
+    </listitem>
+   </itemizedlist>
+  </sect2>
+
   <sect2 xml:id="sec-cap-ha-defaults">
    <title>Finding Default and Allowable Sizing Values</title>
    <para>
     The <literal>sizing:</literal> section in the &helm;
     <filename>values.yaml</filename> files for each chart describes which
-    instance groups can be scaled, and the scaling options for each instance group. You may use
+    roles can be scaled, and the scaling options for each role. You may use
     <command>helm inspect</command> to read the <literal>sizing:</literal>
     section in the &helm; charts:
    </para>
@@ -39,22 +57,26 @@
 &prompt.user;helm inspect suse/cf | less +/sizing:
 </screen>
    <para>
-    Another way is to use Perl to extract the information for each instance group from
+    Another way is to use Perl to extract the information for each role from
     the <literal>sizing:</literal> section. The following example is for the
     <literal>uaa</literal> namespace.
    </para>
 <screen>
 &prompt.user;helm inspect values suse/uaa | \
 perl -ne '/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail|scale|count/ }'
-181:    # The mysql instance group can scale between 1 and 3 instances.
-182:    # For high availability it needs at least 2 instances.
-183:    count: 1
-205:    # The secret-generation instance group cannot be scaled.
-206:    count: 1
-234:  #   for managing user accounts and for registering OAuth2 clients, as well as
-240:    # The uaa instance group can scale between 1 and 65535 instances.
-241:    # For high availability it needs at least 2 instances.
-242:    count: 1</screen>
+199:    # The mysql instance group can scale between 1 and 7 instances.
+200:    # For high availability it needs at least 3 instances.
+201:    count: ~
+226:    # The mysql_proxy instance group can scale between 1 and 5 instances.
+227:    # For high availability it needs at least 2 instances.
+228:    count: ~
+247:    # The secret_generation instance group cannot be scaled.
+248:    count: ~
+276:  #   for managing user accounts and for registering OAuth2 clients, as well as
+282:    # The uaa instance group can scale between 1 and 65535 instances.
+283:    # For high availability it needs at least 2 instances.
+284:    count: ~
+</screen>
    <para>
     The default <filename>values.yaml</filename> files are also included in
     this guide at <xref linkend="app-uaa-values-yaml"/> and
@@ -70,7 +92,7 @@ perl -ne '/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail|scal
    <para>
     The simplest way to make your &productname; deployment highly available is
     to set <literal>config.HA</literal> to <literal>true</literal>. This
-    changes the size of all instance groups to the minimum required for a highly
+    changes the size of all roles to the minimum required for a highly
     available deployment. In your deployment configuration file,
     <filename>scf-config-values.yaml</filename>, include the following.
    </para>
@@ -80,9 +102,8 @@ config:
   HA: true
 </screen>
    <para>
-    Use <command>helm install</command> to deploy or
-    <command>helm upgrade</command> to apply the change to an existing
-    deployment.
+    Or, you may pass it as a command line option when you are deploying with
+    &helm;, for example:
    </para>
 <screen>&prompt.user;helm install suse/uaa \
  --name susecf-uaa \
@@ -230,34 +251,6 @@ sizing:
 --values scf-sizing.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
-  </sect2>
-
-  <sect2 xml:id="sec-cap-ha-prod-upgrade">
-   <title>Upgrading a non-&ha; Deployment to &ha;</title>
-   <para>
-    You may make a non-&ha; deployment highly available by upgrading with
-    &helm;:
-   </para>
-<screen>
-&prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa \
---values scf-config-values.yaml \
---values uaa-sizing.yaml
-
-&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
---output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
-
-&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
---output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-
-&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
---values scf-config-values.yaml \
---values scf-sizing.yaml \
---set "secrets.UAA_CA_CERT=${CA_CERT}"
-</screen>
-   <para>
-    This may take a long time, and your cluster will be unavailable until the
-    upgrade is complete.
-   </para>
   </sect2>
  </sect1>
  <sect1 xml:id="sec-cap-availability-zones">
