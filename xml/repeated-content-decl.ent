@@ -166,7 +166,7 @@ Before you start deploying &productname;, review the following documents:
     </thead>
     <tbody>
      <row>
-      <entry>User Account and Authentication (<literal>uaa</literal>)</entry>
+      <entry>&uaa; (<literal>uaa</literal>)</entry>
       <entry>uaa-uaa-public</entry>
      </row>
      <row>
@@ -834,7 +834,7 @@ suse/uaa                        &latestscfchart;          1.4             A Helm
 '<note xmlns="http://docbook.org/ns/docbook">
   <title>Embedded <literal>uaa</literal> in <literal>scf</literal></title>
   <para>
-   As of &cap; 1.4.1, <literal>uaa</literal> is included as an optional
+   The &uaa; (<literal>uaa</literal>) Server is included as an optional
    feature of the <literal>scf</literal> &helm; chart. This simplifies the &cap;
    deployment process as a separate installation and/or upgrade of
    <literal>uaa</literal> is no longer a prerequisite to installing and/or
@@ -855,6 +855,13 @@ suse/uaa                        &latestscfchart;          1.4             A Helm
      You <emphasis>cannot</emphasis> migrate from an existing external
      <literal>uaa</literal> to an embedded one. In this situation, enabling
      this feature during an upgrade will result in a single admin account.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Currently the embedded <literal>uaa</literal> cannot be used with the
+     Ingress controller (see <xref linkend="cha-cap-ingress"/>) as automatic
+     ingress creation via &helm; does not work at present.
     </para>
    </listitem>
   </itemizedlist>

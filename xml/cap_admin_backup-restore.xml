@@ -43,12 +43,11 @@
    </listitem>
    <listitem>
     <para>
-     User information is managed by the User Account and Authentication
-     (<literal>uaa</literal>) server, not the Cloud Controller (CC). As the
-     plugin talks only to the CC it cannot save full user information, nor
-     restore users. Saving and restoring users must be performed separately,
-     and user restoration must be performed before the backup plugin is
-     invoked.
+     User information is managed by the &uaa; (<literal>uaa</literal>) Server,
+     not the Cloud Controller (CC). As the plugin talks only to the CC it cannot
+     save full user information, nor restore users. Saving and restoring users
+     must be performed separately, and user restoration must be performed before
+     the backup plugin is invoked.
     </para>
    </listitem>
    <listitem>

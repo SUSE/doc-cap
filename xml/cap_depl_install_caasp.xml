@@ -641,7 +641,7 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create --filename -<
  <sect1 xml:id="sec-cap-install-uaa-prod">
   <title>Deploy <literal>uaa</literal></title>
 
-  <!-- &uaa-in-scf; -->
+  &uaa-in-scf;
 
   <para>
    Use &helm; to deploy the <literal>uaa</literal> (User Account and
