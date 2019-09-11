@@ -83,7 +83,7 @@ have a maximum length of 36 characters.
     does not remove generated secrets from the <literal>scf</literal> and
     <literal>uaa</literal> namespaces as it is
     not aware of them. These leftover secrets may cause deployment failures. See
-    <xref linkend="sec-cap-rebuild-depl"/> for more information.
+    <xref linkend="sec-cap-tbl-rebuild-depl"/> for more information.
       </para>
      </listitem>
     </varlistentry>
