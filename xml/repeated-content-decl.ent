@@ -900,7 +900,7 @@ suse/uaa                        &latestscfchart;          1.4             A Helm
   <listitem>
    <para>
     SUSE Container as a Service (CaaS) Platform 3.0. For details, see
-    <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_deployment/data/book_caasp_deployment.html"/>.
+    <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book-caasp-deployment/data/book-caasp-deployment.html"/>.
    </para>
   </listitem>
   <listitem>
