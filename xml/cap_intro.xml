@@ -21,7 +21,11 @@
   components. The core of the platform is &scf;, a &cf; distribution for &kube;
   which runs on &sle; containers.
  </para>
- <!-- Any Kubernetes + platforms covered by guide -->
+ <para>
+  &cap; is designed to run on any Kubernetes cluster. This guide describes how
+  to deploy it on:
+ </para>
+ <!-- Platforms covered by guide -->
  &deployment-platforms;
  <xi:include href="common_intro_target_audience_i.xml"/>
  <xi:include href="common_intro_available_doc_i.xml"/>

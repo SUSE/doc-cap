@@ -137,7 +137,11 @@
    commercially-supported &sle; version.
   </para>
 
-  <!-- Any Kubernetes + platforms covered by guide -->
+  <para>
+   &cap; is designed to run on any Kubernetes cluster. This guide describes how
+   to deploy it on:
+  </para>
+  <!-- Platforms covered by guide -->
   &deployment-platforms;
 
   <para>
