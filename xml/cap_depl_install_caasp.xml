@@ -114,7 +114,7 @@
      </para>
      <para>
       For information about network and name services configurations, see
-      <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_deployment/data/sec_deploy_requirements_system.html#sec_deploy_requirements_network"/>.
+      <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book-caasp-deployment/data/sec-deploy-requirements-network.html"/>.
      </para>
     </listitem>
    </varlistentry>
@@ -156,9 +156,9 @@
      </para>
      <para>
       The easiest way to create the &kube; nodes, after you create the admin
-      node, is to use AutoYaST; see
-      <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_deployment/data/sec_deploy_nodes_worker_install.html#sec_deploy_nodes_worker_install_manual_autoyast">
-      Installation with AutoYaST</link>. Set up &caasp; with one admin node and
+      node, is to use AutoYaST. See
+      <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book-caasp-deployment/data/sec-deploy-nodes-worker-install.html#sec-deploy-nodes-worker-install-manual-autoyast"/>
+      for instructions. Set up &caasp; with one admin node and
       at least three Kubernetes masters and three Kubernetes workers. You also
       need an Internet connection, as the installer downloads additional
       packages, and the &kube; workers will each download ~10 GB of Docker
@@ -173,9 +173,8 @@
       </mediaobject>
      </figure>
      <para>
-      When you have completed
-      <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_deployment/data/sec_deploy_install_bootstrap.html">
-      Bootstrapping the Cluster</link> click the <guimenu>kubectl
+      When you have completed bootstrapping the cluster according to
+      <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book-caasp-deployment/data/sec-deploy-install-bootstrap.html"/>, click the <guimenu>kubectl
       config</guimenu> button to download your new cluster's
       <filename>kubeconfig</filename> file. This takes you to a login screen;
       use the login you created to access Velum. Save the file as
@@ -324,8 +323,7 @@ Happy Helming!</screen>
    The &kube; cluster requires a persistent storage class for the databases to
    store persistent data. Your available storage classes depend on which
    storage cluster you are using (&ses; users, see
-   <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_admin/data/cha_admin_integration.html">&suse;
-   &caasp; Integration with SES</link>). After connecting your storage back-end
+   <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book-caasp-admin/data/cha-admin-integration.html"/>). After connecting your storage back-end
    use <command>kubectl</command> to see your available storage classes. This
    example is for an NFS storage class:
   </para>
@@ -480,7 +478,7 @@ persistentvolumeclaim "test-sc-persistent" deleted</screen>
      <title>Ingress Controller</title>
      <para>
       For more information about using an ingress controller, see
-      <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/singlehtml/book_caasp_admin/book_caasp_admin.html#nginx-ingress-controller"/>.
+      <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book-caasp-admin/data/sec-admin-monitoring-stack.html#nginx-ingress-controller"/>
      </para>
      <!-- FIXME: Can we explan the ingress controller as a "software load
      balancer?" - sknorr, 2019-04-05 -->
@@ -710,7 +708,7 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create --filename -<
    <step>
     <para>
      Add additional nodes to your &susecaaspreg; cluster as described in
-     <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/singlehtml/book_caasp_admin/book_caasp_admin.html#sec.admin.nodes.add"/>.
+     <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book-caasp-admin/data/sec-admin-nodes.html#sec-admin-nodes-add"/>.
     </para>
    </step>
    <step>
