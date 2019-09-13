@@ -78,7 +78,7 @@
   <itemizedlist>
    <listitem>
     <para>
-     Cluster sizing changes (see <xref linkend="cha-cap-ha"/>)
+     Cluster sizing changes (see <xref linkend="sec-cap-ha-prod-upgrade"/>)
     </para>
    </listitem>
    <listitem>
