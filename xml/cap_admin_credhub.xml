@@ -78,18 +78,6 @@
 --set "secrets.UAA_CA_CERT=${CA_CERT}" \
 --set "enable.credhub=true"</screen>
 
- <warning>
-  <para>
-   On occasion, the <literal>credhub</literal> pod may fail to start due to
-   database migration failures; this has been spotted intermittently on
-   Azure Kubernetes Service and to a lesser extent, other public clouds.
-   In these situations, manual intervention is required to track the last
-   completed transaction in <literal>credhub_user</literal> database and
-   update the flyway schema history table with the record of the last
-   completed transaction. Please contact support for further instructions.
-  </para>
- </warning>
-
  <para>
   To disable CredHub, run <command>helm upgrade</command> with the
   <command>--set "enable.credhub=false"</command> flag. Be sure to
@@ -112,7 +100,7 @@
   <title>Upgrade Considerations</title>
 
   <para>
-   The following applies to upgrades from &productname; 1.3.1 to &productname; 1.4:
+   The following applies to upgrades from &productname; 1.3.1 to &productname; 1.4.0:
   </para>
 
   <para>

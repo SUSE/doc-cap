@@ -26,64 +26,24 @@
     <para>
      &scf; has been updated to version &latestscfchart;:
     </para>
-    <itemizedlist>
-     <listitem>
-      <para>
-       PXC (Percona XtraDB Cluster) replaces <literal>cf-mysql</literal> for
-       database management — please read the Known Issues section of the release
-       notes for this version on deployment and upgrade changes
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       Ability to set <literal>config.HA_strict=false</literal> in combination
-       with <literal>config.HA=true</literal> to allow lowering the sizing
-       count for a role below what is required for HA
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       UAA can now be embedded in the <literal>cf</literal> namespace — please
-       read the Known Issues section of the release notes for this version on
-       deployment limitations
-      </para>
-     </listitem>
-    </itemizedlist>
    </listitem>
+   <!--
    <listitem>
     <para>
-     The Stratos UI has been updated to version 2.5.1:
+     Added option to deploy <literal>uaa</literal> from the
+     <literal>scf</literal> &helm; chart. In new &cap; deployments that do not
+     require a separate <literal>uaa</literal> deployment, setting
+     <command>enable.uaa=true</command> in the &helm; values automatically
+     creates a <literal>uaa</literal> StatefulSet within the
+     <literal>scf</literal> deployment. This removes the manual step of copying
+     the <literal>UAA_CA_CERT</literal> during setup. In this configuration
+     <literal>uaa</literal> uses the same database as <literal>scf</literal>,
+     reducing the memory footprint of the cluster. This option should be left
+     as <literal>false</literal> (default) for upgrades of existing &cap;
+     clusters.
     </para>
-    <itemizedlist>
-     <listitem>
-      <para>
-       Tech preview for helm feature
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       Add custom welcome message on endpoints page
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       Add support for connecting SUSE Containers as a Service Platform V4
-       endpoints
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       Refinements to the Autoscaler UI
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       For a full list of features and fixes see
-       <link xlink:href="https://github.com/SUSE/stratos/releases/tag/2.5.1"/>
-      </para>
-     </listitem>
-    </itemizedlist>
    </listitem>
+   -->
   </itemizedlist>
 
   <para>
@@ -114,9 +74,9 @@
   </para>
 
   <para>
-   &productname; is comprised of the &sle; builds of the &uaa;
-   (<literal>uaa</literal>) Server, &scf; (<literal>scf</literal>), the Stratos
-   Web user interface, and Stratos Metrics.
+   &productname; is comprised of the &sle; builds of the <literal>uaa</literal>
+   (User Account and Authentication) server, &scf;, the Stratos Web user
+   interface, and Stratos Metrics.
   </para>
 
   <para>
@@ -137,11 +97,7 @@
    commercially-supported &sle; version.
   </para>
 
-  <para>
-   &cap; is designed to run on any Kubernetes cluster. This guide describes how
-   to deploy it on:
-  </para>
-  <!-- Platforms covered by guide -->
+  <!-- Any Kubernetes + platforms covered by guide -->
   &deployment-platforms;
 
   <para>

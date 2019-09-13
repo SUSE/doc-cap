@@ -62,8 +62,28 @@
      platform. Note that the DNS sections in the platform-specific documentation can be
      omitted.
     </para>
-    <!-- Platforms covered by guide -->
-    &deployment-platforms;
+    <itemizedlist>
+     <listitem>
+      <para>
+       For &caasp;, see <xref linkend="cha-cap-depl-caasp"/>
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       For &aks;, see <xref linkend="cha-cap-depl-aks"/>
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       For &eks;, see <xref linkend="cha-cap-depl-eks"/>
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       For &gke;, see <xref linkend="cha-cap-depl-gke"/>
+      </para>
+     </listitem>
+    </itemizedlist>
    </step>
    <step>
     <para>

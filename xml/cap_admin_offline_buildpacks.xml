@@ -227,6 +227,6 @@ applications:
     </note>
    </step>
   </procedure>
-  &stack-deprecation-note;
+  &sle12-deprecation-note;
  </sect1>
 </chapter>
