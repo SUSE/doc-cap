@@ -4,13 +4,13 @@
 
 <!ENTITY productname    "&suse; Cloud Application Platform">
 <!ENTITY productnamereg "&suse;&reg; Cloud Application Platform">
-<!ENTITY productnumber  "1.4.1">
+<!ENTITY productnumber  "1.5">
 <!ENTITY github.url     "https://github.com/SUSE/doc-cap">
 <!ENTITY cap            "Cloud Application Platform">
 <!ENTITY kernel_version "3.19">
-<!ENTITY latestuaachart "2.17.1">
-<!ENTITY latestscfchart "2.17.1">
-<!ENTITY lateststratoschart "2.4.0">
+<!ENTITY latestuaachart "2.18.0">
+<!ENTITY latestscfchart "2.18.0">
+<!ENTITY lateststratoschart "2.5.1">
 <!ENTITY aksnodeversion "1.11.9">
 <!ENTITY node-size    "80">
 <!ENTITY cfcli        "cf CLI">
@@ -25,6 +25,7 @@
 <!ENTITY susecaaspreg "&suse;&reg; CaaS Platform">
 <!ENTITY cf           "Cloud Foundry">
 <!ENTITY scf          "&suse; Cloud Foundry">
+<!ENTITY uaa          "User Account and Authentication">
 <!ENTITY susemicros   "&suse; MicroOS">
 <!ENTITY ses	      "&suse; Enterprise Storage">
 <!ENTITY tiller	      "Tiller">

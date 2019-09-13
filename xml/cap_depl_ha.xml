@@ -20,16 +20,34 @@
 
   <para>
    There are two ways to make your &productname; deployment highly available.
-   The simplest method is to set the <literal>HA</literal> parameter in your
-   deployment configuration file to <literal>true</literal>. The second method
-   is to create custom configuration files with your own custom values.
+   The simplest method is to set the <literal>config.HA</literal> parameter in
+   your deployment configuration file to <literal>true</literal>. The second
+   method is to create custom configuration files with your own sizing values.
   </para>
+
+  <sect2 xml:id="sec-cap-ha-prereqs">
+   <title>Prerequisites</title>
+   <itemizedlist>
+    <listitem>
+     <para>
+      A running deployment of &productname; where the database roles,
+      <literal>mysql</literal>, are single availability for both
+      <literal>uaa</literal> and <literal>scf</literal>. By starting with single
+      availability <literal>mysql</literal> roles then transitioning to high
+      availability <literal>mysql</literal> roles, it allows other resources
+      dependent on the database to come up properly. It is not recommended for
+      initial deployments of &productname; to have the <literal>mysql</literal>
+      roles in high availability mode.
+     </para>
+    </listitem>
+   </itemizedlist>
+  </sect2>
 
   <sect2 xml:id="sec-cap-ha-defaults">
    <title>Finding Default and Allowable Sizing Values</title>
    <para>
     The <literal>sizing:</literal> section in the &helm;
-    <filename>values.yaml</filename> files for each namespace describes which
+    <filename>values.yaml</filename> files for each chart describes which
     roles can be scaled, and the scaling options for each role. You may use
     <command>helm inspect</command> to read the <literal>sizing:</literal>
     section in the &helm; charts:
@@ -46,15 +64,19 @@
 <screen>
 &prompt.user;helm inspect values suse/uaa | \
 perl -ne '/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail|scale|count/ }'
-151:    # The mysql instance group can scale between 1 and 3 instances.
-152:    # For high availability it needs at least 2 instances.
-153:    count: 1
-178:    # The secret-generation instance group cannot be scaled.
-179:    count: 1
-207:  #   for managing user accounts and for registering OAuth2 clients, as well as
-216:    # The uaa instance group can scale between 1 and 65535 instances.
-217:    # For high availability it needs at least 2 instances.
-218:    count: 1</screen>
+199:    # The mysql instance group can scale between 1 and 7 instances.
+200:    # For high availability it needs at least 3 instances.
+201:    count: ~
+226:    # The mysql_proxy instance group can scale between 1 and 5 instances.
+227:    # For high availability it needs at least 2 instances.
+228:    count: ~
+247:    # The secret_generation instance group cannot be scaled.
+248:    count: ~
+276:  #   for managing user accounts and for registering OAuth2 clients, as well as
+282:    # The uaa instance group can scale between 1 and 65535 instances.
+283:    # For high availability it needs at least 2 instances.
+284:    count: ~
+</screen>
    <para>
     The default <filename>values.yaml</filename> files are also included in
     this guide at <xref linkend="app-uaa-values-yaml"/> and
@@ -65,13 +87,14 @@ perl -ne '/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail|scal
   <sect2 xml:id="sec-cap-ha-simple">
    <title>Simple &ha; Configuration</title>
    <important>
-&fresh-namespace;
-</important>
+    &fresh-namespace;
+    </important>
    <para>
     The simplest way to make your &productname; deployment highly available is
-    to set <literal>HA</literal> to <literal>true</literal> in your deployment
-    configuration file, for example
-    <filename>scf-config-values.yaml</filename>:
+    to set <literal>config.HA</literal> to <literal>true</literal>. This
+    changes the size of all roles to the minimum required for a highly
+    available deployment. In your deployment configuration file,
+    <filename>scf-config-values.yaml</filename>, include the following.
    </para>
 <screen>
 config:
@@ -82,18 +105,30 @@ config:
     Or, you may pass it as a command line option when you are deploying with
     &helm;, for example:
    </para>
-<screen>
-&prompt.user;helm install suse/uaa \
+<screen>&prompt.user;helm install suse/uaa \
  --name susecf-uaa \
  --namespace uaa \
- --values scf-config-values.yaml \
- --set config.HA=true
+ --values scf-config-values.yaml
 </screen>
    <para>
-    This changes all roles with a default size of 1 to the minimum required for
-    a &ha; deployment. It is not possible to customize any of the sizing
-    values.
+    When <literal>config.HA</literal> is set to <literal>true</literal>,
+    instances groups can be made to allow sizing values other than the minimum
+    required for &ha; mode. To do so, set the
+    <literal>config.HA_strict</literal> flag to <literal>false</literal> in
+    conjunction with specifying the count for a given instance group in the
+    <literal>sizing:</literal> section. As an example, the following
+    configuration enables &ha; mode while only using 1 instance of the
+    <literal>mysql</literal> instance group.
    </para>
+<screen>
+config:
+  # Flag to activate high-availability mode
+  HA: true
+  HA_strict: false
+sizing:
+  mysql:
+    count: 1
+</screen>
   </sect2>
 
   <sect2 xml:id="sec-cap-ha-custom">
@@ -102,21 +137,22 @@ config:
     The following two example &ha; configuration files are for the
     <literal>uaa</literal> and <literal>scf</literal> namespaces. The example
     values are not meant to be copied, as these depend on your particular
-    deployment and requirements. Do not change the <literal>config.HA</literal>
-    flag to <literal>true</literal> (see <xref linkend="sec-cap-ha-simple"/>.)
+    deployment and requirements.
    </para>
 
-   <!-- &uaa-in-scf; -->
+   &uaa-in-scf;
 
    <para>
     The first example is for the <literal>uaa</literal> namespace,
     <filename>uaa-sizing.yaml</filename>. The values specified are the minimum
-    required for a &ha; deployment (that is equivalent to setting
-    <literal>config.HA</literal> to true):
+    required for a &ha; deployment, equivalent to setting
+    <literal>config.HA</literal> to true.
    </para>
 <screen>
 sizing:
   mysql:
+    count: 3
+  mysql_proxy:
     count: 2
   uaa:
     count: 2
@@ -124,9 +160,8 @@ sizing:
    <para>
     The second example is for <literal>scf</literal>,
     <filename>scf-sizing.yaml</filename>. The values specified are the minimum
-    required for a &ha; deployment (that is equivalent to setting
-    <literal>config.HA</literal> to true), except for
-    <literal>diego-cell</literal> which includes additional instances:
+    required for a &ha; deployment, equivalent to setting
+    <literal>config.HA</literal> to true.
    </para>
 <screen>
 sizing:
@@ -147,18 +182,22 @@ sizing:
   diego_brain:
     count: 2
   diego_cell:
-    count: 6
+    count: 3
   diego_ssh:
     count: 2
   doppler:
     count: 2
   locket:
     count: 2
-  log-api:
+  log_api:
     count: 2
   log_cache_scheduler:
     count: 2
+  loggregator_agent:
+    count: 2
   mysql:
+    count: 3
+  mysql_proxy:
     count: 2
   nats:
     count: 2
@@ -173,10 +212,15 @@ sizing:
   tcp_router:
     count: 2
 </screen>
-   <important>
-&fresh-namespace;
-</important>
    <para>
+    When using custom sizing configurations, take note that the
+    <literal>mysql</literal> instance group, for both <literal>uaa</literal> and
+    <literal>scf</literal>, must have have an odd number of instances.
+   </para>
+   <important>
+    &fresh-namespace;
+   </important>
+  <para>
     After creating your configuration files, follow the steps in
     <xref linkend="sec-cap-configure-prod"/> until you get to
     <xref linkend="sec-cap-install-uaa-prod"/>. Then deploy
@@ -207,64 +251,6 @@ sizing:
 --values scf-sizing.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
-   <para>
-    The HA pods with the following roles will enter in both passive and ready
-    states; there should always be at least one pod in each role that is ready.
-   </para>
-   <itemizedlist>
-    <listitem>
-     <para>
-      diego-brain
-     </para>
-    </listitem>
-    <listitem>
-     <para>
-      diego-database
-     </para>
-    </listitem>
-    <listitem>
-     <para>
-      routing-api
-     </para>
-    </listitem>
-   </itemizedlist>
-   <para>
-    You can confirm this by looking at the logs inside the container. Look for
-    <literal>.consul-lock.acquiring-lock</literal>.
-   </para>
-   <para>
-    Some roles follow an active/passive scaling model, meaning all pods except
-    the active one will be shown as NOT READY by &kube;. This is appropriate
-    and expected behavior.
-   </para>
-  </sect2>
-
-  <sect2 xml:id="sec-cap-ha-prod-upgrade">
-   <title>Upgrading a non-&ha; Deployment to &ha;</title>
-   <para>
-    You may make a non-&ha; deployment highly available by upgrading with
-    &helm;:
-   </para>
-<screen>
-&prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa \
---values scf-config-values.yaml \
---values uaa-sizing.yaml
-
-&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
---output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
-
-&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
---output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-
-&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
---values scf-config-values.yaml \
---values scf-sizing.yaml \
---set "secrets.UAA_CA_CERT=${CA_CERT}"
-</screen>
-   <para>
-    This may take a long time, and your cluster will be unavailable until the
-    upgrade is complete.
-   </para>
   </sect2>
  </sect1>
  <sect1 xml:id="sec-cap-availability-zones">
