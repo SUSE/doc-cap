@@ -204,7 +204,7 @@
    <filename>scf-config-values.yaml</filename>, deploy &productname;.
   </para>
 
-  <!-- &uaa-in-scf; -->
+  &uaa-in-scf;
 
   <para>
    If this is an initial deployment, use <command>helm install</command> to
