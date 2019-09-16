@@ -77,8 +77,8 @@
        </row>
        <row>
         <entry>PostgreSQL</entry>
-	<entry>1.0.0</entry>
-        <entry>9.6.2</entry>
+	<entry>6.2.1</entry>
+        <entry>11.5.0</entry>
        </row>
        <row>
         <entry>Redis</entry>
