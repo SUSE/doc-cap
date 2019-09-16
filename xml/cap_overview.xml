@@ -48,7 +48,7 @@
 
   <para>
    See all product manuals for &productname; 1.x at
-   <link xlink:href="https://www.suse.com/documentation/cloud-application-platform-1/index.html">SUSE
+   <link xlink:href="https://documentation.suse.com/suse-cap/1/">SUSE
    Cloud Application Platform 1</link>.
   </para>
 
@@ -92,7 +92,7 @@
    images. (Community-supported images for &opensuse; are hosted on
    <link xlink:href="https://hub.docker.com"> Docker Hub</link>.) Product
    manuals on
-   <link xlink:href="https://www.suse.com/documentation/cloud-application-platform-1/">SUSE
+   <link xlink:href="https://documentation.suse.com/suse-cap/1/">SUSE
    Doc: SUSE Cloud Application Platform 1</link> refer to the
    commercially-supported &sle; version.
   </para>
