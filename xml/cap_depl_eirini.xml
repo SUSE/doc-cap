@@ -52,6 +52,11 @@
    </listitem>
    <listitem>
     <para>
+     Currently, Eirini is only compatible with the <literal>cflinuxfs3</literal> stack.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
      <command>cf ssh</command> to applications is currently not working. As an
      alternative, SSH into the application pods via <command>kubectl</command>.
     </para>
@@ -95,6 +100,8 @@
   eirini: true
 kube:
   auth: rbac
+env:
+  DEFAULT_STACK: cflinuxfs3
 </screen>
    </step>
    <step>
