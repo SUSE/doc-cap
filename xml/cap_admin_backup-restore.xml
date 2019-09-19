@@ -638,6 +638,7 @@
 <screen>&prompt.user;kubectl exec mysql-0 --namespace scf -- bash -c \
   '/var/vcap/packages/mariadb/bin/mysqldump \
   --defaults-file=/var/vcap/jobs/mysql/config/mylogin.cnf \
+  --socket /var/vcap/sys/run/pxc-mysql/mysqld.sock \
   ccdb' > <replaceable>/tmp/ccdb-src.sql</replaceable>
 </screen>
     </step>
@@ -788,6 +789,7 @@ It appears that on 2.14.5 I need to manually terminate the loggregator_agent pro
 <screen>&prompt.user;kubectl exec mysql-0 --namespace scf -- bash -c \
   "/var/vcap/packages/mariadb/bin/mysql \
   --defaults-file=/var/vcap/jobs/mysql/config/mylogin.cnf \
+  --socket /var/vcap/sys/run/pxc-mysql/mysqld.sock \
   -e 'drop database ccdb; create database ccdb;'"</screen>
     </step>
     <step>
@@ -797,6 +799,7 @@ It appears that on 2.14.5 I need to manually terminate the loggregator_agent pro
 <screen>&prompt.user;kubectl exec --stdin mysql-0 --namespace scf -- bash -c \
   '/var/vcap/packages/mariadb/bin/mysql \
   --defaults-file=/var/vcap/jobs/mysql/config/mylogin.cnf \
+  --socket /var/vcap/sys/run/pxc-mysql/mysqld.sock \
   ccdb' &lt; /tmp/ccdb-src.sql
 </screen>
     </step>
