@@ -381,4 +381,62 @@ end
    </step>
   </procedure>
  </sect1>
+ <sect1  xml:id="sec-cap-tbl-buildpack-with-stack">
+  <title><literal>api-group</literal> Pod Not Ready after Buildpack Update</title>
+  <para>
+   When a built-in buildpack is updated as described in one of the scenarios
+   below, the <literal>api-group</literal> pod will fail to reach a fully ready
+   state upon restart. A built-in buildpack is a buildpack that is included as
+   part of a &productname; release and has no stack association by default.
+  </para>
+  <para>
+   The following scenarios can result in the <literal>api-group</literal> not
+   being fully ready:
+  </para>
+  <itemizedlist>
+   <listitem>
+    <para>
+     A built-in buildpack is assigned a stack association. For example:
+    </para>
+<screen>&prompt.user;cf update-buildpack <replaceable>ruby_buildpack</replaceable> --assign-stack <replaceable>sle15</replaceable></screen>
+   </listitem>
+   <listitem>
+    <para>
+     A built-in buildpack is updated to to a version with an inherent stack
+     association, such as those provided by upstream &cf;. For example:
+    </para>
+<screen>&prompt.user;cf update-buildpack <replaceable>ruby_buildpack</replaceable> -p <replaceable>https://github.com/cloudfoundry/ruby-buildpack/releases/download/v1.7.43/ruby-buildpack-cflinuxfs3-v1.7.43.zip</replaceable></screen>
+   </listitem>
+  </itemizedlist>
+
+  <sect2 xml:id="sec-cap-tbl-buildpack-with-stack-recovery-prevention">
+   <title>Recovery and Prevention</title>
+   <para>
+    In order to bring the <literal>api-group</literal> pod back to a fully ready
+    state, use the following procedure.
+   </para>
+   <procedure>
+    <step>
+     <para>
+      Delete the buildpack that was updated to have a stack association.
+     </para>
+<screen>&prompt.user;cf delete-buildpack <replaceable>ruby_buildpack</replaceable></screen>
+    </step>
+    <step>
+     <para>
+      Restart the <literal>api-group</literal> pod.
+     </para>
+<screen>&prompt.user;kubectl delete pod api-group-0 --namespace <replaceable>scf</replaceable></screen>
+    </step>
+   </procedure>
+   <para>
+    In order to use a buildpack with a stack association and not encounter the
+    issue described in this section, do the following. Instead of updating one
+    of the built-in buildpacks to either assign a stack or update to one with an
+    inherent stack association, create a new buildpack with the desired buildpack
+    files and associated stack.
+   </para>
+<screen>&prompt.user;cf create-buildpack <replaceable>ruby_cflinuxfs3</replaceable> <replaceable>https://github.com/cloudfoundry/ruby-buildpack/releases/download/v1.7.41/ruby-buildpack-cflinuxfs3-v1.7.41.zip</replaceable> <replaceable>1</replaceable> <replaceable>--enable</replaceable></screen>
+  </sect2>
+ </sect1>
 </chapter>
