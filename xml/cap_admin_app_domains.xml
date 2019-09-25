@@ -55,7 +55,7 @@
    If <literal>uaa</literal> is deployed, pass your <literal>uaa</literal>
    secret and certificate to <literal>scf</literal>. Otherwise deploy
    <literal>uaa</literal> first (See
-   <xref linkend="sec-cap-install-uaa-prod"/>), then proceed with this step:
+   <xref linkend="sec-cap-caasp-deploy-uaa"/>), then proceed with this step:
   </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \

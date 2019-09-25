@@ -30,7 +30,7 @@
       The steps in this section describe how to install Stratos on &susecaaspreg;
       without an external load balancer, instead mapping a worker node to your
       &productname; domain as described in
-      <xref linkend="sec-cap-configure-prod"/>. These instructions assume you
+      <xref linkend="sec-cap-caasp-config"/>. These instructions assume you
       have followed the procedure in <xref linkend="cha-cap-depl-caasp"/>,
       have deployed <literal>uaa</literal> and <literal>scf</literal> successfully,
       and have created a default storage class.
@@ -50,7 +50,7 @@ sed 's/"namespace": "default"/"namespace": "stratos"/' | kubectl create --filena
 
   <para>
    You should already have the Stratos charts when you downloaded the &suse;
-   charts repository (see <xref linkend="sec-cap-addrepo-prod"/>). Search your
+   charts repository (see <xref linkend="sec-cap-addrepo-caasp"/>). Search your
    &helm; repository to verify that you have the <literal>suse/console</literal>
    chart:
   </para>

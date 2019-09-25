@@ -193,7 +193,7 @@ workers = 2</screen>
   </para>
   <para>
    For more information about networking requirements, see
-   <xref linkend="sec-cap-prereqs-prod"/>.
+   <xref linkend="sec-cap-prereqs-caasp"/>.
   </para>
 
   <itemizedlist>

@@ -63,8 +63,8 @@
    </listitem>
    <listitem>
     <para>
-     Either <command>ntp</command> or <command>systemd-timesyncd</command> must
-     be installed and active
+     <command>ntp</command>, <command>systemd-timesyncd</command>, 
+     or <command>chrony</command> must be installed and active
     </para>
    </listitem>
    <listitem>
