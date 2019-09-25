@@ -26,7 +26,7 @@
  </sect1>
  <sect1>
   <title>Important Changes</title>
-  &sle12-deprecation-note;
+  &stack-deprecation-note;
  </sect1>
  <sect1>
   <title>Usage of &helm; Chart Fields in &cap;</title>

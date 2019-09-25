@@ -628,9 +628,9 @@ suse/uaa                        &latestscfchart;          1.4             A Helm
  </para>
 '>
 
-<!--ENTITY sle12-deprecation-note...........................................-->
+<!--ENTITY stack-deprecation-note...........................................-->
 
-<!ENTITY sle12-deprecation-note
+<!ENTITY stack-deprecation-note
 '<warning xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
   <title>Deprecation of <literal>cflinuxfs2</literal> and <literal>sle12</literal> Stacks</title>
   <para>
