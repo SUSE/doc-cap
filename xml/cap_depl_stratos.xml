@@ -258,8 +258,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
     --namespace stratos \
     --values scf-config-values.yaml \
     --set kube.storage_class.persistent=gp2scoped \
-    --set services.loadbalanced=true \
-    --set console.service.http.nodePort=8080
+    --set services.loadbalanced=true
 </screen>
 
   &stratos-deploy-complete;
@@ -388,8 +387,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
     --name susecf-console \
     --namespace stratos \
     --values scf-config-values.yaml \
-    --set services.loadbalanced=true \
-    --set console.service.http.nodePort=8080
+    --set services.loadbalanced=true
 </screen>
 
   &stratos-deploy-complete;
@@ -505,8 +503,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
     --name susecf-console \
     --namespace stratos \
     --values scf-config-values.yaml \
-    --set services.loadbalanced=true \
-    --set console.service.http.nodePort=8080
+    --set services.loadbalanced=true
 </screen>
 
   &stratos-deploy-complete;
