@@ -25,6 +25,324 @@
   buildpack will then download any necessary dependencies during the staging
   process.
  </para>
+ <sect1 xml:id="sec-cap-cap-system-buildpacks">
+  <title>System Buildpacks</title>
+  <para>
+   &productname; releases include a set of system, or built-in, buildpacks for
+   common languages and frameworks. These system buildpacks are based on the
+   upstream versions of the buildpack, but are made compatible with the
+   SLE-based stack(s) found in &productname;.
+  </para>
+  <para>
+   The following table lists the default system buildpacks and their associated
+   versions included as part of the &productname; &productnumber; release.
+  </para>
+  <informaltable>
+   <tgroup cols="3">
+    <thead>
+     <row>
+      <entry>Buildpack</entry>
+      <entry>Version</entry>
+      <entry>Github Repository</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>Staticfile</entry>
+      <entry>1.4.43</entry>
+      <entry><link xlink:href="https://github.com/SUSE/cf-staticfile-buildpack"/></entry>
+     </row>
+     <row>
+      <entry>NGINX</entry>
+      <entry>1.0.15</entry>
+      <entry><link xlink:href="https://github.com/SUSE/cf-nginx-buildpack"/></entry>
+     </row>
+     <row>
+      <entry>Java</entry>
+      <entry>4.20.0</entry>
+      <entry><link xlink:href="https://github.com/SUSE/cf-java-buildpack"/></entry>
+     </row>
+     <row>
+      <entry>Ruby</entry>
+      <entry>1.7.42</entry>
+      <entry><link xlink:href="https://github.com/SUSE/cf-ruby-buildpack"/></entry>
+     </row>
+     <row>
+      <entry>Node.js</entry>
+      <entry>1.6.53</entry>
+      <entry><link xlink:href="https://github.com/SUSE/cf-nodejs-buildpack"/></entry>
+     </row>
+     <row>
+      <entry>Go</entry>
+      <entry>1.8.42</entry>
+      <entry><link xlink:href="https://github.com/SUSE/cf-go-buildpack"/></entry>
+     </row>
+     <row>
+      <entry>Python</entry>
+      <entry>1.6.36</entry>
+      <entry><link xlink:href="https://github.com/SUSE/cf-python-buildpack"/></entry>
+     </row>
+     <row>
+      <entry>PHP</entry>
+      <entry>4.3.80</entry>
+      <entry><link xlink:href="https://github.com/SUSE/cf-php-buildpack"/></entry>
+     </row>
+     <row>
+      <entry>Binary</entry>
+      <entry>1.0.33</entry>
+      <entry><link xlink:href="https://github.com/SUSE/cf-binary-builder"/></entry>
+     </row>
+     <row>
+      <entry>.NET Core</entry>
+      <entry>2.2.13</entry>
+      <entry><link xlink:href="https://github.com/SUSE/cf-dotnet-core-buildpack"/></entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+ </sect1>
+ <sect1 xml:id="sec-cap-using-buildpacks">
+  <title>Using Buildpacks</title>
+  <para>
+   When deploying an application, a buildpack can be selected through one of the
+   following methods:
+  </para>
+  <itemizedlist>
+   <listitem>
+    <para>
+     Using the <command>-b</command> option during the
+     <command>cf push</command> command, for example:
+    </para>
+<screen>&prompt.user;cf push <replaceable>12factor</replaceable> -b <replaceable>ruby_buildpack</replaceable></screen>
+   </listitem>
+   <listitem>
+    <para>
+     Using the <literal>buildpacks</literal> attribute in your application's
+     <filename>manifest.yml</filename>. For more information, see
+     <link xlink:href="https://docs.cloudfoundry.org/devguide/deploy-apps/manifest-attributes.html#buildpack"/>.
+    </para>
+<screen>---
+applications:
+- name: <replaceable>12factor</replaceable>
+  buildpacks:
+    - <replaceable>ruby_buildpack</replaceable>
+</screen>
+   </listitem>
+   <listitem>
+    <para>
+     Using buildpack detection.
+    </para>
+    <para>
+     Buildpack detection occurs when an application is pushed and a buildpack
+     has not been specified using any of the other methods. The application is
+     checked aginst the detection criteria of a buildpack to verify whether its
+     compatible. Each buildpack has its own detection criteria, defined in the
+     <filename>/bin/detect</filename> file. The Ruby buildpack, for example,
+     considers an application compatible if it contains a
+     <filename>Gemfile</filename> file and <filename>Gemfile.lock</filename>
+     file in its root directory.
+    </para>
+    <para>
+     The detection process begins with the first buildpack in the detection
+     priority list. If the buildpack is compatible with the application, the
+     staging process continues. If the buildpack is <emphasis>not</emphasis>
+     compatible with the application, the buildpack in the next position is
+     checked. To see the detection priority list, run
+     <command>cf buildpacks</command> and examine the
+     <literal>position</literal> field. If there are no compatible buildpacks,
+     the <command>cf push</command> command will fail.
+    </para>
+    <para>
+     For more information, see
+     <link xlink:href="https://docs.cloudfoundry.org/buildpacks/understand-buildpacks.html#buildpack-detection"/>.
+    </para>
+   </listitem>
+  </itemizedlist>
+  <para>
+   In the above, <replaceable>ruby_buildpack</replaceable> can be replaced with:
+  </para>
+  <itemizedlist>
+   <listitem>
+    <para>
+     The name of a buildpack. To list the currently available buildpacks,
+     including any that were created or updated, examine the
+     <literal>buildpack</literal> field after running:
+    </para>
+<screen>&prompt.user;cf buildpacks</screen>
+   </listitem>
+   <listitem>
+    <para>
+     The Git URL of a buildpack. For example,
+     <replaceable>https://github.com/SUSE/cf-ruby-buildpack</replaceable>.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     The Git URL of a buildpack with a specific branch or tag. For example,
+     <replaceable>https://github.com/SUSE/cf-ruby-buildpack#1.7.40</replaceable>.
+    </para>
+   </listitem>
+  </itemizedlist>
+  <para>
+   For more information about using buildpacks, see
+   <link xlink:href="https://docs.cloudfoundry.org/buildpacks/#using-buildpacks"/>.
+  </para>
+ </sect1>
+ <sect1 xml:id="sec-cap-adding-buildpacks">
+  <title>Adding Buildpacks</title>
+  <para>
+   Additional buildpacks can be added to your &productname; deployment to
+   complement the ones already installed.
+  </para>
+  <procedure>
+   <step>
+    <para>
+     List the currently installed buildpacks.
+    </para>
+<screen>&prompt.user;cf buildpacks
+Getting buildpacks...
+
+buildpack               position   enabled   locked   filename                                           stack
+staticfile_buildpack    1          true      false    staticfile-buildpack-v1.4.43.1-1.1-53227ab3.zip
+nginx_buildpack         2          true      false    nginx-buildpack-v1.0.15.1-1.1-868e3dbf.zip
+java_buildpack          3          true      false    java-buildpack-v4.20.0.1-7b3efeee.zip
+ruby_buildpack          4          true      false    ruby-buildpack-v1.7.42.1-1.1-897dec18.zip
+nodejs_buildpack        5          true      false    nodejs-buildpack-v1.6.53.1-1.1-ca7738ac.zip
+go_buildpack            6          true      false    go-buildpack-v1.8.42.1-1.1-c93d1f83.zip
+python_buildpack        7          true      false    python-buildpack-v1.6.36.1-1.1-4c0057b7.zip
+php_buildpack           8          true      false    php-buildpack-v4.3.80.1-6.1-613615bf.zip
+binary_buildpack        9          true      false    binary-buildpack-v1.0.33.1-1.1-a53fa79d.zip
+dotnet-core_buildpack   10         true      false    dotnet-core-buildpack-v2.2.13.1-1.1-cf41131a.zip
+</screen>
+   </step>
+   <step>
+    <para>
+     Add a new buildpack using the <command>cf create-buildpack</command>
+     command.
+    </para>
+<screen>&prompt.user;cf create-buildpack <replaceable>another_ruby_buildpack</replaceable> <replaceable>https://cf-buildpacks.suse.com/ruby-buildpack-v1.7.41.1-1.1-c4cd5fed.zip</replaceable> <replaceable>10</replaceable></screen>
+    <para>
+     Where:
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       <replaceable>another_ruby_buildpack</replaceable> is the name of the
+       buildpack.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       <replaceable>https://cf-buildpacks.suse.com/ruby-buildpack-v1.7.41.1-1.1-c4cd5fed.zip</replaceable>
+       is the path to the buildpack release. It should be a zip file, a URL to a
+       zip file, or a local directory.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       <replaceable>10</replaceable> is the position of the buildpack and
+       used to determine priority. A lower value indicates a higher priority.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     To see all available options, run:
+    </para>
+<screen>&prompt.user;cf create-buildpack -h</screen>
+   </step>
+   <step>
+    <para>
+     Verify the new buildpack has been added.
+    </para>
+<screen>&prompt.user;cf buildpacks
+Getting buildpacks...
+
+buildpack                position   enabled   locked   filename                                           stack
+staticfile_buildpack     1          true      false    staticfile-buildpack-v1.4.43.1-1.1-53227ab3.zip
+nginx_buildpack          2          true      false    nginx-buildpack-v1.0.15.1-1.1-868e3dbf.zip
+java_buildpack           3          true      false    java-buildpack-v4.20.0.1-7b3efeee.zip
+ruby_buildpack           4          true      false    ruby-buildpack-v1.7.42.1-1.1-897dec18.zip
+nodejs_buildpack         5          true      false    nodejs-buildpack-v1.6.53.1-1.1-ca7738ac.zip
+go_buildpack             6          true      false    go-buildpack-v1.8.42.1-1.1-c93d1f83.zip
+python_buildpack         7          true      false    python-buildpack-v1.6.36.1-1.1-4c0057b7.zip
+php_buildpack            8          true      false    php-buildpack-v4.3.80.1-6.1-613615bf.zip
+binary_buildpack         9          true      false    binary-buildpack-v1.0.33.1-1.1-a53fa79d.zip
+another_ruby_buildpack   10         true      false    ruby-buildpack-v1.7.41.1-1.1-c4cd5fed.zip
+dotnet-core_buildpack    11         true      false    dotnet-core-buildpack-v2.2.13.1-1.1-cf41131a.zip
+</screen>
+   </step>
+  </procedure>
+ </sect1>
+ <sect1 xml:id="sec-cap-updating-buildpacks">
+  <title>Updating Buildpacks</title>
+  <para>
+   Currently installed buildpacks can be updated using the
+   <command>cf update-buildpack</command> command. To see all values that can be
+   updated, run <command>cf update-buildpack -h</command>.
+  </para>
+  <important>
+   <para>
+    Before updating a built-in buildpack, take note of the scenarios that could
+    lead to the <literal>api-group</literal> pod not being in a ready state as
+    described in <xref linkend="sec-cap-tbl-buildpack-with-stack"/>.
+   </para>
+  </important>
+  <procedure>
+   <step>
+    <para>
+     List the currently installed buildpacks that can be updated.
+    </para>
+<screen>&prompt.user;cf buildpacks
+Getting buildpacks...
+
+buildpack                position   enabled   locked   filename                                           stack
+staticfile_buildpack     1          true      false    staticfile-buildpack-v1.4.43.1-1.1-53227ab3.zip
+nginx_buildpack          2          true      false    nginx-buildpack-v1.0.15.1-1.1-868e3dbf.zip
+java_buildpack           3          true      false    java-buildpack-v4.20.0.1-7b3efeee.zip
+ruby_buildpack           4          true      false    ruby-buildpack-v1.7.42.1-1.1-897dec18.zip
+nodejs_buildpack         5          true      false    nodejs-buildpack-v1.6.53.1-1.1-ca7738ac.zip
+go_buildpack             6          true      false    go-buildpack-v1.8.42.1-1.1-c93d1f83.zip
+python_buildpack         7          true      false    python-buildpack-v1.6.36.1-1.1-4c0057b7.zip
+php_buildpack            8          true      false    php-buildpack-v4.3.80.1-6.1-613615bf.zip
+binary_buildpack         9          true      false    binary-buildpack-v1.0.33.1-1.1-a53fa79d.zip
+another_ruby_buildpack   10         true      false    ruby-buildpack-v1.7.41.1-1.1-c4cd5fed.zip
+dotnet-core_buildpack    11         true      false    dotnet-core-buildpack-v2.2.13.1-1.1-cf41131a.zip
+</screen>
+   </step>
+   <step>
+    <para>
+     Use the <command>cf update-buildpack</command> command to update a
+     buildpack.
+    </para>
+<screen>&prompt.user;cf update-buildpack <replaceable>another_ruby_buildpack</replaceable> <replaceable>-i 11</replaceable></screen>
+    <para>
+     To see all available options, run:
+    </para>
+<screen>&prompt.user;cf update-buildpack -h</screen>
+   </step>
+   <step>
+    <para>
+     Verify the new buildpack has been updated.
+    </para>
+<screen>&prompt.user;cf buildpacks
+Getting buildpacks...
+
+buildpack                position   enabled   locked   filename                                           stack
+staticfile_buildpack     1          true      false    staticfile-buildpack-v1.4.43.1-1.1-53227ab3.zip
+nginx_buildpack          2          true      false    nginx-buildpack-v1.0.15.1-1.1-868e3dbf.zip
+java_buildpack           3          true      false    java-buildpack-v4.20.0.1-7b3efeee.zip
+ruby_buildpack           4          true      false    ruby-buildpack-v1.7.42.1-1.1-897dec18.zip
+nodejs_buildpack         5          true      false    nodejs-buildpack-v1.6.53.1-1.1-ca7738ac.zip
+go_buildpack             6          true      false    go-buildpack-v1.8.42.1-1.1-c93d1f83.zip
+python_buildpack         7          true      false    python-buildpack-v1.6.36.1-1.1-4c0057b7.zip
+php_buildpack            8          true      false    php-buildpack-v4.3.80.1-6.1-613615bf.zip
+binary_buildpack         9          true      false    binary-buildpack-v1.0.33.1-1.1-a53fa79d.zip
+dotnet-core_buildpack    10         true      false    dotnet-core-buildpack-v2.2.13.1-1.1-cf41131a.zip
+another_ruby_buildpack   11         true      false    ruby-buildpack-v1.7.41.1-1.1-c4cd5fed.zip
+</screen>
+   </step>
+  </procedure>
+ </sect1>
  <sect1 xml:id="sec-cap-offline-buildpacks">
   <title>Offline Buildpacks</title>
   <para>
@@ -198,35 +516,6 @@ dotnet-core_buildpack   10         true      false    dotnet-core-buildpack-v2.0
 &prompt.user;cd <replaceable>12factor</replaceable>
 &prompt.user;cf push <replaceable>12factor</replaceable> -b <replaceable>ruby_buildpack_cached</replaceable>
 </screen>
-     <note>
-      <title>Specifying a Buildpack to Use with Your Application</title>
-      <para>
-       You can specify which buildpack is used to deploy your application
-       through two methods:
-      </para>
-      <itemizedlist>
-       <listitem>
-        <para>
-         Using the <command>-b</command> option during <command>cf
-         push</command>, for example:
-        </para>
-<screen>&prompt.user;cf push <replaceable>my_application</replaceable> -b <replaceable>my_buildpack</replaceable></screen>
-       </listitem>
-       <listitem>
-        <para>
-         Using the
-         <literal><link xlink:href="https://docs.cloudfoundry.org/devguide/deploy-apps/manifest.html#buildpack">buildpacks</link></literal>
-         in your application's <filename>manifest.yml</filename>:
-        </para>
-<screen>---
-applications:
-- name: <replaceable>my_application</replaceable>
-  buildpacks:
-    - <replaceable>my_buildpack</replaceable>
-</screen>
-       </listitem>
-      </itemizedlist>
-     </note>
     </step>
    </procedure>
    &stack-deprecation-note;
