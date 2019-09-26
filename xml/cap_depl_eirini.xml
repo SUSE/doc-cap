@@ -43,7 +43,7 @@
      Amazon Elastic Container Service for Kubernetes and GKE, you need to apply
      a workaround of deleting a webhook by doing the following:
     </para>
-<screen>&prompt.user;kubectl delete mutatingwebhookconfigurations --namespace eirini eirini-x-mutating-hook-eirini</screen>
+<screen>&prompt.user;kubectl delete mutatingwebhookconfigurations eirini-x-mutating-hook-eirini</screen>
     <para>
      Deleting the webhook means that the <literal>eirini-persi</literal> service
      would not be available. Note that this workaround is not needed on Azure
@@ -140,7 +140,7 @@ env:
      Amazon Elastic Container Service for Kubernetes and GKE, you need to apply
      a workaround of deleting a webhook by doing the following:
     </para>
-<screen>&prompt.user;kubectl delete mutatingwebhookconfigurations --namespace eirini eirini-x-mutating-hook-eirini</screen>
+<screen>&prompt.user;kubectl delete mutatingwebhookconfigurations eirini-x-mutating-hook-eirini</screen>
     <para>
      Deleting the webhook means that the <literal>eirini-persi</literal> service
      would not be available. Note that this workaround is not needed on Azure
