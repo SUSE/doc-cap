@@ -87,12 +87,6 @@
   <procedure>
    <step>
     <para>
-     Create the <literal>eirini</literal> namespace.
-    </para>
-<screen>&prompt.user;kubectl create -f - &lt;&lt;&lt; '{"kind": "Namespace","apiVersion": "v1","metadata": {"name": "eirini","labels": {"name": "eirini"}}}'</screen>
-   </step>
-   <step>
-    <para>
      To enable Eirini, and disable Diego, add the following to your
      <filename>scf-config-values.yaml</filename> file.
     </para>
