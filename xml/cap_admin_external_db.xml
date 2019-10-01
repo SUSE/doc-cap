@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha-cap-external-db"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <title>External Database for <literal>uaa</literal> and <literal>scf</literal></title>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+ </info>
+ <para>
+  By default, internal &mariadb; instances serve as the backing databases for
+  internal components of <literal>uaa</literal> and <literal>scf</literal>.
+  These components can be configured to use an external database system, such as
+  a data service offered by a cloud service provider or an existing high
+  availability database server.
+ </para>
+ <para>
+  The current &productname; release supports the following databases:
+ </para>
+ <itemizedlist>
+  <listitem>
+   <para>
+    &mariadb;
+   </para>
+  </listitem>
+  <listitem>
+   <para>
+    MySQL
+   </para>
+  </listitem>
+ </itemizedlist>
+ <sect1 xml:id="sec-cap-configuring-external-db">
+  <title>Configuration</title>
+  <para>
+   This section describes how to configure &productname; to use an external
+   database with internal components of <literal>uaa</literal> and
+   <literal>scf</literal>. The deployment and configuration of the external
+   database itself is the responsibility of the operator and beyond the scope of
+   this documentation. It is assumed the external database has been deployed and
+   accessible.
+  </para>
+  <para>
+   In order to configure &productname; to use an external database, add and
+   define the following &helm; values in your
+   <filename>scf-config-values.yaml</filename>.
+  </para>
+  <itemizedlist>
+   <listitem>
+    <para>
+     In the <literal>env</literal> section:
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       <literal>DB_EXTERNAL_HOST</literal>. The hostname for the external
+       database server.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       <literal>DB_EXTERNAL_PORT</literal>. The port for the external database
+       server. By default, this is <literal>3306</literal>.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       <literal>DB_EXTERNAL_USER</literal>. The name of an administrator user
+       name for the external database server. This is required to create the
+       necessary databases.
+      </para>
+     </listitem>
+    </itemizedlist>
+   </listitem>
+   <listitem>
+    <para>
+     In the <literal>secrets</literal> section:
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       <literal>DB_EXTERNAL_PASSWORD</literal>. The corresponding password for
+       the administrator user defined for <literal>DB_EXTERNAL_USER</literal>.
+      </para>
+     </listitem>
+    </itemizedlist>
+   </listitem>
+   <listitem>
+    <para>
+     In the <literal>enable</literal> section:
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       <literal>mysql: false </literal>. This option disables the start and use
+       of the internal database-related roles (mysql, mysql-proxy). It is
+       currently not possible to do this automatically when an external database
+       is used.
+      </para>
+     </listitem>
+    </itemizedlist>
+   </listitem>
+  </itemizedlist>
+  <para>
+   The following snippet contains the relevant &helm; values defined in an
+   example <filename>scf-config-values.yaml</filename>. Replace the example
+   values with the connection details of your database.
+  </para>
+<screen>env:
+  DB_EXTERNAL_HOST: <replaceable>my-external-db.chnutnopvydk.us-west-2.rds.amazonaws.com</replaceable>
+  DB_EXTERNAL_PORT: <replaceable>3306</replaceable>
+  DB_EXTERNAL_USER: <replaceable>admin</replaceable>
+
+secrets:
+  DB_EXTERNAL_PASSWORD: <replaceable>password</replaceable>
+
+enable:
+  mysql: false
+</screen>
+  <para>
+   The backing databases for <literal>uaa</literal> and <literal>scf</literal>
+   can be independently configured by supplying the above &helm; values in
+   separate <filename>scf-config-values.yaml</filename> files (or as command
+   line options). They can be configured to share the same external database, use different
+   external databases, or use the internal database. The table below outlines
+   the compatible combinations.
+  </para>
+  <informaltable>
+   <tgroup cols="2">
+    <thead>
+     <row>
+      <entry><literal>uaa</literal></entry>
+      <entry><literal>scf</literal></entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>Internal database</entry>
+      <entry>Internal database</entry>
+     </row>
+     <row>
+      <entry>Internal database</entry>
+      <entry>External database</entry>
+     </row>
+     <row>
+      <entry>External database</entry>
+      <entry>Internal database</entry>
+     </row>
+     <row>
+      <entry>External database A</entry>
+      <entry>External database A</entry>
+     </row>
+     <row>
+      <entry>External database A</entry>
+      <entry>External database B</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+  <para>
+   If this is an initial deployment, refer to the platform-specific instructions
+   to deploy <literal>uaa</literal> and/or <literal>scf</literal>:
+  </para>
+  &deployment-platforms;
+  <para>
+   If this is an existing deployment, use <command>helm upgrade</command> to
+   update <literal>uaa</literal> and/or <literal>scf</literal> to use an
+   external database:
+  </para>
+  <procedure>
+   <step>
+    <para>
+     Upgrade <literal>uaa</literal>:
+    </para>
+<screen>&prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa \
+--reuse-values \
+--values scf-config-values.yaml \
+--version &latestuaachart;
+</screen>
+   </step>
+   <step>
+    <para>
+     Wait until you have a successful <literal>uaa</literal> deployment before
+     going to the next steps, which you can monitor with the
+     <command>watch</command> command:
+    </para>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace uaa'</screen>
+   </step>
+   <step>
+    <para>
+     Pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>:
+    </para>
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+</screen>
+   </step>
+   <step>
+    <para>
+     Upgrade <literal>scf</literal>:
+    </para>
+<screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
+--reuse-values \
+--values scf-config-values.yaml \
+--version &latestscfchart; \
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
+</screen>
+   </step>
+   <step>
+    <para>
+     Monitor the deployment progress using the <command>watch</command> command:
+    </para>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace scf'</screen>
+   </step>
+  </procedure>
+ </sect1>
+</chapter>
