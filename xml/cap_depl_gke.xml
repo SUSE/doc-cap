@@ -189,8 +189,7 @@
      <listitem>
       <para>
        Specify <command>--no-enable-autoupgrade</command> to disable
-       automatic upgrades as this affects the swap accounting changes
-       that will be made (see <xref linkend="sec-cap-gke-swap-accounting"/>).
+       automatic upgrades.
       </para>
      </listitem>
      <listitem>
@@ -204,60 +203,6 @@
     </itemizedlist>
    </step>
   </procedure>
- </sect1>
- <sect1 xml:id="sec-cap-gke-swap-accounting">
-  <title>Enable Swap Accounting</title>
-
-  <para>
-   Swap accounting is required by &productname;, but not enabled by default.
-   When your cluster finishes creating, enable swap accounting using the
-   steps below. Ensure your <literal>gcloud</literal> CLI is configured
-   correctly.
-  </para>
-
-  <procedure xml:id="pro-gke-swap-account">
-   <step>
-    <para>
-     Get the node instance names:
-    </para>
-<screen>&prompt.user;instance_names=$(gcloud compute instances list --filter=name~${CLUSTER_NAME:?required} --format json | jq --raw-output '.[].name')</screen>
-   </step>
-   <step>
-    <para>
-     Set the correct zone:
-    </para>
-<screen>&prompt.user;gcloud config set compute/zone ${CLUSTER_ZONE:?required}</screen>
-   </step>
-   <step>
-    <para>
-     Update the kernel command line and GRUB then restart the virtual machines:
-    </para>
-    <screen>&prompt.user;echo "$instance_names" | xargs -i{} gcloud compute ssh {} -- "sudo sed --in-place 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0 cgroup_enable=memory swapaccount=1\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub &amp;&amp; sudo systemctl reboot -i"</screen>
-   </step>
-  </procedure>
-
-  <para>
-   In the event swap accounting is not successfully enabled on all nodes using
-   the previous procedure, perform the following on each node that requires swap
-   accounting to be enabled:
-  </para>
-
-  <procedure>
-   <step>
-    <para>
-     <command>ssh</command> into the node.
-    </para>
-<screen>&prompt.user;gcloud compute ssh INSTANCE</screen>
-   </step>
-   <step>
-    <para>
-     When inside the node, run the command to update the kernel command line and
-     GRUB, then restart the node.
-    </para>
-<screen>&prompt.user;sudo sed --in-place 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0 cgroup_enable=memory swapaccount=1\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub &amp;&amp; sudo systemctl reboot -i</screen>
-   </step>
-  </procedure>
-
  </sect1>
  <sect1 xml:id="sec-cap-gke-kubeconfig">
   <title>Get <literal>kubeconfig</literal> File</title>
@@ -1192,53 +1137,6 @@ applications:
      Verify the new nodes are in a <literal>Ready</literal> state before proceeding.
     </para>
 <screen>&prompt.user;kubectl get nodes</screen>
-   </step>
-   <step>
-    <para>
-     Enable swap accounting on the new nodes.
-    </para>
-    <substeps>
-     <step>
-      <para>
-       Get the names of the new node instances.
-      </para>
-<screen>&prompt.user;export NEW_VM_NODES=$(gcloud compute instances list --filter=name~${CLUSTER_NAME:?required} --format json | jq --raw-output 'sort_by(.creationTimestamp) | .[] | if (.creationTimestamp | .[0:19] | strptime("%Y-%m-%dT%H:%M:%S") | mktime) > '$RECENT_VM_NODE' then .name else empty end')</screen>
-     </step>
-     <step>
-      <para>
-       Update the kernel command line and GRUB then restart the virtual machines.
-      </para>
-<screen>&prompt.user;echo "$NEW_VM_NODES" | xargs -i{} gcloud compute ssh {} -- "sudo sed --in-place 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0 cgroup_enable=memory swapaccount=1\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub &amp;&amp; sudo systemctl reboot -i"</screen>
-     </step>
-     <step>
-      <para>
-       In the event swap accounting is not successfully enabled on all nodes
-       using the previous step, perform the following on each node that
-       requires swap accounting to be enabled.
-      </para>
-      <substeps>
-       <step>
-	<para>
-         <command>ssh</command> into the node.
-	</para>
-<screen>&prompt.user;gcloud compute ssh INSTANCE</screen>
-       </step>
-       <step>
-        <para>
-         When inside the node, run the command to update the kernel command line
-	 and GRUB, then restart the node.
-	</para>
-<screen>&prompt.user;sudo sed --in-place 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0 cgroup_enable=memory swapaccount=1\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub &amp;&amp; sudo systemctl reboot -i</screen>
-       </step>
-      </substeps>
-     </step>
-     <step>
-      <para>
-       Verify the new nodes are in a <literal>Ready</literal> state before proceeding.
-      </para>
-<screen>&prompt.user;kubectl get nodes</screen>
-     </step>
-    </substeps>
    </step>
    <step>
     <para>

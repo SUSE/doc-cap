@@ -35,7 +35,8 @@
    </listitem>
    <listitem>
     <para>
-     Kernel parameter <literal>swapaccount=1</literal>
+     If your &kube; nodes have swap, then kernel parameter
+     <literal>swapaccount=1</literal> is set
     </para>
    </listitem>
    <listitem>
