@@ -506,9 +506,18 @@ suse            https://kubernetes-charts.suse.com/</screen>
   </para>
 
 <screen>&prompt.user;aws elb delete-load-balancer-listeners \
---load-balancer-name  healthcheck   \
+--load-balancer-name  <replaceable>a635338ecc2ed11e607790a6b408ef5f</replaceable> \
 --load-balancer-ports 8080
 </screen>
+
+  <para>
+   Where the <literal>--load-balancer-name</literal> can be found by examining
+   the <literal>EXTERNAL-IP</literal> field after running command below. The
+   load balancer name will be the string preceding the first
+   <literal>-</literal> character.
+  </para>
+ 
+<screen>&prompt.user;kubectl get service -n scf tcp-router-tcp-router-public</screen>
 
   <para>
    The health checks should now operate correctly. When the status shows RUNNING
