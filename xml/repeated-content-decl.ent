@@ -1145,3 +1145,79 @@ done
    </varlistentry>
   </variablelist>
  </important>'>
+
+<!--ENTITY log-types-and-fetch..............................................-->
+
+<!ENTITY log-types-and-fetch
+'<itemizedlist xmlns="http://docbook.org/ns/docbook">
+  <listitem>
+   <para>
+    Application logs provide information specific to a given application that
+    has been deployed to your &cap; cluster and can be accessed through:
+   </para>
+   <itemizedlist>
+    <listitem>
+     <para>
+      The &cfcli; using the <command>cf logs</command> command
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      The application&apos;s log stream within the Stratos console
+     </para>
+    </listitem>
+   </itemizedlist>
+  </listitem>
+  <listitem>
+   <para>
+    Access to logs for a given component of your &cap; deployment can be
+    obtained by:
+   </para>
+   <itemizedlist>
+    <listitem>
+     <para>
+      The <command>kubectl logs</command> command
+     </para>
+     <para>
+      The following example retrieves the logs of the <literal>router</literal>
+      container of <literal>router-0</literal> pod in the <literal>scf</literal>
+      namespace
+     </para>
+<screen>&prompt.user;kubectl logs --namespace scf <replaceable>router-0</replaceable> <replaceable>router</replaceable></screen>
+    </listitem>
+    <listitem>
+     <para>
+      Direct access to the log files using the following:
+     </para>
+     <orderedlist>
+      <listitem>
+       <para>
+        Open a shell to the container of the component using the
+        <command>kubectl exec</command> command
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        Navigate to the logs directory at
+        <filename>/var/vcap/sys/logs</filename>, at which point there will be
+        subdirectories containing the log files for access.
+       </para>
+<screen>&prompt.user;kubectl exec --stdin --tty --namespace scf router-0 /bin/bash
+
+router/0:/# cd /var/vcap/sys/log
+
+router/0:/var/vcap/sys/log# ls -R
+.:
+gorouter  loggregator_agent
+
+./gorouter:
+access.log  gorouter.err.log  gorouter.log  post-start.err.log  post-start.log
+
+./loggregator_agent:
+agent.log</screen>
+      </listitem>
+     </orderedlist>
+    </listitem>
+   </itemizedlist>
+  </listitem>
+ </itemizedlist>'>

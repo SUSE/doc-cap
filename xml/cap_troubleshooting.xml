@@ -22,6 +22,18 @@
   release must deploy successfully, with no failed pods, before deploying the
   next release.
  </para>
+ <sect1 xml:id="sec-cap-tbl-logging">
+  <title>Logging</title>
+
+  <para>
+   There are two types of logs in a deployment of &productname;, applications
+   logs and component logs. The following provides a brief overview of each log
+   type and how to retrieve them for monitoring and debugging use.
+  </para>
+
+  <!-- itemizedlist of log types and how to fetch them -->
+  &log-types-and-fetch;
+ </sect1>
  <sect1  xml:id="sec-cap-tbl-supportconfig">
   <title>Using Supportconfig</title>
 
