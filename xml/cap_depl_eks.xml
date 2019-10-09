@@ -265,22 +265,6 @@ allowVolumeExpansion: true
 
 <screen>&prompt.user;kubectl create --filename storage-class.yaml</screen>
  </sect1>
- <sect1 xml:id="sec-cap-eks-secgroup-rules">
-  <title>Security Group rules</title>
-
-  <para>
-   In your EC2 virtual machine list, add the following rules to the security
-   group to any one of your nodes:
-  </para>
-
-<screen>Type		   Protocol     Port Range      Source          Description
-HTTP               TCP          80              0.0.0.0/0       CAP HTTP
-Custom TCP Rule    TCP          2793            0.0.0.0/0       CAP UAA
-Custom TCP Rule    TCP          2222            0.0.0.0/0       CAP SSH
-Custom TCP Rule    TCP          4443            0.0.0.0/0       CAP WSS
-Custom TCP Rule    TCP          443             0.0.0.0/0       CAP HTTPS
-Custom TCP Rule    TCP          20000-20009     0.0.0.0/0       TCP Routing</screen>
- </sect1>
  <sect1 xml:id="sec-cap-eks-dns">
   <title>DNS Configuration</title>
 
