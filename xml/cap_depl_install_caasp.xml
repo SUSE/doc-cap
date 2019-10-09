@@ -526,6 +526,9 @@ env:
   UAA_HOST: uaa.<replaceable>&exampledomain;</replaceable>
   UAA_PORT: 2793
 
+  # btrfs (the default) is required for SLE-based &kube; nodes
+  GARDEN_ROOTFS_DRIVER: "btrfs"
+
 kube:
   # Specify the master node's external IP and internal IP
   external_ips: ["<replaceable>&kubeip;</replaceable>", "<replaceable>&subnetI;</replaceable>"]
