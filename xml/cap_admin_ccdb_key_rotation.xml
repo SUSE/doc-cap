@@ -90,6 +90,12 @@ secrets:
 <screen>&prompt.user;kubectl exec --namespace scf api-group-0 -- bash -c 'export PATH=/var/vcap/packages/ruby-2.4/bin:$PATH ; export CLOUD_CONTROLLER_NG_CONFIG=/var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml ; cd /var/vcap/packages/cloud_controller_ng/cloud_controller_ng ; /var/vcap/packages/ruby-2.4/bin/bundle exec rake rotate_cc_database_key:perform'
      </screen>
     </step>
+    <step>
+     <para>
+      Restart the <literal>api-group</literal> pod.
+     </para>
+<screen>&prompt.user;kubectl delete pod api-group-0 --namespace scf --force --grace-period=0</screen>
+    </step>
    </substeps>
    <para>
     Note that keys should be appended to the existing secret to ensure existing
