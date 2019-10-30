@@ -628,6 +628,10 @@ gp2scoped       kubernetes.io/aws-ebs   1d
    <link xlink:href="https://prometheus.io/">Prometheus</link> for both Cloud
    Foundry and Kubernetes.
   </para>
+  <para>
+   To learn more about Stratos Metrics and its full list of configuration
+   options, see <link xlink:href="https://github.com/SUSE/stratos-metrics"/>.
+  </para>
 
   <sect2 xml:id="sec-cap-stratos-metrics-install">
    <title>Install Stratos Metrics with &helm;</title>
@@ -652,21 +656,22 @@ gp2scoped       kubernetes.io/aws-ebs   1d
 <screen>env:
   DOPPLER_PORT: 443
 kubernetes:
-  authEndpoint: <replaceable>kube_server_address.example.com</replaceable>
+  apiEndpoint: <replaceable>kube_server_address.example.com</replaceable>
 prometheus:
   kubeStateMetrics:
     enabled: true
 nginx:
   username: <replaceable>username</replaceable>
   password: <replaceable>password</replaceable>
-useLb: true</screen>
+services:
+  loadbalanced: true</screen>
    <para>
     where:
    </para>
    <itemizedlist>
     <listitem>
      <para>
-      <literal>authEndpoint</literal> is the same URL that you used when
+      <literal>apiEndpoint</literal> is the same URL that you used when
       registering your Kubernetes environment with Stratos (the Kubernetes API
       Server URL)
      </para>
@@ -686,7 +691,7 @@ useLb: true</screen>
     </listitem>
     <listitem>
      <para>
-      <literal>useLb</literal> is set to <literal>true</literal> if your &kube;
+      <literal>loadbalanced</literal> is set to <literal>true</literal> if your &kube;
       deployment supports automatic configuration of a load balancer (for example,
       AKS, EKS, and GKE)
      </para>
