@@ -410,11 +410,23 @@ pvc/test-sc-persistent   Bound     pvc-c464ed6a-3852-11e8-bd10-90b8d0c59f1c   1G
    volume claims when you're finished:
   </para>
 
-<screen>&prompt.user;kubectl delete pv/pvc-c464ed6a-3852-11e8-bd10-90b8d0c59f1c
-persistentvolume "pvc-c464ed6a-3852-11e8-bd10-90b8d0c59f1c" deleted
-
-&prompt.user;kubectl delete pvc/test-sc-persistent
+<screen>&prompt.user;kubectl delete pvc/test-sc-persistent
 persistentvolumeclaim "test-sc-persistent" deleted</screen>
+
+  <tip>
+    <title>Deleting Persistent Volume</title>
+    <para>
+      The default setting of <literal>reclaimPolicy: Delete</literal>
+      automatically deletes the persistent volume associated with the persistent
+      volume claim. If you want to delete it manually (for example, if the
+      <literal>reclaimPolicy</literal> is set to <literal>retain</literal>), use
+      this command:
+    </para>
+    <screen>
+&prompt.user;kubectl delete pv/pvc-c464ed6a-3852-11e8-bd10-90b8d0c59f1c
+persistentvolume "pvc-c464ed6a-3852-11e8-bd10-90b8d0c59f1c" deleted
+    </screen>
+  </tip>
 
   <para>
    If something goes wrong and your volume claims get stuck in
