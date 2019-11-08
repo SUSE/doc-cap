@@ -301,7 +301,7 @@ export NODEPOOL_NAME="mypool"
  --node-count $NODE_COUNT --admin-username $ADMIN_USERNAME \
  --ssh-key-value $SSH_KEY_VALUE --node-vm-size $NODE_VM_SIZE \
  --node-osdisk-size=&node-size; --nodepool-name $NODEPOOL_NAME \
- --kubernetes-version <replaceable>&aksnodeversion;</replaceable>
+ --vm-set-type AvailabilitySet --kubernetes-version <replaceable>&aksnodeversion;</replaceable>
 </screen>
 
   <note>
