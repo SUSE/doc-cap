@@ -48,8 +48,7 @@
 
   <para>
    See all product manuals for &productname; 1.x at
-   <link xlink:href="https://documentation.suse.com/suse-cap/1/">SUSE
-   Cloud Application Platform 1</link>.
+   <link xlink:href="https://documentation.suse.com/suse-cap/1/">&productname; 1</link>.
   </para>
 
   <tip>
@@ -74,9 +73,9 @@
   </para>
 
   <para>
-   &productname; is comprised of the &sle; builds of the <literal>uaa</literal>
-   (User Account and Authentication) server, &scf;, the Stratos Web user
-   interface, and Stratos Metrics.
+   &productname; is comprised of the &sle; builds of the &uaa;
+   (<literal>uaa</literal>) Server, &scf; (<literal>scf</literal>), the Stratos
+   Web user interface, and Stratos Metrics.
   </para>
 
   <para>
@@ -87,18 +86,18 @@
   </para>
 
   <para>
-   All Docker images for the &sle; builds are hosted on
+   All &docker; images for the &sle; builds are hosted on
    <literal>registry.suse.com</literal>. These are the commercially-supported
    images. (Community-supported images for &opensuse; are hosted on
-   <link xlink:href="https://hub.docker.com"> Docker Hub</link>.) Product
+   <link xlink:href="https://hub.docker.com"> &docker; Hub</link>.) Product
    manuals on
-   <link xlink:href="https://documentation.suse.com/suse-cap/1/">SUSE
-   Doc: SUSE Cloud Application Platform 1</link> refer to the
+   <link xlink:href="https://documentation.suse.com/suse-cap/1/">&suse;
+   Doc: &productname; 1</link> refer to the
    commercially-supported &sle; version.
   </para>
 
   <para>
-   &cap; is designed to run on any Kubernetes cluster. This guide describes how
+   &cap; is designed to run on any &kube; cluster. This guide describes how
    to deploy it on:
   </para>
   <!-- Platforms covered by guide -->
@@ -185,8 +184,8 @@
 
   <para>
    The principle interface and API for deploying applications to &productname;
-   is &scf;. Most Cloud Foundry distributions run on virtual machines managed
-   by &bosh;. &scf; runs in SUSE Linux Enterprise containers managed by &kube;.
+   is &scf;. Most &cf; distributions run on virtual machines managed
+   by &bosh;. &scf; runs in &sle; containers managed by &kube;.
    Containerizing the components of the platform itself has these advantages:
   </para>
 
@@ -208,7 +207,7 @@
   </itemizedlist>
 
   <para>
-   &scf; packages upstream Cloud Foundry &bosh; releases to produce containers
+   &scf; packages upstream &cf; &bosh; releases to produce containers
    and configurations which are deployed to &kube; clusters using &helm;.
   </para>
  </sect1>
@@ -217,8 +216,7 @@
 
   <para>
    This guide details the steps for deploying &scf; on &suse; &caasp;, and on
-   supported &kube; environments such as Microsoft Azure Kubernetes Service
-   (AKS), and Amazon Elastic Container Service for Kubernetes (EKS). &suse;
+   supported &kube; environments such as &aks-full;, and &eks-full;. &suse;
    &caasp; is a specialized application development and hosting platform built
    on the &susemicros; container host operating system, container orchestration
    with &kube;, and &salt; for automating installation and configuration.
@@ -240,8 +238,8 @@
   <para>
    You may create a minimal deployment on four &kube; nodes for testing.
    However, this is insufficient for a production deployment. A supported
-   deployment includes &scf; installed on &suse; &caasp;, Amazon EKS, or Azure
-   AKS. You also need a storage back-end such as &ses; or NFS, a DNS/DHCP
+   deployment includes &scf; installed on &suse; &caasp;, &eks;, or &aks;.
+   You also need a storage back-end such as &ses; or NFS, a DNS/DHCP
    server, and an Internet connection to download additional packages during
    installation and ~10 GB of &docker; images on each &kube; worker after
    installation. (See <xref linkend="cha-cap-depl-caasp"/>.)
@@ -396,7 +394,7 @@
     </listitem>
     <listitem>
      <para>
-      Docker Trusted Registry owned by SUSE.
+      &docker; Trusted Registry owned by &suse;.
      </para>
     </listitem>
     <listitem>
@@ -406,7 +404,7 @@
     </listitem>
     <listitem>
      <para>
-      &helm;, the &kube; package manager, which includes Tiller, the &helm;
+      &helm;, the &kube; package manager, which includes &tiller;, the &helm;
       server, and the <command>helm</command> command line client.
      </para>
     </listitem>
@@ -584,7 +582,7 @@
      <term>mysql</term>
      <listitem>
       <para>
-       A MariaDB server and component to route requests to replicas. (A
+       A &mariadb; server and component to route requests to replicas. (A
        separate copy is deployed for <literal>uaa</literal>.)
       </para>
      </listitem>
@@ -618,7 +616,7 @@
      <term>router</term>
      <listitem>
       <para>
-       Routes application and API traffic. Exposed using a Kubernetes service.
+       Routes application and API traffic. Exposed using a &kube; service.
       </para>
      </listitem>
     </varlistentry>
@@ -718,13 +716,13 @@
        <entry>External</entry>
        <entry>HTTPS</entry>
        <entry>Internal &kube; components</entry>
-       <entry>Download Docker Images</entry>
+       <entry>Download &docker; Images</entry>
        <entry>Refer to registry.suse.com</entry>
        <entry>Refer to registry.suse.com</entry>
        <entry>registry.suse.com</entry>
-       <entry>Docker images</entry>
+       <entry>&docker; images</entry>
        <entry>None</entry>
-       <entry>Docker images that make up &cap; are downloaded</entry>
+       <entry>&docker; images that make up &cap; are downloaded</entry>
       </row>
       <row>
        <entry>3</entry>

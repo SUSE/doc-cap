@@ -349,14 +349,14 @@ another_ruby_buildpack   11         true      false    ruby-buildpack-v1.7.41.1-
     Offline buildpacks can be created using the
     <link xlink:href="https://github.com/SUSE/cf-buildpack-packager-docker">cf-buildpack-packager-docker</link>
     tool, which is available as a
-    <link xlink:href="https://www.docker.com/">Docker</link> image. The only
-    requirement to use this tool is a system with Docker support.
+    <link xlink:href="https://www.docker.com/">&docker;</link> image. The only
+    requirement to use this tool is a system with &docker; support.
    </para>
 
    <important>
     <title>Disclaimer</title>
     <para>
-     Some Cloud Foundry buildpacks can reference binaries with proprietary or
+     Some &cf; buildpacks can reference binaries with proprietary or
      mutually incompatible open source licenses which cannot be distributed
      together as offline/cached buildpack archives. Operators who wish to
      package and maintain offline buildpacks will be responsible for any
@@ -421,7 +421,7 @@ another_ruby_buildpack   11         true      false    ruby-buildpack-v1.7.41.1-
    <procedure>
     <step>
      <para>
-      Build the latest released SUSE Ruby buildpack for the &sle; 15 stack:
+      Build the latest released &suse; Ruby buildpack for the &sle; 15 stack:
      </para>
 <screen>&prompt.user;docker run --interactive --tty --rm -v $PWD:/out splatform/cf-buildpack-packager <replaceable>SUSE</replaceable> <replaceable>ruby</replaceable> <replaceable>""</replaceable> <replaceable>sle15</replaceable></screen>
     </step>

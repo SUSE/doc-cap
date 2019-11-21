@@ -19,8 +19,8 @@
      &readmefirst;
  </important>
  <para>
-  &cap;, which consists of Docker images, is deployed to a &kube; cluster
-  through &helm;. These images are hosted on a Docker registry at
+  &cap;, which consists of &docker; images, is deployed to a &kube; cluster
+  through &helm;. These images are hosted on a &docker; registry at
   <literal>registry.suse.com</literal>. In an air gapped environment,
   <literal>registry.suse.com</literal> will not be accessible. You will need to
   create a registry, and populate it will the images used by &cap;.
@@ -39,15 +39,15 @@
   <itemizedlist>
    <listitem>
     <para>
-     The Docker Command Line. See
+     The &docker; Command Line. See
      <link xlink:href="https://docs.docker.com/engine/reference/commandline/cli/"/>
      for more information.
     </para>
    </listitem>
    <listitem>
     <para>
-     A Docker registry has been created in your air gapped environment. Refer to
-     the Docker documentation at
+     A &docker; registry has been created in your air gapped environment. Refer to
+     the &docker; documentation at
      <link xlink:href="https://docs.docker.com/registry/"/> for instructions.
     </para>
    </listitem>

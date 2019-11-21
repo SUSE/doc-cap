@@ -22,7 +22,7 @@
   which runs on &sle; containers.
  </para>
  <para>
-  &cap; is designed to run on any Kubernetes cluster. This guide describes how
+  &cap; is designed to run on any &kube; cluster. This guide describes how
   to deploy it on:
  </para>
  <!-- Platforms covered by guide -->

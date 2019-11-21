@@ -38,16 +38,14 @@
    <listitem>
     <para>
      As of &scf; 2.18.0, <command>cf push</command> with Eirini does not work on
-     Amazon Elastic Container Service for Kubernetes and Google Kubernetes
-     Engine (GKE) by default. To get <command>cf push</command> to work with
-     Amazon Elastic Container Service for Kubernetes and GKE, you need to apply
+     &eks-full; and &gke-full; by default. To get <command>cf push</command> to work with
+     &eks-full; and &gke;, you need to apply
      a workaround of deleting a webhook by doing the following:
     </para>
 <screen>&prompt.user;kubectl delete mutatingwebhookconfigurations eirini-x-mutating-hook-eirini</screen>
     <para>
      Deleting the webhook means that the <literal>eirini-persi</literal> service
-     would not be available. Note that this workaround is not needed on Azure
-     Kubernetes Service.
+     would not be available. Note that this workaround is not needed on &aks-full;.
     </para>
    </listitem>
    <listitem>
@@ -75,7 +73,7 @@
    <listitem>
     <para>
      Eirini is not compatible with &kube; environments running CRI-O at this
-     time. Please use Docker runtime instead for now.
+     time. Please use &docker; runtime instead for now.
     </para>
    </listitem>
   </itemizedlist>
@@ -135,16 +133,14 @@ env:
    <step>
     <para>
      As of &scf; 2.18.0, <command>cf push</command> with Eirini does not work on
-     Amazon Elastic Container Service for Kubernetes and Google Kubernetes
-     Engine (GKE) by default. To get <command>cf push</command> to work with
-     Amazon Elastic Container Service for Kubernetes and GKE, you need to apply
+     &eks-full; and &gke-full; by default. To get <command>cf push</command> to work with
+     &aks; and &gke;, you need to apply
      a workaround of deleting a webhook by doing the following:
     </para>
 <screen>&prompt.user;kubectl delete mutatingwebhookconfigurations eirini-x-mutating-hook-eirini</screen>
     <para>
      Deleting the webhook means that the <literal>eirini-persi</literal> service
-     would not be available. Note that this workaround is not needed on Azure
-     Kubernetes Service.
+     would not be available. Note that this workaround is not needed on &aks-full;.
     </para>
    </step>
   </procedure>

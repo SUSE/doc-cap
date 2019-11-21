@@ -102,7 +102,7 @@ Before you start deploying &productname;, review the following documents:
               <para>
          Read the Release Notes:
          <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/1/">
-           Release Notes SUSE Cloud Application Platform</link>
+           Release Notes &productname;</link>
         </para>
                 <para>
             Read
@@ -166,7 +166,7 @@ Before you start deploying &productname;, review the following documents:
     </thead>
     <tbody>
      <row>
-      <entry>User Account and Authentication (<literal>uaa</literal>)</entry>
+      <entry>&uaa; (<literal>uaa</literal>)</entry>
       <entry>uaa-uaa-public</entry>
      </row>
      <row>
@@ -274,7 +274,7 @@ Before you start deploying &productname;, review the following documents:
  For &slea;, ensure the &productname; Tools Module has been added. Add the
  module using &yast; or &suseconnect;.
 </para>
-<screen>&prompt.user;SUSEConnect --product sle-module-cap-tools/15.1/x86_64</screen>
+<screen>&prompt.user;&suseconnect; --product sle-module-cap-tools/15.1/x86_64</screen>
 <para>
  For other systems, follow the instructions at
  <link xlink:href="https://docs.cloudfoundry.org/cf-cli/install-go-cli.html"/>.
@@ -382,14 +382,15 @@ Before you start deploying &productname;, review the following documents:
 <!ENTITY helm-search-suse
 '<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;helm search suse
 NAME                            CHART VERSION   APP VERSION     DESCRIPTION
-suse/cf                         &latestscfchart;          1.4             A Helm chart for SUSE Cloud Foundry
-suse/cf-usb-sidecar-mysql       1.0.1                           A Helm chart for SUSE Universal Service Broker Sidecar fo...
-suse/cf-usb-sidecar-postgres    1.0.1                           A Helm chart for SUSE Universal Service Broker Sidecar fo...
-suse/console                    &lateststratoschart;           &lateststratoschart;           A Helm chart for deploying Stratos UI Console
-suse/metrics                    1.0.0           1.0.0           A Helm chart for Stratos Metrics
-suse/minibroker                 0.2.0                           A minibroker for your minikube
+suse/cf                         &latestscfchart;          &chart-appversion;           A Helm chart for &suse; &cf;
+suse/cf-usb-sidecar-mysql       1.0.1                           A Helm chart for &suse; Universal Service Broker Sidecar fo...
+suse/cf-usb-sidecar-postgres    1.0.1                           A Helm chart for &suse; Universal Service Broker Sidecar fo...
+suse/console                    &lateststratoschart;           &chart-appversion;           A Helm chart for deploying Stratos UI Console
+suse/log-agent-rsyslog      	1.0.1        	8.39.0     	Log Agent for forwarding logs of K8s control pl...
+suse/metrics                    &metrics-version;           &chart-appversion;           A Helm chart for Stratos Metrics
+suse/minibroker                 &minibroker-version;                           A minibroker for your minikube
 suse/nginx-ingress              0.28.4          0.15.0          An nginx Ingress controller that uses ConfigMap to store ...
-suse/uaa                        &latestscfchart;          1.4             A Helm chart for SUSE UAA
+suse/uaa                        &latestscfchart;          &chart-appversion;           A Helm chart for &suse; UAA
 </screen>'>
 
 <!--ENTITY chart-version-fields.............................................-->
@@ -834,7 +835,7 @@ suse/uaa                        &latestscfchart;          1.4             A Helm
 '<note xmlns="http://docbook.org/ns/docbook">
   <title>Embedded <literal>uaa</literal> in <literal>scf</literal></title>
   <para>
-   As of &cap; 1.4.1, <literal>uaa</literal> is included as an optional
+   The &uaa; (<literal>uaa</literal>) Server is included as an optional
    feature of the <literal>scf</literal> &helm; chart. This simplifies the &cap;
    deployment process as a separate installation and/or upgrade of
    <literal>uaa</literal> is no longer a prerequisite to installing and/or
@@ -1138,7 +1139,7 @@ done
     <term>Other Features</term>
     <listitem>
      <para>
-      Refer to the Administration Guide at
+      Refer to the &admin; at
       <xref linkend="part-cap-administration"/> for additional features.
      </para>
     </listitem>

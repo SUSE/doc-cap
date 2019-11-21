@@ -234,7 +234,7 @@ workers = 2</screen>
    </listitem>
    <listitem>
     <para>
-     For the <guimenu>External Kubernetes API FQDN</guimenu>, use the public
+     For the <guimenu>External &kube; API FQDN</guimenu>, use the public
      (floating) IP address of the &caasp; master and append the
      <literal>.xip.io</literal> domain suffix
     </para>

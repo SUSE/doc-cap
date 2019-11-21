@@ -86,14 +86,14 @@
 
   <para>
    The following examples demonstrate how to deploy service brokers for MySQL
-   and PostgreSQL with &helm;, using charts from the &suse; repository. You
+   and &postgresql; with &helm;, using charts from the &suse; repository. You
    must have the following prerequisites:
   </para>
 
   <itemizedlist>
    <listitem>
     <para>
-     A working &productname; deployment with &helm; and the Cloud Foundry
+     A working &productname; deployment with &helm; and the &cf;
      command line interface (&cfcli;).
     </para>
    </listitem>
@@ -107,7 +107,7 @@
    </listitem>
    <listitem>
     <para>
-     An external MySQL or PostgreSQL installation with account credentials that
+     An external &mariadb; or &postgresql; installation with account credentials that
      allow creating and deleting databases and users.
     </para>
    </listitem>
@@ -244,7 +244,7 @@ kube:
   <title>Deploying the MySQL Chart</title>
 
   <para>
-   &productname; includes charts for MySQL and PostgreSQL (see
+   &productname; includes charts for &mariadb; and &postgresql; (see
    <xref linkend="sec-cap-addrepo-prod"/> for information on managing your
    &helm; repository):
   </para>
@@ -277,8 +277,7 @@ kube:
 <screen>&prompt.user;watch kubectl get pods --namespace=mysql-sidecar</screen>
 
   <para>
-   Confirm that the new service has been added to your SUSE Cloud Applications
-   Platform installation:
+   Confirm that the new service has been added to your &productname; installation:
   </para>
 
 <screen>&prompt.user;cf marketplace</screen>
@@ -317,10 +316,10 @@ kube:
 <screen>&prompt.user;cf bind-service <replaceable>my_application service_instance_name</replaceable></screen>
  </sect1>
  <sect1 xml:id="sec-cap-configure-postgresql">
-  <title>Deploying the PostgreSQL Chart</title>
+  <title>Deploying the &postgresql; Chart</title>
 
   <para>
-   The PostgreSQL configuration is slightly different from the MySQL
+   The &postgresql; configuration is slightly different from the MySQL
    configuration. The database-specific keys are named differently, and it
    requires the <varname>SERVICE_POSTGRESQL_SSLMODE</varname> key.
   </para>
@@ -407,7 +406,7 @@ kube:
    </listitem>
    <listitem>
     <para>
-     Install the CF-USB CLI plugin for the Cloud Foundry CLI from
+     Install the CF-USB CLI plugin for the &cf; CLI from
      <link xlink:href="https://github.com/SUSE/cf-usb-plugin/releases/"/>, for
      example:
     </para>
@@ -416,7 +415,7 @@ kube:
    </listitem>
    <listitem>
     <para>
-     Configure the Cloud Foundry USB CLI plugin, using the domain you created
+     Configure the &cf; USB CLI plugin, using the domain you created
      for your &scf; deployment:
     </para>
 <screen>&prompt.user;cf usb-target https://usb.<replaceable>example.com</replaceable></screen>
