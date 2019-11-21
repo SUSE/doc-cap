@@ -96,7 +96,7 @@
       </listitem>
       <listitem>
        <para>
-        Traffic inside of &productname; resolves to a &kube; master node in
+        Traffic inside of &productname; resolves to a &kube; worker node in
         that dedicated domain.
        </para>
       </listitem>
@@ -519,11 +519,11 @@ persistentvolume "pvc-c464ed6a-3852-11e8-bd10-90b8d0c59f1c" deleted
   <para>
    The example <filename>scf-config-values.yaml</filename> file is for a simple
    deployment without an ingress controller or external load balancer. Instead,
-   assign the master node an external IP address, and map this to the domain
+   assign the worker node an external IP address, and map this to the domain
    name to provide external access to the cluster. The
    <literal>external_ips</literal> parameter needs
    this address to provide access to the Stratos Web interface and other public
-   servers, and it also needs the internal IP addresses of the master node to provide
+   servers, and it also needs the internal IP addresses of the worker nodes to provide
    access to internal services.
 </para>
 
@@ -542,12 +542,11 @@ env:
   GARDEN_ROOTFS_DRIVER: "btrfs"
 
 kube:
-  # Specify the master node's external IP and internal IP
-  external_ips: ["<replaceable>&kubeip;</replaceable>", "<replaceable>&subnetI;</replaceable>"]
+  external_ips: ["<replaceable>&kubeip;</replaceable>", "<replaceable>&subnetI;</replaceable>", "<replaceable>&subnetII;</replaceable>", "<replaceable>&subnetIII;</replaceable>"]
 
   storage_class:
     persistent: <replaceable>"persistent"</replaceable>
-    shared: "shared"
+    shared: "persistent"
 
   # The registry the images will be fetched from.
   # The values below should work for
