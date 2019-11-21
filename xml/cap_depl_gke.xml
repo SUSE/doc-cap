@@ -61,7 +61,7 @@
    </listitem>
    <listitem>
     <para>
-     Access to a GCP project with the Kubernetes Engine API enabled. If a
+     Access to a GCP project with the &kube; Engine API enabled. If a
      project needs to be created, refer to
      <link xlink:href="https://cloud.google.com/apis/docs/getting-started#creating_a_google_project"/>.
      To enable access to the API, refer to
@@ -230,7 +230,7 @@
    </step>
    <step>
     <para>
-     Update the kernel command line and GRUB then restart the virtual machines:
+     Update the kernel command line and &grub; then restart the virtual machines:
     </para>
     <screen>&prompt.user;echo "$instance_names" | xargs -i{} gcloud compute ssh {} -- "sudo sed --in-place 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0 cgroup_enable=memory swapaccount=1\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub &amp;&amp; sudo systemctl reboot -i"</screen>
    </step>
@@ -252,7 +252,7 @@
    <step>
     <para>
      When inside the node, run the command to update the kernel command line and
-     GRUB, then restart the node.
+     &grub;, then restart the node.
     </para>
 <screen>&prompt.user;sudo sed --in-place 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0 cgroup_enable=memory swapaccount=1\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub &amp;&amp; sudo systemctl reboot -i</screen>
    </step>
@@ -1206,7 +1206,7 @@ applications:
      </step>
      <step>
       <para>
-       Update the kernel command line and GRUB then restart the virtual machines.
+       Update the kernel command line and &grub; then restart the virtual machines.
       </para>
 <screen>&prompt.user;echo "$NEW_VM_NODES" | xargs -i{} gcloud compute ssh {} -- "sudo sed --in-place 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0 cgroup_enable=memory swapaccount=1\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub &amp;&amp; sudo systemctl reboot -i"</screen>
      </step>
@@ -1226,7 +1226,7 @@ applications:
        <step>
         <para>
          When inside the node, run the command to update the kernel command line
-	 and GRUB, then restart the node.
+	 and &grub;, then restart the node.
 	</para>
 <screen>&prompt.user;sudo sed --in-place 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0 cgroup_enable=memory swapaccount=1\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub &amp;&amp; sudo systemctl reboot -i</screen>
        </step>

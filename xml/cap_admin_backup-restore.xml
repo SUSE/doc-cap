@@ -62,7 +62,7 @@
    <listitem>
     <para>
      Buildpacks are not saved. Applications using custom buildpacks not
-     available on the target SUSE Cloud Foundry instance will not be restored.
+     available on the target &scf; instance will not be restored.
      Custom buildpacks must be managed separately, and relevant buildpacks must
      be in place before the affected applications are restored.
     </para>

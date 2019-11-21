@@ -35,7 +35,7 @@
   <para>
    You will run most of the commands in this chapter from a remote workstation,
    rather than directly on any of the &productname; nodes. These are indicated
-   by the unprivileged user Tux, while root prompts are on a cluster node.
+   by the unprivileged user &exampleuser;, while root prompts are on a cluster node.
    There are few tasks that need to be performed directly on any of the cluster
    hosts.
   </para>
@@ -134,10 +134,10 @@
       <link xlink:href=
       "https://documentation.suse.com/suse-caasp/3/">&caasp;
       3</link> and logging into the Velum Web interface, check the box to
-      install Tiller (&helm;'s server component).
+      install &tiller; (&helm;'s server component).
      </para>
      <figure xml:id="fig-cap-install-tiller-prod">
-      <title>Install Tiller</title>
+      <title>Install &tiller;</title>
       <mediaobject>
        <imageobject>
         <imagedata fileref="install-tiller.png" format="PNG" width="75%"/>
@@ -159,9 +159,9 @@
       node, is to use AutoYaST; see
       <link xlink:href="https://documentation.suse.com/suse-caasp/3/html/caasp-deployment/cha-deploy-nodes.html#sec-deploy-nodes-worker-install-manual-autoyast">
       Installation with AutoYaST</link>. Set up &caasp; with one admin node and
-      at least three Kubernetes masters and three Kubernetes workers. You also
+      at least three &kube; masters and three &kube; workers. You also
       need an Internet connection, as the installer downloads additional
-      packages, and the &kube; workers will each download ~10 GB of Docker
+      packages, and the &kube; workers will each download ~10 GB of &docker;
       images.
      </para>
      <figure xml:id="fig-cap-select-master-nodes">
@@ -238,7 +238,7 @@ d028551.example.com   Ready    &lt;none>    4h   v1.10.11
       Zypper, you will install the &helm; client on your workstation to install
       the required Kubernetes applications to set up &productname;, and to
       administer your cluster remotely. &helm; is the &kube; package manager.
-      The &helm; client goes on your remote administration computer, and Tiller
+      The &helm; client goes on your remote administration computer, and &tiller;
       is &helm;'s server, which is installed on your &kube; cluster.
      </para>
      <para>
@@ -551,7 +551,7 @@ kube:
 
   # The registry the images will be fetched from.
   # The values below should work for
-  # a default installation from the SUSE registry.
+  # a default installation from the &suse; registry.
   registry:
     hostname: "registry.suse.com"
     username: ""

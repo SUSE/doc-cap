@@ -20,7 +20,7 @@
   <link xlink:href="https://www.openservicebrokerapi.org/">OSBAPI compliant
   broker</link> created by members of the
   <link xlink:href="https://github.com/osbkit">Microsoft Azure team</link>. It
-  provides a simple method to provision service brokers on Kubernetes clusters.
+  provides a simple method to provision service brokers on &kube; clusters.
  </para>
  <important>
   <title>Minibroker Upstream Services</title>
@@ -40,7 +40,7 @@
   <procedure>
    <step>
     <para>
-     Minibroker is deployed using a &helm; chart. Ensure your SUSE &helm; chart
+     Minibroker is deployed using a &helm; chart. Ensure your &suse; &helm; chart
      repository contains the most recent Minibroker chart:
     </para>
 <screen>&prompt.user;helm repo update</screen>
@@ -66,7 +66,7 @@
       </thead>
       <tbody>
        <row>
-        <entry>MariaDB</entry>
+        <entry>&mariadb;</entry>
 	<entry>4.3.0</entry>
         <entry>10.1.34</entry>
        </row>
@@ -76,7 +76,7 @@
         <entry>4.0.6</entry>
        </row>
        <row>
-        <entry>PostgreSQL</entry>
+        <entry>&postgresql;</entry>
 	<entry>6.2.1</entry>
         <entry>11.5.0</entry>
        </row>
@@ -187,7 +187,7 @@ TIP:  Use 'cf marketplace -s SERVICE' to view descriptions of individual plans o
       </thead>
       <tbody>
        <row>
-        <entry>MariaDB</entry>
+        <entry>&mariadb;</entry>
         <entry>3306</entry>
        </row>
        <row>
@@ -195,7 +195,7 @@ TIP:  Use 'cf marketplace -s SERVICE' to view descriptions of individual plans o
         <entry>27017</entry>
        </row>
        <row>
-        <entry>PostgreSQL</entry>
+        <entry>&postgresql;</entry>
         <entry>5432</entry>
        </row>
        <row>
@@ -276,9 +276,9 @@ minibroker-minibroker-5865f66bb8-6dxm7          2/2       Running            0  
   </procedure>
 
   <important>
-   <title>Database Names for PostgreSQL and MariaDB Instances</title>
+   <title>Database Names for &postgresql; and &mariadb; Instances</title>
    <para>
-    By default, Minibroker creates PostgreSQL and MariaDB server instances
+    By default, Minibroker creates &postgresql; and &mariadb; server instances
     without a named database. A named database is required for normal usage
     with these and will need to be added during the <command>cf
     create-service</command> step using the <literal>-c</literal> flag. For
