@@ -159,7 +159,7 @@ MariaDB [(none)]> select name, encrypted_environment_variables, encryption_key_l
     <term>droplets</term>
     <listitem>
      <para>
-      May contain Docker registry passwords
+      May contain &docker; registry passwords
      </para>
     </listitem>
    </varlistentry>
@@ -175,7 +175,7 @@ MariaDB [(none)]> select name, encrypted_environment_variables, encryption_key_l
     <term>packages</term>
     <listitem>
      <para>
-      May contain Docker registry passwords
+      May contain &docker; registry passwords
      </para>
     </listitem>
    </varlistentry>
@@ -250,7 +250,7 @@ MariaDB [(none)]> select name, encrypted_environment_variables, encryption_key_l
      <listitem>
       <para>
        <command>cf delete</command>, then <command>cf push</command> the app
-       (Docker apps with registry password)
+       (&docker; apps with registry password)
       </para>
      </listitem>
     </varlistentry>

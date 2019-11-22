@@ -18,7 +18,7 @@
 
    <para>
    The Stratos user interface (UI) is a modern web-based management application
-   for Cloud Foundry. It provides a graphical management console for both
+   for &cf;. It provides a graphical management console for both
    developers and system administrators. Install Stratos with &helm; after all
    of the <literal>uaa</literal> and <literal>scf</literal> pods are running.
   </para>
@@ -49,7 +49,7 @@
 sed 's/"namespace": "default"/"namespace": "stratos"/' | kubectl create --filename -</screen>
 
   <para>
-   You should already have the Stratos charts when you downloaded the SUSE
+   You should already have the Stratos charts when you downloaded the &suse;
    charts repository (see <xref linkend="sec-cap-addrepo-prod"/>). Search your
    &helm; repository to verify that you have the <literal>suse/console</literal>
    chart:
@@ -148,7 +148,7 @@ stratos  1        1        3h
     <step>
      <para>
       On the <literal>Register a new Endpoint</literal> view, click the
-      <literal>SUSE CaaS Platform</literal> button.
+      <literal>&caasp;</literal> button.
      </para>
     </step>
     <step>
@@ -159,9 +159,9 @@ stratos  1        1        3h
     </step>
     <step>
      <para>
-      Enter the URL of the API server for your Kubernetes environment in the
+      Enter the URL of the API server for your &kube; environment in the
       <guimenu>Endpoint Address</guimenu> field. Run <command>kubectl cluster-info</command>
-      and use the value of <literal>Kubernetes master</literal> as the URL.
+      and use the value of <literal>&kube; master</literal> as the URL.
      </para>
 <screen>&prompt.user;kubectl cluster-info</screen>
     </step>
@@ -193,7 +193,7 @@ stratos  1        1        3h
     </step>
     <step>
      <para>
-      In the Stratos UI, go to <guimenu>Kubernetes</guimenu> in the left-hand side
+      In the Stratos UI, go to <guimenu>&kube;</guimenu> in the left-hand side
       navigation. Information for your &susecaaspreg; environment should now be displayed.
      </para>
     </step>
@@ -303,7 +303,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
     <step>
      <para>
       On the <literal>Register a new Endpoint</literal> view, click the
-      <literal>Amazon EKS</literal> button.
+      <literal>&eks;</literal> button.
      </para>
     </step>
     <step>
@@ -314,9 +314,9 @@ gp2scoped       kubernetes.io/aws-ebs   1d
     </step>
     <step>
      <para>
-      Enter the URL of the API server for your Kubernetes environment in the
+      Enter the URL of the API server for your &kube; environment in the
       <guimenu>Endpoint Address</guimenu> field. Run <command>kubectl cluster-info</command>
-      and use the value of <literal>Kubernetes master</literal> as the URL.
+      and use the value of <literal>&kube; master</literal> as the URL.
      </para>
 <screen>&prompt.user;kubectl cluster-info</screen>
     </step>
@@ -361,7 +361,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
     </step>
     <step>
      <para>
-      In the Stratos UI, go to <guimenu>Kubernetes</guimenu> in the left-hand side
+      In the Stratos UI, go to <guimenu>&kube;</guimenu> in the left-hand side
       navigation. Information for your &eks; environment should now be displayed.
      </para>
     </step>
@@ -443,9 +443,9 @@ gp2scoped       kubernetes.io/aws-ebs   1d
     </step>
     <step>
      <para>
-      Enter the URL of the API server for your Kubernetes environment in the
+      Enter the URL of the API server for your &kube; environment in the
       <guimenu>Endpoint Address</guimenu> field. Run <command>kubectl cluster-info</command>
-      and use the value of <literal>Kubernetes master</literal> as the URL.
+      and use the value of <literal>&kube; master</literal> as the URL.
      </para>
 <screen>&prompt.user;kubectl cluster-info</screen>
     </step>
@@ -477,7 +477,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
     </step>
     <step>
      <para>
-      In the Stratos UI, go to <guimenu>Kubernetes</guimenu> in the left-hand side
+      In the Stratos UI, go to <guimenu>&kube;</guimenu> in the left-hand side
       navigation. Information for your &aks; environment should now be displayed.
      </para>
     </step>
@@ -548,7 +548,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
     <step>
      <para>
       On the <literal>Register a new Endpoint</literal> view, click the
-      <literal>Google Kubernetes Engine</literal> button.
+      <literal>&gke-full;</literal> button.
      </para>
     </step>
     <step>
@@ -559,9 +559,9 @@ gp2scoped       kubernetes.io/aws-ebs   1d
     </step>
     <step>
      <para>
-      Enter the URL of the API server for your Kubernetes environment in the
+      Enter the URL of the API server for your &kube; environment in the
       <guimenu>Endpoint Address</guimenu> field. Run <command>kubectl cluster-info</command>
-      and use the value of <literal>Kubernetes master</literal> as the URL.
+      and use the value of <literal>&kube; master</literal> as the URL.
      </para>
 <screen>&prompt.user;kubectl cluster-info</screen>
     </step>
@@ -597,7 +597,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
     </step>
     <step>
      <para>
-      In the Stratos UI, go to <guimenu>Kubernetes</guimenu> in the left-hand side
+      In the Stratos UI, go to <guimenu>&kube;</guimenu> in the left-hand side
       navigation. Information for your &gke; environment should now be displayed.
      </para>
     </step>
@@ -622,8 +622,8 @@ gp2scoped       kubernetes.io/aws-ebs   1d
 
   <para>
    Stratos can show metrics data from
-   <link xlink:href="https://prometheus.io/">Prometheus</link> for both Cloud
-   Foundry and Kubernetes.
+   <link xlink:href="https://prometheus.io/">Prometheus</link> for both &cf;
+    and &kube;.
   </para>
   <para>
    To learn more about Stratos Metrics and its full list of configuration
@@ -635,8 +635,8 @@ gp2scoped       kubernetes.io/aws-ebs   1d
    <para>
     In order to display metrics data with Stratos, you need to deploy the
     <literal>stratos-metrics</literal> &helm; chart - this deploys Prometheus
-    with the necessary exporters that collect data from Cloud Foundry and
-    Kubernetes. It also wraps Prometheus with an
+    with the necessary exporters that collect data from &cf; and
+    &kube;. It also wraps Prometheus with an
     <link xlink:href="http://nginx.org/">nginx</link> server to provide
     authentication.
    </para>
@@ -669,7 +669,7 @@ services:
     <listitem>
      <para>
       <literal>apiEndpoint</literal> is the same URL that you used when
-      registering your Kubernetes environment with Stratos (the Kubernetes API
+      registering your &kube; environment with Stratos (the &kube; API
       Server URL)
      </para>
     </listitem>
@@ -879,7 +879,7 @@ susecf-metrics-metrics-nginx   NodePort   172.28.107.209   10.86.101.115,172.28.
     </listitem>
     <listitem>
      <para>
-      On the Kubernetes views, views such as the Node view should show an
+      On the &kube; views, views such as the Node view should show an
       additional <guimenu>Metrics</guimenu> tab with metric information.
      </para>
      <figure xml:id="stratos-kubernetes-node-metrics-png">

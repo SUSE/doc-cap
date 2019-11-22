@@ -200,7 +200,8 @@ cap-aks</screen>
     <para>
      Set the Azure location. See
      <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/container-service-quotas">
-     Quotas and region availability for Azure Kubernetes Service (AKS)</link>
+     Quotas, virtual machine size restrictions, and region availability
+     in Azure Kubernetes Service (AKS)</link>
  for supported locations. Run <command>az account list-locations</command> to
  verify the correct way to spell your location name, for example East US is
  <literal>eastus</literal> in your <command>az</command> commands:
@@ -375,7 +376,7 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
    Identify and set the cluster resource group, then enable kernel swap
    accounting. Swap accounting is required by &cap;, but it is not the default
    in AKS nodes. The following commands use the <command>az</command> command
-   to modify the GRUB configuration on each node, and then reboot the virtual
+   to modify the &grub; configuration on each node, and then reboot the virtual
    machines.
   </para>
 
@@ -821,11 +822,11 @@ tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.
   </para>
 
   <warning>
-   <title>Service Broker Installation Fails on AKS Cluster Running Kubernetes 1.11.8</title>
+   <title>Service Broker Installation Fails on &aks; Cluster Running &kube; 1.11.8</title>
    <para>
     If installation of <literal>open-service-broker-azure</literal> is unsuccessful due to
     <literal>Failed to pull image "osbapublicacr.azurecr.io/microsoft/azure-service-broker:v1.6.0</literal>,
-    upgrade your AKS cluster to &kube; 1.11.9. See <xref linkend="sec-cap-aks-kubernetes-upgrade"/> for
+    upgrade your &aks; cluster to &kube; 1.11.9. See <xref linkend="sec-cap-aks-kubernetes-upgrade"/> for
     instructions.
    </para>
   </warning>
@@ -956,7 +957,7 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
      <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/upgrade-cluster"/>.
     </para>
     <para>
-     Modify the GRUB configuration of each node to enable swap accounting and then
+     Modify the &grub; configuration of each node to enable swap accounting and then
      reboot all nodes. <literal>RG_NAME</literal> and <literal>AKS_NAME</literal> are
      the values set earlier in this chapter and can also be obtained through
      the AKS web dashboard.

@@ -85,15 +85,15 @@
   <title>Prerequisites</title>
 
   <para>
-   The following examples demonstrate how to deploy service brokers for MySQL
-   and PostgreSQL with &helm;, using charts from the &suse; repository. You
+   The following examples demonstrate how to deploy service brokers for &mysql;
+   and &postgresql; with &helm;, using charts from the &suse; repository. You
    must have the following prerequisites:
   </para>
 
   <itemizedlist>
    <listitem>
     <para>
-     A working &productname; deployment with &helm; and the Cloud Foundry
+     A working &productname; deployment with &helm; and the &cf;
      command line interface (&cfcli;).
     </para>
    </listitem>
@@ -107,7 +107,7 @@
    </listitem>
    <listitem>
     <para>
-     An external MySQL or PostgreSQL installation with account credentials that
+     An external &mysql; or &postgresql; installation with account credentials that
      allow creating and deleting databases and users.
     </para>
    </listitem>
@@ -162,7 +162,7 @@
   </para>
  </sect1>
  <sect1 xml:id="sec-cap-configure-service-broker">
-  <title>Configuring the MySQL Deployment</title>
+  <title>Configuring the &mysql; Deployment</title>
 
   <para>
    Start by extracting the <literal>uaa</literal> namespace secrets name, and
@@ -241,10 +241,10 @@ kube:
     password: ""</screen>
  </sect1>
  <sect1 xml:id="sec-cap-configure-mysql">
-  <title>Deploying the MySQL Chart</title>
+  <title>Deploying the &mysql; Chart</title>
 
   <para>
-   &productname; includes charts for MySQL and PostgreSQL (see
+   &productname; includes charts for &mysql; and &postgresql; (see
    <xref linkend="sec-cap-addrepo-prod"/> for information on managing your
    &helm; repository):
   </para>
@@ -252,13 +252,13 @@ kube:
 &helm-search-suse;
 
   <para>
-   Create a namespace for your MySQL sidecar:
+   Create a namespace for your &mysql; sidecar:
   </para>
 
 <screen>&prompt.user;kubectl create namespace <replaceable>mysql-sidecar</replaceable></screen>
 
   <para>
-   Install the MySQL Helm chart:
+   Install the &mysql; Helm chart:
   </para>
 
 <screen>&prompt.user;helm install suse/cf-usb-sidecar-mysql \
@@ -277,18 +277,17 @@ kube:
 <screen>&prompt.user;watch kubectl get pods --namespace=mysql-sidecar</screen>
 
   <para>
-   Confirm that the new service has been added to your SUSE Cloud Applications
-   Platform installation:
+   Confirm that the new service has been added to your &productname; installation:
   </para>
 
 <screen>&prompt.user;cf marketplace</screen>
 
   <warning>
-   <title>MySQL Requires <literal>mysql_native_password</literal></title>
+   <title>&mysql; Requires <literal>mysql_native_password</literal></title>
    <para>
-    The MySQL sidecar works only with deployments that use
+    The &mysql; sidecar works only with deployments that use
     <literal>mysql_native_password</literal> as their authentication plugin.
-    This is the default for MySQL versions 8.0.3 and earlier, but later
+    This is the default for &mysql; versions 8.0.3 and earlier, but later
     versions must be started with
     <literal>--default-auth=mysql_native_password</literal> before any user
     creation. (See
@@ -297,7 +296,7 @@ kube:
   </warning>
  </sect1>
  <sect1 xml:id="sec-cap-deploy-mysql">
-  <title>Create and Bind a MySQL Service</title>
+  <title>Create and Bind a &mysql; Service</title>
 
   <para>
    To create a new service instance, use the &cf; command line client:
@@ -317,10 +316,10 @@ kube:
 <screen>&prompt.user;cf bind-service <replaceable>my_application service_instance_name</replaceable></screen>
  </sect1>
  <sect1 xml:id="sec-cap-configure-postgresql">
-  <title>Deploying the PostgreSQL Chart</title>
+  <title>Deploying the &postgresql; Chart</title>
 
   <para>
-   The PostgreSQL configuration is slightly different from the MySQL
+   The &postgresql; configuration is slightly different from the &mysql;
    configuration. The database-specific keys are named differently, and it
    requires the <varname>SERVICE_POSTGRESQL_SSLMODE</varname> key.
   </para>
@@ -385,7 +384,7 @@ kube:
   --wait</screen>
 
   <para>
-   Then follow the same steps as for the MySQL chart.
+   Then follow the same steps as for the &mysql; chart.
   </para>
  </sect1>
  <sect1 xml:id="sec-cap-remove-sidecars">
@@ -407,7 +406,7 @@ kube:
    </listitem>
    <listitem>
     <para>
-     Install the CF-USB CLI plugin for the Cloud Foundry CLI from
+     Install the CF-USB CLI plugin for the &cf; CLI from
      <link xlink:href="https://github.com/SUSE/cf-usb-plugin/releases/"/>, for
      example:
     </para>
@@ -416,7 +415,7 @@ kube:
    </listitem>
    <listitem>
     <para>
-     Configure the Cloud Foundry USB CLI plugin, using the domain you created
+     Configure the &cf; USB CLI plugin, using the domain you created
      for your &scf; deployment:
     </para>
 <screen>&prompt.user;cf usb-target https://usb.<replaceable>example.com</replaceable></screen>

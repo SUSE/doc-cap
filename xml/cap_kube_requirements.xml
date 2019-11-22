@@ -9,7 +9,7 @@
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
  <info>
-  <title>Running &productname; on non-&suse; &caasp; &kube; Systems</title>
+  <title>Running &productname; on non-&caasp; &kube; Systems</title>
   <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
    <dm:bugtracker></dm:bugtracker>
    <dm:translation>yes</dm:translation>
@@ -26,7 +26,7 @@
   <itemizedlist>
    <listitem>
     <para>
-     Kubernetes API version of at least 1.10, but less than 1.16
+     &kube; API version of at least 1.10, but less than 1.16
     </para>
    </listitem>
    <listitem>
@@ -68,7 +68,7 @@
    </listitem>
    <listitem>
     <para>
-     Docker must be configured to allow privileged containers
+     &docker; must be configured to allow privileged containers
     </para>
    </listitem>
    <listitem>
@@ -91,7 +91,7 @@
    </listitem>
    <listitem>
     <para>
-     Helm's Tiller has to be installed and active, with Tiller on the &kube;
+     Helm's &tiller; has to be installed and active, with &tiller; on the &kube;
      cluster and Helm on your remote administration machine
     </para>
    </listitem>

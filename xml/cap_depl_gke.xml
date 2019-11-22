@@ -61,7 +61,7 @@
    </listitem>
    <listitem>
     <para>
-     Access to a GCP project with the Kubernetes Engine API enabled. If a
+     Access to a GCP project with the &kube; Engine API enabled. If a
      project needs to be created, refer to
      <link xlink:href="https://cloud.google.com/apis/docs/getting-started#creating_a_google_project"/>.
      To enable access to the API, refer to
@@ -230,7 +230,7 @@
    </step>
    <step>
     <para>
-     Update the kernel command line and GRUB then restart the virtual machines:
+     Update the kernel command line and &grub; then restart the virtual machines:
     </para>
     <screen>&prompt.user;echo "$instance_names" | xargs -i{} gcloud compute ssh {} -- "sudo sed --in-place 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0 cgroup_enable=memory swapaccount=1\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub &amp;&amp; sudo systemctl reboot -i"</screen>
    </step>
@@ -252,7 +252,7 @@
    <step>
     <para>
      When inside the node, run the command to update the kernel command line and
-     GRUB, then restart the node.
+     &grub;, then restart the node.
     </para>
 <screen>&prompt.user;sudo sed --in-place 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0 cgroup_enable=memory swapaccount=1\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub &amp;&amp; sudo systemctl reboot -i</screen>
    </step>
@@ -783,7 +783,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.23.241.17   35.197
 
    <para>
     The GCP Service Broker requires a database to store information about the
-    resources it provisions. Any database that adheres to the MySQL protocol
+    resources it provisions. Any database that adheres to the &mysql; protocol
     may be used, but it is recommended to use a GCP Cloud SQL instance, as
     outlined in the following steps.
    </para>
@@ -806,13 +806,13 @@ tcp-router-tcp-router-public                LoadBalancer   10.23.241.17   35.197
     </step>
     <step>
      <para>
-      Click <guimenu>Choose MySQL</guimenu> to select MySQL as the database
+      Click <guimenu>Choose &mysql;</guimenu> to select &mysql; as the database
       engine.
      </para>
     </step>
     <step>
      <para>
-      In the <guimenu>Instance ID</guimenu> field, enter an identifier for MySQL
+      In the <guimenu>Instance ID</guimenu> field, enter an identifier for &mysql;
       instance.
      </para>
     </step>
@@ -848,13 +848,13 @@ tcp-router-tcp-router-public                LoadBalancer   10.23.241.17   35.197
     </step>
     <step>
      <para>
-      Click <guimenu>Create</guimenu> and wait for the MySQL instance to finish
+      Click <guimenu>Create</guimenu> and wait for the &mysql; instance to finish
       creating.
      </para>
     </step>
     <step>
      <para>
-      After the MySQL instance is finished creating, connect to it using either
+      After the &mysql; instance is finished creating, connect to it using either
       the Cloud Shell or the <command>mysql</command> command line client.
      </para>
      <itemizedlist>
@@ -865,7 +865,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.23.241.17   35.197
        <procedure>
         <step>
          <para>
-          Click on the instance ID of the MySQL instance.
+          Click on the instance ID of the &mysql; instance.
          </para>
         </step>
         <step>
@@ -879,7 +879,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.23.241.17   35.197
          <para>
           After the shell is opened, the <command>gcloud sql connect</command>
           command is displayed. Press <keycap>Enter</keycap> to connect to the
-          MySQL instance as the root user.
+          &mysql; instance as the root user.
          </para>
         </step>
         <step>
@@ -897,7 +897,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.23.241.17   35.197
        <procedure>
         <step>
          <para>
-          Click on the instance ID of the MySQL instance.
+          Click on the instance ID of the &mysql; instance.
          </para>
         </step>
         <step>
@@ -926,7 +926,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.23.241.17   35.197
     </step>
     <step>
      <para>
-      After connecting to the MySQL instance, run the following commands to
+      After connecting to the &mysql; instance, run the following commands to
       create an initial user. The service broker will use this user to connect
       to the service broker database.
      </para>
@@ -1126,14 +1126,14 @@ applications:
     <step>
      <para>
       Enable access to a service. This example enables access to the Google
-      CloudSQL MySQL service (see
+      CloudSQL &mysql; service (see
       <link xlink:href="https://cloud.google.com/sql/"/>).
      </para>
 <screen>&prompt.user;cf enable-service-access <replaceable>google-cloudsql-mysql</replaceable></screen>
     </step>
     <step>
      <para>
-      Create an instance of the Google CloudSQL MySQL service. This example uses
+      Create an instance of the Google CloudSQL &mysql; service. This example uses
       the <literal>mysql-db-f1-micro</literal> plan. Use the
       <command>-c</command> flag to pass optional parameters when provisioning a
       service. See <link xlink:href="https://github.com/GoogleCloudPlatform/gcp-service-broker/blob/master/docs/use.md"/> for the parameters that can be set for each service.
@@ -1206,7 +1206,7 @@ applications:
      </step>
      <step>
       <para>
-       Update the kernel command line and GRUB then restart the virtual machines.
+       Update the kernel command line and &grub; then restart the virtual machines.
       </para>
 <screen>&prompt.user;echo "$NEW_VM_NODES" | xargs -i{} gcloud compute ssh {} -- "sudo sed --in-place 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0 cgroup_enable=memory swapaccount=1\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub &amp;&amp; sudo systemctl reboot -i"</screen>
      </step>
@@ -1226,7 +1226,7 @@ applications:
        <step>
         <para>
          When inside the node, run the command to update the kernel command line
-	 and GRUB, then restart the node.
+	 and &grub;, then restart the node.
 	</para>
 <screen>&prompt.user;sudo sed --in-place 's/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0\"/GRUB_CMDLINE_LINUX_DEFAULT=\"console=ttyS0 net.ifnames=0 cgroup_enable=memory swapaccount=1\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub &amp;&amp; sudo systemctl reboot -i</screen>
        </step>

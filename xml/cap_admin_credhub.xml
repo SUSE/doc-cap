@@ -81,7 +81,7 @@
   <para>
    On occasion, the <literal>credhub</literal> pod may fail to start due to
    database migration failures; this has been spotted intermittently on
-   Azure Kubernetes Service and to a lesser extent, other public clouds.
+   &aks-full; and to a lesser extent, other public clouds.
    In these situations, manual intervention is required to track the last
    completed transaction in <literal>credhub_user</literal> database and
    update the flyway schema history table with the record of the last
