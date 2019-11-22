@@ -53,7 +53,7 @@
    <literal>example.com</literal> as the example domain. Your DNS management is
    platform-dependent, for example &aks; assigns IP addresses to your
    services, which you will map to A records. &eks; assigns host names,
-   which you will use to create CNAMEs. &suse; &caasp; provides the flexibility
+   which you will use to create CNAMEs. &caasp; provides the flexibility
    to manage your name services in nearly any way you wish. The chapters for
    each platform in this guide provide the relevant DNS instructions.
 </para>

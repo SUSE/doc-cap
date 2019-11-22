@@ -15,7 +15,7 @@
  <para>
   &productname; 1.3.1 introduces built-in support for Pod Security Policies
   (PSPs), which are provided via &helm; charts and are set up automatically,
-  unlike older releases which require manual PSP setup. &suse; &caasp; and
+  unlike older releases which require manual PSP setup. &caasp; and
   &aks; both require PSPs for &cap; to operate correctly. This section
   provides instructions for configuring and applying the appropriate PSPs to
   older &cap; releases.
