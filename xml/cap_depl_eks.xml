@@ -740,7 +740,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
     </step>
     <step>
      <para>
-      Create a service instance. As an example, a custom MySQL instance can be
+      Create a service instance. As an example, a custom &mysql; instance can be
       created as:
      </para>
 <screen>&prompt.user;cf create-service rdsmysql custom mysql-instance-name -c '{
