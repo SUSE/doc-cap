@@ -216,8 +216,8 @@
 
   <para>
    This guide details the steps for deploying &scf; on &suse; &caasp;, and on
-   supported &kube; environments such as &aks-full;, and &eks-full;. &suse;
-   &caasp; is a specialized application development and hosting platform built
+   supported &kube; environments such as &aks-full;, &gke-full;, and &eks-full;.
+   &suse; &caasp; is a specialized application development and hosting platform built
    on the &susemicros; container host operating system, container orchestration
    with &kube;, and &salt; for automating installation and configuration.
   </para>
@@ -238,7 +238,7 @@
   <para>
    You may create a minimal deployment on four &kube; nodes for testing.
    However, this is insufficient for a production deployment. A supported
-   deployment includes &scf; installed on &suse; &caasp;, &eks;, or &aks;.
+   deployment includes &scf; installed on &suse; &caasp;, &eks;, &gke;, or &aks;.
    You also need a storage back-end such as &ses; or NFS, a DNS/DHCP
    server, and an Internet connection to download additional packages during
    installation and ~10 GB of &docker; images on each &kube; worker after
