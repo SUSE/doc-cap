@@ -551,7 +551,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
     <step>
      <para>
       On the <literal>Register a new Endpoint</literal> view, click the
-      <literal>Google &kube; Engine</literal> button.
+      <literal>&gke-full;</literal> button.
      </para>
     </step>
     <step>
