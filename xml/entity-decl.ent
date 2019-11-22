@@ -150,6 +150,7 @@
 <!ENTITY mariadb       "MariaDB">
 <!ENTITY selnx         "SELinux">
 <!ENTITY postgresql    "PostgreSQL">
+<!ENTITY mysql         "MySQL">
 <!ENTITY jeos          "JeOS"><!-- Just enough OS -->
 <!ENTITY stap          "SystemTap">
 <!ENTITY oprof         "OProfile">
