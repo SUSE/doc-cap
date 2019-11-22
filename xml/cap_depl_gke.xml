@@ -783,7 +783,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.23.241.17   35.197
 
    <para>
     The GCP Service Broker requires a database to store information about the
-    resources it provisions. Any database that adheres to the MySQL protocol
+    resources it provisions. Any database that adheres to the &mysql; protocol
     may be used, but it is recommended to use a GCP Cloud SQL instance, as
     outlined in the following steps.
    </para>
@@ -806,13 +806,13 @@ tcp-router-tcp-router-public                LoadBalancer   10.23.241.17   35.197
     </step>
     <step>
      <para>
-      Click <guimenu>Choose MySQL</guimenu> to select MySQL as the database
+      Click <guimenu>Choose &mysql;</guimenu> to select &mysql; as the database
       engine.
      </para>
     </step>
     <step>
      <para>
-      In the <guimenu>Instance ID</guimenu> field, enter an identifier for MySQL
+      In the <guimenu>Instance ID</guimenu> field, enter an identifier for &mysql;
       instance.
      </para>
     </step>
@@ -848,13 +848,13 @@ tcp-router-tcp-router-public                LoadBalancer   10.23.241.17   35.197
     </step>
     <step>
      <para>
-      Click <guimenu>Create</guimenu> and wait for the MySQL instance to finish
+      Click <guimenu>Create</guimenu> and wait for the &mysql; instance to finish
       creating.
      </para>
     </step>
     <step>
      <para>
-      After the MySQL instance is finished creating, connect to it using either
+      After the &mysql; instance is finished creating, connect to it using either
       the Cloud Shell or the <command>mysql</command> command line client.
      </para>
      <itemizedlist>
@@ -865,7 +865,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.23.241.17   35.197
        <procedure>
         <step>
          <para>
-          Click on the instance ID of the MySQL instance.
+          Click on the instance ID of the &mysql; instance.
          </para>
         </step>
         <step>
@@ -879,7 +879,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.23.241.17   35.197
          <para>
           After the shell is opened, the <command>gcloud sql connect</command>
           command is displayed. Press <keycap>Enter</keycap> to connect to the
-          MySQL instance as the root user.
+          &mysql; instance as the root user.
          </para>
         </step>
         <step>
@@ -897,7 +897,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.23.241.17   35.197
        <procedure>
         <step>
          <para>
-          Click on the instance ID of the MySQL instance.
+          Click on the instance ID of the &mysql; instance.
          </para>
         </step>
         <step>
@@ -926,7 +926,7 @@ tcp-router-tcp-router-public                LoadBalancer   10.23.241.17   35.197
     </step>
     <step>
      <para>
-      After connecting to the MySQL instance, run the following commands to
+      After connecting to the &mysql; instance, run the following commands to
       create an initial user. The service broker will use this user to connect
       to the service broker database.
      </para>
@@ -1126,14 +1126,14 @@ applications:
     <step>
      <para>
       Enable access to a service. This example enables access to the Google
-      CloudSQL MySQL service (see
+      CloudSQL &mysql; service (see
       <link xlink:href="https://cloud.google.com/sql/"/>).
      </para>
 <screen>&prompt.user;cf enable-service-access <replaceable>google-cloudsql-mysql</replaceable></screen>
     </step>
     <step>
      <para>
-      Create an instance of the Google CloudSQL MySQL service. This example uses
+      Create an instance of the Google CloudSQL &mysql; service. This example uses
       the <literal>mysql-db-f1-micro</literal> plan. Use the
       <command>-c</command> flag to pass optional parameters when provisioning a
       service. See <link xlink:href="https://github.com/GoogleCloudPlatform/gcp-service-broker/blob/master/docs/use.md"/> for the parameters that can be set for each service.

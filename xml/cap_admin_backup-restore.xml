@@ -671,7 +671,7 @@
       defined on the source cluster. This value is defined in
       <filename>/var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml</filename>
       of the <literal>api-group-0</literal> pod and also found in various
-      tables of the MySQL database.
+      tables of the &mysql; database.
      </para>
      <para>
       Begin by examining the configuration file for
