@@ -75,7 +75,9 @@
 <screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}" \
---set "enable.credhub=true"</screen>
+--set "enable.credhub=true" \
+--version &latestscfchart;
+</screen>
 
  <warning>
   <para>
@@ -105,7 +107,9 @@
 &prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}" \
---set "enable.credhub=false"</screen>
+--set "enable.credhub=false" \
+--version &latestscfchart;
+</screen>
  </sect1>
  <sect1 xml:id="sec-cap-credhub-upgrade-considerations">
   <title>Upgrade Considerations</title>

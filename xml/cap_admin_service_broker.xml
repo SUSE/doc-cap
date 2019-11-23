@@ -60,7 +60,9 @@
 <screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}" \
---set "enable.cf_usb=false"</screen>
+--set "enable.cf_usb=false" \
+--version &latestscfchart;
+</screen>
 
  <para>
   To enable the feature again, run <command>helm upgrade</command> with the
@@ -78,7 +80,9 @@
 &prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}" \
---set "enable.cf_usb=true"</screen>
+--set "enable.cf_usb=true" \
+--version &latestscfchart;
+</screen>
 
  </sect1>
  <sect1 xml:id="sec-cap-prereqs-service-broker">
