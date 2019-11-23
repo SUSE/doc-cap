@@ -65,7 +65,8 @@ secrets:
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
 --values <replaceable>new-key-values.yaml</replaceable> \
---set "secrets.UAA_CA_CERT=${CA_CERT}"
+--set "secrets.UAA_CA_CERT=${CA_CERT}" \
+--version &latestscfchart;
    </screen>
   </step>
   <step>

@@ -261,7 +261,8 @@
      Upgrade <literal>uaa</literal>:
     </para>
 <screen>&prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa \
---values scf-config-values.yaml
+--values scf-config-values.yaml \
+--version &latestuaachart;
 </screen>
    </step>
    <step>
@@ -289,7 +290,8 @@
     </para>
 <screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
---set "secrets.UAA_CA_CERT=${CA_CERT}"
+--set "secrets.UAA_CA_CERT=${CA_CERT}" \
+--version &latestscfchart;
 </screen>
    </step>
    <step>
@@ -349,6 +351,8 @@
 --output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
 &prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
---values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}"</screen>
+--values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}" \
+--version &latestscfchart;
+</screen>
  </sect1>
 </chapter>

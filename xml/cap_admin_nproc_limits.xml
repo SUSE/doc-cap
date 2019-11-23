@@ -176,7 +176,8 @@ CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
       Use <command>helm upgrade</command> to apply the change:
      </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
---values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}"
+--values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}" \
+--version &latestscfchart;
 </screen>
     </step>
     <step>

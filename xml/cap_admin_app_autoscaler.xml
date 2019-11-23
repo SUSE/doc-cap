@@ -70,7 +70,8 @@
 &prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}" \
---set "enable.autoscaler=true"
+--set "enable.autoscaler=true" \
+--version &latestscfchart;
 </screen>
 
   <para>
@@ -89,7 +90,8 @@
 &prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}" \
---set "enable.autoscaler=false"
+--set "enable.autoscaler=false" \
+--version &latestscfchart;
 </screen>
 
  </sect1>
@@ -139,7 +141,8 @@
      Upgrade <literal>uaa</literal>:
     </para>
 <screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
---values scf-config-values.yaml
+--values scf-config-values.yaml \
+--version &latestuaachart;
 </screen>
    </step>
    <step>
