@@ -57,7 +57,10 @@
    named <literal>susecf-uaa</literal>:
   </para>
 
-<screen>&prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa --values <replaceable>scf-config-values.yaml</replaceable></screen>
+<screen>&prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa \
+--values <replaceable>scf-config-values.yaml</replaceable> \
+--version &latestuaachart;
+</screen>
 
   <para>
    When all pods are in a <literal>READY</literal> state, the configuration

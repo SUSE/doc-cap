@@ -1269,7 +1269,8 @@ applications:
     </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
---set "secrets.UAA_CA_CERT=${CA_CERT}"
+--set "secrets.UAA_CA_CERT=${CA_CERT}" \
+--version &latestscfchart;
 </screen>
    </step>
    <step>
