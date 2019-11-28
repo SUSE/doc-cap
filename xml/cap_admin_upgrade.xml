@@ -53,7 +53,8 @@
       During a <command>helm upgrade</command>, always ensure your
       <filename>scf-config-values-yaml</filename> file is passed. This will
       preserve any previously set &helm; values while allowing additional
-      &helm; value changes to be made.
+      &helm; value changes to be made. <emphasis role="strong">Do not</emphasis>
+      use <literal>--reuse-values</literal> when performing an upgrade.
      </para>
     </listitem>
    </varlistentry>
@@ -199,7 +200,8 @@
         <literal>config.HA</literal> flag is set to <literal>false</literal>.
        </para>
 <screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
---reuse-values \
+--values scf-config-values.yaml \
+--version 2.17.1 \
 --set config.HA=false \
 --set sizing.uaa.count=2 \
 --set sizing.mysql.count=1
@@ -239,7 +241,8 @@
         <literal>config.HA</literal> flag is set to <literal>false</literal>.
        </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
---reuse-values \
+--values scf-config-values.yaml \
+--version 2.17.1 \
 --set config.HA=false \
 --set=sizing.adapter.count=2 --set=sizing.api_group.count=2 \
 --set=sizing.autoscaler_actors.count=2 --set=sizing.autoscaler_api.count=2 \
@@ -272,7 +275,7 @@
     <step>
      <para>
       Get the latest updates from your &helm; chart repositories. This will
-      allow upgrading to the latest release of the &productname; charts.
+      allow upgrading to newer releases of the &productname; charts.
      </para>
 <screen>&prompt.user;helm repo update</screen>
     </step>
@@ -288,6 +291,7 @@
      </para>
 <screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
 --values scf-config-values.yaml \
+--version 2.18.0 \
 --set config.HA=true \
 --set config.HA_strict=false \
 --set sizing.mysql.count=1
@@ -321,6 +325,7 @@
      </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
+--version 2.18.0 \
 --set config.HA=true \
 --set config.HA_strict=false \
 --set sizing.mysql.count=1 \
@@ -339,6 +344,7 @@
      </para>
 <screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
 --values scf-config-values.yaml \
+--version 2.18.0 \
 --set config.HA_strict=true \
 --set config.HA=true
 </screen>
@@ -367,6 +373,7 @@
      </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
+--version 2.18.0 \
 --set config.HA_strict=true \
 --set config.HA=true \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
@@ -377,7 +384,8 @@
       If installed, upgrade Stratos.
      </para>
 <screen>&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-console</replaceable> suse/console \
---values scf-config-values.yaml
+--values scf-config-values.yaml \
+--version 2.5.3
 </screen>
     </step>
    </procedure>
@@ -405,7 +413,8 @@
         Scale the <literal>mysql</literal> instance count to 1.
        </para>
 <screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
---reuse-values \
+--values scf-config-values.yaml \
+--version 2.17.1 \
 --set sizing.mysql.count=1
 </screen>
        <para>
@@ -435,7 +444,8 @@
         Scale the <literal>mysql</literal> instance count to 1.
        </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
---reuse-values \
+--values scf-config-values.yaml \
+--version 2.17.1 \
 --set=sizing.mysql.count=1
 </screen>
        <para>
@@ -456,7 +466,7 @@
     <step>
      <para>
       Get the latest updates from your &helm; chart repositories. This will
-      allow upgrading to the latest release of the &productname; charts.
+      allow upgrading to newer releases of the &productname; charts.
      </para>
 <screen>&prompt.user;helm repo update</screen>
     </step>
@@ -465,7 +475,8 @@
       Upgrade <literal>uaa</literal>.
      </para>
 <screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
---reuse-values \
+--values scf-config-values.yaml \
+--version 2.18.0 \
 --set sizing.mysql.count=1
 </screen>
      <para>
@@ -490,7 +501,8 @@
       Upgrade <literal>scf</literal>.
      </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
---reuse-values \
+--values scf-config-values.yaml \
+--version 2.18.0 \
 --set sizing.mysql.count=1 \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
@@ -511,7 +523,8 @@
       number of instances.
      </para>
 <screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
---reuse-values \
+--values scf-config-values.yaml \
+--version 2.18.0 \
 --set sizing.mysql.count=3
 </screen>
      <para>
@@ -543,7 +556,8 @@
       number of instances.
      </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
---reuse-values \
+--values scf-config-values.yaml \
+--version 2.18.0 \
 --set sizing.mysql.count=3 \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
      </screen>
@@ -553,7 +567,8 @@
       If installed, upgrade Stratos.
      </para>
 <screen>&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-console</replaceable> suse/console \
---values scf-config-values.yaml
+--values scf-config-values.yaml \
+--version 2.5.3
 </screen>
     </step>
    </procedure>
@@ -571,7 +586,7 @@
     <step>
      <para>
       Get the latest updates from your &helm; chart repositories. This will
-      allow upgrading to the latest release of the &productname; charts.
+      allow upgrading to newer releases of the &productname; charts.
      </para>
 <screen>&prompt.user;helm repo update</screen>
     </step>
@@ -580,7 +595,8 @@
       Upgrade <literal>uaa</literal>.
      </para>
 <screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
---reuse-values
+--values scf-config-values.yaml \
+--version 2.18.0
 </screen>
      <para>
       Monitor progress using the <command>watch</command> command.
@@ -604,7 +620,8 @@
       Upgrade <literal>scf</literal>.
      </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
---reuse-values \
+--values scf-config-values.yaml \
+--version 2.18.0 \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
      <para>
@@ -617,7 +634,8 @@
       If installed, upgrade Stratos.
      </para>
 <screen>&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-console</replaceable> suse/console \
---values scf-config-values.yaml
+--values scf-config-values.yaml \
+--version 2.5.3
 </screen>
     </step>
    </procedure>
@@ -642,8 +660,10 @@
    option to install a specific version:
   </para>
 
-<screen>&prompt.user;helm upgrade --recreate-pods --version 2.11.0 <replaceable>susecf-uaa</replaceable> suse/uaa \
---values scf-config-values.yaml</screen>
+<screen>&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-uaa</replaceable> suse/uaa \
+--values scf-config-values.yaml \
+--version 2.11.0
+</screen>
 
   <para>
    Be sure to install the corresponding versions for <literal>scf</literal> and
