@@ -53,7 +53,8 @@
       During a <command>helm upgrade</command>, always ensure your
       <filename>scf-config-values-yaml</filename> file is passed. This will
       preserve any previously set &helm; values while allowing additional
-      &helm; value changes to be made.
+      &helm; value changes to be made. <emphasis role="strong">Do not</emphasis>
+      use <literal>--reuse-values</literal> when performing an upgrade.
      </para>
     </listitem>
    </varlistentry>
@@ -178,6 +179,13 @@
     setting <literal>config.HA</literal> to <literal>true</literal> (see
     <xref linkend="sec-cap-ha-simple"/>).
    </para>
+   <para>
+    The following example assumes your current
+    <filename>scf-config-values.yaml</filename> file contains:
+   </para>
+<screen>config:
+  HA: true
+</screen>
    <procedure>
     <step>
      <para>
@@ -198,11 +206,30 @@
         sizing counts of roles are manually specfied and the
         <literal>config.HA</literal> flag is set to <literal>false</literal>.
        </para>
+       <para>
+        Create a custom configuration file,
+        called <filename>ha-uaa-single-mysql.yaml</filename> in this example,
+        with the values below. The counts used for all roles are equivalent to
+        setting <literal>config.HA</literal> to <literal>true</literal>, with
+        the exception of the <literal>mysql</literal> role which has a single
+        instance. Note that it is assumed <literal>config.HA=true</literal> is
+        set in your existing <filename>scf-config-values.yaml</filename> file.
+       </para>
+<screen>config:
+  HA: false
+sizing:
+  uaa:
+    count: 2
+  mysql:
+    count: 1
+</screen>
+       <para>
+        Perform the scaling. 
+       </para>
 <screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
---reuse-values \
---set config.HA=false \
---set sizing.uaa.count=2 \
---set sizing.mysql.count=1
+--values scf-config-values.yaml \
+--values <replaceable>ha-uaa-single-mysql.yaml</replaceable> \
+--version 2.17.1
 </screen>
        <para>
         Monitor progress using the <command>watch</command> command.
@@ -238,21 +265,74 @@
         sizing counts of roles are manually specfied and the
         <literal>config.HA</literal> flag is set to <literal>false</literal>.
        </para>
+       <para>
+        Create a custom configuration file,
+        called <filename>ha-scf-single-mysql.yaml</filename> in this example,
+        with the values below. The counts used for all roles are equivalent to
+        setting <literal>config.HA</literal> to <literal>true</literal>, with
+        the exception of the <literal>mysql</literal> role which has a single
+        instance. Note that it is assumed <literal>config.HA=true</literal> is
+        set in your existing <filename>scf-config-values.yaml</filename> file.
+       </para>
+<screen>config:
+  HA: false
+sizing:
+  adapter:
+    count: 2
+  api_group:
+    count: 2
+  autoscaler_actors:
+    count: 2
+  autoscaler_api:
+    count: 2
+  autoscaler_metrics:
+    count: 2
+  cc_clock:
+    count: 2
+  cc_uploader:
+    count: 2
+  cc_worker:
+    count: 2
+  cf_usb_group:
+    count: 2
+  diego_api:
+    count: 2
+  diego_brain:
+    count: 2
+  diego_cell:
+    count: 3
+  diego_ssh:
+    count: 2
+  doppler:
+    count: 2
+  locket:
+    count: 2
+  log_api:
+    count: 2
+  log_cache_scheduler:
+    count: 2
+  nats:
+    count: 2
+  nfs_broker:
+    count: 2
+  router:
+    count: 2
+  routing_api:
+    count: 2
+  syslog_scheduler:
+    count: 2
+  tcp_router:
+    count: 2
+  mysql:
+    count: 1
+</screen>
+       <para>
+        Perform the scaling. 
+       </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
---reuse-values \
---set config.HA=false \
---set=sizing.adapter.count=2 --set=sizing.api_group.count=2 \
---set=sizing.autoscaler_actors.count=2 --set=sizing.autoscaler_api.count=2 \
---set=sizing.autoscaler_metrics.count=2 --set=sizing.cc_clock.count=2 \
---set=sizing.cc_uploader.count=2 --set=sizing.cc_worker.count=2 \
---set=sizing.cf_usb_group.count=2 --set=sizing.diego_api.count=2 \
---set=sizing.diego_brain.count=2 --set=sizing.diego_cell.count=3 \
---set=sizing.diego_ssh.count=2 --set=sizing.doppler.count=2 \
---set=sizing.locket.count=2 --set=sizing.log_api.count=2 \
---set=sizing.log_cache_scheduler.count=2 --set=sizing.nats.count=2 \
---set=sizing.nfs_broker.count=2 --set=sizing.router.count=2 \
---set=sizing.routing_api.count=2 --set=sizing.syslog_scheduler.count=2 \
---set=sizing.tcp_router.count=2 --set=sizing.mysql.count=1
+--values scf-config-values.yaml \
+--values <replaceable>ha-scf-single-mysql.yaml</replaceable> \
+--version 2.17.1
 </screen>
        <para>
         Monitor progress using the <command>watch</command> command.
@@ -272,7 +352,7 @@
     <step>
      <para>
       Get the latest updates from your &helm; chart repositories. This will
-      allow upgrading to the latest release of the &productname; charts.
+      allow upgrading to newer releases of the &productname; charts.
      </para>
 <screen>&prompt.user;helm repo update</screen>
     </step>
@@ -286,11 +366,25 @@
       <literal>config.HA</literal> and specifying custom sizing counts
       simultaneously. For details, refer to <xref linkend="sec-cap-ha-simple"/>.
      </para>
+     <para>
+      Create a custom configuration file, called
+      <filename>ha-strict-false-single-mysql.yaml</filename> in this example,
+      with the values below. The file uses the
+      <literal>config.HA_strict</literal> feature to allow setting the
+      <literal>mysql</literal> role to a single instance while other roles are
+      kept HA. Note that it is assumed <literal>config.HA=true</literal> is set
+      in your existing <filename>scf-config-values.yaml</filename> file.
+     </para>
+<screen>config:
+  HA_strict: false
+sizing:
+  mysql:
+    count: 1
+</screen>
 <screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
 --values scf-config-values.yaml \
---set config.HA=true \
---set config.HA_strict=false \
---set sizing.mysql.count=1
+--values <replaceable>ha-strict-false-single-mysql.yaml</replaceable> \
+--version 2.18.0
 </screen>
      <para>
       Monitor progress using the <command>watch</command> command.
@@ -319,11 +413,22 @@
       <literal>config.HA</literal> and specifying custom sizing counts
       simultaneously. For details, refer to <xref linkend="sec-cap-ha-simple"/>.
      </para>
+     <para>
+      Reuse the custom configuration file, called
+      <filename>ha-strict-false-single-mysql.yaml</filename>, created earlier.
+      The file uses the <literal>config.HA_strict</literal> feature to allow
+      setting the <literal>mysql</literal> role to a single instance while other
+      roles are kept HA. Note that it is assumed
+      <literal>config.HA=true</literal> is set in your existing
+      <filename>scf-config-values.yaml</filename> file.
+     </para>
+     <para>
+      Perform the upgrade.
+     </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
---set config.HA=true \
---set config.HA_strict=false \
---set sizing.mysql.count=1 \
+--values <replaceable>ha-strict-false-single-mysql.yaml</replaceable> \
+--version 2.18.0 \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
      <para>
@@ -337,10 +442,26 @@
       the <literal>mysql</literal> role, back to the default
       high availability mode.
      </para>
+     <para>
+      Create a custom configuration file, called
+      <filename>ha-strict-true.yaml</filename> in this example,
+      with the values below. The file sets <literal>config.HA_strict</literal>
+      to <literal>true</literal>, which enforces all roles, including
+      <literal>mysql</literal>, are at the required minimum required instance
+      count for a default HA configuration. Note that it is assumed
+      <literal>config.HA=true</literal> is set in your existing
+      <filename>scf-config-values.yaml</filename> file.
+     </para>
+<screen>config:
+  HA_strict: true
+</screen>
+     <para>
+      Perform the scaling.
+     </para>
 <screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
 --values scf-config-values.yaml \
---set config.HA_strict=true \
---set config.HA=true
+--values <replaceable>ha-strict-true.yaml</replaceable> \
+--version 2.18.0
 </screen>
      <para>
       Monitor progress using the <command>watch</command> command.
@@ -365,10 +486,20 @@
       the <literal>mysql</literal> role, back to the default
       high availability mode.
      </para>
+     <para>
+      Reuse the custom configuration file, called
+      <filename>ha-strict-true.yaml</filename> in this example,
+      created earlier. The file sets <literal>config.HA_strict</literal>
+      to <literal>true</literal>, which enforces all roles, including
+      <literal>mysql</literal>, are at the required minimum required instance
+      count for a default HA configuration. Note that it is assumed
+      <literal>config.HA=true</literal> is set in your existing
+      <filename>scf-config-values.yaml</filename> file.
+     </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
---set config.HA_strict=true \
---set config.HA=true \
+--values <replaceable>ha-strict-true.yaml</replaceable> \
+--version 2.18.0 \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
      </screen>
     </step>
@@ -377,7 +508,8 @@
       If installed, upgrade Stratos.
      </para>
 <screen>&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-console</replaceable> suse/console \
---values scf-config-values.yaml
+--values scf-config-values.yaml \
+--version 2.5.3
 </screen>
     </step>
    </procedure>
@@ -404,9 +536,22 @@
        <para>
         Scale the <literal>mysql</literal> instance count to 1.
        </para>
+       <para>
+        Modify your existing custom sizing configuration file, called
+        <filename>uaa-sizing.yaml</filename> in this example, so that the
+        <literal>mysql</literal> role has a count of 1.
+       </para>
+<screen>sizing:
+  mysql:
+    count: 1
+</screen>
+       <para>
+        Perform the scaling.
+       </para>
 <screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
---reuse-values \
---set sizing.mysql.count=1
+--values scf-config-values.yaml \
+--values <replaceable>uaa-sizing.yaml</replaceable> \
+--version 2.17.1
 </screen>
        <para>
         Monitor progress using the <command>watch</command> command.
@@ -434,9 +579,22 @@
        <para>
         Scale the <literal>mysql</literal> instance count to 1.
        </para>
+       <para>
+        Modify your existing custom sizing configuration file, called
+        <filename>scf-sizing.yaml</filename> in this example, so that the
+        <literal>mysql</literal> role has a count of 1.
+       </para>
+<screen>sizing:
+  mysql:
+    count: 1
+</screen>
+       <para>
+        Perform the scaling.
+       </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
---reuse-values \
---set=sizing.mysql.count=1
+--values scf-config-values.yaml \
+--values <replaceable>scf-sizing.yaml</replaceable> \
+--version 2.17.1
 </screen>
        <para>
         Monitor progress using the <command>watch</command> command.
@@ -456,7 +614,7 @@
     <step>
      <para>
       Get the latest updates from your &helm; chart repositories. This will
-      allow upgrading to the latest release of the &productname; charts.
+      allow upgrading to newer releases of the &productname; charts.
      </para>
 <screen>&prompt.user;helm repo update</screen>
     </step>
@@ -464,9 +622,15 @@
      <para>
       Upgrade <literal>uaa</literal>.
      </para>
+     <para>
+      Reuse your existing custom sizing configuration file, called
+      <filename>uaa-sizing.yaml</filename> in this example, so that the
+      <literal>mysql</literal> role has a count of 1.
+     </para>
 <screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
---reuse-values \
---set sizing.mysql.count=1
+--values scf-config-values.yaml \
+--values <replaceable>uaa-sizing.yaml</replaceable> \
+--version 2.18.0
 </screen>
      <para>
       Monitor progress using the <command>watch</command> command.
@@ -489,9 +653,15 @@
      <para>
       Upgrade <literal>scf</literal>.
      </para>
+     <para>
+      Reuse your existing custom sizing configuration file, called
+      <filename>scf-sizing.yaml</filename> in this example, so that the
+      <literal>mysql</literal> role has a count of 1.
+     </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
---reuse-values \
---set sizing.mysql.count=1 \
+--values scf-config-values.yaml \
+--values <replaceable>scf-sizing.yaml</replaceable> \
+--version 2.18.0 \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
      <para>
@@ -502,17 +672,29 @@
     <step>
      <para>
       Scale the entire <literal>uaa</literal> deployment, including
-      the <literal>mysql</literal> role, back to the default
-      high availability mode.
+      the <literal>mysql</literal> role, back to high availability mode.
      </para>
      <para>
       Note that as of &productname; 1.5, the <literal>mysql</literal> role
       requires at least 3 instances for high availability and must have an odd
       number of instances.
      </para>
+     <para>
+      Modify your existing custom sizing configuration file, called
+      <filename>uaa-sizing.yaml</filename> in this example, so that the 
+      <literal>mysql</literal> role has a count of 3.
+     </para>
+<screen>sizing:
+  mysql:
+    count: 3
+</screen>
+     <para>
+      Perform the scaling.
+     </para>
 <screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
---reuse-values \
---set sizing.mysql.count=3
+--values scf-config-values.yaml \
+--values <replaceable>uaa-sizing.yaml</replaceable> \
+--version 2.18.0
 </screen>
      <para>
       Monitor progress using the <command>watch</command> command.
@@ -534,17 +716,22 @@
     <step>
      <para>
       Scale the entire <literal>scf</literal> deployment, including
-      the <literal>mysql</literal> role, back to the default
-      high availability mode.
+      the <literal>mysql</literal> role, back to high availability mode.
      </para>
      <para>
       Note that as of &productname; 1.5, the <literal>mysql</literal> role
       requires at least 3 instances for high availability and must have an odd
       number of instances.
      </para>
+     <para>
+      Modify your existing custom sizing configuration file, called
+      <filename>scf-sizing.yaml</filename> in this example, so that the 
+      <literal>mysql</literal> role has a count of 3.
+     </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
---reuse-values \
---set sizing.mysql.count=3 \
+--values scf-config-values.yaml \
+--values <replaceable>scf-sizing.yaml</replaceable> \
+--version 2.18.0 \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
      </screen>
     </step>
@@ -553,7 +740,8 @@
       If installed, upgrade Stratos.
      </para>
 <screen>&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-console</replaceable> suse/console \
---values scf-config-values.yaml
+--values scf-config-values.yaml \
+--version 2.5.3
 </screen>
     </step>
    </procedure>
@@ -571,7 +759,7 @@
     <step>
      <para>
       Get the latest updates from your &helm; chart repositories. This will
-      allow upgrading to the latest release of the &productname; charts.
+      allow upgrading to newer releases of the &productname; charts.
      </para>
 <screen>&prompt.user;helm repo update</screen>
     </step>
@@ -580,7 +768,8 @@
       Upgrade <literal>uaa</literal>.
      </para>
 <screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
---reuse-values
+--values scf-config-values.yaml \
+--version 2.18.0
 </screen>
      <para>
       Monitor progress using the <command>watch</command> command.
@@ -604,7 +793,8 @@
       Upgrade <literal>scf</literal>.
      </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
---reuse-values \
+--values scf-config-values.yaml \
+--version 2.18.0 \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
      <para>
@@ -617,7 +807,8 @@
       If installed, upgrade Stratos.
      </para>
 <screen>&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-console</replaceable> suse/console \
---values scf-config-values.yaml
+--values scf-config-values.yaml \
+--version 2.5.3
 </screen>
     </step>
    </procedure>
@@ -642,8 +833,10 @@
    option to install a specific version:
   </para>
 
-<screen>&prompt.user;helm upgrade --recreate-pods --version 2.11.0 <replaceable>susecf-uaa</replaceable> suse/uaa \
---values scf-config-values.yaml</screen>
+<screen>&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-uaa</replaceable> suse/uaa \
+--values scf-config-values.yaml \
+--version 2.11.0
+</screen>
 
   <para>
    Be sure to install the corresponding versions for <literal>scf</literal> and
