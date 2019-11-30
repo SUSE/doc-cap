@@ -17,11 +17,12 @@
   the current &productname; &productnumber; release.
  </para>
 
-<screen>apiVersion: 2.18.0+cf9.5.0.0.ga2697c75
-appVersion: 1.5.0
+<screen>apiVersion: v1
+appVersion: 1.5.1
 description: A Helm chart for SUSE Cloud Foundry
 name: cf
-version: 2.18.0
+version: 2.19.1
+scfVersion: 2.19.1
 
 ---
 ---
@@ -36,7 +37,7 @@ kube:
     nproc:
       hard: ""
       soft: ""
-  organization: "registry.suse.com"
+  organization: "cap"
   psp:
     default: ~
   registry:
@@ -206,11 +207,6 @@ secrets:
   # PEM-encoded client key.
   BBS_SERVER_CRT_KEY: ~
 
-  # The basic auth password that the Cloud Controller uses to connect to the
-  # admin endpoint on webdav.
-  # This value uses a generated default.
-  BITS_ADMIN_USERS_PASSWORD: ~
-
   # This is the key secret Bits-Service uses and clients should use to generate
   # signed URLs.
   # This value uses a generated default.
@@ -292,6 +288,12 @@ secrets:
   # PEM-encoded server key
   CREDHUB_SERVER_CERT_KEY: ~
 
+  # Administrator password for an external database server; this is required to
+  # create the necessary databases. Only used if DB_EXTERNAL_HOST is set.
+  #
+  # This value is immutable and must not be changed once set.
+  DB_EXTERNAL_PASSWORD: ~
+
   # PEM-encoded client certificate
   # This value uses a generated default.
   DIEGO_CLIENT_CERT: ~
@@ -306,9 +308,27 @@ secrets:
   # PEM-encoded key.
   DOPPLER_CERT_KEY: ~
 
+  # TLS certificate for Eirini server
+  # This value uses a generated default.
+  EIRINI_CLIENT_CRT: ~
+
+  # Private key associated with TLS certificate for Eirini server
+  EIRINI_CLIENT_CRT_KEY: ~
+
   # Basic auth password to verify on incoming Service Broker requests
   # This value uses a generated default.
   EIRINI_PERSI_NFS_BROKER_PASSWORD: ~
+
+  # Basic auth user password for registry
+  # This value uses a generated default.
+  EIRINI_REGISTRY_PASSWORD: ~
+
+  # TLS certificate for Eirini server
+  # This value uses a generated default.
+  EIRINI_SERVER_CERT: ~
+
+  # Private key associated with TLS certificate for Eirini server
+  EIRINI_SERVER_CERT_KEY: ~
 
   # A PEM-encoded TLS certificate for the Galera server.
   # This value uses a generated default.
@@ -685,7 +705,7 @@ env:
   CLUSTER_ADMIN_AUTHORITIES: "scim.write,scim.read,openid,cloud_controller.admin,clients.read,clients.write,doppler.firehose,routing.router_groups.read,routing.router_groups.write"
 
   # 'build' attribute in the /v2/info endpoint
-  CLUSTER_BUILD: "2.18.0"
+  CLUSTER_BUILD: "2.19.0"
 
   # 'description' attribute in the /v2/info endpoint
   CLUSTER_DESCRIPTION: "SUSE Cloud Foundry"
@@ -695,6 +715,29 @@ env:
 
   # 'version' attribute in the /v2/info endpoint
   CLUSTER_VERSION: "2"
+
+  # Database driver to use for the external database server used to manage the
+  # CF-internal databases. Only used if DB_EXTERNAL_HOST is set. Currently only
+  # `mysql` is valid.
+  DB_EXTERNAL_DRIVER: "mysql"
+
+  # Hostname for an external database server to use for the CF-internal
+  # databases (such as for the cloud controller database). If not set, the
+  # internal database is used.
+  DB_EXTERNAL_HOST: ~
+
+  # Port for an external database server to use for the CF-internal databases.
+  # Only used if DB_EXTERNAL_HOST is set.
+  DB_EXTERNAL_PORT: "3306"
+
+  # TLS configuration for the external database server to use for the
+  # CF-internal databases. Only used if DB_EXTERNAL_HOST is set. Valid values
+  # depend on which database driver is in use.
+  DB_EXTERNAL_SSL_MODE: ~
+
+  # Administrator user name for an external database server; this is required to
+  # create the necessary databases. Only used if DB_EXTERNAL_HOST is set.
+  DB_EXTERNAL_USER: ~
 
   # The standard amount of disk (in MB) given to an application when not
   # overriden by the user via manifest, command line, etc.
@@ -740,15 +783,11 @@ env:
   # rollback to this amount of versions.
   DROPLET_MAX_STAGED_STORED: "5"
 
-  # The docker image used by Eirini to register the image registry CA cert with
-  # Docker, on each Kubernetes node
-  EIRINI_CERT_COPIER_IMAGE: "splatform/eirini-cert-copier:1.0.0.4.gd8e7208"
-
   # Downloads app-bits and buildpacks from the bits-service
-  EIRINI_DOWNLOADER_IMAGE: "eirini/recipe-downloader:0.2.0"
+  EIRINI_DOWNLOADER_IMAGE: "registry.suse.com/cap/recipe-downloader:0.18.0"
 
   # Executes the buildpackapplifecyle to build a Droplet
-  EIRINI_EXECUTOR_IMAGE: "eirini/recipe-executor:0.2.0"
+  EIRINI_EXECUTOR_IMAGE: "registry.suse.com/cap/recipe-executor:0.18.0"
 
   # Address of Kubernetes' Heapster installation, used for reading Cloud Foundry
   # app metrics.
@@ -767,8 +806,11 @@ env:
   #     default_size: "1Gi"
   EIRINI_PERSI_PLANS: "[]"
 
+  # The port of the ssh proxy for Eirini
+  EIRINI_SSH_PORT: "2222"
+
   # Uploads the Droplet to the bits-service
-  EIRINI_UPLOADER_IMAGE: "eirini/recipe-uploader:0.2.0"
+  EIRINI_UPLOADER_IMAGE: "registry.suse.com/cap/recipe-uploader:0.17.0"
 
   # By default, Cloud Foundry does not enable Cloud Controller request logging.
   # To enable this feature, you must set this property to "true". You can learn
@@ -811,6 +853,10 @@ env:
   INSECURE_DOCKER_REGISTRIES: ""
 
   KUBERNETES_CLUSTER_DOMAIN: ~
+
+  # Allow the secrets-generator to auto-approve the kube cert signing requests
+  # it makes.
+  KUBE_CSR_AUTO_APPROVAL: "false"
 
   # The cluster's log level: off, fatal, error, warn, info, debug, debug1,
   # debug2.
@@ -1044,17 +1090,19 @@ sizing:
   #   SCF patches for upstream bugs
   #
   # - cloud_controller_ng: The Cloud Controller provides primary Cloud Foundry
-  #   API that is by the &cfcli;. The Cloud Controller uses a database to keep
+  #   API that is by the CF CLI. The Cloud Controller uses a database to keep
   #   tables for organizations, spaces, apps, services, service instances, user
   #   roles, and more. Typically multiple instances of Cloud Controller are load
   #   balanced.
   #
   # - route_registrar: Used for registering routes
   #
-  # Also: bpm, statsd_injector, go-buildpack, binary-buildpack,
-  # nodejs-buildpack, ruby-buildpack, php-buildpack, python-buildpack,
-  # staticfile-buildpack, nginx-buildpack, java-buildpack, and
-  # dotnet-core-buildpack
+  # Also: bpm, statsd_injector, go-buildpack, go-buildpack, binary-buildpack,
+  # binary-buildpack, nodejs-buildpack, nodejs-buildpack, ruby-buildpack,
+  # ruby-buildpack, php-buildpack, php-buildpack, python-buildpack,
+  # python-buildpack, staticfile-buildpack, staticfile-buildpack,
+  # nginx-buildpack, nginx-buildpack, java-buildpack, java-buildpack,
+  # dotnet-core-buildpack, and dotnet-core-buildpack
   api_group:
     # Node affinity rules can be specified here
     affinity: {}
@@ -1194,16 +1242,15 @@ sizing:
   # - global-properties: Dummy BOSH job used to host global parameters that are
   #   required to configure SCF
   #
-  # - route_registrar: Used for registering routes
-  #
-  # - eirinifs: This job copies the eirinifs to a desired location
+  # - eirinifs-sle15: This job copies the eirinifs-sle15 to a desired location
   #
   # Also: statsd_injector, bpm, and bits-service
   bits:
     # Node affinity rules can be specified here
     affinity: {}
 
-    # The bits instance group cannot be scaled.
+    # The bits instance group can be enabled by the eirini feature.
+    # It cannot be scaled.
     count: ~
 
     # Unit [millicore]
@@ -1575,13 +1622,70 @@ sizing:
   # - patch-properties: Dummy BOSH job used to host parameters that are used in
   #   SCF patches for upstream bugs
   #
-  # Also: bpm, eirini-persi-broker, eirini-persi, eirini-loggregator-bridge, and
-  # opi
+  # Also: bpm, eirini-loggregator-bridge, and opi
   eirini:
     # Node affinity rules can be specified here
     affinity: {}
 
     # The eirini instance group can be enabled by the eirini feature.
+    # It cannot be scaled.
+    count: ~
+
+    # Unit [millicore]
+    cpu:
+      request: 2000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 256
+      limit: ~
+
+  # The eirini-persi instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - authorize-internal-ca: Install both internal and UAA CA certificates
+  #
+  # - patch-properties: Dummy BOSH job used to host parameters that are used in
+  #   SCF patches for upstream bugs
+  #
+  # Also: bpm, eirini-persi-broker, and eirini-persi
+  eirini_persi:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # The eirini_persi instance group can be enabled by the eirini feature.
+    # It cannot be scaled.
+    count: ~
+
+    # Unit [millicore]
+    cpu:
+      request: 2000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 256
+      limit: ~
+
+  # The eirini-ssh instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - authorize-internal-ca: Install both internal and UAA CA certificates
+  #
+  # - patch-properties: Dummy BOSH job used to host parameters that are used in
+  #   SCF patches for upstream bugs
+  #
+  # Also: bpm, eirini-ssh-proxy, and eirini-ssh-extension
+  eirini_ssh:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # The eirini_ssh instance group can be enabled by the eirini feature.
     # It cannot be scaled.
     count: ~
 
@@ -1721,7 +1825,8 @@ sizing:
     # Node affinity rules can be specified here
     affinity: {}
 
-    # The mysql instance group can scale between 1 and 7 instances.
+    # The mysql instance group is enabled by the mysql feature.
+    # It can scale between 1 and 7 instances.
     # The instance count must be an odd number (not divisible by 2).
     # For high availability it needs at least 3 instances.
     count: ~
@@ -1744,12 +1849,16 @@ sizing:
   # - global-properties: Dummy BOSH job used to host global parameters that are
   #   required to configure SCF
   #
-  # Also: proxy and bpm
+  # - switchboard-leader: Job to host the active/passive probe for mysql
+  #   switchboard and leader election
+  #
+  # Also: bpm and proxy
   mysql_proxy:
     # Node affinity rules can be specified here
     affinity: {}
 
-    # The mysql_proxy instance group can scale between 1 and 5 instances.
+    # The mysql_proxy instance group is enabled by the mysql feature.
+    # It can scale between 1 and 5 instances.
     # For high availability it needs at least 2 instances.
     count: ~
 
@@ -1823,6 +1932,10 @@ sizing:
   #   required to configure SCF
   #
   # - authorize-internal-ca: Install both internal and UAA CA certificates
+  #
+  # - database-seeder: When using an external database server, seed it with the
+  #   necessary databases.
+  #
   #
   # - uaa-create-user: Create the initial user in UAA
   #
@@ -2027,11 +2140,14 @@ enable:
   # The credhub feature enables these instance groups: credhub_user
   credhub: false
 
-  # The eirini feature enables these instance groups: eirini and
-  # configure_eirini
+  # The eirini feature enables these instance groups: eirini, eirini_persi,
+  # eirini_ssh, bits, and configure_eirini
   # It disables these instance groups: diego_api, diego_brain, diego_ssh,
   # nfs_broker, and diego_cell
   eirini: false
+
+  # The mysql feature enables these instance groups: mysql and mysql_proxy
+  mysql: true
 
   # The uaa feature enables these instance groups: uaa
   uaa: false
