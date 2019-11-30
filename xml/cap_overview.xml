@@ -29,57 +29,22 @@
     <itemizedlist>
      <listitem>
       <para>
-       PXC (Percona XtraDB Cluster) replaces <literal>cf-mysql</literal> for
-       database management — please read the Known Issues section of the release
-       notes for this version on deployment and upgrade changes
+       Support for Eirini SSH feature
       </para>
      </listitem>
      <listitem>
       <para>
-       Ability to set <literal>config.HA_strict=false</literal> in combination
-       with <literal>config.HA=true</literal> to allow lowering the sizing
-       count for a role below what is required for HA
+       Support for external Cloud Controller and UAA database configuration
       </para>
      </listitem>
      <listitem>
       <para>
-       UAA can now be embedded in the <literal>cf</literal> namespace — please
-       read the Known Issues section of the release notes for this version on
-       deployment limitations
-      </para>
-     </listitem>
-    </itemizedlist>
-   </listitem>
-   <listitem>
-    <para>
-     The Stratos UI has been updated to version 2.5.1:
-    </para>
-    <itemizedlist>
-     <listitem>
-      <para>
-       Tech preview for helm feature
+       Ingress controller now available for UAA embedded in SCF
       </para>
      </listitem>
      <listitem>
       <para>
-       Add custom welcome message on endpoints page
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       Add support for connecting SUSE Containers as a Service Platform V4
-       endpoints
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       Refinements to the Autoscaler UI
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       For a full list of features and fixes see
-       <link xlink:href="https://github.com/SUSE/stratos/releases/tag/2.5.1"/>
+       AUDIT_WRITE capabilities added for CRI-O
       </para>
      </listitem>
     </itemizedlist>
