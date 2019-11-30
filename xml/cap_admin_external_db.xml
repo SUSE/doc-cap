@@ -180,7 +180,6 @@ enable:
      Upgrade <literal>uaa</literal>:
     </para>
 <screen>&prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa \
---reuse-values \
 --values scf-config-values.yaml \
 --version &latestuaachart;
 </screen>
@@ -209,7 +208,6 @@ enable:
      Upgrade <literal>scf</literal>:
     </para>
 <screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
---reuse-values \
 --values scf-config-values.yaml \
 --version &latestscfchart; \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
