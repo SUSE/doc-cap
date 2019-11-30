@@ -179,8 +179,10 @@ suse/uaa        2.6.11                          A Helm chart for SUSE UAA
    upgrade <literal>uaa</literal>:
   </para>
 
-<screen>&prompt.user;helm upgrade --force --recreate-pods <replaceable>susecf-uaa</replaceable> suse/uaa \
---values scf-config-values.yaml
+<screen>&prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa \
+--values scf-config-values.yaml \
+--force --recreate-pods \
+--version &latestuaachart;
 </screen>
 
 
@@ -202,8 +204,10 @@ suse/uaa        2.6.11                          A Helm chart for SUSE UAA
    get pods --namespace scf'</command> then everything is all right.
   </para>
 
-<screen>&prompt.user;helm upgrade --force --recreate-pods <replaceable>susecf-scf</replaceable> suse/cf \
+<screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
+--version &latestscfchart; \
+--force --recreate-pods \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
 
@@ -211,8 +215,10 @@ suse/uaa        2.6.11                          A Helm chart for SUSE UAA
    Then upgrade Stratos:
   </para>
 
-<screen>&prompt.user;helm upgrade --force --recreate-pods <replaceable>susecf-console</replaceable> suse/console \
---values scf-config-values.yaml
+<screen>&prompt.user;helm upgrade <replaceable>susecf-console</replaceable> suse/console \
+--values scf-config-values.yaml \
+--version &lateststratoschart; \
+--force --recreate-pods
 </screen>
 <!-- Internal cf-usb broker broker endpoint URL change involving 1.3 -->
 
