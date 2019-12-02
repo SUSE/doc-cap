@@ -658,7 +658,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
       <link xlink:href="https://github.com/awslabs/aws-servicebroker/blob/master/docs/getting-started-k8s.md"/>.
       Skip the installation of the &kube; Service Catalog. While installing
       the AWS Service Broker, make sure to update the &helm; chart version (the
-      version as of this writing is <literal>1.0.0-beta.3</literal>). For the
+      version as of this writing is <literal>1.0.1</literal>). For the
       broker install, pass in a value indicating the Cluster Service Broker
       should not be installed (for example <command>--set
       deployClusterServiceBroker=false</command>). Ensure an account and role
