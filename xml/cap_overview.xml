@@ -29,57 +29,22 @@
     <itemizedlist>
      <listitem>
       <para>
-       PXC (Percona XtraDB Cluster) replaces <literal>cf-mysql</literal> for
-       database management — please read the Known Issues section of the release
-       notes for this version on deployment and upgrade changes
+       Support for Eirini SSH feature
       </para>
      </listitem>
      <listitem>
       <para>
-       Ability to set <literal>config.HA_strict=false</literal> in combination
-       with <literal>config.HA=true</literal> to allow lowering the sizing
-       count for a role below what is required for HA
+       Support for external Cloud Controller and UAA database configuration
       </para>
      </listitem>
      <listitem>
       <para>
-       UAA can now be embedded in the <literal>cf</literal> namespace — please
-       read the Known Issues section of the release notes for this version on
-       deployment limitations
-      </para>
-     </listitem>
-    </itemizedlist>
-   </listitem>
-   <listitem>
-    <para>
-     The Stratos UI has been updated to version 2.5.1:
-    </para>
-    <itemizedlist>
-     <listitem>
-      <para>
-       Tech preview for helm feature
+       Ingress controller now available for UAA embedded in SCF
       </para>
      </listitem>
      <listitem>
       <para>
-       Add custom welcome message on endpoints page
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       Add support for connecting &caasp; V4
-       endpoints
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       Refinements to the Autoscaler UI
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       For a full list of features and fixes see
-       <link xlink:href="https://github.com/SUSE/stratos/releases/tag/2.5.1"/>
+       AUDIT_WRITE capabilities added for CRI-O
       </para>
      </listitem>
     </itemizedlist>
@@ -88,7 +53,8 @@
 
   <para>
    See all product manuals for &productname; 1.x at
-   <link xlink:href="https://documentation.suse.com/suse-cap/1/">&productname; 1</link>.
+   <link xlink:href="https://documentation.suse.com/suse-cap/1/">SUSE
+   Cloud Application Platform 1</link>.
   </para>
 
   <tip>
@@ -126,18 +92,18 @@
   </para>
 
   <para>
-   All &docker; images for the &sle; builds are hosted on
+   All Docker images for the &sle; builds are hosted on
    <literal>registry.suse.com</literal>. These are the commercially-supported
    images. (Community-supported images for &opensuse; are hosted on
-   <link xlink:href="https://hub.docker.com"> &docker; Hub</link>.) Product
+   <link xlink:href="https://hub.docker.com"> Docker Hub</link>.) Product
    manuals on
-   <link xlink:href="https://documentation.suse.com/suse-cap/1/">&suse;
-   Doc: &productname; 1</link> refer to the
+   <link xlink:href="https://documentation.suse.com/suse-cap/1/">SUSE
+   Doc: SUSE Cloud Application Platform 1</link> refer to the
    commercially-supported &sle; version.
   </para>
 
   <para>
-   &cap; is designed to run on any &kube; cluster. This guide describes how
+   &cap; is designed to run on any Kubernetes cluster. This guide describes how
    to deploy it on:
   </para>
   <!-- Platforms covered by guide -->
@@ -224,8 +190,8 @@
 
   <para>
    The principle interface and API for deploying applications to &productname;
-   is &scf;. Most &cf; distributions run on virtual machines managed
-   by &bosh;. &scf; runs in &sle; containers managed by &kube;.
+   is &scf;. Most Cloud Foundry distributions run on virtual machines managed
+   by &bosh;. &scf; runs in SUSE Linux Enterprise containers managed by &kube;.
    Containerizing the components of the platform itself has these advantages:
   </para>
 
@@ -247,7 +213,7 @@
   </itemizedlist>
 
   <para>
-   &scf; packages upstream &cf; &bosh; releases to produce containers
+   &scf; packages upstream Cloud Foundry &bosh; releases to produce containers
    and configurations which are deployed to &kube; clusters using &helm;.
   </para>
  </sect1>
@@ -255,8 +221,9 @@
   <title>Minimum Requirements</title>
 
   <para>
-   This guide details the steps for deploying &scf; on &caasp;, and on
-   supported &kube; environments such as &aks-full;, &gke-full;, and &eks-full;.
+   This guide details the steps for deploying &scf; on &suse; &caasp;, and on
+   supported &kube; environments such as Microsoft Azure Kubernetes Service
+   (AKS), and Amazon Elastic Container Service for Kubernetes (EKS). &suse;
    &caasp; is a specialized application development and hosting platform built
    on the &susemicros; container host operating system, container orchestration
    with &kube;, and &salt; for automating installation and configuration.
@@ -266,7 +233,7 @@
    <title>Required Knowledge</title>
    <para>
     Installing and administering &productname; requires knowledge of Linux,
-    &docker;, &kube;, and your &kube; platform (for example &caasp;,
+    &docker;, &kube;, and your &kube; platform (for example &suse; &caasp;,
     AKS, EKS, OpenStack). You must plan resource allocation and network
     architecture by taking into account the requirements of your &kube;
     platform in addition to &scf; requirements. &scf; is a discrete component
@@ -278,8 +245,8 @@
   <para>
    You may create a minimal deployment on four &kube; nodes for testing.
    However, this is insufficient for a production deployment. A supported
-   deployment includes &scf; installed on &caasp;, &eks;, &gke;, or &aks;.
-   You also need a storage back-end such as &ses; or NFS, a DNS/DHCP
+   deployment includes &scf; installed on &suse; &caasp;, Amazon EKS, or Azure
+   AKS. You also need a storage back-end such as &ses; or NFS, a DNS/DHCP
    server, and an Internet connection to download additional packages during
    installation and ~10 GB of &docker; images on each &kube; worker after
    installation. (See <xref linkend="cha-cap-depl-caasp"/>.)
@@ -287,10 +254,10 @@
 
   <para>
    A production deployment requires considerable resources. &productname;
-   includes an entitlement of &caasp; and &ses;. &ses; alone has
+   includes an entitlement of &suse; &caasp; and &ses;. &ses; alone has
    substantial requirements; see the
    <link xlink:href="https://www.suse.com/products/suse-enterprise-storage/">Tech
-   Specs</link> for details. &caasp; requires a minimum of four hosts:
+   Specs</link> for details. &suse; &caasp; requires a minimum of four hosts:
    one admin and three &kube; nodes. &scf; is then deployed on the &kube;
    nodes. Four &caasp; nodes are not sufficient for a production deployment.
    <xref linkend="fig-cap-min-prod-arch"/> describes a minimal production
@@ -358,7 +325,7 @@
   </itemizedlist>
 
   <para>
-   &caasp; is a Container as a Service platform, and &productname; is a
+   &suse; &caasp; is a Container as a Service platform, and &productname; is a
    PaaS.
   </para>
 
@@ -377,7 +344,7 @@
   </figure>
 
   <para>
-   <xref linkend="fig-cap-containerized"/> illustrates how &caasp; and
+   <xref linkend="fig-cap-containerized"/> illustrates how &suse; &caasp; and
    &productname; containerize the platform itself.
   </para>
 
@@ -390,7 +357,7 @@
     <imageobject role="html">
      <imagedata fileref="cap-containerized.png"/>
     </imageobject>
-    <textobject role="description"><phrase>&caasp; and &productname; containerize the
+    <textobject role="description"><phrase>&suse; &caasp; and &productname; containerize the
       platform itself.</phrase>
     </textobject>
    </mediaobject>
@@ -434,7 +401,7 @@
     </listitem>
     <listitem>
      <para>
-      &docker; Trusted Registry owned by &suse;.
+      Docker Trusted Registry owned by SUSE.
      </para>
     </listitem>
     <listitem>
@@ -444,7 +411,7 @@
     </listitem>
     <listitem>
      <para>
-      &helm;, the &kube; package manager, which includes &tiller;, the &helm;
+      &helm;, the &kube; package manager, which includes Tiller, the &helm;
       server, and the <command>helm</command> command line client.
      </para>
     </listitem>
@@ -601,6 +568,30 @@
      </listitem>
     </varlistentry>
     <varlistentry>
+     <term>eirini</term>
+     <listitem>
+      <para>
+       An alternative to the Diego scheduler.
+      </para>
+     </listitem>
+    </varlistentry>
+        <varlistentry>
+     <term>eirini-persi</term>
+     <listitem>
+      <para>
+       Enables persistent storage for applications when using the Diego scheduler.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>eirini-ssh</term>
+     <listitem>
+      <para>
+       Provides SSH access to user applications when using the Diego scheduler.
+      </para>
+     </listitem>
+    </varlistentry>
+<varlistentry>
      <term>doppler</term>
      <listitem>
       <para>
@@ -622,7 +613,7 @@
      <term>mysql</term>
      <listitem>
       <para>
-       A &mariadb; server and component to route requests to replicas. (A
+       A MariaDB server and component to route requests to replicas. (A
        separate copy is deployed for <literal>uaa</literal>.)
       </para>
      </listitem>
@@ -656,7 +647,7 @@
      <term>router</term>
      <listitem>
       <para>
-       Routes application and API traffic. Exposed using a &kube; service.
+       Routes application and API traffic. Exposed using a Kubernetes service.
       </para>
      </listitem>
     </varlistentry>
@@ -756,13 +747,13 @@
        <entry>External</entry>
        <entry>HTTPS</entry>
        <entry>Internal &kube; components</entry>
-       <entry>Download &docker; Images</entry>
+       <entry>Download Docker Images</entry>
        <entry>Refer to registry.suse.com</entry>
        <entry>Refer to registry.suse.com</entry>
        <entry>registry.suse.com</entry>
-       <entry>&docker; images</entry>
+       <entry>Docker images</entry>
        <entry>None</entry>
-       <entry>&docker; images that make up &cap; are downloaded</entry>
+       <entry>Docker images that make up &cap; are downloaded</entry>
       </row>
       <row>
        <entry>3</entry>

@@ -369,41 +369,7 @@ kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m
    instructions.
   </para>
  </sect1>
- <sect1 xml:id="sec-cap-swap-accounting">
-  <title>Enable Swap Accounting</title>
 
-  <para>
-   Identify and set the cluster resource group, then enable kernel swap
-   accounting. Swap accounting is required by &cap;, but it is not the default
-   in AKS nodes. The following commands use the <command>az</command> command
-   to modify the &grub; configuration on each node, and then reboot the virtual
-   machines.
-  </para>
-
-  <procedure xml:id="pro-swap-account">
-   <step>
-<screen>&prompt.user;export MC_RG_NAME=$(az aks show --resource-group $RG_NAME --name $AKS_NAME --query nodeResourceGroup --output json | jq -r '.')</screen>
-   </step>
-   <step>
-<screen>&prompt.user;export VM_NODES=$(az vm list --resource-group $MC_RG_NAME --output json | jq -r '.[] | select (.tags.poolName | contains("'$NODEPOOL_NAME'")) | .name')</screen>
-   </step>
-   <step>
-<screen>&prompt.user;for i in $VM_NODES
- do
-   az vm run-command invoke --resource-group $MC_RG_NAME --name $i --command-id RunShellScript --scripts \
-   "sudo sed --in-place --regexp-extended 's|^(GRUB_CMDLINE_LINUX_DEFAULT=)\"(.*.)\"|\1\"\2 swapaccount=1\"|' \
-   /etc/default/grub.d/50-cloudimg-settings.cfg &amp;&amp; sudo update-grub"
-   az vm restart --resource-group $MC_RG_NAME --name $i
-done</screen>
-   </step>
-   <step>
-    <para>
-     Verify that all nodes are in state "Ready" again, before you continue.
-    </para>
-<screen>&prompt.user;kubectl get nodes</screen>
-   </step>
-  </procedure>
- </sect1>
  <sect1 xml:id="sec-cap-aks-storage">
   <title>Default Storage Class</title>
   <para>
@@ -957,7 +923,7 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
      <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/upgrade-cluster"/>.
     </para>
     <para>
-     Modify the &grub; configuration of each node to enable swap accounting and then
+     Modify the GRUB configuration of each node to enable swap accounting and then
      reboot all nodes. <literal>RG_NAME</literal> and <literal>AKS_NAME</literal> are
      the values set earlier in this chapter and can also be obtained through
      the AKS web dashboard.
