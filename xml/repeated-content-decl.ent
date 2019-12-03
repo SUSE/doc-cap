@@ -212,7 +212,7 @@ Before you start deploying &productname;, review the following documents:
       <entry>&productnumber; (current release)</entry>
       <entry>&latestscfchart;</entry>
       <entry>&lateststratoschart;</entry>
-      <entry>1.1.0</entry>
+      <entry>1.1.1</entry>
       <!-- cf-deployment 9.5: 2.138.0, cf api result: 2.138.0 -->
       <entry>2.138.0</entry>
       <entry>6.46.1</entry>
