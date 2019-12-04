@@ -78,8 +78,38 @@ env:
    </step>
    <step>
     <para>
-     Depending on your cluster configuration, Metrics Server need to be deployed
-     . Use &helm; to install the latest stable Metrics Server.
+     After initiating the <command>helm install</command> command to deploy
+     <literal>scf</literal>, monitor the status of the pods.
+    </para>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace scf'</screen>
+    <para>
+     In particular, take note of the <literal>secret-generation</literal> pod.
+     When its <literal>STATUS</literal> reaches a <literal>Running</literal>
+     state, a certificate signing request (CSR) from the
+     <literal>scf-bits-service-ssl-cert</literal> must be approved, Once
+     approved, the <literal>secret-generation</literal> will be able to reach a
+     <literal>Completed</literal> state.
+    </para>
+    <para>
+     Run the following command to approve the CSR.
+    </para>
+<screen>&prompt.user;kubectl certificate approve scf-bits-service-ssl-cert</screen>
+    <para>
+     Note that manual approval of CSRs is recommended.
+    </para>
+    <para>
+     An alternative to manual approval of the CSR is to pass
+     <command>--set env.KUBE_CSR_AUTO_APPROVAL=true</command> as part of the
+     <command>helm install</command> command. This flag will allow the CSR to
+     be automatically approved. Operators should take caution with this approach
+     as it will provide the secrets genrator with a cluster role binding that
+     allows it to approve <emphasis>all</emphasis> CSRs made to the &kube; signer.
+    </para>
+   </step>
+   <step>
+    <para>
+     Depending on your cluster configuration, Metrics Server may need to be
+     deployed. Use &helm; to install the latest stable Metrics Server.
     </para>
     <para>
      Note that <literal>--kubelet-insecure-tls</literal> is not recommended for
