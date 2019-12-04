@@ -4,37 +4,100 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha-cap-depl-sbs"
+<chapter version="5.0" xml:id="cha-cap-service-brokers"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
  <info>
-  <title>Setting Up and Using a Service Broker</title>
+  <title>Service Brokers</title>
   <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
    <dm:bugtracker></dm:bugtracker>
    <dm:translation>yes</dm:translation>
   </dm:docmanager>
  </info>
  <para>
-  The Open Service Broker API provides your &productname; applications with
-  access to external dependencies and platform-level capabilities, such as
+  The Open Service Broker API provides (OSBAPI) your &productname; applications
+  with access to external dependencies and platform-level capabilities, such as
   databases, filesystems, external repositories, and messaging systems. These
   resources are called services. Services are created, used, and deleted as
-  needed, and provisioned on demand.
+  needed, and provisioned on demand. This chapter introduces several different
+  service brokers that implement the Open Service Broker API.
+ </para>
+ 
+ <para>
+  Use the following guideline to determine which service broker is most suitable
+  for your situation.
  </para>
 
- <sect1 xml:id="sec-cap-disable-service-broker">
-  <title>Enabling and Disabling Service Brokers</title>
+ <itemizedlist>
+  <listitem>
+   <para>
+    When &productname; is deployed on a cloud service provider (CSP), use
+    service brokers provided by the CSP.
+   </para>
+   <itemizedlist>
+    <listitem>
+     <para>
+      For deployments on &aks-full;, see <xref linkend="sec-cap-azure-service-broker"/>.
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      For deployments on &eks-full;, see <xref linkend="sec-cap-aws-service-broker"/>.
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      For deployments on &gke-full;, see <xref linkend="sec-cap-gke-service-broker"/>.
+     </para>
+    </listitem>
+   </itemizedlist>
+  </listitem>
+  <listitem>
+   <para>
+    When connecting &productname; to existing HA &mysql; or &postgresql;
+    clusters or services, use <literal>cf-usb</literal>. See
+    <xref linkend="sec-cap-cf-usb"/> for more information.
+   </para>
+  </listitem>
+  <listitem>
+   <para>
+    When you want services deployed on demand to &kube;, use Minibroker. See
+    <xref linkend="sec-cap-minibroker"/> for more information.
+   </para>
+  </listitem>
+  <listitem>
+   <para>
+    When you want a service that is not one of the above, note that 3rd party
+    OSBAPI brokers will work with &productname;. Refer to the &cf; documentation
+    at <link xlink:href="https://docs.cloudfoundry.org/services/managing-service-brokers.html"/> 
+    for configuration instructions.
+   </para>
+  </listitem>
+ </itemizedlist>
+ <sect1 xml:id="sec-cap-cf-usb">
+  <title><literal>cf-usb</literal></title>
 
   <para>
-   The service broker feature is enabled as part of a default &scf;
-   deployment. To disable it, use the <command>--set "enable.cf_usb=false"</command>
-   flag when running <command>helm install</command> or <command>helm upgrade</command>.
+   Universal Service Broker for &cf;, or <literal>cf-usb</literal>, is a project
+   that implements and exposes the Open Service Broker API. It uses drivers,
+   referred to as plugins, to connect to different services. More information
+   about <literal>cf-usb</literal> can be found at
+   <link xlink:href="https://github.com/SUSE/cf-usb"/>.
   </para>
+  
+  <sect2 xml:id="sec-cap-cf-usb-enable-disable">
+   <title>Enabling and Disabling Service Brokers</title>
 
-  <para>
-   First fetch the <literal>uaa</literal> secret and certificate:
-  </para>
+   <para>
+    The service broker feature is enabled as part of a default &scf;
+    deployment. To disable it, use the <command>--set "enable.cf_usb=false"</command>
+    flag when running <command>helm install</command> or <command>helm upgrade</command>.
+   </para>
+
+   <para>
+    First fetch the <literal>uaa</literal> secret and certificate:
+   </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
 --output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
@@ -42,9 +105,9 @@
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
 --output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"</screen>
 
-  <para>
-   If disabling the feature on an initial deployment, run the following command:
-  </para>
+   <para>
+    If disabling the feature on an initial deployment, run the following command:
+   </para>
 
 <screen>&prompt.user;helm install suse/cf \
 --name <replaceable>susecf-scf</replaceable> \
@@ -53,9 +116,9 @@
 --set "secrets.UAA_CA_CERT=${CA_CERT}" \
 --set "enable.cf_usb=false"</screen>
 
- <para>
-  If disabling the feature on an existing deployment, run the following command:
- </para>
+  <para>
+   If disabling the feature on an existing deployment, run the following command:
+  </para>
 
 <screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
@@ -64,12 +127,12 @@
 --version &latestscfchart;
 </screen>
 
- <para>
-  To enable the feature again, run <command>helm upgrade</command> with the
-  <command>--set "enable.cf_usb=true"</command> flag. Be sure to
-  pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>
-  first:
- </para>
+  <para>
+   To enable the feature again, run <command>helm upgrade</command> with the
+   <command>--set "enable.cf_usb=true"</command> flag. Be sure to
+   pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>
+   first:
+  </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
 --output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
@@ -84,97 +147,93 @@
 --version &latestscfchart;
 </screen>
 
- </sect1>
- <sect1 xml:id="sec-cap-prereqs-service-broker">
-  <title>Prerequisites</title>
+  </sect2>
+  <sect2 xml:id="sec-cap-cf-usb-prereqs">
+   <title>Prerequisites</title>
 
-  <para>
-   The following examples demonstrate how to deploy service brokers for &mysql;
-   and &postgresql; with &helm;, using charts from the &suse; repository. You
-   must have the following prerequisites:
-  </para>
+   <para>
+    The following examples demonstrate how to deploy service brokers for &mysql;
+    and &postgresql; with &helm;, using charts from the &suse; repository. You
+    must have the following prerequisites:
+   </para>
 
-  <itemizedlist>
-   <listitem>
-    <para>
-     A working &productname; deployment with &helm; and the &cf;
-     command line interface (&cfcli;).
-    </para>
-   </listitem>
-   <listitem>
-    <para>
-     An Application Security Group (ASG) for applications to reach external
-     databases. (See
-     <link xlink:href="https://docs.cloudfoundry.org/concepts/asg.html">
-     Understanding Application Security Groups</link>.)
-    </para>
-   </listitem>
-   <listitem>
-    <para>
-     An external &mysql; or &postgresql; installation with account credentials that
-     allow creating and deleting databases and users.
-    </para>
-   </listitem>
-  </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>
+      A working &productname; deployment with &helm; and the &cf;
+      command line interface (&cfcli;).
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      An Application Security Group (ASG) for applications to reach external
+      databases. (See
+      <link xlink:href="https://docs.cloudfoundry.org/concepts/asg.html">
+      Understanding Application Security Groups</link>.)
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      An external &mysql; or &postgresql; installation with account credentials that
+      allow creating and deleting databases and users.
+     </para>
+    </listitem>
+   </itemizedlist>
 
-  <para>
-   For testing purposes you may create an insecure security group:
-  </para>
+   <para>
+    For testing purposes you may create an insecure security group:
+   </para>
 
 <screen>&prompt.user;echo > "internal-services.json" '[{ "destination": "0.0.0.0/0", "protocol": "all" }]'
 &prompt.user;cf create-security-group internal-services-test internal-services.json
 &prompt.user;cf bind-running-security-group internal-services-test
 &prompt.user;cf bind-staging-security-group internal-services-test</screen>
 
-  <para>
-   You may apply an ASG later, after testing. All running applications must be
-   restarted to use the new security group.
-  </para>
- </sect1>
- <sect1>
-  <title>Deploying on &caasp; 3</title>
+   <para>
+    You may apply an ASG later, after testing. All running applications must be
+    restarted to use the new security group.
+   </para>
+  </sect2>
+  <sect2>
+   <title>Deploying on &caasp;</title>
 
-  <para>
-   If you are deploying &productname; on &caasp; 3, see
-<!--TODO fixme-->
-   for important information on applying the required Pod Security Policy (PSP)
-   to your deployment. You must also apply the PSP to your new service brokers.
-  </para>
+   <para>
+    If you are deploying &productname; on &caasp;, see a Pod Security Policy
+    (PSP) must also applied to your new service brokers.
+   </para>
 
-  <para>
-   Take the example configuration file, <filename>cap-psp-rbac.yaml</filename>,
-   in
-<!--TODO fixme-->
-   , and append these lines to the end, using your own namespace name for your
-   new service broker:
-  </para>
+   <para>
+    Take the example configuration file, <filename>cap-psp-rbac.yaml</filename>,
+    and add the following. Replace <replaceable>mysql-sidecar</replaceable> with
+    the namespace name of your service broker.
+   </para>
 
 <screen>- kind: ServiceAccount
   name: default
   namespace: <replaceable>mysql-sidecar</replaceable></screen>
 
-  <para>
-   Then apply the updated PSP configuration, before you deploy your new service
-   broker, with this command:
-  </para>
+   <para>
+    Then apply the PSP configuration, before you deploy your new service
+    broker, with this command:
+   </para>
 
 <screen>&prompt.user;kubectl apply -f cap-psp-rbac.yaml</screen>
 
-  <para>
-   <command>kubectl apply</command> updates an existing deployment. After
-   applying the PSP, proceed to configuring and deploying your service broker.
-  </para>
- </sect1>
- <sect1 xml:id="sec-cap-configure-service-broker">
-  <title>Configuring the &mysql; Deployment</title>
+   <para>
+    <command>kubectl apply</command> updates an existing deployment. After
+    applying the PSP, proceed to configuring and deploying your service broker.
+   </para>
+  </sect2>
+  <sect2 xml:id="sec-cap-cf-usb-configure">
+   <title>Configuring the &mysql; Deployment</title>
 
-  <para>
-   Start by extracting the <literal>uaa</literal> namespace secrets name, and
-   the <literal>uaa</literal> and <literal>scf</literal> namespaces internal
-   certificates with these commands. These will output the complete
-   certificates. Substitute your secrets name if it is different than the
-   example:
-  </para>
+   <para>
+    Start by extracting the <literal>uaa</literal> namespace secrets name, and
+    the <literal>uaa</literal> and <literal>scf</literal> namespaces internal
+    certificates with these commands. These will output the complete
+    certificates. Substitute your secrets name if it is different than the
+    example:
+   </para>
 
 <screen>&prompt.user;kubectl get pods --namespace uaa \
 --output jsonpath='{.items[*].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}'
@@ -194,16 +253,16 @@
  to2GI8rPMb9W9fd2WwUXGEHTc+PqTg==
  -----END CERTIFICATE-----</screen>
 
-  <para>
-   You will copy these certificates into your configuration file as shown
-   below.
-  </para>
+   <para>
+    You will copy these certificates into your configuration file as shown
+    below.
+   </para>
 
-  <para>
-   Create a <filename>values.yaml</filename> file. The following example is
-   called <filename>usb-config-values.yaml</filename>. Modify the values to
-   suit your &productname; installation.
-  </para>
+   <para>
+    Create a <filename>values.yaml</filename> file. The following example is
+    called <filename>usb-config-values.yaml</filename>. Modify the values to
+    suit your &productname; installation.
+   </para>
 
 <screen>env:
   # Database access credentials
@@ -243,27 +302,27 @@ kube:
     hostname: "registry.suse.com"
     username: ""
     password: ""</screen>
- </sect1>
- <sect1 xml:id="sec-cap-configure-mysql">
-  <title>Deploying the &mysql; Chart</title>
+  </sect2>
+  <sect2 xml:id="sec-cap-cf-usb-configure-mysql">
+   <title>Deploying the &mysql; Chart</title>
 
-  <para>
-   &productname; includes charts for &mysql; and &postgresql; (see
-   <xref linkend="sec-cap-addrepo-prod"/> for information on managing your
-   &helm; repository):
-  </para>
+   <para>
+    &productname; includes charts for &mysql; and &postgresql; (see
+    <xref linkend="sec-cap-addrepo-prod"/> for information on managing your
+    &helm; repository):
+   </para>
 
 &helm-search-suse;
 
-  <para>
-   Create a namespace for your &mysql; sidecar:
-  </para>
+   <para>
+    Create a namespace for your &mysql; sidecar:
+   </para>
 
 <screen>&prompt.user;kubectl create namespace <replaceable>mysql-sidecar</replaceable></screen>
 
-  <para>
-   Install the &mysql; Helm chart:
-  </para>
+   <para>
+    Install the &mysql; Helm chart:
+   </para>
 
 <screen>&prompt.user;helm install suse/cf-usb-sidecar-mysql \
   --devel \
@@ -274,59 +333,59 @@ kube:
   --values usb-config-values.yaml \
   --wait</screen>
 
-  <para>
-   Wait for the new pods to become ready:
-  </para>
+   <para>
+    Wait for the new pods to become ready:
+   </para>
 
 <screen>&prompt.user;watch kubectl get pods --namespace=mysql-sidecar</screen>
 
-  <para>
-   Confirm that the new service has been added to your &productname; installation:
-  </para>
+   <para>
+    Confirm that the new service has been added to your &productname; installation:
+   </para>
 
 <screen>&prompt.user;cf marketplace</screen>
 
-  <warning>
-   <title>&mysql; Requires <literal>mysql_native_password</literal></title>
-   <para>
-    The &mysql; sidecar works only with deployments that use
-    <literal>mysql_native_password</literal> as their authentication plugin.
-    This is the default for &mysql; versions 8.0.3 and earlier, but later
-    versions must be started with
-    <literal>--default-auth=mysql_native_password</literal> before any user
-    creation. (See
-    <link xlink:href="https://github.com/go-sql-driver/mysql/issues/785"></link>
-   </para>
-  </warning>
- </sect1>
- <sect1 xml:id="sec-cap-deploy-mysql">
-  <title>Create and Bind a &mysql; Service</title>
+   <warning>
+    <title>&mysql; Requires <literal>mysql_native_password</literal></title>
+    <para>
+     The &mysql; sidecar works only with deployments that use
+     <literal>mysql_native_password</literal> as their authentication plugin.
+     This is the default for &mysql; versions 8.0.3 and earlier, but later
+     versions must be started with
+     <literal>--default-auth=mysql_native_password</literal> before any user
+     creation. (See
+     <link xlink:href="https://github.com/go-sql-driver/mysql/issues/785"></link>
+    </para>
+   </warning>
+  </sect2>
+  <sect2 xml:id="sec-cap-deploy-mysql">
+   <title>Create and Bind a &mysql; Service</title>
 
-  <para>
-   To create a new service instance, use the &cf; command line client:
-  </para>
+   <para>
+    To create a new service instance, use the &cf; command line client:
+   </para>
 
 <screen>&prompt.user;cf create-service mysql default <replaceable>service_instance_name</replaceable></screen>
 
-  <para>
-   You may replace <replaceable>service_instance_name</replaceable> with any
-   name you prefer.
-  </para>
+   <para>
+    You may replace <replaceable>service_instance_name</replaceable> with any
+    name you prefer.
+   </para>
 
-  <para>
-   Bind the service instance to an application:
-  </para>
+   <para>
+    Bind the service instance to an application:
+   </para>
 
 <screen>&prompt.user;cf bind-service <replaceable>my_application service_instance_name</replaceable></screen>
- </sect1>
- <sect1 xml:id="sec-cap-configure-postgresql">
-  <title>Deploying the &postgresql; Chart</title>
+  </sect2>
+  <sect2 xml:id="sec-cap-configure-postgresql">
+   <title>Deploying the &postgresql; Chart</title>
 
-  <para>
-   The &postgresql; configuration is slightly different from the &mysql;
-   configuration. The database-specific keys are named differently, and it
-   requires the <varname>SERVICE_POSTGRESQL_SSLMODE</varname> key.
-  </para>
+   <para>
+    The &postgresql; configuration is slightly different from the &mysql;
+    configuration. The database-specific keys are named differently, and it
+    requires the <varname>SERVICE_POSTGRESQL_SSLMODE</varname> key.
+   </para>
 
 <screen>env:
   # Database access credentials
@@ -373,9 +432,9 @@ kube:
     username: ""
     password: ""</screen>
 
-  <para>
-   Create a namespace and install the chart:
-  </para>
+   <para>
+    Create a namespace and install the chart:
+   </para>
 
 <screen>&prompt.user;kubectl create namespace <replaceable>postgres-sidecar</replaceable>
 
@@ -387,59 +446,59 @@ kube:
   --values usb-config-values.yaml \
   --wait</screen>
 
-  <para>
-   Then follow the same steps as for the &mysql; chart.
-  </para>
- </sect1>
- <sect1 xml:id="sec-cap-remove-sidecars">
-  <title>Removing Service Broker Sidecar Deployments</title>
+   <para>
+    Then follow the same steps as for the &mysql; chart.
+   </para>
+  </sect2>
+  <sect2 xml:id="sec-cap-cf-usb-remove-sidecars">
+   <title>Removing Service Broker Sidecar Deployments</title>
 
-  <para>
-   To correctly remove sidecar deployments, perform the following steps in
-   order.
-  </para>
+   <para>
+    To correctly remove sidecar deployments, perform the following steps in
+    order.
+   </para>
 
-  <itemizedlist>
-   <listitem>
-    <para>
-     Unbind any applications using instances of the service, and then delete
-     those instances:
-    </para>
+   <itemizedlist>
+    <listitem>
+     <para>
+      Unbind any applications using instances of the service, and then delete
+      those instances:
+     </para>
 <screen>&prompt.user;cf unbind-service <replaceable>my_app my_service_instance</replaceable>
 &prompt.user;cf delete-service <replaceable>my_service_instance</replaceable></screen>
-   </listitem>
-   <listitem>
-    <para>
-     Install the CF-USB CLI plugin for the &cf; CLI from
-     <link xlink:href="https://github.com/SUSE/cf-usb-plugin/releases/"/>, for
-     example:
-    </para>
+    </listitem>
+    <listitem>
+     <para>
+      Install the CF-USB CLI plugin for the &cf; CLI from
+      <link xlink:href="https://github.com/SUSE/cf-usb-plugin/releases/"/>, for
+      example:
+     </para>
 <screen>&prompt.user;cf install-plugin \
  https://github.com/SUSE/cf-usb-plugin/releases/download/1.0.0/cf-usb-plugin-1.0.0.0.g47b49cd-linux-amd64</screen>
-   </listitem>
-   <listitem>
-    <para>
-     Configure the &cf; USB CLI plugin, using the domain you created
-     for your &scf; deployment:
-    </para>
+    </listitem>
+    <listitem>
+     <para>
+      Configure the &cf; USB CLI plugin, using the domain you created
+      for your &scf; deployment:
+     </para>
 <screen>&prompt.user;cf usb-target https://usb.<replaceable>example.com</replaceable></screen>
-   </listitem>
-   <listitem>
-    <para>
-     List the current sidecar deployments and take note of the names:
-    </para>
+    </listitem>
+    <listitem>
+     <para>
+      List the current sidecar deployments and take note of the names:
+     </para>
 <screen>&prompt.user;cf usb-driver-endpoints</screen>
-   </listitem>
-   <listitem>
-    <para>
-     Remove the service by specifying its name:
-    </para>
+    </listitem>
+    <listitem>
+     <para>
+      Remove the service by specifying its name:
+     </para>
 <screen>&prompt.user;cf usb-delete-driver-endpoint <replaceable>mysql-service</replaceable></screen>
-   </listitem>
-   <listitem>
-    <para>
-     Find your release name, then delete the release:
-    </para>
+    </listitem>
+    <listitem>
+     <para>
+      Find your release name, then delete the release:
+     </para>
 <screen>&prompt.user;helm list
 NAME           REVISION UPDATED                   STATUS    CHART                      NAMESPACE
 susecf-console 1        Wed Aug 14 08:35:58 2018  DEPLOYED  console-&lateststratoschart;              stratos
@@ -448,14 +507,291 @@ susecf-uaa     1        Tue Aug 14 12:01:17 2018  DEPLOYED  uaa-&latestuaachart;
 mysql-service  1        Mon May 21 11:40:11 2018  DEPLOYED  cf-usb-sidecar-mysql-1.0.1 mysql-sidecar
 
 &prompt.user;helm delete --purge mysql-service</screen>
-   </listitem>
-  </itemizedlist>
- </sect1>
- <sect1 xml:id="sec-cap-service-broker-upgrades">
-  <title>Upgrade Notes</title>
-
+    </listitem>
+   </itemizedlist>
+  </sect2>
 <!-- Internal cf-usb broker broker endpoint URL change involving 1.3 -->
 
-  <xi:include href="sec_cf_usb_url.xml"/>
+   <xi:include href="sec_cf_usb_url.xml"/>
+ </sect1>
+ <sect1 xml:id="sec-cap-minibroker">
+  <title>Provisioning Services with Minibroker</title>
+  <para>
+   <link xlink:href="https://github.com/SUSE/minibroker">Minibroker</link> is an
+   <link xlink:href="https://www.openservicebrokerapi.org/">OSBAPI compliant
+   broker</link> created by members of the
+   <link xlink:href="https://github.com/osbkit">Microsoft Azure team</link>. It
+   provides a simple method to provision service brokers on &kube; clusters.
+  </para>
+  <important>
+   <title>Minibroker Upstream Services</title>
+   <para>
+    The services deployed by Minibroker are sourced from the stable upstream
+    charts repository, see
+    <link xlink:href="https://github.com/helm/charts/tree/master/stable"/>,
+    and maintained by contributors to the Helm project. Though &suse; supports
+    Minibroker itself, it does not support the service charts it deploys.
+    Operators should inspect the charts and images exposed by the service plans
+    before deciding to use them in a production environment.
+   </para>
+  </important>
+  <sect2 xml:id="sec-cap-minibroker-deployment">
+   <title>Deploy Minibroker</title>
+
+   <procedure>
+    <step>
+     <para>
+      Minibroker is deployed using a &helm; chart. Ensure your &suse; &helm; chart
+      repository contains the most recent Minibroker chart:
+     </para>
+ <screen>&prompt.user;helm repo update</screen>
+    </step>
+    <step>
+     <para>
+      Use &helm; to deploy Minibroker:
+     </para>
+ <screen>&prompt.user;helm install suse/minibroker --namespace minibroker --name minibroker --set "defaultNamespace=minibroker"</screen>
+     <para>
+      The following table lists the services provided by Minibroker, along with
+      the latest chart and application version combination known to work with
+      Minibroker.
+     </para>
+     <informaltable>
+      <tgroup cols="3">
+       <thead>
+	<row>
+	 <entry>Service</entry>
+	 <entry>Version</entry>
+	 <entry>appVersion</entry>
+	</row>
+       </thead>
+       <tbody>
+	<row>
+	 <entry>&mariadb;</entry>
+	 <entry>4.3.0</entry>
+	 <entry>10.1.34</entry>
+	</row>
+	<row>
+	 <entry>MongoDB</entry>
+	 <entry>5.3.3</entry>
+	 <entry>4.0.6</entry>
+	</row>
+	<row>
+	 <entry>&postgresql;</entry>
+	 <entry>6.2.1</entry>
+	 <entry>11.5.0</entry>
+	</row>
+	<row>
+	 <entry>Redis</entry>
+	 <entry>3.7.2</entry>
+	 <entry>4.0.10</entry>
+	</row>
+       </tbody>
+      </tgroup>
+     </informaltable>
+    </step>
+    <step>
+     <para>
+      Monitor the deployment progress. Wait until all pods are in a ready state
+      before proceeding:
+     </para>
+ <screen>&prompt.user;watch --color 'kubectl get pods --namespace minibroker'</screen>
+    </step>
+   </procedure>
+  </sect2>
+  <sect2 xml:id="sec-cap-minibroker-environment-setup">
+   <title>Setting Up the Environment for Minibroker Usage</title>
+
+   <procedure>
+    <step>
+     <para>
+      Begin by logging into your &cap; deployment. Select an organization and
+      space to work with, creating them if needed:
+     </para>
+ <screen>&prompt.user;cf api --skip-ssl-validation <replaceable>https://api.example.com</replaceable>
+ &prompt.user;cf login -u <replaceable>admin</replaceable> -p <replaceable>password</replaceable>
+ &prompt.user;cf create-org <replaceable>org</replaceable>
+ &prompt.user;cf create-space <replaceable>space</replaceable> -o <replaceable>org</replaceable>
+ &prompt.user;cf target -o <replaceable>org</replaceable> -s <replaceable>space</replaceable>
+ </screen>
+    </step>
+    <step>
+     <para>
+      Create the service broker. Note that Minibroker does not require
+      authentication and the <literal>username</literal> and
+      <literal>password</literal> parameters act as dummy values to pass to the
+      <command>cf</command> command. These parameters do not need to be
+      customized for the &cap; installation:
+     </para>
+ <screen>&prompt.user;cf create-service-broker <replaceable>minibroker</replaceable> <replaceable>username</replaceable> <replaceable>password</replaceable> http://minibroker-minibroker.minibroker.svc.cluster.local</screen>
+     <para>
+      After the service broker is ready, it can be seen on your deployment:
+     </para>
+ <screen>&prompt.user;cf service-brokers
+ Getting service brokers as admin...
+
+ name               url
+ minibroker         http://minibroker-minibroker.minibroker.svc.cluster.local
+ </screen>
+    </step>
+    <step>
+     <para>
+      List the services and their associated plans the Minibroker has access to:
+     </para>
+ <screen>&prompt.user;cf service-access -b <replaceable>minibroker</replaceable></screen>
+    </step>
+    <step>
+     <para>
+      Enable access to a service. Refer to the table in
+      <xref linkend="sec-cap-minibroker-deployment"/> for service plans known to
+      be working with Minibroker.
+     </para>
+     <para>
+      This example enables access to the Redis service:
+     </para>
+ <screen>&prompt.user;cf enable-service-access <replaceable>redis</replaceable> -b <replaceable>minibroker</replaceable> -p <replaceable>4-0-10</replaceable></screen>
+     <para>
+      Use <command>cf marketplace</command> to verify the service has been
+      enabled:
+     </para>
+ <screen>&prompt.user;cf marketplace
+ Getting services from marketplace in org org / space space as admin...
+ OK
+
+ service      plans     description
+ redis        4-0-10    Helm Chart for redis
+
+ TIP:  Use 'cf marketplace -s SERVICE' to view descriptions of individual plans of a given service.
+ </screen>
+    </step>
+    <step>
+     <para>
+      Define your
+      <link xlink:href="https://docs.cloudfoundry.org/concepts/asg.html">Application
+      Security Group (ASG)</link> rules in a JSON file. Using the defined rules,
+      create an ASG and bind it to an organization and space:
+     </para>
+ <screen>&prompt.user;echo > <replaceable>redis.json</replaceable> '[{ "protocol": "tcp", "destination": "<replaceable>10.0.0.0/8</replaceable>", "ports": "<replaceable>6379</replaceable>", "description": "<replaceable>Allow Redis traffic</replaceable>" }]'
+ &prompt.user;cf create-security-group <replaceable>redis_networking</replaceable> <replaceable>redis.json</replaceable>
+ &prompt.user;cf bind-security-group <replaceable>redis_networking</replaceable> <replaceable>org</replaceable> <replaceable>space</replaceable>
+ </screen>
+     <para>
+      Use following ports to define your ASG for the given service:
+     </para>
+     <informaltable>
+      <tgroup cols="2">
+       <thead>
+	<row>
+	 <entry>Service</entry>
+	 <entry>Port</entry>
+	</row>
+       </thead>
+       <tbody>
+	<row>
+	 <entry>&mariadb;</entry>
+	 <entry>3306</entry>
+	</row>
+	<row>
+	 <entry>MongoDB</entry>
+	 <entry>27017</entry>
+	</row>
+	<row>
+	 <entry>&postgresql;</entry>
+	 <entry>5432</entry>
+	</row>
+	<row>
+	 <entry>Redis</entry>
+	 <entry>6379</entry>
+	</row>
+       </tbody>
+      </tgroup>
+     </informaltable>
+    </step>
+    <step>
+     <para>
+      Create an instance of the Redis service. The <command>cf
+      marketplace</command> or <command>cf marketplace -s redis</command>
+      commands can be used to see the available plans for the service:
+     </para>
+ <screen>&prompt.user;cf create-service <replaceable>redis</replaceable> <replaceable>4-0-10</replaceable> <replaceable>redis-example-service</replaceable></screen>
+     <para>
+      Monitor the progress of the pods and wait until all pods are in a ready
+      state. The example below shows the additional <literal>redis</literal>
+      pods with a randomly generated name that have been created in the
+      <literal>minibroker</literal> namespace:
+     </para>
+ <screen>&prompt.user;watch --color 'kubectl get pods --namespace minibroker'
+ NAME                                            READY     STATUS             RESTARTS   AGE
+ alternating-frog-redis-master-0                 1/1       Running            2          1h
+ alternating-frog-redis-slave-7f7444978d-z86nr   1/1       Running            0          1h
+ minibroker-minibroker-5865f66bb8-6dxm7          2/2       Running            0          1h
+ </screen>
+    </step>
+   </procedure>
+  </sect2>
+  <sect2 xml:id="sec-cap-minibroker-application-usage">
+   <title>Using Minibroker with Applications</title>
+
+   <para>
+    This section demonstrates how to use Minibroker services with your
+    applications. The example below uses the Redis service instance created in
+    the previous section.
+   </para>
+
+   <procedure>
+    <step>
+     <para>
+      Obtain the demo application from Github and use <command>cf push</command>
+      with the <literal>--no-start</literal> flag to deploy the application
+      without starting it:
+     </para>
+ <screen>&prompt.user;git clone https://github.com/scf-samples/cf-redis-example-app
+ &prompt.user;cd cf-redis-example-app
+ &prompt.user;cf push --no-start
+ </screen>
+    </step>
+    <step>
+     <para>
+      Bind the service to your application and start the application:
+     </para>
+ <screen>&prompt.user;cf bind-service redis-example-app redis-example-service
+ &prompt.user;cf start redis-example-app
+ </screen>
+    </step>
+    <step>
+     <para>
+      When the application is ready, it can be tested by storing a value into
+      the Redis service:
+     </para>
+ <screen>&prompt.user;export APP=redis-example-app.example.com
+ &prompt.user;curl --request GET $APP/foo
+ &prompt.user;curl --request PUT $APP/foo --data 'data=bar'
+ &prompt.user;curl --request GET $APP/foo
+ </screen>
+     <para>
+      The first <literal>GET</literal> will return <literal>key not
+      present</literal>. After storing a value, it will return
+      <literal>bar</literal>.
+     </para>
+    </step>
+   </procedure>
+
+   <important>
+    <title>Database Names for &postgresql; and &mariadb; Instances</title>
+    <para>
+     By default, Minibroker creates &postgresql; and &mariadb; server instances
+     without a named database. A named database is required for normal usage
+     with these and will need to be added during the <command>cf
+     create-service</command> step using the <literal>-c</literal> flag. For
+     example:
+    </para>
+ <screen>&prompt.user;cf create-service postgresql 9-6-2 djangocms-db -c '{"postgresDatabase":"mydjango"}'
+ &prompt.user;cf create-service mariadb 10-1-34 my-db  -c '{"mariadbDatabase":"mydb"}'
+ </screen>
+    <para>
+     Other options can be set too, but vary by service type.
+    </para>
+   </important>
+  </sect2>
  </sect1>
 </chapter>
