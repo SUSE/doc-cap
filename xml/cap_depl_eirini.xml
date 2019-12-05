@@ -79,21 +79,13 @@ env:
    <step>
     <para>
      After initiating the <command>helm install</command> command to deploy
-     <literal>scf</literal>, monitor the status of the pods.
+     <literal>scf</literal>, The secret generator will create a certificate
+     signing request that must be approved by an administrator before deployment
+     will continue. To do so, run the command below where <literal>scf</literal>
+     should be replaced with your namespace of your <literal>scf</literal>
+     deployment.
     </para>
-<screen>&prompt.user;watch --color 'kubectl get pods --namespace scf'</screen>
-    <para>
-     In particular, take note of the <literal>secret-generation</literal> pod.
-     When its <literal>STATUS</literal> reaches a <literal>Running</literal>
-     state, a certificate signing request (CSR) from the
-     <literal>scf-bits-service-ssl-cert</literal> must be approved, Once
-     approved, the <literal>secret-generation</literal> will be able to reach a
-     <literal>Completed</literal> state.
-    </para>
-    <para>
-     Run the following command to approve the CSR.
-    </para>
-<screen>&prompt.user;kubectl certificate approve scf-bits-service-ssl-cert</screen>
+<screen>&prompt.user;kubectl certificate approve <replaceable>scf</replaceable>-bits-service-ssl-cert</screen>
     <para>
      Note that manual approval of CSRs is recommended.
     </para>
