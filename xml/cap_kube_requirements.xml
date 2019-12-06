@@ -92,6 +92,12 @@
    </listitem>
    <listitem>
     <para>
+     Usage with &cap; requires &helm; 2 and/or iterations of its minor releases.
+     Compatibility between &cap; and &helm; 3 is not supported.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
      Helm's &tiller; has to be installed and active, with &tiller; on the &kube;
      cluster and Helm on your remote administration machine
     </para>
