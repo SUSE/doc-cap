@@ -45,7 +45,7 @@
     <para>
      The plugin can be installed by running the following command:
     </para>
-<screen>&prompt.user;cf install-plugin app-autoscaler-plugin</screen>
+<screen>&prompt.user;cf install-plugin -r CF-Community app-autoscaler-plugin</screen>
    </listitem>
   </itemizedlist>
  </sect1>
@@ -325,7 +325,24 @@
      <term>detach-autoscaling-policy</term>
      <listitem>
       <para>
-       Detach the scaling policy from an application. See <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler-cli-plugin#cf-detach-autoscaling-policy"/> for more information.
+       Detach the scaling policy from an application. See <link xlink:href="https://github.com/cloudfoundry/app-autoscaler-cli-plugin#cf-detach-autoscaling-policy"/> for more information.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>create-autoscaling-credential</term>
+     <listitem>
+      <para>
+       Create custom metric credential for an application. See <link xlink:href="https://github.com/cloudfoundry/app-autoscaler-cli-plugin#cf-create-autoscaling-credential"/> for more information.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>delete-autoscaling-credential</term>
+     <listitem>
+      <para>
+        Delete the custom metric credential of an application.
+        See <link xlink:href="https://github.com/cloudfoundry/app-autoscaler-cli-plugin#cf-delete-autoscaling-credential"/> for more information.
       </para>
      </listitem>
     </varlistentry>
@@ -465,6 +482,11 @@
        <listitem>
         <para>
          memoryutil
+        </para>
+       </listitem>
+       <listitem>
+        <para>
+         cpu
         </para>
        </listitem>
        <listitem>
