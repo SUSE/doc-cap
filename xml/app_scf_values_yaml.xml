@@ -18,7 +18,7 @@
  </para>
 
 <screen>apiVersion: v1
-appVersion: 1.5.1
+appVersion: 1.5.2
 description: A Helm chart for SUSE Cloud Foundry
 name: cf
 version: 2.19.1
