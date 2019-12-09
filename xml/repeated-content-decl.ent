@@ -219,6 +219,26 @@ Before you start deploying &productname;, review the following documents:
       <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.46.1"/></entry>
      </row>
      <row>
+      <entry>1.5.1</entry>
+      <entry>2.19.1</entry>
+      <entry>2.6.0</entry>
+      <entry>1.1.0</entry>
+      <!-- cf-deployment 9.5: 2.138.0, cf api result: 2.138.0 -->
+      <entry>2.138.0</entry>
+      <entry>6.46.1</entry>
+      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.46.1"/></entry>
+     </row>
+     <row>
+      <entry>1.5</entry>
+      <entry>2.18.0</entry>
+      <entry>2.5.3</entry>
+      <entry>1.1.0</entry>
+      <!-- cf-deployment 9.5: 2.138.0, cf api result: 2.138.0 -->
+      <entry>2.138.0</entry>
+      <entry>6.46.1</entry>
+      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.46.1"/></entry>
+     </row>
+     <row>
       <entry>1.5</entry>
       <entry>2.18.0</entry>
       <entry>2.5.3</entry>
