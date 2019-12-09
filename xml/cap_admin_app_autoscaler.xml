@@ -40,7 +40,7 @@
 
    <listitem>
     <para>
-     The &cf; CLI AutoScaler Plug-in, see <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler-cli-plugin"/>
+     The &cf; CLI AutoScaler Plug-in, see <link xlink:href="https://github.com/cloudfoundry/app-autoscaler-cli-plugin"/>
     </para>
     <para>
      The plugin can be installed by running the following command:
@@ -294,14 +294,14 @@
    <title>The App-AutoScaler &cfcli; Plugin</title>
    <para>
     The App-AutoScaler plugin is used for managing the service with your
-    applications and provides the following commands. Refer to <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler-cli-plugin#command-list"/> for details about each command:
+    applications and provides the following commands. Refer to <link xlink:href="https://github.com/cloudfoundry/app-autoscaler-cli-plugin#command-list"/> for details about each command:
    </para>
    <variablelist>
     <varlistentry>
      <term>autoscaling-api</term>
      <listitem>
       <para>
-       Set or view AutoScaler service API endpoint. See <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler-cli-plugin#cf-autoscaling-api"/> for more information.
+       Set or view AutoScaler service API endpoint. See <link xlink:href="https://github.com/cloudfoundry/app-autoscaler-cli-plugin#cf-autoscaling-api"/> for more information.
       </para>
      </listitem>
     </varlistentry>
@@ -309,7 +309,7 @@
      <term>autoscaling-policy</term>
      <listitem>
       <para>
-       Retrieve the scaling policy of an application. See <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler-cli-plugin#cf-autoscaling-policy"/> for more information.
+       Retrieve the scaling policy of an application. See <link xlink:href="https://github.com/cloudfoundry/app-autoscaler-cli-plugin#cf-autoscaling-policy"/> for more information.
       </para>
      </listitem>
     </varlistentry>
@@ -317,7 +317,7 @@
      <term>attach-autoscaling-policy</term>
      <listitem>
       <para>
-       Attach a scaling policy to an application. See <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler-cli-plugin#cf-attach-autoscaling-policy"/> for more information.
+       Attach a scaling policy to an application. See <link xlink:href="https://github.com/cloudfoundry/app-autoscaler-cli-plugin#cf-attach-autoscaling-policy"/> for more information.
       </para>
      </listitem>
     </varlistentry>
@@ -333,7 +333,7 @@
      <term>autoscaling-metrics</term>
      <listitem>
       <para>
-       Retrieve the metrics of an application. See <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler-cli-plugin#cf-autoscaling-metrics"/> for more information.
+       Retrieve the metrics of an application. See <link xlink:href="https://github.com/cloudfoundry/app-autoscaler-cli-plugin#cf-autoscaling-metrics"/> for more information.
       </para>
      </listitem>
     </varlistentry>
@@ -341,7 +341,7 @@
      <term>autoscaling-history</term>
      <listitem>
       <para>
-       Retrieve the scaling history of an application. See <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler-cli-plugin#cf-autoscaling-history"/> for more information.
+       Retrieve the scaling history of an application. See <link xlink:href="https://github.com/cloudfoundry/app-autoscaler-cli-plugin#cf-autoscaling-history"/> for more information.
       </para>
      </listitem>
     </varlistentry>
@@ -353,37 +353,37 @@
    <para>
     The App-AutoScaler service provides a
     Public
-    API with detailed usage information, see <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/docs/Public_API.rst"/>. It includes requests to:
+    API with detailed usage information, see <link xlink:href="https://github.com/cloudfoundry/app-autoscaler/blob/develop/docs/Public_API.rst"/>. It includes requests to:
    </para>
    <itemizedlist>
     <listitem>
      <para>
-      List scaling history of an application. For details, refer to <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/docs/Public_API.rst#list-scaling-history-of-an-application"/>
+      List scaling history of an application. For details, refer to <link xlink:href="https://github.com/cloudfoundry/app-autoscaler/blob/develop/docs/Public_API.rst#list-scaling-history-of-an-application"/>
      </para>
     </listitem>
     <listitem>
      <para>
-      List instance metrics of an application. For details, refer to <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/docs/Public_API.rst#list-instance-metrics-of-an-application"/>
+      List instance metrics of an application. For details, refer to <link xlink:href="https://github.com/cloudfoundry/app-autoscaler/blob/develop/docs/Public_API.rst#list-instance-metrics-of-an-application"/>
      </para>
     </listitem>
     <listitem>
      <para>
-      List aggregated metrics of an application. For details, refer to <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/docs/Public_API.rst#list-aggregated-metrics-of-an-application"/>
+      List aggregated metrics of an application. For details, refer to <link xlink:href="https://github.com/cloudfoundry/app-autoscaler/blob/develop/docs/Public_API.rst#list-aggregated-metrics-of-an-application"/>
      </para>
     </listitem>
     <listitem>
      <para>
-      Policy api. For details, refer to <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/docs/Public_API.rst#policy-api"/>
+      Policy api. For details, refer to <link xlink:href="https://github.com/cloudfoundry/app-autoscaler/blob/develop/docs/Public_API.rst#policy-api"/>
      </para>
     </listitem>
     <listitem>
      <para>
-      Delete policy. For details, refer to <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/docs/Public_API.rst#delete-policy"/>
+      Delete policy. For details, refer to <link xlink:href="https://github.com/cloudfoundry/app-autoscaler/blob/develop/docs/Public_API.rst#delete-policy"/>
      </para>
     </listitem>
     <listitem>
      <para>
-      Get policy. For details, refer to <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/docs/Public_API.rst#get-policy"/>
+      Get policy. For details, refer to <link xlink:href="https://github.com/cloudfoundry/app-autoscaler/blob/develop/docs/Public_API.rst#get-policy"/>
      </para>
     </listitem>
    </itemizedlist>
@@ -431,7 +431,7 @@
 
   <para>
    For an example that demonstrates defining multiple scaling rules in a single
-   policy, refer to the sample of a policy file at <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/blob/develop/src/integration/fakePolicyWithSchedule.json"/>. The complete list of configurable policy values can be
+   policy, refer to the sample of a policy file at <link xlink:href="https://github.com/cloudfoundry/app-autoscaler/blob/develop/src/integration/fakePolicyWithSchedule.json"/>. The complete list of configurable policy values can be
    found at
    <link xlink:href="https://github.com/cloudfoundry/app-autoscaler/blob/master/docs/policy.md"/>.
   </para>
@@ -477,13 +477,18 @@
          throughput
         </para>
        </listitem>
+       <listitem>
+        <para>
+         custom metric
+        </para>
+       </listitem>
       </itemizedlist>
      </listitem>
     </varlistentry>
    </variablelist>
    <para>
     See
-    <link xlink:href="https://github.com/cloudfoundry-incubator/app-autoscaler/tree/develop/docs#scaling-type"/> for additional details.
+    <link xlink:href="https://github.com/cloudfoundry/app-autoscaler/tree/develop/docs#scaling-type"/> for additional details.
    </para>
   </sect2>
  </sect1>
