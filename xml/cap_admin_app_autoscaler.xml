@@ -46,6 +46,10 @@
      The plugin can be installed by running the following command:
     </para>
 <screen>&prompt.user;cf install-plugin -r CF-Community app-autoscaler-plugin</screen>
+    <para>
+      If the plugin repo is not found, add it first:
+    </para>
+<screen>&prompt.user;cf add-plugin-repo "CF-Community" "https://plugins.cloudfoundry.org"</screen>
    </listitem>
   </itemizedlist>
  </sect1>
@@ -220,73 +224,35 @@
   <title>Using the App-AutoScaler Service</title>
 
   <para>
-   Create the Service Broker for App-AutoScaler, replacing
-   <replaceable>example.com</replaceable> with the <literal>DOMAIN</literal>
-   set in your <filename>scf-config-values.yaml</filename> file:
+   Push the application without starting it
+   first:
   </para>
 
-<screen>&prompt.user;SECRET=$(kubectl get pods --namespace scf \
---output jsonpath='{.items[?(.metadata.name=="api-group-0")].spec.containers[?(.name=="api-group")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
-
-&prompt.user;AS_PASSWORD="$(kubectl get secret $SECRET --namespace scf --output jsonpath="{.data['autoscaler-service-broker-password']}" | base64 --decode)"
-
-&prompt.user;cf create-service-broker <replaceable>autoscaler</replaceable> username $AS_PASSWORD https://autoscalerservicebroker.<replaceable>example.com</replaceable>
+<screen>&prompt.user;cf push <replaceable>my_application</replaceable> --no-start
 </screen>
 
   <para>
-   Enable access to the service:
+   Attach auto-scaling policy to the application:
   </para>
 
-<screen>&prompt.user;cf enable-service-access autoscaler -p autoscaler-free-plan</screen>
-
-  <para>
-   Create a new instance of the App-AutoScaler service:
-  </para>
-
-<screen>&prompt.user;cf create-service autoscaler autoscaler-free-plan <replaceable>service_instance_name</replaceable></screen>
-
-  <para>
-   A name of your choice may be used to replace
-   <literal>service_instance_name</literal>.
-  </para>
-
-  <para>
-   Bind the service instance to an application and attach a policy (See
-   <xref linkend="sec-cap-app-autoscaler-policies"/>):
-  </para>
-
-<screen>&prompt.user;cf bind-service <replaceable>my_application</replaceable> <replaceable>service_instance_name</replaceable>
-&prompt.user;cf attach-autoscaling-policy <replaceable>my_application</replaceable> <replaceable>my-policy.json</replaceable>
+<screen>&prompt.user;cf attach-autoscaling-policy <replaceable>my_application</replaceable> <replaceable>my-policy.json</replaceable>
 </screen>
 
   <para>
-   If a policy has already been defined and is available for use, you can
-   attach the policy as part of the binding process instead:
-  </para>
-
-<screen>&prompt.user;cf bind-service <replaceable>my_application</replaceable> <replaceable>service_instance_name</replaceable> -c <replaceable>'{
-    "instance_min_count": 1,
-    "instance_max_count": 4,
-    "scaling_rules": [{
-        "metric_type": "memoryused",
-        "stat_window_secs": 60,
-        "breach_duration_secs": 60,
-        "threshold": 10,
-        "operator": ">=",
-        "cool_down_secs": 300,
-        "adjustment": "+1"
-    }]
-}'</replaceable></screen>
-
-  <para>
-   Note that attaching a policy in this manner requires passing the policy
-   directly rather than specifying the path to the policy file.
+    Policy has to be defined as a JSON file
+    (See <xref linkend="sec-cap-app-autoscaler-policies"/>) in a proper format
+    (See <link xlink:href="https://github.com/cloudfoundry/app-autoscaler/blob/develop/docs/policy.md"/>).
   </para>
 
   <para>
-   Once an instance of the App-AutoScaler service has been created and bound to
-   an app, it can be managed using the &cfcli; with the App-AutoScaler plugin
-   (See <xref linkend="sec-cap-app-autoscaler-cli"/>) or using the
+   Start the application:
+  </para>
+
+<screen>&prompt.user;cf start <replaceable>my_application</replaceable></screen>
+
+  <para>
+   Autoscaling policies can be managed using &cfcli; with the App-AutoScaler plugin
+   as above (See <xref linkend="sec-cap-app-autoscaler-cli"/>) or using the
    App-AutoScaler API (See <xref linkend="sec-cap-app-autoscaler-api"/>).
   </para>
 
@@ -294,7 +260,7 @@
    <title>The App-AutoScaler &cfcli; Plugin</title>
    <para>
     The App-AutoScaler plugin is used for managing the service with your
-    applications and provides the following commands. Refer to <link xlink:href="https://github.com/cloudfoundry/app-autoscaler-cli-plugin#command-list"/> for details about each command:
+    applications and provides the following commands (with shortcuts in brackets). Refer to <link xlink:href="https://github.com/cloudfoundry/app-autoscaler-cli-plugin#command-list"/> for details about each command:
    </para>
    <variablelist>
     <varlistentry>
