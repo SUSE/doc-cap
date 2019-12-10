@@ -264,7 +264,7 @@
    </para>
    <variablelist>
     <varlistentry>
-     <term>autoscaling-api</term>
+     <term>autoscaling-api (asa)</term>
      <listitem>
       <para>
        Set or view AutoScaler service API endpoint. See <link xlink:href="https://github.com/cloudfoundry/app-autoscaler-cli-plugin#cf-autoscaling-api"/> for more information.
@@ -272,7 +272,7 @@
      </listitem>
     </varlistentry>
     <varlistentry>
-     <term>autoscaling-policy</term>
+     <term>autoscaling-policy (asp)</term>
      <listitem>
       <para>
        Retrieve the scaling policy of an application. See <link xlink:href="https://github.com/cloudfoundry/app-autoscaler-cli-plugin#cf-autoscaling-policy"/> for more information.
@@ -280,7 +280,7 @@
      </listitem>
     </varlistentry>
     <varlistentry>
-     <term>attach-autoscaling-policy</term>
+     <term>attach-autoscaling-policy (aasp)</term>
      <listitem>
       <para>
        Attach a scaling policy to an application. See <link xlink:href="https://github.com/cloudfoundry/app-autoscaler-cli-plugin#cf-attach-autoscaling-policy"/> for more information.
@@ -288,7 +288,7 @@
      </listitem>
     </varlistentry>
     <varlistentry>
-     <term>detach-autoscaling-policy</term>
+     <term>detach-autoscaling-policy (dasp)</term>
      <listitem>
       <para>
        Detach the scaling policy from an application. See <link xlink:href="https://github.com/cloudfoundry/app-autoscaler-cli-plugin#cf-detach-autoscaling-policy"/> for more information.
@@ -296,7 +296,7 @@
      </listitem>
     </varlistentry>
     <varlistentry>
-     <term>create-autoscaling-credential</term>
+     <term>create-autoscaling-credential (casc)</term>
      <listitem>
       <para>
        Create custom metric credential for an application. See <link xlink:href="https://github.com/cloudfoundry/app-autoscaler-cli-plugin#cf-create-autoscaling-credential"/> for more information.
@@ -304,7 +304,7 @@
      </listitem>
     </varlistentry>
     <varlistentry>
-     <term>delete-autoscaling-credential</term>
+     <term>delete-autoscaling-credential (dasc)</term>
      <listitem>
       <para>
         Delete the custom metric credential of an application.
@@ -313,7 +313,7 @@
      </listitem>
     </varlistentry>
     <varlistentry>
-     <term>autoscaling-metrics</term>
+     <term>autoscaling-metrics (asm)</term>
      <listitem>
       <para>
        Retrieve the metrics of an application. See <link xlink:href="https://github.com/cloudfoundry/app-autoscaler-cli-plugin#cf-autoscaling-metrics"/> for more information.
@@ -321,7 +321,7 @@
      </listitem>
     </varlistentry>
     <varlistentry>
-     <term>autoscaling-history</term>
+     <term>autoscaling-history (ash)</term>
      <listitem>
       <para>
        Retrieve the scaling history of an application. See <link xlink:href="https://github.com/cloudfoundry/app-autoscaler-cli-plugin#cf-autoscaling-history"/> for more information.
