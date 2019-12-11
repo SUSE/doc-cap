@@ -178,8 +178,7 @@ Please log in again</screen>
 
   <para>
    After you have set up a service broker (see
-   <xref linkend="cha-cap-minibroker"/> and <xref linkend="cha-cap-depl-sbs"/>),
-   create new services:
+   <xref linkend="cha-cap-service-brokers"/>), create new services:
   </para>
 
 <screen>&prompt.user;cf create-service <replaceable>service-name</replaceable> <replaceable>default</replaceable> <replaceable>mydb</replaceable></screen>
