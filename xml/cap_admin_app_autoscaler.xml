@@ -232,7 +232,7 @@
 </screen>
 
   <para>
-   Attach a autoscaling policy to the application:
+   Attach autoscaling policy to the application:
   </para>
 
 <screen>&prompt.user;cf attach-autoscaling-policy <replaceable>my_application</replaceable> <replaceable>my-policy.json</replaceable>
