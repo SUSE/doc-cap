@@ -660,6 +660,8 @@ kubernetes:
 prometheus:
   kubeStateMetrics:
     enabled: true
+  server:
+    storageClass: <replaceable>"persistent"</replaceable>
 nginx:
   username: <replaceable>username</replaceable>
   password: <replaceable>password</replaceable>
@@ -674,6 +676,14 @@ services:
       <literal>apiEndpoint</literal> is the same URL that you used when
       registering your &kube; environment with Stratos (the &kube; API
       Server URL)
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      <literal>storageClass</literal> is the storage class to be used by Stratos
+      Metrics. If a storage class is not assigned, the default storage class
+      will be used. If a storage class is not specified and there is no default
+      storage class, the <literal>prometheus</literal> pod will fail to start.
      </para>
     </listitem>
     <listitem>
