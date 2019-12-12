@@ -148,22 +148,22 @@
   <itemizedlist>
    <listitem>
     <para>
-     The <literal>mysql</literal> roles are in high availability mode by setting
-     <literal>config.HA</literal> to <literal>true</literal>, see
-     <xref linkend="sec-cap-upgrade-config-ha"/>.
+     If the <literal>mysql</literal> roles are currently running in high
+     availability mode through setting <literal>config.HA</literal> to
+     <literal>true</literal>, see <xref linkend="sec-cap-upgrade-config-ha"/>.
     </para>
    </listitem>
    <listitem>
     <para>
-     The <literal>mysql</literal> roles are in high availability mode by
-     configuring custom sizing values, see
+     If the <literal>mysql</literal> roles are currently running in high
+     availability mode through configuring custom sizing values, see
      <xref linkend="sec-cap-upgrade-custom-sizing"/>.
     </para>
    </listitem>
    <listitem>
     <para>
-     The <literal>mysql</literal> roles are in single availability mode, see
-     <xref linkend="sec-cap-upgrade-no-ha"/>.
+     If the <literal>mysql</literal> roles are currently running in single
+     availability mode, see <xref linkend="sec-cap-upgrade-no-ha"/>.
     </para>
    </listitem>
   </itemizedlist>
@@ -188,8 +188,8 @@
     <step>
      <para>
       For the <literal>uaa</literal> deployment, scale the instance count of the
-      <literal>mysql</literal> role to 1 and remove the associated persistent
-      volume claim.
+      <literal>mysql</literal> role to 1 and remove the persistent volume claims
+      associated with the removed <literal>mysql</literal> instances.
      </para>
      <substeps>
       <step>
@@ -226,19 +226,30 @@ sizing:
       </step>
       <step>
        <para>
-        Delete the persistent volume claim (PVC) for <literal>mysql-1</literal>
-	from the <literal>uaa</literal> namespace. <emphasis>Do not</emphasis>
-	delete the persistent volume (PV).
+        Delete the persistent volume claims (PVC) associated with the removed
+        <literal>mysql</literal> instances from the <literal>uaa</literal>
+        namespace. <emphasis>Do not</emphasis> delete the persistent volumes
+	(PV).
        </para>
-<screen>&prompt.user;kubectl delete persistentvolumeclaim --namespace uaa mysql-data-mysql-1</screen>
+       <para>
+        When <literal>config.HA</literal> is set to <literal>true</literal>,
+	there are 3 instances of the<literal>mysql</literal> role. This means
+	that after scaling to single availability, the PVCs associated with
+	<literal>mysql-1</literal> and <literal>mysql-2</literal> need to be
+	deleted.
+       </para>
+<screen>&prompt.user;kubectl delete persistentvolumeclaim --namespace uaa mysql-data-mysql-1
+
+&prompt.user;kubectl delete persistentvolumeclaim --namespace uaa mysql-data-mysql-2
+</screen>
       </step>
      </substeps>
     </step>
     <step>
      <para>
       For the <literal>scf</literal> deployment, scale the instance count of the
-      <literal>mysql</literal> role to 1 and remove the associated
-      persistent volume claim.
+      <literal>mysql</literal> role to 1 and remove the persistent volume claims
+      associated with the removed <literal>mysql</literal> instances.
      </para>
      <substeps>
       <step>
@@ -269,11 +280,22 @@ sizing:
       </step>
       <step>
        <para>
-        Delete the persistent volume claim (PVC) for <literal>mysql-1</literal>
-	from the <literal>scf</literal> namespace. <emphasis>Do not</emphasis>
-	delete the persistent volume (PV).
+        Delete the persistent volume claims (PVC) associated with the removed
+        <literal>mysql</literal> instances from the <literal>scf</literal>
+        namespace. <emphasis>Do not</emphasis> delete the persistent volumes
+	(PV).
        </para>
-<screen>&prompt.user;kubectl delete persistentvolumeclaim --namespace scf mysql-data-mysql-1</screen>
+       <para>
+        When <literal>config.HA</literal> is set to <literal>true</literal>,
+	there are 3 instances of the<literal>mysql</literal> role. This means
+	that after scaling to single availability, the PVCs associated with
+	<literal>mysql-1</literal> and <literal>mysql-2</literal> need to be
+	deleted.
+       </para>
+<screen>&prompt.user;kubectl delete persistentvolumeclaim --namespace scf mysql-data-mysql-1
+
+&prompt.user;kubectl delete persistentvolumeclaim --namespace scf mysql-data-mysql-2
+</screen>
       </step>
      </substeps>
     </step>
@@ -358,7 +380,7 @@ sizing:
       with the values below. The file sets <literal>config.HA_strict</literal>
       to <literal>true</literal>, which enforces all roles, including
       <literal>mysql</literal>, are at the required minimum required instance
-      count for a default HA configuration. Note that it is assumed
+      count of 3 for a default HA configuration. Note that it is assumed
       <literal>config.HA=true</literal> is set in your existing
       <filename>scf-config-values.yaml</filename> file.
      </para>
@@ -402,7 +424,7 @@ sizing:
       created earlier. The file sets <literal>config.HA_strict</literal>
       to <literal>true</literal>, which enforces all roles, including
       <literal>mysql</literal>, are at the required minimum required instance
-      count for a default HA configuration. Note that it is assumed
+      count of 3 for a default HA configuration. Note that it is assumed
       <literal>config.HA=true</literal> is set in your existing
       <filename>scf-config-values.yaml</filename> file.
      </para>
@@ -438,8 +460,8 @@ sizing:
     <step>
      <para>
       For the <literal>uaa</literal> deployment, scale the instance count of the
-      <literal>mysql</literal> role to 1 and remove the associated persistent
-      volume claim.
+      <literal>mysql</literal> role to 1 and remove the persistent volume claims
+      associated with the removed <literal>mysql</literal> instances.
      </para>
      <substeps>
       <step>
@@ -470,19 +492,39 @@ sizing:
       </step>
       <step>
        <para>
-        Delete the persistent volume claim (PVC) for <literal>mysql-1</literal>
-	from the <literal>uaa</literal> namespace. <emphasis>Do not</emphasis>
-	delete the persistent volume (PV).
+        Delete the persistent volume claims (PVC) associated with the removed
+        <literal>mysql</literal> instances from the <literal>uaa</literal>
+        namespace. <emphasis>Do not</emphasis> delete the persistent volumes
+	(PV).
        </para>
-<screen>&prompt.user;kubectl delete persistentvolumeclaim --namespace uaa mysql-data-mysql-1</screen>
+       <para>
+        This example assumes <literal>mysql.count</literal> was previously set
+        to 3 instances in your custom sizing configuration file. This means
+        that after scaling to single availability, the PVCs associated with
+        <literal>mysql-1</literal> and <literal>mysql-2</literal> need to be
+        deleted.
+       </para>
+       <para>
+        If your <literal>mysql.count</literal> was previously set to 5 or 7
+	instances, repeat the procedure. For 5 instances, the PVCs associated
+	with <literal>mysql-3</literal> and <literal>mysql-4</literal> would
+	need to be deleted as well. For 7 instances, the PVCs associated with
+	<literal>mysql-3</literal>, <literal>mysql-4</literal>,
+	<literal>mysql-5</literal>, and <literal>mysql-6</literal> would need to
+	be deleted as well.
+       </para>
+<screen>&prompt.user;kubectl delete persistentvolumeclaim --namespace uaa mysql-data-mysql-1
+
+&prompt.user;kubectl delete persistentvolumeclaim --namespace uaa mysql-data-mysql-2
+</screen>
       </step>
      </substeps>
     </step>
     <step>
      <para>
       For the <literal>scf</literal> deployment, scale the instance count of the
-      <literal>mysql</literal> role to 1 and remove the associated
-      persistent volume claim.
+      <literal>mysql</literal> role to 1 and remove the persistent volume claims
+      associated with the removed <literal>mysql</literal> instances.
      </para>
      <substeps>
       <step>
@@ -513,11 +555,31 @@ sizing:
       </step>
       <step>
        <para>
-        Delete the persistent volume claim (PVC) for <literal>mysql-1</literal>
-	from the <literal>scf</literal> namespace. <emphasis>Do not</emphasis>
-	delete the persistent volume (PV).
+        Delete the persistent volume claims (PVC) associated with the removed
+        <literal>mysql</literal> instances from the <literal>scf</literal>
+        namespace. <emphasis>Do not</emphasis> delete the persistent volumes
+	(PV).
        </para>
-<screen>&prompt.user;kubectl delete persistentvolumeclaim --namespace scf mysql-data-mysql-1</screen>
+       <para>
+        This example assumes <literal>mysql.count</literal> was previously set
+        to 3 instances in your custom sizing configuration file. This means
+        that after scaling to single availability, the PVCs associated with
+        <literal>mysql-1</literal> and <literal>mysql-2</literal> need to be
+        deleted.
+       </para>
+       <para>
+        If your <literal>mysql.count</literal> was previously set to 5 or 7
+	instances, repeat the procedure. For 5 instances, the PVCs associated
+	with <literal>mysql-3</literal> and <literal>mysql-4</literal> would
+	need to be deleted as well. For 7 instances, the PVCs associated with
+	<literal>mysql-3</literal>, <literal>mysql-4</literal>,
+	<literal>mysql-5</literal>, and <literal>mysql-6</literal> would need to
+	be deleted as well.
+       </para>
+<screen>&prompt.user;kubectl delete persistentvolumeclaim --namespace scf mysql-data-mysql-1
+
+&prompt.user;kubectl delete persistentvolumeclaim --namespace scf mysql-data-mysql-2
+</screen>
       </step>
      </substeps>
     </step>
@@ -582,7 +644,9 @@ sizing:
     <step>
      <para>
       Scale the entire <literal>uaa</literal> deployment, including
-      the <literal>mysql</literal> role, back to high availability mode.
+      the <literal>mysql</literal> role, back to high availability mode. This
+      example assumes the <literal>mysql.count</literal> was previously set to
+      3 instances.
      </para>
      <para>
       Note that the <literal>mysql</literal> role requires at least 3 instances
@@ -625,7 +689,9 @@ sizing:
     <step>
      <para>
       Scale the entire <literal>scf</literal> deployment, including
-      the <literal>mysql</literal> role, back to high availability mode.
+      the <literal>mysql</literal> role, back to high availability mode. This
+      example assumes the <literal>mysql.count</literal> was previously set to
+      3 instances.
      </para>
      <para>
       Note the <literal>mysql</literal> role requires at least 3 instances for
