@@ -2,8 +2,8 @@
 <!-- Product-specific                                                       -->
 <!-- ====================================================================== -->
 
-<!ENTITY productname    "&suse; Cloud Application Platform">
-<!ENTITY productnamereg "&suse;&reg; Cloud Application Platform">
+<!ENTITY productname    "&suse; &cap;">
+<!ENTITY productnamereg "&suse;&reg; &cap;">
 <!ENTITY productnumber  "1.5.1">
 <!ENTITY github.url     "https://github.com/SUSE/doc-cap">
 <!ENTITY cap            "Cloud Application Platform">
@@ -24,7 +24,7 @@
 
 
 
-<!ENTITY caasp        "CaaS Platform">
+<!ENTITY caasp        "&suse; CaaS Platform">
 <!ENTITY susecaaspreg "&suse;&reg; CaaS Platform">
 <!ENTITY cf           "Cloud Foundry">
 <!ENTITY scf          "&suse; Cloud Foundry">
@@ -147,10 +147,10 @@
 <!ENTITY aareg         "<phrase xmlns='http://docbook.org/ns/docbook'>AppArmor&reg;</phrase>">
 <!ENTITY sudo          "<command xmlns='http://docbook.org/ns/docbook'>sudo</command>">
 <!ENTITY pk            "PolKit">
-<!ENTITY mariadb       "Maria DB">
+<!ENTITY mariadb       "MariaDB">
 <!ENTITY selnx         "SELinux">
 <!ENTITY postgresql    "PostgreSQL">
-<!ENTITY mysql         "MariaDB">
+<!ENTITY mysql         "MySQL">
 <!ENTITY jeos          "JeOS"><!-- Just enough OS -->
 <!ENTITY stap          "SystemTap">
 <!ENTITY oprof         "OProfile">
@@ -170,11 +170,11 @@
 
 <!ENTITY ms            "Microsoft">
 <!ENTITY aks           "&ms; AKS">
-<!ENTITY aks-full      "&ms; Azure Kubernetes Service">
+<!ENTITY aks-full      "&ms; Azure &kube; Service">
 <!ENTITY eks           "Amazon EKS">
-<!ENTITY eks-full      "Amazon Elastic Kubernetes Service">
+<!ENTITY eks-full      "Amazon Elastic &kube; Service">
 <!ENTITY gke           "Google GKE">
-<!ENTITY gke-full      "Google Kubernetes Engine">
+<!ENTITY gke-full      "Google &kube; Engine">
 
 <!-- ============================================================= -->
 <!-- Virtualization                                                -->

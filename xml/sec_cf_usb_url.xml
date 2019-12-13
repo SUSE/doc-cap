@@ -13,7 +13,7 @@
  <para>
   This change is only applicable for upgrades from &cap; 1.2.1 to &cap; 1.3 and
   upgrades from &cap; 1.3 to &cap; 1.3.1. The URL of the internal cf-usb broker
-  endpoint has changed. Brokers for &postgresql; and &mariadb; that use cf-usb will
+  endpoint has changed. Brokers for &postgresql; and &mysql; that use cf-usb will
   require the following manual fix after upgrading to reconnect with SCF/CAP:
  </para>
  <para>
