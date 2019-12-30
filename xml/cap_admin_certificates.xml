@@ -366,9 +366,9 @@
      No difference between applications from buildpacks and from &docker; images.
    </para>
    <para>
-     The ROOT_TRUSTED_CERTS parameter contains a list of CA certificates which
+     <literal>The ROOT_TRUSTED_CERTS</literal> parameter contains a list of CA certificates which
      are available in application instance containers through the general OS trust store.
-     Only applications based on buildpack (and a rootfs) receive the information.
+     Only applications based on buildpacks (and a rootfs) receive the information.
    </para>
    <para>
      Summary
@@ -382,7 +382,7 @@
       <listitem>
         <para>
           <literal>ROOTFS_TRUSTED_CERTS</literal> only applies to applications based
-          on build packs and rootfs and are automatically available through
+          on buildpacks and rootfs and are automatically available through
           the OS trust store.
         </para>
        </listitem>
