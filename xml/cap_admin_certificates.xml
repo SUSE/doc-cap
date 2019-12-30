@@ -362,7 +362,7 @@
      available in application instance containers as files in the directory
      <filename>/etc/cf-system-certificates</filename> and the general trust store
      (Only cflinuxfs3).
-     The enviromental value <literal>CF_SYSTEM_CERT_PATH</literal> holds the first path.
+     The environment variable <literal>CF_SYSTEM_CERT_PATH</literal> holds the first path.
      No difference between applications from buildpacks and from &docker; images.
    </para>
    <para>
@@ -390,7 +390,7 @@
          <para>
            <literal>TRUSTED_CERTS</literal> applies to all applications, based on both
            buildpacks and &docker; images. Not automatically available. Applications
-           have to use the enviromental value <literal>CF_SYSTEM_CERT_PATH</literal>
+           have to use the environment variable <literal>CF_SYSTEM_CERT_PATH</literal>
            and add the certificates themselves.
          </para>
         </listitem>
