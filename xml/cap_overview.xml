@@ -277,11 +277,8 @@
 
   <para>
    A production deployment requires considerable resources. &productname;
-   includes an entitlement of &caasp; and &ses;. &ses; alone has
-   substantial requirements; see the
-   <link xlink:href="https://www.suse.com/products/suse-enterprise-storage/">Tech
-   Specs</link> for details. &suse; &caasp; requires a minimum of four hosts:
-   one admin and three &kube; nodes. &scf; is then deployed on the &kube;
+   includes an entitlement of &caasp;. &caasp; requires a minimum of four
+   hosts: one admin and three &kube; nodes. &scf; is then deployed on the &kube;
    nodes. Four &caasp; nodes are not sufficient for a production deployment.
    <xref linkend="fig-cap-min-prod-arch"/> describes a minimal production
    deployment with &scf; deployed on a &kube; cluster containing three &kube;
