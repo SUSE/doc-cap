@@ -621,47 +621,200 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <title>Stratos Metrics</title>
 
   <para>
-   Stratos can show metrics data from
-   <link xlink:href="https://prometheus.io/">Prometheus</link> for both &cf;
-    and &kube;.
+   Stratos Metrics provides a &helm; chart for deploying Prometheus (see
+   <link xlink:href="https://prometheus.io/"/>) and the following metrics
+   exporters to &kube;:
+  </para>
+  <itemizedlist>
+   <listitem>
+    <para>
+     &cf; Firehose Exporter (enabled by default)
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     &cf; Exporter (disabled by default)
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     &kube; State Metrics Exporter (disabled by default)
+    </para>
+   </listitem>
+  </itemizedlist>
+  <para>
+   The Stratos Metrics &helm; chart deploys a Prometheus server and the
+   configured Exporters and fronts the Prometheus server with an nginx server
+   to provide authenticated access to Prometheus (currently basic authentication
+   over HTTPS).
+  </para>
+  <para>
+   When required by configuration, it also contains an initialization script
+   that will setup users in the UAA that have correct scopes/permissions to be
+   able to read data from the &cf; Firehose and/or API.
+  </para>
+  <para>
+   Lastly, the &helm; chart generates a small metadata file in the root of the
+   nginx server that is used by Stratos to determine which &cf; and &kube;
+   clusters the Prometheus server is providing Metrics for.
   </para>
   <para>
    To learn more about Stratos Metrics and its full list of configuration
    options, see <link xlink:href="https://github.com/SUSE/stratos-metrics"/>.
   </para>
 
+  <sect2 xml:id="sec-cap-stratos-metrics-exporter-config">
+   <title>Exporter Configuration</title>
+   <sect3 xml:id="sec-cap-stratos-metrics-exporter-config-firehose">
+    <title>Firehose Exporter</title>
+
+    <para>
+     This exporter can be enabled/disabled via the &helm; value
+     <literal>firehoseExporter.enabled</literal>. By default this exporter is
+     enabled.
+    </para>
+    <para>
+You must provide the following Helm chart values for this Exporter to work correctly:
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       <literal>cloudFoundry.apiEndpoint</literal> - API Endpoint of the &cf;
+       API Server
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       <literal>cloudFoundry.uaaAdminClient</literal> - Admin client of the UAA
+       used by the &cf; server
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       <literal>cloudFoundry.uaaAdminClientSecret</literal> - Admin client
+       secret of the UAA used by the &cf; server
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       <literal>cloudFoundry.skipSslVerification</literal> - Whether to skip SSL
+       verification when communicating with &cf; and the UAA APIs
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     You can scale the firehose nozzle in Stratos Metrics by specifying the
+     following override:
+    </para>
+<screen>
+firehoseExporter:
+  instances: 1
+</screen>
+    <para>
+     Please note, the number of firehose nozzles should be proportional to the
+     number of Traffic Controllers in your &cf; (see docs at
+     <link xlink:href="https://docs.cloudfoundry.org/loggregator/log-ops-guide.html"/>).
+     Otherwise, Loggregator will not split the firehose between the nozzles.
+    </para>
+   </sect3>
+   <sect3 xml:id="sec-cap-stratos-metrics-exporter-config-cloud-foundry">
+    <title>&cf; Exporter</title>
+
+    <para>
+     This exporter can be enabled/disabled via the &helm; value
+     <literal>cfExporter.enabled</literal>. By default this exporter is
+     disabled.
+    </para>
+    <para>
+     You must provide the following &helm; chart values for this Exporter to
+     work correctly:
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       <literal>cloudFoundry.apiEndpoint</literal> - API Endpoint of the &cf;
+       API Server
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       <literal>cloudFoundry.uaaAdminClient</literal> - Admin client of the UAA
+       used by the &cf; server
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       <literal>cloudFoundry.uaaAdminClientSecret</literal> - Admin client
+       secret of the UAA used by the &cf; server
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       <literal>cloudFoundry.skipSslVerification</literal> - Whether to skip SSL
+       verification when communicating with &cf; and the UAA APIs
+      </para>
+     </listitem>
+    </itemizedlist>
+   </sect3>
+
+   <sect3 xml:id="sec-cap-stratos-metrics-exporter-config-kubernetes">
+    <title>&kube; Monitoring</title>
+
+    <para>
+     This exporter can be enabled/disabled via the &helm; value
+     <literal>prometheus.kubeStateMetrics.enabled</literal>. By default this
+     exporter is disabled.
+    </para>
+    <para>
+     You must provide the following &helm; chart values for this Exporter to
+     work correctly:
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       <literal>kubernetes.apiEndpoint</literal> - The API Endpoint of the
+       &kube; API Server
+      </para>
+     </listitem>
+    </itemizedlist>
+   </sect3>
+  </sect2>
+
   <sect2 xml:id="sec-cap-stratos-metrics-install">
    <title>Install Stratos Metrics with &helm;</title>
    <para>
     In order to display metrics data with Stratos, you need to deploy the
-    <literal>stratos-metrics</literal> &helm; chart - this deploys Prometheus
-    with the necessary exporters that collect data from &cf; and
-    &kube;. It also wraps Prometheus with an
-    <link xlink:href="http://nginx.org/">nginx</link> server to provide
-    authentication.
+    <literal>stratos-metrics</literal> &helm; chart. As with deploying Stratos,
+    you should deploy the metrics &helm; chart using the same
+    <filename>scf-config-values.yaml</filename> file that was used for deploying
+    <literal>scf</literal> and <literal>uaa</literal>.
    </para>
    <para>
-    As with deploying Stratos, you should deploy the metrics &helm; chart using
-    the same <filename>scf-config-values.yaml</filename> file that was used for
-    deploying <literal>scf</literal> and <literal>uaa</literal>.
+    Additionally, create a new YAML file, named
+    <filename>stratos-metrics-values.yaml</filename> in this example, for
+    configuration options specific to Stratos Metrics.
    </para>
    <para>
-    Create a new yaml file named
-    <filename>stratos-metrics-values.yaml</filename>, with the following
-    contents:
+    The following is an example <filename>stratos-metrics-values.yaml</filename>
+    file.
    </para>
-<screen>env:
+<screen>cloudFoundry:                                                                   
+  apiEndpoint: <replaceable>https://api.example.com</replaceable>
+  uaaAdminClient: admin                                                         
+  uaaAdminClientSecret: <replaceable>password</replaceable>
+  skipSslVerification: "true"  
+env:
   DOPPLER_PORT: 443
 kubernetes:
   apiEndpoint: <replaceable>kube_server_address.example.com</replaceable>
+metrics:
+  username: <replaceable>username</replaceable>                                 
+  password: <replaceable>password</replaceable>
 prometheus:
   kubeStateMetrics:
     enabled: true
   server:
     storageClass: <replaceable>"persistent"</replaceable>
-nginx:
-  username: <replaceable>username</replaceable>
-  password: <replaceable>password</replaceable>
 services:
   loadbalanced: true</screen>
    <para>
@@ -670,37 +823,40 @@ services:
    <itemizedlist>
     <listitem>
      <para>
-      <literal>apiEndpoint</literal> is the same URL that you used when
-      registering your &kube; environment with Stratos (the &kube; API
-      Server URL)
+      <literal>kubernetes.apiEndpoint</literal> is the same URL that you used
+      when registering your &kube; environment with Stratos (the &kube; API
+      Server URL).
      </para>
     </listitem>
     <listitem>
      <para>
-      <literal>storageClass</literal> is the storage class to be used by Stratos
-      Metrics. If a storage class is not assigned, the default storage class
-      will be used. If a storage class is not specified and there is no default
-      storage class, the <literal>prometheus</literal> pod will fail to start.
+      <literal>prometheus.server.storageClass</literal> is the storage class to
+      be used by Stratos Metrics. If a storage class is not assigned, the
+      default storage class will be used. If a storage class is not specified
+      and there is no default storage class, the <literal>prometheus</literal>
+      pod will fail to start.
      </para>
     </listitem>
     <listitem>
      <para>
-      <literal>username</literal> should be chosen by you as the username that
-      you will use when connecting to Stratos Metrics
+      <literal>metrics.username</literal> is the username used to authenticate
+      with the nginx server that fronts Prometheus. This username is also used
+      during the <xref linkend="sec-cap-stratos-metrics-connect"/>) process.
      </para>
     </listitem>
     <listitem>
      <para>
-      <literal>password</literal> should be chosen by you as the password that
-      you will use when connecting to Stratos Metrics. Ensure to choose a secure
-      password
+      <literal>metrics.password</literal> is the password used to authenticate  
+      with the nginx server that fronts Prometheus. This username is also used  
+      during the <xref linkend="sec-cap-stratos-metrics-connect"/>) process.
+      Ensure a secure password is chosen.
      </para>
     </listitem>
     <listitem>
      <para>
-      <literal>loadbalanced</literal> is set to <literal>true</literal> if your &kube;
-      deployment supports automatic configuration of a load balancer (for example,
-      AKS, EKS, and GKE)
+      <literal>services.loadbalanced</literal> is set to <literal>true</literal>
+      if your &kube; deployment supports automatic configuration of a load
+      balancer (for example, AKS, EKS, and GKE).
      </para>
     </listitem>
    </itemizedlist>
@@ -830,14 +986,14 @@ susecf-metrics-metrics-nginx   NodePort   172.28.107.209   10.86.101.115,172.28.
     <step>
      <para>
       Enter the username for your Stratos Metrics instance. This will be the
-      <literal>nginx.username</literal> defined in your
+      <literal>metrics.username</literal> defined in your
       <filename>stratos-metrics-values.yaml</filename> file.
      </para>
     </step>
     <step>
      <para>
       Enter the password for your Stratos Metrics instance. This will be the
-      <literal>nginx.password</literal> defined in your
+      <literal>metrics.password</literal> defined in your
       <filename>stratos-metrics-values.yaml</filename> file.
      </para>
     </step>
