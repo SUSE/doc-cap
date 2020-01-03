@@ -277,7 +277,7 @@
 
   <para>
    A production deployment requires considerable resources. &productname;
-   includes an entitlement of &caasp;. &suse; &caasp; requires a minimum of four
+   includes an entitlement of &caasp;. &caasp; requires a minimum of four
    hosts: one admin and three &kube; nodes. &scf; is then deployed on the &kube;
    nodes. Four &caasp; nodes are not sufficient for a production deployment.
    <xref linkend="fig-cap-min-prod-arch"/> describes a minimal production
