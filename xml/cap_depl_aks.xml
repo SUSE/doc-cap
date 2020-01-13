@@ -459,6 +459,9 @@ env:
   # the UAA prefix is required
   UAA_HOST: uaa.<replaceable>example.com</replaceable>
   UAA_PORT: 2793
+  # default SCF namespace
+  UAA_ZONE: scf
+
   GARDEN_ROOTFS_DRIVER: "overlay-xfs"
 
 kube:
