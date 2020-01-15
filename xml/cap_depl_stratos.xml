@@ -64,7 +64,7 @@ sed 's/"namespace": "default"/"namespace": "stratos"/' | kubectl create --filena
   </para>
 
 <important>
-  <title>Non-default SCF namespace</title>
+  <title>Non-default &scf; namespace</title>
   <para>If you used a non-default namespace for &scf;, you need to change the
     <literal>UAA_ZONE</literal> environment variable in the
     <filename>scf-config-values.yaml</filename> to the correct namespace. You
