@@ -300,8 +300,6 @@ env:
   DOMAIN: <replaceable>example.com</replaceable>
   UAA_HOST: uaa.<replaceable>example.com</replaceable>
   UAA_PORT: 2793
-  # default SCF namespace
-  UAA_ZONE: scf
 
   GARDEN_ROOTFS_DRIVER: overlay-xfs
   GARDEN_APPARMOR_PROFILE: ""
@@ -502,7 +500,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
    load balancer name will be the string preceding the first
    <literal>-</literal> character.
   </para>
-
+ 
 <screen>&prompt.user;kubectl get service -n scf tcp-router-tcp-router-public</screen>
 
   <para>

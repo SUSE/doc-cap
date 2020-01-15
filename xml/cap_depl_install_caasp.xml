@@ -537,8 +537,6 @@ env:
   # <literal>uaa</literal> host and port
   UAA_HOST: uaa.<replaceable>&exampledomain;</replaceable>
   UAA_PORT: 2793
-  # default SCF namespace
-  UAA_ZONE: scf
 
   # btrfs (the default) is required for SLE-based &kube; nodes
   GARDEN_ROOTFS_DRIVER: "btrfs"
