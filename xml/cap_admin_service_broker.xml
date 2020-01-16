@@ -556,6 +556,10 @@ mysql-service  1        Mon May 21 11:40:11 2018  DEPLOYED  cf-usb-sidecar-mysql
       the latest chart and application version combination known to work with
       Minibroker.
      </para>
+     <para>
+      Note that the table is only applicable to &kube; deployments with version
+      1.15 or earlier.
+     </para>
      <informaltable>
       <tgroup cols="3">
        <thead>
