@@ -63,6 +63,8 @@ sed 's/"namespace": "default"/"namespace": "stratos"/' | kubectl create --filena
      deploy<literal>uaa</literal> and <literal>scf</literal>:
   </para>
 
+  &defaul-scf-namespace-note;
+
 <screen>&prompt.user;helm install suse/console \
     --name <replaceable>susecf-console</replaceable> \
     --namespace stratos \
@@ -253,6 +255,9 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <para>
    Use &helm; to install Stratos:
   </para>
+
+  &defaul-scf-namespace-note;
+
 <screen>&prompt.user;helm install suse/console \
     --name susecf-console \
     --namespace stratos \
@@ -380,6 +385,8 @@ gp2scoped       kubernetes.io/aws-ebs   1d
    have been successfully deployed on &aks; (see <xref linkend="cha-cap-depl-aks"/>).
   </para>
 
+  &defaul-scf-namespace-note;
+
   <para>
    Use &helm; to install Stratos:
   </para>
@@ -499,6 +506,9 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <para>
    Use &helm; to install Stratos:
   </para>
+
+  &defaul-scf-namespace-note;
+
 <screen>&prompt.user;helm install suse/console \
     --name susecf-console \
     --namespace stratos \

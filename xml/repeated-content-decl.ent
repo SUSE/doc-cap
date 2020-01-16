@@ -1308,3 +1308,26 @@ agent.log</screen>
    </itemizedlist>
   </listitem>
  </itemizedlist>'>
+
+ <!--ENTITY defaul-scf-namespace-note.........................................-->
+
+ <!ENTITY defaul-scf-namespace-note
+ '<important xmlns="http://docbook.org/ns/docbook">
+   <title>Non-default &scf; namespace</title>
+   <para>If you used a non-default namespace for &scf;, you need to change the
+     <literal>UAA_ZONE</literal> environment variable in the
+     <filename>scf-config-values.yaml</filename> to the correct namespace. You
+     can do so in the <literal>env</literal> section:
+   </para>
+<screen>
+ env:
+   # Enter the domain you created for your CAP cluster
+   DOMAIN: example.com
+
+   # uaa host and port
+   UAA_HOST: uaa.example.com
+   UAA_PORT: 2793
+   # scf namespace, default is "scf"
+   UAA_ZONE: scf2
+</screen>
+ </important>'>
