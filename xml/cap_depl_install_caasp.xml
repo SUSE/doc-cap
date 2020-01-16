@@ -256,7 +256,7 @@ d028551.example.com   Ready    &lt;none>    4h   v1.10.11
      <para>
       If the Linux distribution on your workstation does not provide the correct
       &helm; version, or you are using some other platform, see the
-      <link xlink:href="https://docs.helm.sh/using_helm/#quickstart"> &helm;
+      <link xlink:href="https://v2.helm.sh/docs/using_helm/#quickstart"> &helm;
       Quickstart Guide</link> for installation instructions and basic usage
       examples. Download the &helm; binary into any directory that is in your
       PATH on your workstation, such as your <filename>~/bin</filename>
