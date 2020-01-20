@@ -937,13 +937,6 @@ suse/uaa                        &latestscfchart;          &chart-appversion;    
      this feature during an upgrade will result in a single admin account.
     </para>
    </listitem>
-   <listitem>
-    <para>
-     Currently the embedded <literal>uaa</literal> cannot be used with the
-     Ingress controller (see <xref linkend="cha-cap-ingress"/>) as automatic
-     ingress creation via &helm; does not work at present.
-    </para>
-   </listitem>
   </itemizedlist>
   <para>
    To enable this feature, add the following to your
