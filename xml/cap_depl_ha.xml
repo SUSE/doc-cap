@@ -102,13 +102,14 @@ config:
   HA: true
 </screen>
    <para>
-    Or, you may pass it as a command line option when you are deploying with
-    &helm;, for example:
+    Use <command>helm install</command> to deploy or
+    <command>helm upgrade</command> to apply the change to an existing
+    deployment.
    </para>
 <screen>&prompt.user;helm install suse/uaa \
- --name susecf-uaa \
- --namespace uaa \
- --values scf-config-values.yaml
+--name susecf-uaa \
+--namespace uaa \
+--values scf-config-values.yaml
 </screen>
    <para>
     When <literal>config.HA</literal> is set to <literal>true</literal>,
