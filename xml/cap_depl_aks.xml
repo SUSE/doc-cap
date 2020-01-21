@@ -394,6 +394,7 @@ parameters:
 provisioner: kubernetes.io/azure-disk
 reclaimPolicy: Delete
 allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer
 </screen>
 
   <para>

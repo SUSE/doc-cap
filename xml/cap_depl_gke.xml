@@ -241,6 +241,7 @@ parameters:
 provisioner: kubernetes.io/gce-pd
 reclaimPolicy: Delete
 allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer
 </screen>
   <para>
    Create the new storage class using the manifest defined:
