@@ -555,6 +555,13 @@
      </listitem>
     </varlistentry>
     <varlistentry>
+     <term>configgin-helper</term>
+     <listitem>
+      <para>
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
      <term>diego-api</term>
      <listitem>
       <para>
