@@ -21,9 +21,10 @@
 appVersion: 1.5.2
 description: A Helm chart for SUSE Cloud Foundry
 name: cf
-version: 2.19.1
-scfVersion: 2.19.1
+version: 2.20.1
+scfVersion: 2.20.1+cf12.17.0.0.g7267fe69
 
+---
 ---
 ---
 kube:
@@ -92,6 +93,7 @@ secrets:
 
   # PEM-encoded certificate
   # This value uses a generated default.
+  # This certificate uses the name "auctioneer-rep-cert".
   AUCTIONEER_REP_CERT: ~
 
   # PEM-encoded key
@@ -99,6 +101,7 @@ secrets:
 
   # PEM-encoded server certificate
   # This value uses a generated default.
+  # This certificate uses the role name "diego-brain-auctioneer".
   AUCTIONEER_SERVER_CERT: ~
 
   # PEM-encoded server key
@@ -107,6 +110,7 @@ secrets:
   # A PEM-encoded TLS certificate of the Autoscaler API public https server.
   # This includes the Autoscaler ApiServer and the Service Broker.
   # This value uses a generated default.
+  # This certificate uses the names "autoscaler.{{.DOMAIN}}" and "localhost".
   AUTOSCALER_ASAPI_PUBLIC_SERVER_CERT: ~
 
   # A PEM-encoded TLS key of the Autoscaler API public https server. This
@@ -116,6 +120,9 @@ secrets:
   # A PEM-encoded TLS certificate of the Autoscaler API https server. This
   # includes the Autoscaler ApiServer and the Service Broker.
   # This value uses a generated default.
+  # This certificate uses the names
+  # "autoscaler-api-apiserver.{{.KUBERNETES_NAMESPACE}}.svc.{{.KUBERNETES_CLUSTER_DOMAIN}}"
+  # and "localhost".
   AUTOSCALER_ASAPI_SERVER_CERT: ~
 
   # A PEM-encoded TLS key of the Autoscaler API https server. This includes the
@@ -125,6 +132,7 @@ secrets:
   # A PEM-encoded TLS certificate for clients to connect to the Autoscaler
   # Metrics. This includes the Autoscaler Metrics Collector and Event Generator.
   # This value uses a generated default.
+  # This certificate uses the name "autoscaler-asmetrics-client-cert".
   AUTOSCALER_ASMETRICS_CLIENT_CERT: ~
 
   # A PEM-encoded TLS key for clients to connect to the Autoscaler Metrics. This
@@ -134,6 +142,10 @@ secrets:
   # A PEM-encoded TLS certificate of the Autoscaler Metrics https server. This
   # includes the Autoscaler Metrics Collector.
   # This value uses a generated default.
+  # This certificate uses the names
+  # "autoscaler-metrics-metricscollector.{{.KUBERNETES_NAMESPACE}}.svc.{{.KUBERNETES_CLUSTER_DOMAIN}}",
+  # "autoscaler-metrics-eventgenerator.{{.KUBERNETES_NAMESPACE}}.svc.{{.KUBERNETES_CLUSTER_DOMAIN}}",
+  # and "localhost".
   AUTOSCALER_ASMETRICS_SERVER_CERT: ~
 
   # A PEM-encoded TLS key of the Autoscaler Metrics https server. This includes
@@ -147,6 +159,7 @@ secrets:
   # A PEM-encoded TLS certificate for clients to connect to the Autoscaler
   # Scaling Engine.
   # This value uses a generated default.
+  # This certificate uses the name "autoscaler-scaling-engine-client-cert".
   AUTOSCALER_SCALING_ENGINE_CLIENT_CERT: ~
 
   # A PEM-encoded TLS key for clients to connect to the Autoscaler Scaling
@@ -155,6 +168,9 @@ secrets:
 
   # A PEM-encoded TLS certificate of the Autoscaler Scaling Engine https server.
   # This value uses a generated default.
+  # This certificate uses the names
+  # "autoscaler-actors-scalingengine.{{.KUBERNETES_NAMESPACE}}.svc.{{.KUBERNETES_CLUSTER_DOMAIN}}"
+  # and "localhost".
   AUTOSCALER_SCALING_ENGINE_SERVER_CERT: ~
 
   # A PEM-encoded TLS key of the Autoscaler Scaling Engine https server.
@@ -163,6 +179,7 @@ secrets:
   # A PEM-encoded TLS certificate for clients to connect to the Autoscaler
   # Scheduler.
   # This value uses a generated default.
+  # This certificate uses the name "autoscaler-scheduler-client-cert".
   AUTOSCALER_SCHEDULER_CLIENT_CERT: ~
 
   # A PEM-encoded TLS key for clients to connect to the Autoscaler Scheduler.
@@ -170,6 +187,9 @@ secrets:
 
   # A PEM-encoded TLS certificate of the Autoscaler Scheduler https server.
   # This value uses a generated default.
+  # This certificate uses the names
+  # "autoscaler-actors-scheduler.{{.KUBERNETES_NAMESPACE}}.svc.{{.KUBERNETES_CLUSTER_DOMAIN}}"
+  # and "localhost".
   AUTOSCALER_SCHEDULER_SERVER_CERT: ~
 
   # A PEM-encoded TLS key of the Autoscaler Scheduler https server.
@@ -181,6 +201,7 @@ secrets:
 
   # PEM-encoded certificate
   # This value uses a generated default.
+  # This certificate uses the name "bbs-auctioneer-cert".
   BBS_AUCTIONEER_CERT: ~
 
   # PEM-encoded key
@@ -188,6 +209,7 @@ secrets:
 
   # PEM-encoded client certificate.
   # This value uses a generated default.
+  # This certificate uses the name "bbs-client-crt".
   BBS_CLIENT_CRT: ~
 
   # PEM-encoded client key.
@@ -195,6 +217,7 @@ secrets:
 
   # PEM-encoded certificate
   # This value uses a generated default.
+  # This certificate uses the name "bbs-rep-cert".
   BBS_REP_CERT: ~
 
   # PEM-encoded key
@@ -202,6 +225,7 @@ secrets:
 
   # PEM-encoded client certificate.
   # This value uses a generated default.
+  # This certificate uses the role name "diego-api-bbs".
   BBS_SERVER_CRT: ~
 
   # PEM-encoded client key.
@@ -214,6 +238,7 @@ secrets:
 
   # PEM-encoded client certificate.
   # This value uses a generated default.
+  # This certificate uses the name "127.0.0.1".
   BITS_SERVICE_SSL_CERT: ~
 
   # PEM-encoded client key.
@@ -232,6 +257,7 @@ secrets:
   # The PEM-encoded certificate (optionally as a certificate chain) for serving
   # blobs over TLS/SSL.
   # This value uses a generated default.
+  # This certificate uses the role name "blobstore-blobstore".
   BLOBSTORE_TLS_CERT: ~
 
   # The PEM-encoded private key for signing TLS/SSL traffic.
@@ -247,6 +273,9 @@ secrets:
   # The PEM-encoded certificate for secure TLS communication over external
   # endpoints.
   # This value uses a generated default.
+  # This certificate uses the names "api", "api-set", "api-set.{{
+  # .KUBERNETES_NAMESPACE }}.svc.{{ .KUBERNETES_CLUSTER_DOMAIN }}", and "api.{{
+  # .KUBERNETES_NAMESPACE }}.svc.{{ .KUBERNETES_CLUSTER_DOMAIN }}".
   CC_PUBLIC_TLS_CERT: ~
 
   # The PEM-encoded key for secure TLS communication over external endpoints.
@@ -254,6 +283,7 @@ secrets:
 
   # The PEM-encoded certificate for internal cloud controller traffic.
   # This value uses a generated default.
+  # This certificate uses the role name "api".
   CC_SERVER_CRT: ~
 
   # The PEM-encoded private key for internal cloud controller traffic.
@@ -261,6 +291,7 @@ secrets:
 
   # The PEM-encoded certificate for internal cloud controller uploader traffic.
   # This value uses a generated default.
+  # This certificate uses the role name "cc-uploader-cc-uploader".
   CC_UPLOADER_CRT: ~
 
   # The PEM-encoded private key for internal cloud controller uploader traffic.
@@ -268,6 +299,7 @@ secrets:
 
   # PEM-encoded broker server certificate.
   # This value uses a generated default.
+  # This certificate uses the role name "cf-usb".
   CF_USB_BROKER_SERVER_CERT: ~
 
   # PEM-encoded broker server key.
@@ -283,6 +315,8 @@ secrets:
 
   # PEM-encoded server certificate
   # This value uses a generated default.
+  # This certificate uses the names "credhub-set" and
+  # "server.dc1.{{.KUBERNETES_NAMESPACE}}.svc.{{.KUBERNETES_CLUSTER_DOMAIN}}".
   CREDHUB_SERVER_CERT: ~
 
   # PEM-encoded server key
@@ -296,6 +330,8 @@ secrets:
 
   # PEM-encoded client certificate
   # This value uses a generated default.
+  # This certificate uses the names "locket-locket.{{.KUBERNETES_NAMESPACE}}"
+  # and "127.0.0.1".
   DIEGO_CLIENT_CERT: ~
 
   # PEM-encoded client key
@@ -303,6 +339,7 @@ secrets:
 
   # PEM-encoded certificate.
   # This value uses a generated default.
+  # This certificate uses the names "doppler", "log-cache", and "metron".
   DOPPLER_CERT: ~
 
   # PEM-encoded key.
@@ -310,6 +347,7 @@ secrets:
 
   # TLS certificate for Eirini server
   # This value uses a generated default.
+  # This certificate uses the name "eirini-client-crt".
   EIRINI_CLIENT_CRT: ~
 
   # Private key associated with TLS certificate for Eirini server
@@ -325,13 +363,24 @@ secrets:
 
   # TLS certificate for Eirini server
   # This value uses a generated default.
+  # This certificate uses the name "eirini-opi.{{ .KUBERNETES_NAMESPACE
+  # }}.svc.{{ .KUBERNETES_CLUSTER_DOMAIN }}".
   EIRINI_SERVER_CERT: ~
 
   # Private key associated with TLS certificate for Eirini server
   EIRINI_SERVER_CERT_KEY: ~
 
+  # PEM-encoded tls certificate that can be used for server auth.
+  # This value uses a generated default.
+  # This certificate uses the role name "diego-access".
+  FILE_SERVER_CERT: ~
+
+  # A PEM-encoded TLS key for the file server.
+  FILE_SERVER_CERT_KEY: ~
+
   # A PEM-encoded TLS certificate for the Galera server.
   # This value uses a generated default.
+  # This certificate uses the name "galera_server_certificate".
   GALERA_SERVER_CERT: ~
 
   # A PEM-encoded TLS key for the Galera server.
@@ -358,6 +407,7 @@ secrets:
 
   # PEM-encoded certificate.
   # This value uses a generated default.
+  # This certificate uses the names "localhost" and "metron".
   LOGGREGATOR_AGENT_CERT: ~
 
   # PEM-encoded key.
@@ -365,6 +415,7 @@ secrets:
 
   # PEM-encoded client certificate for loggregator mutual authentication
   # This value uses a generated default.
+  # This certificate uses the name "loggregator-client-cert".
   LOGGREGATOR_CLIENT_CERT: ~
 
   # PEM-encoded client key for loggregator mutual authentication
@@ -372,6 +423,7 @@ secrets:
 
   # PEM-encoded client certificate for loggregator forwarder authentication
   # This value uses a generated default.
+  # This certificate uses the name "loggregator-forward-cert".
   LOGGREGATOR_FORWARD_CERT: ~
 
   # PEM-encoded client key for loggregator forwarder authentication
@@ -379,6 +431,9 @@ secrets:
 
   # TLS cert for outgoing dropsonde connection
   # This value uses a generated default.
+  # This certificate uses the names "doppler" and
+  # "log-api-loggregator-trafficcontroller.{{ .KUBERNETES_NAMESPACE }}.svc.{{
+  # .KUBERNETES_CLUSTER_DOMAIN }}".
   LOGGREGATOR_OUTGOING_CERT: ~
 
   # TLS key for outgoing dropsonde connection
@@ -386,6 +441,7 @@ secrets:
 
   # PEM-encoded certificate.
   # This value uses a generated default.
+  # This certificate uses the names "log-cache" and "localhost".
   LOG_CACHE_CERT: ~
 
   # PEM-encoded key.
@@ -393,6 +449,7 @@ secrets:
 
   # The TLS cert for the auth proxy.
   # This value uses a generated default.
+  # This certificate uses the names "log-cache" and "localhost".
   LOG_CACHE_CF_AUTH_PROXY_EXTERNAL_CERT: ~
 
   # The TLS key for the auth proxy.
@@ -400,10 +457,19 @@ secrets:
 
   # PEM-encoded certificate.
   # This value uses a generated default.
-  LOG_CACHE_TO_LOGGREGATOR_AGENT_CERT: ~
+  # This certificate uses the names "log-cache" and "localhost".
+  LOG_CACHE_GATEWAY_PROXY_CERT: ~
 
   # PEM-encoded key.
-  LOG_CACHE_TO_LOGGREGATOR_AGENT_CERT_KEY: ~
+  LOG_CACHE_GATEWAY_PROXY_CERT_KEY: ~
+
+  # PEM-encoded certificate.
+  # This value uses a generated default.
+  # This certificate uses the names "metrics_server" and "localhost".
+  METRICS_CERT: ~
+
+  # PEM-encoded key.
+  METRICS_CERT_KEY: ~
 
   # Password used for the monit API.
   # This value uses a generated default.
@@ -456,6 +522,9 @@ secrets:
 
   # A PEM-encoded TLS certificate for the MySQL server.
   # This value uses a generated default.
+  # This certificate uses the names "mysql-set.{{ .KUBERNETES_NAMESPACE
+  # }}.svc.{{ .KUBERNETES_CLUSTER_DOMAIN }}" and "mysql-proxy-set.{{
+  # .KUBERNETES_NAMESPACE }}.svc.{{ .KUBERNETES_CLUSTER_DOMAIN }}".
   MYSQL_SERVER_CERT: ~
 
   # A PEM-encoded TLS key for the MySQL server.
@@ -472,8 +541,26 @@ secrets:
   # LDAP service account password (required for LDAP integration only)
   PERSI_NFS_DRIVER_LDAP_PASSWORD: "-"
 
+  # PEM-encoded prom_scraper certificate
+  # This value uses a generated default.
+  # This certificate uses the role name "prom_scraper_metrics".
+  PROM_SCRAPER_METRICS_TLS_CERT: ~
+
+  # PEM-encoded prom_scraper key
+  PROM_SCRAPER_METRICS_TLS_CERT_KEY: ~
+
+  # PEM-encoded prom_scraper certificate
+  # This value uses a generated default.
+  # This certificate uses the name "prom-scraper-scrape-tls-cert".
+  PROM_SCRAPER_SCRAPE_TLS_CERT: ~
+
+  # PEM-encoded prom_scraper key
+  PROM_SCRAPER_SCRAPE_TLS_CERT_KEY: ~
+
   # PEM-encoded server certificate
   # This value uses a generated default.
+  # This certificate uses the role name "diego-cell" and the additional name
+  # "127.0.0.1".
   REP_SERVER_CERT: ~
 
   # PEM-encoded server key
@@ -481,6 +568,11 @@ secrets:
 
   # PEM-encoded certificate
   # This value uses a generated default.
+  # This certificate uses the names "log-stream", "log-stream.((DOMAIN))",
+  # "rlp-gateway",
+  # "rlp-gateway.((KUBERNETES_NAMESPACE)).svc.((KUBERNETES_CLUSTER_DOMAIN))",
+  # "log-api", and
+  # "log-api.((KUBERNETES_NAMESPACE)).svc.((KUBERNETES_CLUSTER_DOMAIN))".
   RLP_GATEWAY_CERT: ~
 
   # PEM-encoded key.
@@ -494,6 +586,7 @@ secrets:
   # The public ssl cert for ssl termination. Will be ignored if ROUTER_TLS_PEM
   # is set.
   # This value uses a generated default.
+  # This certificate uses the name "*.{{.DOMAIN}}".
   ROUTER_SSL_CERT: ~
 
   # The private ssl key for ssl termination. Will be ignored if ROUTER_TLS_PEM
@@ -519,8 +612,25 @@ secrets:
   #       -----END RSA PRIVATE KEY-----
   ROUTER_TLS_PEM: ~
 
+  # PEM-encoded routing api mtls client certificate.
+  # This value uses a generated default.
+  # This certificate uses the role name "cf-usb".
+  ROUTING_API_MTLS_CLIENT_CERT: ~
+
+  # PEM-encoded routing api mtls client key.
+  ROUTING_API_MTLS_CLIENT_CERT_KEY: ~
+
+  # PEM-encoded routing api mtls server certificate.
+  # This value uses a generated default.
+  # This certificate uses the role name "cf-usb".
+  ROUTING_API_MTLS_SERVER_CERT: ~
+
+  # PEM-encoded routing api mtls server key.
+  ROUTING_API_MTLS_SERVER_CERT_KEY: ~
+
   # PEM-encoded certificate
   # This value uses a generated default.
+  # This certificate uses the name "saml-serviceprovider-cert".
   SAML_SERVICEPROVIDER_CERT: ~
 
   # PEM-encoded key.
@@ -532,6 +642,7 @@ secrets:
 
   # PEM-encoded certificate
   # This value uses a generated default.
+  # This certificate uses the name "adapter".
   SYSLOG_ADAPT_CERT: ~
 
   # PEM-encoded key.
@@ -539,6 +650,7 @@ secrets:
 
   # PEM-encoded certificate
   # This value uses a generated default.
+  # This certificate uses the names "syslog_rlp" and "reverselogproxy".
   SYSLOG_RLP_CERT: ~
 
   # PEM-encoded key.
@@ -546,6 +658,7 @@ secrets:
 
   # PEM-encoded certificate
   # This value uses a generated default.
+  # This certificate uses the name "syslog-sched-cert".
   SYSLOG_SCHED_CERT: ~
 
   # PEM-encoded key.
@@ -554,6 +667,7 @@ secrets:
   # PEM-encoded client certificate for internal communication between the cloud
   # controller and TPS.
   # This value uses a generated default.
+  # This certificate uses the name "tps-cc-client-crt".
   TPS_CC_CLIENT_CRT: ~
 
   # PEM-encoded client key for internal communication between the cloud
@@ -563,6 +677,7 @@ secrets:
   # PEM-encoded certificate for communication with the traffic controller of the
   # log infra structure.
   # This value uses a generated default.
+  # This certificate uses the name "trafficcontroller-cert".
   TRAFFICCONTROLLER_CERT: ~
 
   # PEM-encoded key for communication with the traffic controller of the log
@@ -640,6 +755,8 @@ secrets:
   # The server's ssl certificate. The default is a self-signed certificate and
   # should always be replaced for production deployments.
   # This value uses a generated default.
+  # This certificate uses the role name "uaa" and the additional names
+  # "uaa.{{.DOMAIN}}" and "*.uaa.{{.DOMAIN}}".
   UAA_SERVER_CERT: ~
 
   # The server's ssl private key. Only passphrase-less keys are supported.
@@ -701,11 +818,15 @@ env:
   # Expiration for generated certificates (in days)
   CERT_EXPIRATION: "10950"
 
+  # An ordered, colon-delimited list of golang supported TLS cipher suites in
+  # OpenSSL or RFC format.
+  CIPHER_SUITES: "ECDHE-ECDSA-CHACHA20-POLY1305:TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305:ECDHE-RSA-CHACHA20-POLY1305:TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256:ECDHE-RSA-AES128-GCM-SHA256:TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384:ECDHE-RSA-AES256-GCM-SHA384:TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384:AES128-GCM-SHA256:AES256-GCM-SHA384"
+
   # The Oauth2 authorities available to the cluster administrator.
   CLUSTER_ADMIN_AUTHORITIES: "scim.write,scim.read,openid,cloud_controller.admin,clients.read,clients.write,doppler.firehose,routing.router_groups.read,routing.router_groups.write"
 
   # 'build' attribute in the /v2/info endpoint
-  CLUSTER_BUILD: "2.19.0"
+  CLUSTER_BUILD: "2.20.1"
 
   # 'description' attribute in the /v2/info endpoint
   CLUSTER_DESCRIPTION: "SUSE Cloud Foundry"
@@ -784,10 +905,10 @@ env:
   DROPLET_MAX_STAGED_STORED: "5"
 
   # Downloads app-bits and buildpacks from the bits-service
-  EIRINI_DOWNLOADER_IMAGE: "registry.suse.com/cap/recipe-downloader:0.18.0"
+  EIRINI_DOWNLOADER_IMAGE: "registry.suse.com/cap/recipe-downloader:0.30.0"
 
   # Executes the buildpackapplifecyle to build a Droplet
-  EIRINI_EXECUTOR_IMAGE: "registry.suse.com/cap/recipe-executor:0.18.0"
+  EIRINI_EXECUTOR_IMAGE: "registry.suse.com/cap/recipe-executor:0.31.0"
 
   # Address of Kubernetes' Heapster installation, used for reading Cloud Foundry
   # app metrics.
@@ -810,7 +931,7 @@ env:
   EIRINI_SSH_PORT: "2222"
 
   # Uploads the Droplet to the bits-service
-  EIRINI_UPLOADER_IMAGE: "registry.suse.com/cap/recipe-uploader:0.17.0"
+  EIRINI_UPLOADER_IMAGE: "registry.suse.com/cap/recipe-uploader:0.28.0"
 
   # By default, Cloud Foundry does not enable Cloud Controller request logging.
   # To enable this feature, you must set this property to "true". You can learn
@@ -1089,6 +1210,12 @@ sizing:
   # - patch-properties: Dummy BOSH job used to host parameters that are used in
   #   SCF patches for upstream bugs
   #
+  # - wait-for-database: This is a pre-start job to delay starting the rest of
+  #   the role until a database connection is ready. Currently it only checks
+  #   that a response can be obtained from the server, and not that it responds
+  #   intelligently.
+  #
+  #
   # - cloud_controller_ng: The Cloud Controller provides primary Cloud Foundry
   #   API that is by the CF CLI. The Cloud Controller uses a database to keep
   #   tables for organizations, spaces, apps, services, service instances, user
@@ -1097,12 +1224,13 @@ sizing:
   #
   # - route_registrar: Used for registering routes
   #
-  # Also: bpm, statsd_injector, go-buildpack, go-buildpack, binary-buildpack,
-  # binary-buildpack, nodejs-buildpack, nodejs-buildpack, ruby-buildpack,
-  # ruby-buildpack, php-buildpack, php-buildpack, python-buildpack,
-  # python-buildpack, staticfile-buildpack, staticfile-buildpack,
-  # nginx-buildpack, nginx-buildpack, java-buildpack, java-buildpack,
-  # dotnet-core-buildpack, and dotnet-core-buildpack
+  # Also: bpm, statsd_injector, suse-go-buildpack, go-buildpack,
+  # suse-binary-buildpack, binary-buildpack, suse-nodejs-buildpack,
+  # nodejs-buildpack, suse-ruby-buildpack, ruby-buildpack, suse-php-buildpack,
+  # php-buildpack, suse-python-buildpack, python-buildpack,
+  # suse-staticfile-buildpack, staticfile-buildpack, suse-nginx-buildpack,
+  # nginx-buildpack, suse-java-buildpack, java-buildpack,
+  # suse-dotnet-core-buildpack, and dotnet-core-buildpack
   api_group:
     # Node affinity rules can be specified here
     affinity: {}
@@ -1409,6 +1537,31 @@ sizing:
       request: 128
       limit: ~
 
+  # The configgin-helper instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - configgin-helper: Copy configgin service account token to secret
+  configgin_helper:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # The configgin_helper instance group can scale between 1 and 65535
+    # instances.
+    # For high availability it needs at least 2 instances.
+    count: ~
+
+    # Unit [millicore]
+    cpu:
+      request: 1000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 64
+      limit: ~
+
   # The configure-eirini instance group contains the following jobs:
   #
   # - configure-eirini-scf: Creates and configures components needed for Eirini
@@ -1593,7 +1746,7 @@ sizing:
   # - route_registrar: Used for registering routes
   #
   # Also: log-cache-gateway, log-cache-nozzle, log-cache-cf-auth-proxy,
-  # log-cache-expvar-forwarder, log-cache, doppler, and bpm
+  # log-cache, doppler, and bpm
   doppler:
     # Node affinity rules can be specified here
     affinity: {}
@@ -1757,42 +1910,12 @@ sizing:
       request: 128
       limit: ~
 
-  # The log-cache-scheduler instance group contains the following jobs:
-  #
-  # - global-properties: Dummy BOSH job used to host global parameters that are
-  #   required to configure SCF
-  #
-  # - authorize-internal-ca: Install both internal and UAA CA certificates
-  #
-  # - log-cache-scheduler-properties: Dummy BOSH job used to host parameters
-  #   that are used in SCF patches
-  #
-  # Also: log-cache-scheduler, log-cache-expvar-forwarder, and bpm
-  log_cache_scheduler:
-    # Node affinity rules can be specified here
-    affinity: {}
-
-    # The log_cache_scheduler instance group can scale between 1 and 65535
-    # instances.
-    # For high availability it needs at least 2 instances.
-    count: ~
-
-    # Unit [millicore]
-    cpu:
-      request: 2000
-      limit: ~
-
-    # Unit [MiB]
-    memory:
-      request: 410
-      limit: ~
-
   # The loggregator-agent instance group contains the following jobs:
   #
   # - global-properties: Dummy BOSH job used to host global parameters that are
   #   required to configure SCF
   #
-  # Also: loggr-expvar-forwarder, loggregator_agent, and bpm
+  # Also: loggregator_agent, prom_scraper, and bpm
   loggregator_agent:
     # Node affinity rules can be specified here
     affinity: {}
@@ -1877,8 +2000,8 @@ sizing:
   # - global-properties: Dummy BOSH job used to host global parameters that are
   #   required to configure SCF
   #
-  # - nats: The NATS server provides publish-subscribe messaging system for the
-  #   Cloud Controller, the DEA , HM9000, and other Cloud Foundry components.
+  # - nats: NATS server providing a publish-subscribe messaging system for Cloud
+  #   Foundry components.
   #
   # Also: bpm
   nats:
@@ -2097,11 +2220,7 @@ sizing:
   # - global-uaa-properties: Dummy BOSH job used to host global parameters that
   #   are required to configure SCF / fissile
   #
-  # - wait-for-database: This is a pre-start job to delay starting the rest of
-  #   the role until a database connection is ready. Currently it only checks
-  #   that a response can be obtained from the server, and not that it responds
-  #   intelligently.
-  #
+  # - authorize-internal-ca: Install both internal and UAA CA certificates
   #
   # - uaa: The UAA is the identity management service for Cloud Foundry. It's
   #   primary role is as an OAuth2 provider, issuing tokens for client
@@ -2110,6 +2229,14 @@ sizing:
   #   as an SSO service using those credentials (or others). It has endpoints
   #   for managing user accounts and for registering OAuth2 clients, as well as
   #   various other management functions.
+  #
+  # - wait-for-database: This is a pre-start job to delay starting the rest of
+  #   the role until a database connection is ready. Currently it only checks
+  #   that a response can be obtained from the server, and not that it responds
+  #   intelligently.
+  #
+  #
+  # Also: bpm
   uaa:
     # Node affinity rules can be specified here
     affinity: {}

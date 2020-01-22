@@ -21,9 +21,10 @@
 appVersion: 1.5.2
 description: A Helm chart for SUSE UAA
 name: uaa
-version: 2.19.1
-scfVersion: 2.19.1
+version: 2.20.1
+scfVersion: 2.20.1+cf12.17.0.0.g7267fe69
 
+---
 ---
 ---
 kube:
@@ -90,6 +91,7 @@ secrets:
 
   # A PEM-encoded TLS certificate for the Galera server.
   # This value uses a generated default.
+  # This certificate uses the name "galera_server_certificate".
   GALERA_SERVER_CERT: ~
 
   # A PEM-encoded TLS key for the Galera server.
@@ -132,6 +134,9 @@ secrets:
 
   # A PEM-encoded TLS certificate for the MySQL server.
   # This value uses a generated default.
+  # This certificate uses the names "mysql-set.{{ .KUBERNETES_NAMESPACE
+  # }}.svc.{{ .KUBERNETES_CLUSTER_DOMAIN }}" and "mysql-proxy-set.{{
+  # .KUBERNETES_NAMESPACE }}.svc.{{ .KUBERNETES_CLUSTER_DOMAIN }}".
   MYSQL_SERVER_CERT: ~
 
   # A PEM-encoded TLS key for the MySQL server.
@@ -139,6 +144,7 @@ secrets:
 
   # PEM-encoded certificate
   # This value uses a generated default.
+  # This certificate uses the name "saml-serviceprovider-cert".
   SAML_SERVICEPROVIDER_CERT: ~
 
   # PEM-encoded key.
@@ -155,6 +161,8 @@ secrets:
   # The server's ssl certificate. The default is a self-signed certificate and
   # should always be replaced for production deployments.
   # This value uses a generated default.
+  # This certificate uses the role name "uaa" and the additional names
+  # "uaa.{{.DOMAIN}}" and "*.uaa.{{.DOMAIN}}".
   UAA_SERVER_CERT: ~
 
   # The server's ssl private key. Only passphrase-less keys are supported.
@@ -237,6 +245,31 @@ env:
 # group. Due to limitations on the allowable names, any dashes ("-") in the
 # instance group names are replaced with underscores ("_").
 sizing:
+  # The configgin-helper instance group contains the following jobs:
+  #
+  # - global-properties: Dummy BOSH job used to host global parameters that are
+  #   required to configure SCF
+  #
+  # - configgin-helper: Copy configgin service account token to secret
+  configgin_helper:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # The configgin_helper instance group can scale between 1 and 65535
+    # instances.
+    # For high availability it needs at least 2 instances.
+    count: ~
+
+    # Unit [millicore]
+    cpu:
+      request: 1000
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: 64
+      limit: ~
+
   # The mysql instance group contains the following jobs:
   #
   # - global-uaa-properties: Dummy BOSH job used to host global parameters that
@@ -347,12 +380,6 @@ sizing:
   # - global-uaa-properties: Dummy BOSH job used to host global parameters that
   #   are required to configure SCF / fissile
   #
-  # - wait-for-database: This is a pre-start job to delay starting the rest of
-  #   the role until a database connection is ready. Currently it only checks
-  #   that a response can be obtained from the server, and not that it responds
-  #   intelligently.
-  #
-  #
   # - uaa: The UAA is the identity management service for Cloud Foundry. It's
   #   primary role is as an OAuth2 provider, issuing tokens for client
   #   applications to use when they act on behalf of Cloud Foundry users. It can
@@ -360,6 +387,11 @@ sizing:
   #   as an SSO service using those credentials (or others). It has endpoints
   #   for managing user accounts and for registering OAuth2 clients, as well as
   #   various other management functions.
+  #
+  # - wait-for-database: This is a pre-start job to delay starting the rest of
+  #   the role until a database connection is ready. Currently it only checks
+  #   that a response can be obtained from the server, and not that it responds
+  #   intelligently.
   uaa:
     # Node affinity rules can be specified here
     affinity: {}
