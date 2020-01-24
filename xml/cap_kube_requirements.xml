@@ -81,7 +81,8 @@
    </listitem>
    <listitem>
     <para>
-     Privileged must be enabled in <literal>kubelet</literal>
+     For &kube; deployments prior to version 1.15, privileged must be enabled
+     in <literal>kubelet</literal>
     </para>
    </listitem>
    <listitem>
