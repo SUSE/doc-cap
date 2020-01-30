@@ -10,8 +10,8 @@
 <!ENTITY kernel_version "3.19">
 <!ENTITY latestuaachart "2.19.1">
 <!ENTITY latestscfchart "2.19.1">
-<!ENTITY lateststratoschart "2.6.0">
-<!ENTITY metrics-version "1.1.0">
+<!ENTITY lateststratoschart "2.6.1">
+<!ENTITY metrics-version "1.1.1">
 <!ENTITY minibroker-version "0.3.1">
 <!ENTITY chart-appversion "1.5.1">
 <!ENTITY aksnodeversion "1.11.9">
