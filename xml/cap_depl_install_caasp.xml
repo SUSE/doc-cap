@@ -21,14 +21,13 @@
  <para>
   You may set up a minimal deployment on four &kube; nodes for testing. This is
   not sufficient for a production deployment. A basic &productname; production
-  deployment requires at least eight hosts plus a storage back-end: one &suse;
-  &caasp; admin server, three &kube; masters, three &kube; workers, a DNS/DHCP
-  server, and a storage back-end such as &ses; or NFS. This is a bare minimum,
-  and actual requirements are likely to be much larger, depending on your
-  workloads. You also need an external workstation for administering your
-  cluster. (See <xref linkend="sec-cap-requirements"/>.) You may optionally
-  make your &productname; cluster highly-available. See
-  <xref linkend="sec-cap-ha-prod"/>.
+  deployment requires at least eight hosts plus a storage back-end: &caasp;
+  admin server, three &kube; masters, three &kube; workers, a DNS/DHCP server,
+  and a storage back-end such as &ses; or NFS. This is a bare minimum, and
+  actual requirements are likely to be much larger, depending on your workloads.
+  You also need an external workstation for administering your cluster. (See
+  <xref linkend="sec-cap-requirements"/>.) You may optionally make your
+  &productname; cluster highly-available. See <xref linkend="sec-cap-ha-prod"/>.
  </para>
  <note>
   <title>Remote Administration</title>
