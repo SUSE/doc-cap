@@ -65,6 +65,8 @@ sed 's/"namespace": "default"/"namespace": "stratos"/' | kubectl create --filena
 
   &defaul-scf-namespace-note;
 
+  &stratos-tech-preview-note;
+
 <screen>&prompt.user;helm install suse/console \
     --name <replaceable>susecf-console</replaceable> \
     --namespace stratos \
@@ -258,6 +260,8 @@ gp2scoped       kubernetes.io/aws-ebs   1d
 
   &defaul-scf-namespace-note;
 
+  &stratos-tech-preview-note;
+
 <screen>&prompt.user;helm install suse/console \
     --name susecf-console \
     --namespace stratos \
@@ -387,6 +391,8 @@ gp2scoped       kubernetes.io/aws-ebs   1d
 
   &defaul-scf-namespace-note;
 
+  &stratos-tech-preview-note;
+
   <para>
    Use &helm; to install Stratos:
   </para>
@@ -508,6 +514,8 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   </para>
 
   &defaul-scf-namespace-note;
+
+  &stratos-tech-preview-note;
 
 <screen>&prompt.user;helm install suse/console \
     --name susecf-console \
