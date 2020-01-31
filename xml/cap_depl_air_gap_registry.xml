@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha-cap-depl-air-gap-registry"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <title>Setting Up a Registry for an Air Gapped Environment</title>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+ </info>
+ <important>
+     &readmefirst;
+ </important>
+ <para>
+  &cap;, which consists of &docker; images, is deployed to a &kube; cluster
+  through &helm;. These images are hosted on a &docker; registry at
+  <literal>registry.suse.com</literal>. In an air gapped environment,
+  <literal>registry.suse.com</literal> will not be accessible. You will need to
+  create a registry, and populate it will the images used by &cap;.
+ </para>
+ <para>
+  This chapter describes how to load your registry with the necessary images to
+  deploy &cap; in an air gapped environment.
+ </para>
+ <sect1 xml:id="sec-cap-prereqs-air-gap-registry">
+  <title>Prerequisites</title>
+
+  <para>
+   The following prerequisites are required:
+  </para>
+
+  <itemizedlist>
+   <listitem>
+    <para>
+     The &docker; Command Line. See
+     <link xlink:href="https://docs.docker.com/engine/reference/commandline/cli/"/>
+     for more information.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     A &docker; registry has been created in your air gapped environment. Refer to
+     the &docker; documentation at
+     <link xlink:href="https://docs.docker.com/registry/"/> for instructions.
+    </para>
+   </listitem>
+  </itemizedlist>
+
+ </sect1>
+ <sect1 xml:id="sec-cap-air-gap-registry">
+  <title>Mirror Images to Registry</title>
+  <para>
+   All the &cap; &helm; charts include an <filename>imagelist.txt</filename>
+   file that lists all images from the <literal>registry.suse.com</literal>
+   registry under the <literal>cap</literal> organization. They can be mirrored
+   to a local registry with the following script.
+  </para>
+  <para>
+   Replace the value of <literal>MIRROR</literal> with your registry's domain.
+  </para>
+<screen>#!/bin/bash
+
+MIRROR=registry.home
+
+set -ex
+
+function mirror {
+    CHART=$1
+    CHARTDIR=$(mktemp -d)
+    helm fetch suse/$1 --untar --untardir=${CHARTDIR}
+    IMAGES=$(cat ${CHARTDIR}/**/imagelist.txt)
+    for IMAGE in ${IMAGES}; do
+        echo $IMAGE
+        docker pull registry.suse.com/cap/$IMAGE
+        docker tag registry.suse.com/cap/$IMAGE $MIRROR/cap/$IMAGE
+        docker push $MIRROR/cap/$IMAGE
+    done
+    docker save -o ${CHART}-images.tar.gz \
+           $(perl -E "say qq(registry.suse.com/cap/\$_) for @ARGV" ${IMAGES})
+    rm -r ${CHARTDIR}
+}
+
+mirror cf
+mirror uaa
+mirror console
+mirror metrics
+mirror cf-usb-sidecar-mysql
+mirror cf-usb-sidecar-postgres
+</screen>
+  <para>
+   The script above will both mirror to a local registry and save the images in
+   a local tarball that can be restored with
+   <command>docker load foo-images.tgz</command>. In general only one of these
+   mechanisms will be needed.
+  </para>
+  <para>
+   Also take note of the following regarding the script provided above.
+  </para>
+  <itemizedlist>
+   <listitem>
+    <para>
+     The <literal>minibroker</literal> chart is currently not supported as it
+     does not use a tagged image, but <literal>minibroker:latest</literal>. It
+     will use a tagged imaged in the next release and supported at that time.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     The <literal>nginx-ingress</literal> chart is not supported by this
+     mechanism because it is not part of the <literal>cap</literal> organization
+     (and cannot be configured with the
+     <literal>kube.registry.hostname</literal> setting at deploy time either).
+    </para>
+    <para>
+     Instead manually parse the &helm; chart for the image names and do a manual
+     <command>docker pull &amp;&amp; docker tag &amp;&amp; docker push</command>
+     on them.
+    </para>
+   </listitem>
+  </itemizedlist>
+  <para>
+   Before deploying &cap; using <command>helm install</command>, ensure the
+   following in your
+   <filename>scf-config-values.yaml</filename> has been updated to point to your
+   registry, and not <literal>registry.suse.com</literal>.
+  </para>
+<screen>kube:
+  registry:
+    # example registry domain
+    hostname: <replaceable>"registry.home"</replaceable>
+    username: ""
+    password: ""
+  organization: "cap"
+</screen>
+ </sect1>
+</chapter>

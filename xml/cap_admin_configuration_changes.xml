@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.configuration-changes"
+<chapter version="5.0" xml:id="cha-cap-configuration-changes"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -22,16 +22,16 @@
   the <command>helm upgrade</command> command.
  </para>
  <warning>
-  <title>Do not make changes to pod counts during a version upgrade</title>
+  <title>Do Not Make Changes to Pod Counts During a Version Upgrade</title>
   <para>
    The <command>helm upgrade</command> command can be used to apply
    configuration changes as well as perform version upgrades to &cap;. A change
    to the pod count configuration should not be applied simultaneously with a
    version upgrade. Sizing changes should be made separately, either before or
-   after, from a version upgrade (see <xref linkend="sec.cap.ha-prod"/>).
+   after, from a version upgrade (see <xref linkend="sec-cap-ha-prod"/>).
   </para>
  </warning>
- <sect1 xml:id="sec.cap.configuration-change-example">
+ <sect1 xml:id="sec-cap-configuration-change-example">
   <title>Configuration Change Example</title>
 
   <para>
@@ -48,7 +48,7 @@
   </para>
 
 <screen>env:
-  LOG_LEVEL: "debug2" 
+  LOG_LEVEL: "debug2"
 </screen>
 
   <para>
@@ -57,7 +57,10 @@
    named <literal>susecf-uaa</literal>:
   </para>
 
-<screen>&prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa --values <replaceable>scf-config-values.yaml</replaceable></screen>
+<screen>&prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa \
+--values <replaceable>scf-config-values.yaml</replaceable> \
+--version &latestuaachart;
+</screen>
 
   <para>
    When all pods are in a <literal>READY</literal> state, the configuration
@@ -65,9 +68,9 @@
    <literal>uaa</literal> namespace, progress can be monitored with:
   </para>
 
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace uaa'</screen>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace uaa'</screen>
  </sect1>
- <sect1 xml:id="sec.cap.configuration-change-other-examples">
+ <sect1 xml:id="sec-cap-configuration-change-other-examples">
   <title>Other Examples</title>
 
   <para>
@@ -78,18 +81,18 @@
   <itemizedlist>
    <listitem>
     <para>
-     Cluster sizing changes (see <xref linkend="sec.cap.ha-prod-upgrade"/>)
+     Cluster sizing changes (see <xref linkend="cha-cap-ha"/>)
     </para>
    </listitem>
    <listitem>
     <para>
-     Secrets rotation (see <xref linkend="sec.cap.secrets-rotation"/>)
+     Secrets rotation (see <xref linkend="sec-cap-secrets-rotation"/>)
     </para>
    </listitem>
    <listitem>
     <para>
      Enabling additional services (see
-     <xref linkend="sec.cap.enable-app-autoscaler"/>)
+     <xref linkend="sec-cap-enable-app-autoscaler"/>)
     </para>
    </listitem>
   </itemizedlist>

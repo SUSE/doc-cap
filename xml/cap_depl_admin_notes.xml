@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.depl.notes"
+<chapter version="5.0" xml:id="cha-cap-depl-notes"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -21,29 +21,52 @@
   Important things to know before deploying &productname;.
  </para>
  <sect1>
-  <title>README first</title>
+  <title>README First</title>
 &readmefirst;
+ </sect1>
+ <sect1>
+  <title>Important Changes</title>
+  &stack-deprecation-note;
+ </sect1>
+ <sect1>
+  <title>Usage of &helm; Chart Fields in &cap;</title>
+  &chart-version-fields;
+ </sect1>
+ <sect1>
+  <title>&helm; Values in <filename>scf-config-values.yaml</filename> </title>
+  &config-value-usage;
+ </sect1>
+ <sect1>
+  <title>Status of Pods during Deployment</title>
+&deployment-pod-status;
 </sect1>
  <sect1>
-  <title>Not running/Completed Pods</title>
-&completed-pods;
-</sect1>
- <sect1>
-  <title>Namespaces</title> 
+  <title>Namespaces</title>
 &namespace-length;
 &fresh-namespace;
 </sect1>
  <sect1>
-  <title>DNS management</title> 
-&dns-management;
+  <title>DNS Management</title>
+
+  <para>
+   The following tables list the minimum DNS requirements to run &productname;, using
+   <literal>example.com</literal> as the example domain. Your DNS management is
+   platform-dependent, for example &aks; assigns IP addresses to your
+   services, which you will map to A records. &eks; assigns host names,
+   which you will use to create CNAMEs. &caasp; provides the flexibility
+   to manage your name services in nearly any way you wish. The chapters for
+   each platform in this guide provide the relevant DNS instructions.
+</para>
+
+&dns-tables;
 </sect1>
  <sect1>
-  <title>Releases and &helm; chart versions</title>
+  <title>Releases and Associated Versions</title>
 
   <para>
    The supported upgrade method is to install all upgrades, in order. Skipping
    releases is not supported. This table matches the &helm; chart versions to
-   each release:
+   each release as well as other version related information.
   </para>
     &releases-table;
 </sect1>

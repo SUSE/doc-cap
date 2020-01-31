@@ -1,0 +1,988 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha-cap-depl-aks"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <title>Deploying &productname; on &aks-full; (AKS)</title>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+ </info>
+ <important>
+     &readmefirst;
+ </important>
+ <para>
+  &productname; supports deployment on &aks-full;
+  (AKS), Microsoft's managed &kube; service. This chapter describes the steps
+  for preparing Azure for a &productname; deployment, with a basic Azure load
+  balancer. Note that you will not create any DNS records until after
+  <literal>uaa</literal> is deployed. (See
+  <link xlink:href="https://azure.microsoft.com/en-us/services/container-service/">
+  Azure Kubernetes Service (AKS)</link> for more information.)
+ </para>
+ <para>
+  In &kube; terminology a node used to be a minion, which was the name for a
+  worker node. Now the correct term is simply node (see
+  <link xlink:href="https://kubernetes.io/docs/concepts/architecture/nodes/"></link>).
+  This can be confusing, as computing nodes have traditionally been defined as
+  any device in a network that has an IP address. In Azure they are called
+  agent nodes. In this chapter we call them agent nodes or &kube; nodes.
+ </para>
+ <sect1 xml:id="sec-cap-prereqs-aks">
+  <title>Prerequisites</title>
+
+  <para>
+   The following are required to deploy and use &productname; on AKS:
+  </para>
+
+  <itemizedlist>
+   <listitem>
+    <para>
+     <command>az</command>, the Azure command line client. See
+     <link xlink:href="https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest"/>
+     for more information and installation instructions.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     A &ms; Azure account. For details, refer to
+     <link xlink:href="https://azure.microsoft.com"/>.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     The name of the SSH key that is attached to your Azure account.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Your Azure account as sufficient quota. The minimal installation described
+     in this chapter require 24 vCPUs. If your account has insufficient quota,
+     you can request a quota increase by going to
+     <link xlink:href="https://docs.microsoft.com/en-us/azure/azure-supportability/resource-manager-core-quotas-request"/>.
+    </para>
+   </listitem>
+   <listitem>
+    <!-- para -->
+    &kernel-prereq;
+   </listitem>
+
+   <!-- listitems: Install steps and links -->
+   &cfcli-prereq;
+   &kubectl-prereq;
+   &jq-prereq;
+   &curl-prereq;
+   &sed-prereq;
+  </itemizedlist>
+
+  &min-deploy-note;
+
+  <para>
+   Log in to your Azure Account:
+  </para>
+
+<screen>&prompt.user;az login</screen>
+
+  <para>
+   Your Azure user needs the User Access Administrator role. Check your
+   assigned roles with the <command>az</command> command:
+  </para>
+
+<screen>&prompt.user;az role assignment list --assignee <replaceable>login-name</replaceable>
+[...]
+"roleDefinitionName": "User Access Administrator",</screen>
+
+  <para>
+   If you do not have this role, then you must request it from your Azure
+   administrator.
+  </para>
+
+  <para>
+   You need your Azure subscription ID. Extract it with <command>az</command>:
+  </para>
+
+<screen>&prompt.user;az account show --query "{ subscription_id: id }"
+{
+"subscription_id": <replaceable>"a900cdi2-5983-0376-s7je-d4jdmsif84ca"</replaceable>
+}</screen>
+
+  <para>
+   Replace the example <varname>subscription-id</varname> in the next command
+   with your <varname>subscription-id</varname>. Then export it as an
+   environment variable and set it as the current subscription:
+  </para>
+
+<screen>&prompt.user;export SUBSCRIPTION_ID=<replaceable>"a900cdi2-5983-0376-s7je-d4jdmsif84ca"</replaceable>
+
+&prompt.user;az account set --subscription $SUBSCRIPTION_ID</screen>
+
+  <para>
+   Verify that the <literal>Microsoft.Network</literal>,
+   <literal>Microsoft.Storage</literal>, <literal>Microsoft.Compute</literal>,
+   and <literal>Microsoft.ContainerService</literal> providers are enabled:
+  </para>
+
+<screen>&prompt.user;az provider list | egrep --word-regexp 'Microsoft.Network|Microsoft.Storage|Microsoft.Compute|Microsoft.ContainerService'</screen>
+
+  <para>
+   If any of these are missing, enable them with the <command>az provider
+   register --name <replaceable>provider</replaceable></command> command.
+  </para>
+ </sect1>
+ <sect1 xml:id="sec-cap-create-aks-instance">
+  <title>Create Resource Group and AKS Instance</title>
+
+  <para>
+   Now you can create a new Azure resource group and AKS instance. Define the
+   required variables as environment variables in a file, called
+   <filename>env.sh</filename>. This helps to speed up the setup, and to
+   reduce errors. Verify your environment variables at any time by using
+   the <command>source</command> to load the file, then running
+   <command>echo $<replaceable>VARNAME</replaceable></command>, for example:
+  </para>
+
+<screen>&prompt.user;source ./env.sh
+
+&prompt.user;echo $RG_NAME
+cap-aks</screen>
+
+  <para>
+   This is especially useful when you run long compound commands to extract and
+   set environment variables.
+  </para>
+
+  <tip>
+   <title>Use Different Names</title>
+   <para>
+    Ensure each of your AKS clusters use unique resource group and managed
+    cluster names, and not copy the examples, especially when your Azure
+    subscription supports multiple users. Azure has no tools for sorting
+    resources by user, so creating unique names and putting everything in your
+    deployment in a single resource group helps you keep track, and you can
+    delete the whole deployment by deleting the resource group.
+   </para>
+  </tip>
+
+  <para>
+   In <filename>env.sh</filename>, define the environment variables below.
+   Replace the example values with your own.
+  </para>
+
+  <itemizedlist>
+   <listitem>
+    <para>
+     Set a resource group name.
+    </para>
+<screen>export RG_NAME="<replaceable>cap-aks</replaceable>"</screen>
+   </listitem>
+   <listitem>
+    <para>
+     Set an AKS managed cluster name. Azure's default is to use the
+     resource group name, then prepend it with <literal>MC</literal> and append
+     the location, for example <literal>MC_cap-aks_cap-aks_eastus</literal>.
+     This example uses the creator's initials for the
+     <literal>AKS_NAME</literal> environment variable, which will be mapped to
+     the <command>az</command> command's <command>--name</command> option. The
+     <command>--name</command> option is for creating arbitrary names for your
+     AKS resources. This example will create a managed cluster named
+     <literal>MC_cap-aks_cjs_eastus</literal>:
+    </para>
+<screen>&prompt.user;export AKS_NAME=<replaceable>cjs</replaceable></screen>
+   </listitem>
+   <listitem>
+    <para>
+     Set the Azure location. See
+     <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/container-service-quotas">
+     Quotas, virtual machine size restrictions, and region availability
+     in Azure Kubernetes Service (AKS)</link>
+ for supported locations. Run <command>az account list-locations</command> to
+ verify the correct way to spell your location name, for example East US is
+ <literal>eastus</literal> in your <command>az</command> commands:
+    </para>
+<screen>&prompt.user;export REGION="<replaceable>eastus</replaceable>"</screen>
+   </listitem>
+   <listitem>
+    <para>
+     Set the &kube; agent node count. (&cap; requires a minimum of 3.)
+    </para>
+<screen>&prompt.user;export NODE_COUNT="<replaceable>3</replaceable>"</screen>
+   </listitem>
+   <listitem>
+    <para>
+     Set the virtual machine size (see
+     <link xlink:href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-general">
+     General purpose virtual machine sizes</link>). A virtual machine size of
+     at least <literal>Standard_DS4_v2</literal> using premium storage (see
+     <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/azure-disks-dynamic-pv">Built in
+     storage classes</link>) is recommended. Note
+     <literal>managed-premium</literal> has been specified in the example
+     <filename>scf-config-values.yaml</filename> used (see
+     <xref linkend="sec-cap-cap-on-aks"/>):
+    </para>
+<screen>&prompt.user;export NODE_VM_SIZE="<replaceable>Standard_DS4_v2</replaceable>"</screen>
+   </listitem>
+   <listitem>
+    <para>
+     Set the public SSH key name associated with your Azure account:
+    </para>
+<screen>&prompt.user;export SSH_KEY_VALUE="<replaceable>~/.ssh/id_rsa.pub</replaceable>"</screen>
+   </listitem>
+   <listitem>
+    <para>
+     Set a new admin username:
+    </para>
+<screen>&prompt.user;export ADMIN_USERNAME="<replaceable>scf-admin</replaceable>"</screen>
+   </listitem>
+   <listitem>
+    <para>
+     Create a unique nodepool name. The default is
+     <literal>aks-nodepool</literal> followed by an auto-generated number, for
+     example <literal>aks-nodepool1-39318075-2</literal>. You have the option
+     to change <literal>nodepool1</literal> and create your own unique
+     identifier. For example, <literal>mypool</literal> results in
+     <literal>aks-mypool-39318075-2</literal>. Note that uppercase characters
+     are considered invalid in a nodepool name and should not be used.
+    </para>
+<screen>&prompt.user;export NODEPOOL_NAME="<replaceable>mypool</replaceable>"</screen>
+   </listitem>
+  </itemizedlist>
+
+  <para>
+   The below is an example <filename>env.sh</filename> file after all the
+   environment variables have been defined.
+  </para>
+
+<screen>### example environment variable definition file
+### env.sh
+
+export RG_NAME="cap-aks"
+export AKS_NAME="cjs"
+export REGION="eastus"
+export NODE_COUNT="3"
+export NODE_VM_SIZE="Standard_DS4_v2"
+export SSH_KEY_VALUE="~/.ssh/id_rsa.pub"
+export ADMIN_USERNAME="scf-admin"
+export NODEPOOL_NAME="mypool"
+</screen>
+
+  <para>
+   Now that your environment variables are in place, load the file:
+  </para>
+
+<screen>&prompt.user;source ./env.sh</screen>
+
+  <para>
+   Create a new resource group:
+  </para>
+
+<screen>&prompt.user;az group create --name $RG_NAME --location $REGION</screen>
+
+  <para>
+   List the &kube; versions currently supported by AKS (see
+   <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/supported-kubernetes-versions"/>
+   for more information on the AKS version support policy):
+  </para>
+
+<screen>&prompt.user;az aks get-versions --location $REGION --output table
+</screen>
+
+  <para>
+   Create a new AKS managed cluster, and specify the &kube; version for
+   consistent deployments:
+  </para>
+
+<screen>&prompt.user;az aks create --resource-group $RG_NAME --name $AKS_NAME \
+ --node-count $NODE_COUNT --admin-username $ADMIN_USERNAME \
+ --ssh-key-value $SSH_KEY_VALUE --node-vm-size $NODE_VM_SIZE \
+ --node-osdisk-size=&node-size; --nodepool-name $NODEPOOL_NAME \
+ --vm-set-type AvailabilitySet
+</screen>
+
+  <note>
+   <para>
+    An OS disk size of at least &node-size; GB must be specified using the
+    <command>--node-osdisk-size</command> flag.
+   </para>
+  </note>
+
+  <para>
+   This takes a few minutes. When it is completed, fetch your
+   <command>kubectl</command> credentials. The default behavior for <command>az
+   aks get-credentials</command> is to merge the new credentials with the
+   existing default configuration, and to set the new credentials as as the
+   current &kube; context. The context name is your AKS_NAME value. You should
+   first backup your current configuration, or move it to a different location,
+   then fetch the new credentials:
+  </para>
+
+<screen>&prompt.user;az aks get-credentials --resource-group $RG_NAME --name $AKS_NAME
+ Merged "cap-aks" as current context in /home/&exampleuser_plain;/.kube/config</screen>
+
+  <para>
+   Verify that you can connect to your cluster:
+  </para>
+
+<screen>&prompt.user;kubectl get nodes
+NAME                    STATUS    ROLES     AGE       VERSION
+aks-mypool-47788232-0   Ready     agent     5m        v&aksnodeversion;
+aks-mypool-47788232-1   Ready     agent     6m        v&aksnodeversion;
+aks-mypool-47788232-2   Ready     agent     6m        v&aksnodeversion;
+
+&prompt.user;kubectl get pods --all-namespaces
+NAMESPACE     NAME                                READY  STATUS    RESTARTS   AGE
+kube-system   azureproxy-79c5db744-fwqcx          1/1    Running   2          6m
+kube-system   heapster-55f855b47-c4mf9            2/2    Running   0          5m
+kube-system   kube-dns-v20-7c556f89c5-spgbf       3/3    Running   0          6m
+kube-system   kube-dns-v20-7c556f89c5-z2g7b       3/3    Running   0          6m
+kube-system   kube-proxy-g9zpk                    1/1    Running   0          6m
+kube-system   kube-proxy-kph4v                    1/1    Running   0          6m
+kube-system   kube-proxy-xfngh                    1/1    Running   0          6m
+kube-system   kube-svc-redirect-2knsj             1/1    Running   0          6m
+kube-system   kube-svc-redirect-5nz2p             1/1    Running   0          6m
+kube-system   kube-svc-redirect-hlh22             1/1    Running   0          6m
+kube-system   kubernetes-dashboard-546686-mr9hz   1/1    Running   1          6m
+kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m</screen>
+
+  <para>
+   When all nodes are in a ready state and all pods are running, proceed to the
+   next steps.
+  </para>
+ </sect1>
+
+ <!-- sect1 for helm client and tiller installation -->
+ &install-helm-tiller;
+
+ <sect1 xml:id="sec-cap-psp">
+  <title>Pod Security Policies</title>
+
+  <para>
+   Role-based access control (RBAC) is enabled by default on AKS. &productname;
+   1.3.1 and later do not need to be configured manually. Older &cap; releases
+   require manual PSP configuration; see <xref linkend="app-psps"/> for
+   instructions.
+  </para>
+ </sect1>
+
+ <sect1 xml:id="sec-cap-aks-storage">
+  <title>Default Storage Class</title>
+  <para>
+   This example creates a <literal>managed-premium</literal> (see
+   <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/azure-disks-dynamic-pv"/>)
+   storage class for your cluster using the manifest defined in
+   <filename>storage-class.yaml</filename> below:
+  </para>
+
+<screen>---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+  labels:
+    kubernetes.io/cluster-service: "true"
+  name: persistent
+parameters:
+  kind: Managed
+  storageaccounttype: Premium_LRS
+provisioner: kubernetes.io/azure-disk
+reclaimPolicy: Delete
+allowVolumeExpansion: true
+</screen>
+
+  <para>
+   Then apply the new storage class configuration with this command:
+  </para>
+
+<screen>&prompt.user;kubectl create --filename storage-class.yaml</screen>
+  <para>
+   Specify the newly created created storage class, called <literal>persistent</literal>,
+   as the value for <literal>kube.storage_class.persistent</literal> in your
+   deployment configuration file, like this example:
+  </para>
+
+<screen>kube:
+  storage_class:
+    persistent: "persistent"
+    shared: "persistent"
+</screen>
+  <para>
+   See <xref linkend="sec-cap-aks-config"/> for a complete example deployment
+   configuration file, <filename>scf-config-values.yaml</filename>.
+  </para>
+ </sect1>
+
+ <sect1 xml:id="sec-cap-aks-dns">
+  <title>DNS Configuration</title>
+
+  <para>
+   This section provides an overview of the domain and sub-domains that require
+   A records to be set up for. The process is described in more detail in the
+   deployment section.
+  </para>
+
+  <para>
+   The following table lists the required domain and sub-domains, using
+   <literal>example.com</literal> as the example domain:
+  </para>
+
+&dns-tables;
+
+ </sect1>
+ <sect1 xml:id="sec-cap-aks-config">
+  <title>Deployment Configuration</title>
+  <para>
+   It is not necessary to create any DNS records before deploying
+   <literal>uaa</literal>. Instead, after <literal>uaa</literal>
+   is running you will find the load balancer IP address that was automatically
+   created during deployment, and then create the necessary records.
+  </para>
+  <para>
+   The following file, <filename>scf-config-values.yaml</filename>, provides a
+   complete example deployment configuration. Enter the fully-qualified domain
+   name (FQDN) that you intend to use for <literal>DOMAIN</literal> and
+   <literal>UAA_HOST</literal>.
+  </para>
+<screen>
+### example deployment configuration file
+### scf-config-values.yaml
+
+env:
+  # the FQDN of your domain
+  DOMAIN: <replaceable>example.com</replaceable>
+  # the UAA prefix is required
+  UAA_HOST: uaa.<replaceable>example.com</replaceable>
+  UAA_PORT: 2793
+  GARDEN_ROOTFS_DRIVER: "overlay-xfs"
+
+kube:
+  storage_class:
+    persistent: "persistent"
+    shared: "persistent"
+
+  registry:
+    hostname: "registry.suse.com"
+    username: ""
+    password: ""
+  organization: "cap"
+
+secrets:
+  # Create a very strong password for user 'admin'
+  CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
+
+  # Create a very strong password, and protect it because it
+  # provides root access to everything
+  UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
+
+services:
+  loadbalanced: true
+</screen>
+
+  <!-- Explains usage of some Helm values used in the example/minimal values.yaml-->
+  &config-value-usage;
+
+  <!-- Reiterates importance of this password -->
+  &protect-uaa-admin-secret;
+ </sect1>
+
+ <sect1 xml:id="sec-cap-addrepo-aks">
+  <title>Add the &kube; Charts Repository</title>
+
+  <para>
+   Download the &suse; &kube; charts repository with &helm;:
+  </para>
+
+<screen>&prompt.user;helm repo add <replaceable>suse</replaceable> https://kubernetes-charts.suse.com/</screen>
+
+  <para>
+   You may replace the example <replaceable>suse</replaceable> name with any
+   name. Verify with <command>helm</command>:
+  </para>
+
+<screen>&prompt.user;helm repo list
+NAME       URL
+stable     https://kubernetes-charts.storage.googleapis.com
+local      http://127.0.0.1:8879/charts
+suse       https://kubernetes-charts.suse.com/
+</screen>
+
+  <para>
+   List your chart names, as you will need these for some operations:
+  </para>
+
+&helm-search-suse;
+
+ </sect1>
+ <sect1 xml:id="sec-cap-cap-on-aks">
+  <title>Deploying &productname;</title>
+  <para>
+   This section describes how to deploy &productname; with a basic
+   AKS load balancer and how to configure your DNS records.
+  </para>
+
+  <sect2 xml:id="sec-cap-aks-deploy-uaa">
+   <title>Deploy <literal>uaa</literal></title>
+
+   &uaa-in-scf;
+
+   <para>
+    Use &helm; to deploy the <literal>uaa</literal> server:
+   </para>
+<screen>&prompt.user;helm install suse/uaa \
+--name <replaceable>susecf-uaa</replaceable> \
+--namespace <replaceable>uaa</replaceable> \
+--values <replaceable>scf-config-values.yaml</replaceable>
+</screen>
+   &uaa-deploy-complete;
+   <para>
+    After the deployment completes, a &kube; service for <literal>uaa</literal>
+    will be exposed on an Azure load balancer that is automatically set up by
+    AKS (named <literal>kubernetes</literal> in the resource group that hosts
+    the worker node VMs).
+   </para>
+   <para>
+    List the services that have been exposed on the load balancer public IP.
+    The name of these services end in <literal>-public</literal>. For example,
+    the <literal>uaa</literal> service is exposed on
+    <replaceable>40.85.188.67</replaceable> and port 2793.
+   </para>
+<screen>&prompt.user;kubectl get services --namespace uaa | grep public
+uaa-uaa-public    LoadBalancer   10.0.67.56     40.85.188.67   2793:32034/TCP
+</screen>
+   <para>
+    Use the DNS service of your choice to set up DNS A records for the service
+    from the previous step. Use the public load balancer IP associated with the
+    service to create domain mappings:
+   </para>
+   <itemizedlist>
+    <listitem>
+     <para>
+      For the <literal>uaa</literal> service, map the following domains:
+     </para>
+     <variablelist>
+      <varlistentry>
+       <term>uaa.DOMAIN</term>
+       <listitem>
+        <para>
+         Using the example values, an A record for
+         <literal>uaa.example.com</literal> that points to
+         <replaceable>40.85.188.67</replaceable>
+        </para>
+       </listitem>
+      </varlistentry>
+      <varlistentry>
+       <term>*.uaa.DOMAIN</term>
+       <listitem>
+        <para>
+         Using the example values, an A record for
+         <literal>*.uaa.example.com</literal> that points to
+         <replaceable>40.85.188.67</replaceable>
+        </para>
+       </listitem>
+      </varlistentry>
+     </variablelist>
+    </listitem>
+   </itemizedlist>
+   <para>
+    If you wish to use the DNS service provided by Azure, see the
+    <link xlink:href="https://docs.microsoft.com/en-us/azure/dns/"> Azure DNS
+    Documentation</link> to learn more.
+   </para>
+   <para>
+    Use <command>curl</command> to verify you are able to connect to the
+    <literal>uaa</literal> OAuth server on the DNS name configured:
+   </para>
+<screen>&prompt.user;curl --insecure https://uaa.example.com:2793/.well-known/openid-configuration</screen>
+   <para>
+    This should return a JSON object, as this abbreviated example shows:
+   </para>
+<screen>{"issuer":"https://uaa.example.com:2793/oauth/token",
+"authorization_endpoint":"https://uaa.example.com:2793
+/oauth/authorize","token_endpoint":"https://uaa.example.com:2793/oauth/token"
+</screen>
+  </sect2>
+
+  <sect2 xml:id="sec-cap-aks-deploy-scf">
+   <title>Deploy <literal>scf</literal></title>
+   <para>
+    Before deploying <literal>scf</literal>, ensure the DNS records for the
+    <literal>uaa</literal> domains have been set up as specified in the
+    previous section. Next, pass your <literal>uaa</literal> secret and
+    certificate to <literal>scf</literal>, then use &helm; to deploy
+    <literal>scf</literal>:
+   </para>
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+
+&prompt.user;helm install suse/cf \
+--name <replaceable>susecf-scf</replaceable> \
+--namespace scf \
+--values scf-config-values.yaml \
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
+</screen>
+   &scf-deploy-complete;
+   <para>
+    After the deployment completes, a number of public services will be setup
+    using a load balancer that has been configured with corresponding load
+    balancing rules and probes as well as having the correct ports opened in
+    Network Security Group.
+   </para>
+   <para>
+    List the services that have been exposed on the load balancer public IP.
+    The name of these services end in <literal>-public</literal>. For example,
+    the <literal>gorouter</literal> service is exposed on
+    <replaceable>23.96.32.205</replaceable>:
+   </para>
+<screen>&prompt.user;kubectl get services --namespace scf | grep public
+diego-ssh-ssh-proxy-public                  LoadBalancer   10.0.44.118    40.71.187.83   2222:32412/TCP                                                                                                                                    1d
+router-gorouter-public                      LoadBalancer   10.0.116.78    23.96.32.205   80:32136/TCP,443:32527/TCP,4443:31541/TCP                                                                                                         1d
+tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.46.98    20000:30337/TCP,20001:31530/TCP,20002:32118/TCP,20003:30750/TCP,20004:31014/TCP,20005:32678/TCP,20006:31528/TCP,20007:31325/TCP,20008:30060/TCP   1d
+</screen>
+   <para>
+    Use the DNS service of your choice to set up DNS A records for the services
+    from the previous step. Use the public load balancer IP associated with the
+    service to create domain mappings:
+   </para>
+   <itemizedlist>
+    <listitem>
+     <para>
+      For the <literal>gorouter</literal> service, map the following domains:
+     </para>
+     <variablelist>
+      <varlistentry>
+       <term>DOMAIN</term>
+       <listitem>
+        <para>
+         Using the example values, an A record for
+         <replaceable>example.com</replaceable> that points to
+         <replaceable>23.96.32.205</replaceable> would be created.
+        </para>
+       </listitem>
+      </varlistentry>
+      <varlistentry>
+       <term>*.DOMAIN</term>
+       <listitem>
+        <para>
+         Using the example values, an A record for
+         <replaceable>*.example.com</replaceable> that points to
+         <replaceable>23.96.32.205</replaceable> would be created.
+        </para>
+       </listitem>
+      </varlistentry>
+     </variablelist>
+    </listitem>
+    <listitem>
+     <para>
+      For the <literal>diego-ssh</literal> service, map the following domain:
+     </para>
+     <variablelist>
+      <varlistentry>
+       <term>ssh.DOMAIN</term>
+       <listitem>
+        <para>
+         Using the example values, an A record for
+         <replaceable>ssh.example.com</replaceable> that points to
+         <replaceable>40.71.187.83</replaceable> would be created.
+        </para>
+       </listitem>
+      </varlistentry>
+     </variablelist>
+    </listitem>
+    <listitem>
+     <para>
+      For the <literal>tcp-router</literal> service, map the following domain:
+     </para>
+     <variablelist>
+      <varlistentry>
+       <term>tcp.DOMAIN</term>
+       <listitem>
+        <para>
+         Using the example values, an A record for
+         <replaceable>tcp.example.com</replaceable> that points to
+         <replaceable>23.96.46.98</replaceable> would be created.
+        </para>
+       </listitem>
+      </varlistentry>
+     </variablelist>
+    </listitem>
+   </itemizedlist>
+   <para>
+    If you wish to use the DNS service provided by Azure, see the
+    <link xlink:href="https://docs.microsoft.com/en-us/azure/dns/"> Azure DNS
+    Documentation</link> to learn more.
+   </para>
+   <para>
+    Your load balanced deployment of &cap; is now complete. Verify you can
+    access the API endpoint:
+   </para>
+<screen>&prompt.user;cf api --skip-ssl-validation https://api.example.com</screen>
+  </sect2>
+ </sect1>
+ <sect1 xml:id="sec-cap-azure-service-broker">
+  <title>Configuring and Testing the Native &aks; Service Broker</title>
+
+  <para>
+   &aks-full; provides a service broker called the Open Service Broker for
+   Azure (see <link xlink:href="https://github.com/Azure/open-service-broker-azure"/>.
+   This section describes how to use it with your &productname; deployment.
+  </para>
+
+  <para>
+   Start by extracting and setting a batch of environment variables:
+  </para>
+
+<screen>&prompt.user;SBRG_NAME=$(tr -dc 'a-zA-Z0-9' &lt; /dev/urandom | head -c 8)-service-broker
+
+&prompt.user;REGION=<replaceable>eastus</replaceable>
+
+&prompt.user;export SUBSCRIPTION_ID=$(az account show | jq -r '.id')
+
+&prompt.user;az group create --name ${SBRG_NAME} --location ${REGION}
+
+&prompt.user;SERVICE_PRINCIPAL_INFO=$(az ad sp create-for-rbac --name ${SBRG_NAME})
+
+&prompt.user;TENANT_ID=$(echo ${SERVICE_PRINCIPAL_INFO} | jq -r '.tenant')
+
+&prompt.user;CLIENT_ID=$(echo ${SERVICE_PRINCIPAL_INFO} | jq -r '.appId')
+
+&prompt.user;CLIENT_SECRET=$(echo ${SERVICE_PRINCIPAL_INFO} | jq -r '.password')
+
+&prompt.user;echo SBRG_NAME=${SBRGNAME}
+
+&prompt.user;echo REGION=${REGION}
+
+&prompt.user;echo SUBSCRIPTION_ID=${SUBSCRIPTION_ID} \; TENANT_ID=${TENANT_ID}\; CLIENT_ID=${CLIENT_ID}\; CLIENT_SECRET=${CLIENT_SECRET}
+</screen>
+
+  <para>
+   Add the necessary &helm; repositories and download the charts:
+  </para>
+
+<screen>&prompt.user;helm repo add svc-cat https://svc-catalog-charts.storage.googleapis.com
+
+&prompt.user;helm repo update
+
+&prompt.user;helm install svc-cat/catalog --name catalog \
+ --namespace catalog \
+ --set controllerManager.healthcheck.enabled=false \
+ --set apiserver.healthcheck.enabled=false
+
+&prompt.user;kubectl get apiservice
+
+&prompt.user;helm repo add azure https://kubernetescharts.blob.core.windows.net/azure
+
+&prompt.user;helm repo update
+</screen>
+
+  <para>
+   Set up the service broker with your variables:
+  </para>
+
+<screen>
+&prompt.user;helm install azure/open-service-broker-azure \
+--name <replaceable>osba</replaceable> \
+--namespace <replaceable>osba</replaceable> \
+--set azure.subscriptionId=${SUBSCRIPTION_ID} \
+--set azure.tenantId=${TENANT_ID} \
+--set azure.clientId=${CLIENT_ID} \
+--set azure.clientSecret=${CLIENT_SECRET} \
+--set azure.defaultLocation=${REGION} \
+--set redis.persistence.storageClass=default \
+--set basicAuth.username=$(tr -dc 'a-zA-Z0-9' &lt; /dev/urandom | head -c 16) \
+--set basicAuth.password=$(tr -dc 'a-zA-Z0-9' &lt; /dev/urandom | head -c 16) \
+--set tls.enabled=false
+</screen>
+  <para>
+   Monitor the progress:
+  </para>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace osba'</screen>
+  <para>
+   When all pods are running, create the service broker in &scf; using the &cfcli;:
+  </para>
+<screen>
+&prompt.user;cf login
+
+&prompt.user;cf create-service-broker <replaceable>azure</replaceable> $(kubectl get deployment osba-open-service-broker-azure \
+--namespace osba --output jsonpath='{.spec.template.spec.containers[0].env[?(@.name == "BASIC_AUTH_USERNAME")].value}') $(kubectl get secret --namespace osba osba-open-service-broker-azure --output jsonpath='{.data.basic-auth-password}' | base64 --decode) http://osba-open-service-broker-azure.osba
+</screen>
+
+  <para>
+   List the available service plans. For more information about the services
+   supported see
+   <link xlink:href="https://github.com/Azure/open-service-broker-azure#supported-services"/>:
+  </para>
+<screen>&prompt.user;cf service-access -b <replaceable>azure</replaceable></screen>
+  <para>
+   Use <command>cf enable-service-access</command> to enable access to a service plan. This
+   example enables all <literal>basic</literal> plans:
+  </para>
+<screen>
+&prompt.user;cf service-access -b <replaceable>azure</replaceable> | \
+awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
+</screen>
+
+  <para>
+   Test your new service broker with an example PHP application. First create an
+   organization and space to deploy your test application to:
+  </para>
+
+<screen>
+&prompt.user;cf create-org <replaceable>testorg</replaceable>
+
+&prompt.user;cf create-space <replaceable>scftest</replaceable> -o <replaceable>testorg</replaceable>
+
+&prompt.user;cf target -o "<replaceable>testorg</replaceable>" -s "<replaceable>scftest</replaceable>"
+
+&prompt.user;cf create-service azure-mysql-5-7 basic <replaceable>question2answer-db</replaceable> \
+-c "{ \"location\": \"${REGION}\", \"resourceGroup\": \"${SBRG_NAME}\", \"firewallRules\": [{\"name\": \
+\"AllowAll\", \"startIPAddress\":\"0.0.0.0\",\"endIPAddress\":\"255.255.255.255\"}]}"
+
+&prompt.user;cf service <replaceable>question2answer-db</replaceable> | grep status
+</screen>
+
+  <para>
+   Find your new service and optionally disable TLS. You should not disable TLS
+   on a production deployment, but it simplifies testing. The
+   <literal>mysql2</literal> gem must be configured to use TLS, see
+   <link xlink:href="https://github.com/brianmario/mysql2#ssl-options">brianmario/mysql2/SSL
+   options</link> on GitHub:
+  </para>
+
+<screen>
+&prompt.user;az mysql server list --resource-group $SBRG_NAME
+
+&prompt.user;az mysql server update --resource-group $SBRG_NAME \
+--name <replaceable>scftest</replaceable> --ssl-enforcement Disabled
+</screen>
+
+  <para>
+   Look in your Azure portal to find your database <literal>--name</literal>.
+  </para>
+
+  <para>
+   Build and push the example PHP application:
+  </para>
+
+<screen>
+&prompt.user;git clone https://github.com/scf-samples/question2answer
+
+&prompt.user;cd question2answer
+
+&prompt.user;cf push
+
+&prompt.user;cf service question2answer-db # => bound apps
+</screen>
+
+  <para>
+   When the application has finished deploying, use your browser and
+   navigate to the URL specified in the <literal>routes</literal>
+   field displayed at the end of the staging logs. For example, the
+   application route could be
+   <replaceable>question2answer.example.com</replaceable>.
+  </para>
+
+  <para>
+   Press the button to prepare the database. When the database is ready,
+   further verify by creating an initial user and posting some test questions.
+  </para>
+ </sect1>
+
+ <!-- sect1 for PV resizing -->
+ &resize-persistent-volume;
+
+ <sect1 xml:id="sec-cap-aks-add-capacity">
+  <title>Expanding Capacity of a &cap; Deployment on &aks;</title>
+
+  <para>
+   If the current capacity of your &cap; deployment is insufficient for your
+   workloads, you can expand the capacity using the procedure in this section.
+  </para>
+
+  <para>
+   These instructions assume you have followed the procedure in
+   <xref linkend="cha-cap-depl-aks"/> and have a running &cap; deployment on
+   &aks;. The instructions below will use environment variables defined in
+   <xref linkend="sec-cap-create-aks-instance"/>.
+  </para>
+
+  <procedure>
+   <step>
+    <para>
+     Get the current number of &kube; nodes in the cluster.
+    </para>
+<screen>&prompt.user;export OLD_NODE_COUNT=$(kubectl get nodes --output json | jq '.items | length')</screen>
+   </step>
+   <step>
+    <para>
+     Set the number of &kube; nodes the cluster will be expanded to. Replace the
+     example value with the number of nodes required for your workload.
+    </para>
+<screen>&prompt.user;export NEW_NODE_COUNT=<replaceable>4</replaceable></screen>
+   </step>
+   <step>
+    <para>
+     <!-- https://docs.microsoft.com/en-us/azure/aks/scale-cluster -->
+     Increase the &kube; node count in the cluster.
+    </para>
+<screen>&prompt.user;az aks scale --resource-group $RG_NAME --name $AKS_NAME \
+--node-count $NEW_NODE_COUNT \
+--nodepool-name $NODEPOOL_NAME
+</screen>
+   </step>
+   <step>
+    <para>
+     Verify the new nodes are in a <literal>Ready</literal> state before proceeding.
+    </para>
+<screen>&prompt.user;kubectl get nodes</screen>
+   </step>
+   <step>
+    <para>
+     Add or update the following in your
+     <filename>scf-config-values.yaml</filename> file to increase the number of
+     <literal>diego-cell</literal> in your &cap; deployment. Replace the
+     example value with the number required by your workflow.
+    </para>
+<screen>sizing:
+  diego_cell:
+    count: <replaceable>4</replaceable>
+</screen>
+   </step>
+   <step>
+    <para>
+     Pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>.
+    </para>
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+</screen>
+   </step>
+   <step>
+    <para>
+     Perform a <command>helm upgrade</command> to apply the change.
+    </para>
+<screen>&prompt.user;helm upgrade susecf-scf suse/cf \
+--values scf-config-values.yaml \
+--set "secrets.UAA_CA_CERT=${CA_CERT}" \
+--version &latestscfchart;
+</screen>
+   </step>
+   <step>
+    <para>
+     Monitor progress of the additional <literal>diego-cell</literal> pods:
+    </para>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace scf'</screen>
+   </step>
+  </procedure>
+ </sect1>
+</chapter>

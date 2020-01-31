@@ -1,48 +1,75 @@
 <!--...........................................................................
-This file contains entities for repeated content entities, for re-printing 
-content in multiple locations rather than using xrefs, so that users do not have 
-to skip around so much. This works just like copy-paste, so be mindful of 
+This file contains entities for repeated content entities, for re-printing
+content in multiple locations rather than using xrefs, so that users do not have
+to skip around so much. This works just like copy-paste, so be mindful of
 sections, titles, and paragraphs
 
 Use xmlns="http://docbook.org/ns/docbook" on the first occurrence of every
-parent formatting tag in each entity, to avoid "Namespace default prefix was not 
+parent formatting tag in each entity, to avoid "Namespace default prefix was not
 found" errors
 ............................................................................-->
 
-<!ENTITY completed-pods 
+
+<!--ENTITY deployment-pod-status............................................-->
+
+<!ENTITY deployment-pod-status
 '<variablelist xmlns="http://docbook.org/ns/docbook">
 <varlistentry>
-     <term>Some pods show not running</term>
+     <term>Some Pods Show as Not Running</term>
      <listitem>
       <para>
-       Some <literal>uaa</literal> and <literal>scf</literal> pods perform only 
-       deployment tasks, and it is normal for them to show as unready and 
-       <literal>Completed</literal> after they have completed their tasks, as 
-       these examples show: 
+       Some <literal>uaa</literal> and <literal>scf</literal> pods perform only
+       deployment tasks, and it is normal for them to show as unready and
+       <literal>Completed</literal> after they have completed their tasks, as
+       these examples show:
       </para>
 <screen>
 &prompt.user;kubectl get pods --namespace uaa
 secret-generation-1-z4nlz   0/1       Completed
-          
+
 &prompt.user;kubectl get pods --namespace scf
 secret-generation-1-m6k2h       0/1       Completed
-post-deployment-setup-1-hnpln   0/1       Completed</screen>      
+post-deployment-setup-1-hnpln   0/1       Completed</screen>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>Some Pods Terminate and Restart during Deployment</term>
+     <listitem>
+      <para>
+       When monitoring the status of a deployment, pods can be observed
+       transitioning from a <literal>Running</literal> state to a
+       <literal>Terminating</literal> state, then returning to a
+       <literal>Running</literal> again.
+      </para>
+      <para>
+       If a <literal>RESTARTS</literal> count of 0 is maintained during this
+       process, this is normal behavior and not due to failing pods. It is not
+       necessary to stop the deployment. During deployment, pods will modify
+       annotations on itself via the StatefulSet pod spec. In order to get the
+       correct annotations on the running pod, it is stopped and restarted.
+       Under normal circumstances, this behavior should only result in a pod
+       restarting once.
+      </para>
      </listitem>
     </varlistentry>
 </variablelist>'>
 
-<!ENTITY namespace-length 
+<!--ENTITY namespace-length ................................................-->
+
+<!ENTITY namespace-length
 '<variablelist xmlns="http://docbook.org/ns/docbook">
 <varlistentry>
      <term>Length of release names</term>
      <listitem>
       <para>
-       Release names (for example, when you run <command>helm install --name</command>) 
+       Release names (for example, when you run <command>helm install --name</command>)
 have a maximum length of 36 characters.
       </para>
      </listitem>
     </varlistentry>
 </variablelist>'>
+
+<!--ENTITY fresh-namespace..................................................-->
 
 <!ENTITY fresh-namespace
 '<variablelist xmlns="http://docbook.org/ns/docbook">
@@ -50,17 +77,19 @@ have a maximum length of 36 characters.
      <term>Always install to a fresh namespace</term>
      <listitem>
       <para>
-    If you are not creating a fresh &productname; installation, but have deleted 
-    a previous deployment and are starting over, you must create new namespaces. 
-    Do not re-use your old namespaces. The <command>helm delete</command> command 
-    does not remove generated secrets from the <literal>scf</literal> and 
-    <literal>uaa</literal> namespaces as it is 
-    not aware of them. These leftover secrets may cause deployment failures. See 
-    <xref linkend="sec.cap.rebuild.depl"/> for more information.
+    If you are not creating a fresh &productname; installation, but have deleted
+    a previous deployment and are starting over, you must create new namespaces.
+    Do not re-use your old namespaces. The <command>helm delete</command> command
+    does not remove generated secrets from the <literal>scf</literal> and
+    <literal>uaa</literal> namespaces as it is
+    not aware of them. These leftover secrets may cause deployment failures. See
+    <xref linkend="sec-cap-tbl-rebuild-depl"/> for more information.
       </para>
      </listitem>
     </varlistentry>
-</variablelist>'>    
+</variablelist>'>
+
+<!--ENTITY readmefirst......................................................-->
 
 <!ENTITY readmefirst
 '<variablelist xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -72,93 +101,1226 @@ Before you start deploying &productname;, review the following documents:
       </para>
               <para>
          Read the Release Notes:
-         <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/1/"/>
+         <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/1/">
+           Release Notes &productname;</link>
         </para>
                 <para>
             Read
-         <xref linkend="cha.cap.depl.notes"/>
+         <xref linkend="cha-cap-depl-notes"/>
         </para>
      </listitem>
      </varlistentry>
-     </variablelist>'>    
+     </variablelist>'>
 
-<!ENTITY dns-management
-'<para xmlns="http://docbook.org/ns/docbook">
-<!--TODO link to DNS requirements section, when it exists -->
-You must have control of your own DNS management, and set up all the necessary 
-domains and subdomains for &productname; and your applications.
-</para>'>
+<!--ENTITY dns-tables.......................................................-->
 
-<!ENTITY releases-table    
+<!ENTITY dns-tables
+'<informaltable xmlns="http://docbook.org/ns/docbook">
+   <tgroup cols="2">
+    <thead>
+     <row>
+      <entry>Domains</entry>
+      <entry>Services</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>uaa.example.com</entry>
+      <entry>uaa-uaa-public</entry>
+     </row>
+     <row>
+      <entry>*.uaa.example.com</entry>
+      <entry>uaa-uaa-public</entry>
+     </row>
+     <row>
+      <entry>example.com</entry>
+      <entry>router-gorouter-public</entry>
+     </row>
+     <row>
+      <entry>*.example.com</entry>
+      <entry>router-gorouter-public</entry>
+     </row>
+     <row>
+      <entry>tcp.example.com</entry>
+      <entry>tcp-router-tcp-router-public</entry>
+     </row>
+     <row>
+      <entry>ssh.example.com</entry>
+      <entry>diego-ssh-ssh-proxy-public</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+
+  <para xmlns="http://docbook.org/ns/docbook">
+   A &productname; cluster exposes these four services:
+  </para>
+
+  <informaltable xmlns="http://docbook.org/ns/docbook">
+   <tgroup cols="2">
+    <thead>
+     <row>
+      <entry>&kube; service descriptions</entry>
+      <entry>&kube; service names</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>&uaa; (<literal>uaa</literal>)</entry>
+      <entry>uaa-uaa-public</entry>
+     </row>
+     <row>
+      <entry>Cloud Foundry (CF) TCP routing service</entry>
+      <entry>tcp-router-tcp-router-public</entry>
+     </row>
+     <row>
+      <entry>CF application SSH access</entry>
+      <entry>diego-ssh-ssh-proxy-public</entry>
+     </row>
+     <row>
+      <entry>CF router</entry>
+      <entry>router-gorouter-public</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+
+  <para xmlns="http://docbook.org/ns/docbook">
+   <literal>uaa-uaa-public</literal> is in the <literal>uaa</literal>
+   namespace, and the rest are in the <literal>scf</literal> namespace.
+  </para>'>
+
+<!--ENTITY releases-table...................................................-->
+
+<!ENTITY releases-table
 '<!-- TODO remember to keep this table updated -->
-    <informaltable xmlns="http://docbook.org/ns/docbook" >
-   <tgroup cols="3">
+  <informaltable xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+   <tgroup cols="7">
     <thead>
      <row>
       <entry>CAP Release</entry>
       <entry>SCF and UAA &helm; Chart Version</entry>
       <entry>Stratos &helm; Chart Version</entry>
+      <entry>Stratos Metrics &helm; Chart Version</entry>
+      <entry>CF API Implemented</entry>
+      <entry>Known Compatible CF CLI Version</entry>
+      <entry>CF CLI URL</entry>
      </row>
     </thead>
     <tbody>
      <row>
-      <entry>1.3.1 (current release)</entry>
+      <entry>&productnumber; (current release)</entry>
+      <entry>&latestscfchart;</entry>
+      <entry>&lateststratoschart;</entry>
+      <entry>1.1.1</entry>
+      <!-- cf-deployment 9.5: 2.138.0, cf api result: 2.138.0 -->
+      <entry>2.138.0</entry>
+      <entry>6.46.1</entry>
+      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.46.1"/></entry>
+     </row>
+     <row>
+      <entry>1.5</entry>
+      <entry>2.18.0</entry>
+      <entry>2.5.3</entry>
+      <entry>1.1.0</entry>
+      <!-- cf-deployment 9.5: 2.138.0, cf api result: 2.138.0 -->
+      <entry>2.138.0</entry>
+      <entry>6.46.1</entry>
+      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.46.1"/></entry>
+     </row>
+     <row>
+      <entry>1.4.1</entry>
+      <entry>2.17.1</entry>
+      <entry>2.4.0</entry>
+      <entry>1.0.0</entry>
+      <!-- cf-deployment 7.11: 2.134.0, cf api result: 2.134.0 -->
+      <entry>2.134.0</entry>
+      <entry>6.46.0</entry>
+      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.46.0"/></entry>
+     </row>
+     <row>
+      <entry>1.4</entry>
+      <entry>2.16.4</entry>
+      <entry>2.4.0</entry>
+      <entry>1.0.0</entry>
+      <!-- cf-deployment 6.10: 2.128, cf api result: 2.134.0 -->
+      <entry>2.134.0</entry>
+      <entry>6.44.1</entry>
+      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.44.1"/></entry>
+     </row>
+     <row>
+      <entry>1.3.1</entry>
       <entry>2.15.2</entry>
       <entry>2.3.0</entry>
+      <entry>1.0.0</entry>
+      <!-- cf-deployment 3.6.0 -->
+      <entry>2.120.0</entry>
+      <entry>6.42.0</entry>
+      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.42.0"/></entry>
      </row>
      <row>
       <entry>1.3</entry>
       <entry>2.14.5</entry>
       <entry>2.2.0</entry>
+      <entry>1.0.0</entry>
+      <!-- cf-deployment 2.7.0 -->
+      <entry>2.115.0</entry>
+      <entry>6.40.1</entry>
+      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.40.1"/></entry>
      </row>
      <row>
       <entry>1.2.1</entry>
       <entry>2.13.3</entry>
       <entry>2.1.0</entry>
+      <entry></entry>
+      <!-- cf-deployment 2.7.0 -->
+      <entry>2.115.0</entry>
+      <entry>6.39.1</entry>
+      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.39.1"/></entry>
      </row>
      <row>
       <entry>1.2.0</entry>
       <entry>2.11.0</entry>
       <entry>2.0.0</entry>
+      <entry></entry>
+      <!-- cf-deployment 1.36.0 -->
+      <entry>2.112.0</entry>
+      <entry>6.38.0</entry>
+      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.38.0"/></entry>
      </row>
      <row>
       <entry>1.1.1</entry>
       <entry>2.10.1</entry>
       <entry>1.1.0</entry>
+      <entry></entry>
+      <!-- cf-deployment 1.21.0 -->
+      <entry>2.106.0</entry>
+      <entry>6.37.0</entry>
+      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.37.0"/></entry>
      </row>
      <row>
       <entry>1.1.0</entry>
       <entry>2.8.0</entry>
       <entry>1.1.0</entry>
+      <entry></entry>
+      <!-- cf-deployment 1.15.0 -->
+      <entry>2.103.0</entry>
+      <entry>6.36.1</entry>
+      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.36.1"/></entry>
      </row>
      <row>
       <entry>1.0.1</entry>
       <entry>2.7.0</entry>
       <entry>1.0.2</entry>
+      <entry></entry>
+      <!-- cf-deployment 1.9.0 -->
+      <entry>2.101.0</entry>
+      <entry>6.34.1</entry>
+      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.34.1"/></entry>
      </row>
      <row>
       <entry>1.0</entry>
       <entry>2.6.11</entry>
       <entry>1.0.0</entry>
+      <entry></entry>
+      <entry></entry>
+      <entry>6.34.0</entry>
+      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.34.0"/></entry>
      </row>
     </tbody>
    </tgroup>
-   </informaltable>'>    
+   </informaltable>'>
 
-<!ENTITY recreate-pods
-'<variablelist xmlns="http://docbook.org/ns/docbook">
-<varlistentry>
-     <term>Using <command>--recreate-pods</command> during a <command>helm upgrade</command></term>
+<!--ENTITY cfcli-prereq.....................................................-->
+
+<!ENTITY cfcli-prereq
+'<listitem xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+<para>
+ <command>cf</command>, the &cf; command line interface. For more information,
+ see <link xlink:href="https://docs.cloudfoundry.org/cf-cli/"/>.
+</para>
+<para>
+ For &sle; and &opensuse; systems, install using <command>zypper</command>.
+</para>
+<screen>&prompt.user;sudo zypper install cf-cli</screen>
+<para>
+ For &slea;, ensure the &productname; Tools Module has been added. Add the
+ module using &yast; or &suseconnect;.
+</para>
+<screen>&prompt.user;&suseconnect; --product sle-module-cap-tools/15.1/x86_64</screen>
+<para>
+ For other systems, follow the instructions at
+ <link xlink:href="https://docs.cloudfoundry.org/cf-cli/install-go-cli.html"/>.
+</para>
+</listitem>'>
+
+<!--ENTITY kubectl-prereq...................................................-->
+
+<!ENTITY kubectl-prereq
+'<listitem xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+<para>
+ <command>kubectl</command>, the &kube; command line tool. For more
+ information, refer to
+ <link xlink:href="https://kubernetes.io/docs/reference/kubectl/overview/"/>.
+</para>
+<para>
+ For &slea; 12 SP3 or 15 systems, install the package
+ <package>kubernetes-client</package> from the <emphasis>Public Cloud</emphasis>
+ module.
+</para>
+<para>
+ For other systems, follow the instructions at
+ <link xlink:href="https://kubernetes.io/docs/tasks/tools/install-kubectl/"/>.
+</para>
+</listitem>'>
+
+<!--ENTITY jq-prereq........................................................-->
+
+<!ENTITY jq-prereq
+'<listitem xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+<para>
+ <command>jq</command>, a command line JSON processor. See
+ <link xlink:href="https://stedolan.github.io/jq/"/> for more information and
+ installation instructions.
+</para>
+</listitem>'>
+
+<!--ENTITY curl-prereq......................................................-->
+
+<!ENTITY curl-prereq
+'<listitem xmlns="http://docbook.org/ns/docbook">
+<para>
+ <command>curl</command>, the Client URL (cURL) command line tool.
+</para>
+</listitem>'>
+
+<!--ENTITY sed-prereq.......................................................-->
+
+<!ENTITY sed-prereq
+'<listitem xmlns="http://docbook.org/ns/docbook">
+<para>
+ <command>sed</command>, the stream editor.
+</para>
+</listitem>'>
+
+<!--ENTITY kernel-prereq....................................................-->
+
+<!ENTITY kernel-prereq
+'<para xmlns="http://docbook.org/ns/docbook">
+ Ensure nodes use a mininum kernel version of &kernel_version;.
+</para>'>
+
+<!--ENTITY uaac-prereq......................................................-->
+
+<!ENTITY uaac-prereq
+'<listitem xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+<para>
+ <command>uaac</command>, the &cf; <literal>uaa</literal> command line client
+ (UAAC). See
+ <link xlink:href="https://docs.cloudfoundry.org/uaa/uaa-user-management.html"/>
+ for more information and installation instructions.
+</para>
+<para>
+ On &sle; systems, ensure the <literal>ruby-devel</literal> and <literal>gcc-c++</literal>
+ packages have been installed before installing the <literal>cf-uaac</literal> gem.
+</para>
+<screen>&prompt.user;sudo zypper install ruby-devel gcc-c++</screen>
+</listitem>'>
+
+<!--ENTITY uaac-target......................................................-->
+
+<!ENTITY uaac-target
+'<step xmlns="http://docbook.org/ns/docbook">
+<para>
+ Use UAAC to target your <literal>uaa</literal> server.
+</para>
+<screen>&prompt.user;uaac target --skip-ssl-validation <replaceable>https://uaa.example.com:2793</replaceable></screen>
+</step>'>
+
+<!--ENTITY uaac-authenticate................................................-->
+
+<!ENTITY uaac-authenticate
+'<step xmlns="http://docbook.org/ns/docbook">
+<para>
+ Authenticate to the <literal>uaa</literal> server as
+ <literal>admin</literal> using the
+ <literal>UAA_ADMIN_CLIENT_SECRET</literal> set in your
+ <filename>scf-config-values.yaml</filename> file.
+</para>
+<screen>&prompt.user;uaac token client get admin --secret <replaceable>password</replaceable></screen>
+</step>'>
+
+<!--ENTITY helm-search-suse.................................................-->
+
+<!ENTITY helm-search-suse
+'<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;helm search suse
+NAME                            CHART VERSION   APP VERSION     DESCRIPTION
+suse/cf                         &latestscfchart;          &chart-appversion;           A Helm chart for &suse; &cf;
+suse/cf-usb-sidecar-mysql       1.0.1                           A Helm chart for &suse; Universal Service Broker Sidecar fo...
+suse/cf-usb-sidecar-postgres    1.0.1                           A Helm chart for &suse; Universal Service Broker Sidecar fo...
+suse/console                    &lateststratoschart;           &chart-appversion;           A Helm chart for deploying Stratos UI Console
+suse/log-agent-rsyslog      	1.0.1        	8.39.0     	Log Agent for forwarding logs of K8s control pl...
+suse/metrics                    &metrics-version;           &chart-appversion;           A Helm chart for Stratos Metrics
+suse/minibroker                 &minibroker-version;                           A minibroker for your minikube
+suse/nginx-ingress              0.28.4          0.15.0          An nginx Ingress controller that uses ConfigMap to store ...
+suse/uaa                        &latestscfchart;          &chart-appversion;           A Helm chart for &suse; UAA
+</screen>'>
+
+<!--ENTITY chart-version-fields.............................................-->
+
+<!ENTITY chart-version-fields
+'<para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  There are slight differences in the way &cap; uses some &helm; chart fields
+  than what is defined in <link xlink:href="https://v2.helm.sh/docs/developing_charts"/>.
+  Take note of the following fields:
+ </para>
+ <variablelist xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <varlistentry>
+   <term><literal>APP VERSION</literal> (<literal>appVersion</literal> in <filename>Chart.yaml</filename>)</term>
+   <listitem>
+    <para>
+     In &cap;, the <literal>APP VERSION</literal> field indicates the &cap;
+     release that a &helm; chart belongs to. This is in contrast to indicating
+     the version of the application as defined in
+     <link xlink:href="https://v2.helm.sh/docs/developing_charts/#the-appversion-field"/>.
+     For example, in the <literal>suse/uaa</literal> &helm; chart, an
+     <literal>APP VERSION</literal> of 1.4 is in reference to &cap; release 1.4
+     and does not indicate <literal>uaa</literal> is version 1.4.
+    </para>
+   </listitem>
+  </varlistentry>
+  <varlistentry>
+   <term><literal>CHART VERSION</literal> (<literal>version</literal> in <filename>Chart.yaml</filename>)</term>
+   <listitem>
+    <para>
+     In &cap;, the <literal>CHART VERSION</literal> field indicates the &helm;
+     chart version, the same as defined in
+     <link xlink:href="https://v2.helm.sh/docs/developing_charts/#charts-and-versioning"/>.
+     For &cap; &helm; charts, the chart version is also the release number of the
+     coresponding component. For example, in the <literal>suse/uaa</literal>
+     &helm; chart, a <literal>CHART VERSION</literal> of 2.16.4 also indicates
+     <literal>uaa</literal> is release 2.16.4.
+    </para>
+   </listitem>
+  </varlistentry>
+ </variablelist>'>
+
+<!--ENTITY chart-version-fields-note........................................-->
+
+<!ENTITY chart-version-fields-note
+'<note xmlns="http://docbook.org/ns/docbook">
+ <title>Usage of &helm; Chart Fields in &cap;</title>
+ &chart-version-fields;
+</note>'>
+
+<!--ENTITY stratos-figure...................................................-->
+
+<!ENTITY stratos-figure
+'<figure xmlns="http://docbook.org/ns/docbook">
+ <title>Stratos UI Cloud Foundry Console</title>
+ <mediaobject>
+  <imageobject>
+   <imagedata fileref="stratos.png" format="PNG" width="75&percnt;"/>
+  </imageobject>
+ </mediaobject>
+</figure>'>
+
+<!--ENTITY stratos-kubernetes-figure........................................-->
+
+<!ENTITY stratos-kubernetes-figure
+'<figure xmlns="http://docbook.org/ns/docbook">
+ <title>&kube; Environment Information on Stratos</title>
+ <mediaobject>
+  <imageobject>
+   <imagedata fileref="stratos-kubernetes-view.png" format="PNG" width="75&percnt;"/>
+  </imageobject>
+ </mediaobject>
+</figure>'>
+
+<!--ENTITY config-value-usage...............................................-->
+
+<!ENTITY config-value-usage
+'<para xmlns="http://docbook.org/ns/docbook">
+  Take note of the following &helm; values when defining your
+  <filename>scf-config-values.yaml</filename> file.
+ </para>
+ <variablelist xmlns="http://docbook.org/ns/docbook">
+  <varlistentry>
+   <term>GARDEN_ROOTFS_DRIVER</term>
+   <listitem>
+    <para>
+     For &susecaaspreg; and other &kube; deployments where the nodes are based
+     on &sle;, the <literal>btrfs</literal> file system driver must be used. By
+     default, <literal>btrfs</literal> is selected as the default.
+    </para>
+    <para>
+     For &aks;, &eks;, &gke;, and other &kube; deployments where the nodes are
+     based on other operating systems, the <literal>overlay-xfs</literal>
+     file system driver must be used.
+    </para>
+   </listitem>
+  </varlistentry>
+ </variablelist>'>
+
+<!--ENTITY protect-uaa-admin-secret.........................................-->
+
+<!ENTITY protect-uaa-admin-secret
+'<important xmlns="http://docbook.org/ns/docbook">
+  <title>Protect UAA_ADMIN_CLIENT_SECRET</title>
+  <para>
+   The UAA_ADMIN_CLIENT_SECRET is the master password for access to your &cap;
+   cluster. Make this a very strong password, and protect it just as carefully
+   as you would protect any root password.
+  </para>
+ </important>'>
+
+<!--ENTITY install-helm-tiller..............................................-->
+
+<!ENTITY install-helm-tiller
+'<sect1 xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Install &helm; Client and &tiller;</title>
+  <para>
+   &helm; is a &kube; package manager. It consists of a client and server
+   component, both of which are required in order to install and manage &cap;.
+  </para>
+  <para>
+   The &helm; client, <literal>helm</literal>, can be installed on your remote
+   administration computer by referring to the documentation at
+   <link xlink:href="https://v2.helm.sh/docs/using_helm/#installing-helm"/>. Usage
+   with &cap; requires &helm; 2 and/or iterations of its minor releases.
+   Compatibility between &cap; and &helm; 3 is not supported.
+  </para>
+  <para>
+   &tiller;, the &helm; server component, needs to be installed on your &kube;
+   cluster. Follow the instructions at
+   <link xlink:href="https://v2.helm.sh/docs/using_helm/#installing-tiller"/> to
+   install &tiller; with a service account and ensure your installation is
+   appropriately secured according to your requirements as described in
+   <link xlink:href="https://v2.helm.sh/docs/using_helm/#securing-your-helm-installation"/>.
+  </para>
+ </sect1>'>
+
+<!--ENTITY uaa-deploy-complete..............................................-->
+
+<!ENTITY uaa-deploy-complete
+'<para xmlns="http://docbook.org/ns/docbook">
+  Wait until you have a successful <literal>uaa</literal> deployment before
+  going to the next steps, which you can monitor with the
+  <command>watch</command> command:
+ </para>
+<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch --color &apos;kubectl get pods --namespace uaa&apos;</screen>
+ <para xmlns="http://docbook.org/ns/docbook">
+  When <literal>uaa</literal> is successfully deployed, the following is
+  observed:
+ </para>
+ <itemizedlist xmlns="http://docbook.org/ns/docbook">
+  <listitem>
+   <para>
+    For the <literal>secret-generation</literal> pod, the
+    <literal>STATUS</literal> is <literal>Completed</literal> and the
+    <literal>READY</literal> column is at <literal>0/1</literal>.
+   </para>
+  </listitem>
+  <listitem>
+   <para>
+    All other pods have a <literal>Running</literal> <literal>STATUS</literal>
+    and a <literal>READY</literal> value of <literal>n/n</literal>.
+   </para>
+  </listitem>
+ </itemizedlist>
+ <para xmlns="http://docbook.org/ns/docbook">
+  Press <keycombo><keycap function="control"/><keycap>C</keycap></keycombo> to
+  exit the <command>watch</command> command.
+ </para>
+'>
+
+<!--ENTITY scf-deploy-complete..............................................-->
+
+<!ENTITY scf-deploy-complete
+'<para xmlns="http://docbook.org/ns/docbook">
+  Wait until you have a successful <literal>scf</literal> deployment before
+  going to the next steps, which you can monitor with the
+  <command>watch</command> command:
+ </para>
+<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch --color &apos;kubectl get pods --namespace scf&apos;</screen>
+ <para xmlns="http://docbook.org/ns/docbook">
+  When <literal>scf</literal> is successfully deployed, the following is
+  observed:
+ </para>
+ <itemizedlist xmlns="http://docbook.org/ns/docbook">
+  <listitem>
+   <para>
+    For the <literal>secret-generation</literal> and
+    <literal>post-deployment-setup</literal> pods, the <literal>STATUS</literal>
+    is <literal>Completed</literal> and the <literal>READY</literal> column is
+    at <literal>0/1</literal>.
+   </para>
+  </listitem>
+  <listitem>
+   <para>
+    All other pods have a <literal>Running</literal> <literal>STATUS</literal>
+    and a <literal>READY</literal> value of <literal>n/n</literal>.
+   </para>
+  </listitem>
+ </itemizedlist>
+ <para xmlns="http://docbook.org/ns/docbook">
+  Press <keycombo><keycap function="control"/><keycap>C</keycap></keycombo> to
+  exit the <command>watch</command> command.
+ </para>
+'>
+
+<!--ENTITY stratos-deploy-complete..........................................-->
+
+<!ENTITY stratos-deploy-complete
+'<para xmlns="http://docbook.org/ns/docbook">
+  You can monitor the status of your <literal>stratos</literal> deployment with
+  the <command>watch</command> command:
+ </para>
+<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch --color &apos;kubectl get pods --namespace stratos&apos;</screen>
+ <para xmlns="http://docbook.org/ns/docbook">
+  When <literal>stratos</literal> is successfully deployed, the following is
+  observed:
+ </para>
+ <itemizedlist xmlns="http://docbook.org/ns/docbook">
+  <listitem>
+   <para>
+    For the <literal>volume-migration</literal> pod, the
+    <literal>STATUS</literal> is <literal>Completed</literal> and the
+    <literal>READY</literal> column is at <literal>0/1</literal>.
+   </para>
+  </listitem>
+  <listitem>
+   <para>
+    All other pods have a <literal>Running</literal> <literal>STATUS</literal>
+    and a <literal>READY</literal> value of <literal>n/n</literal>.
+   </para>
+  </listitem>
+ </itemizedlist>
+ <para xmlns="http://docbook.org/ns/docbook">
+  Press <keycombo><keycap function="control"/><keycap>C</keycap></keycombo> to
+  exit the <command>watch</command> command.
+ </para>
+'>
+
+<!--ENTITY stack-deprecation-note...........................................-->
+
+<!ENTITY stack-deprecation-note
+'<warning xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Deprecation of <literal>cflinuxfs2</literal> and <literal>sle12</literal> Stacks</title>
+  <para>
+   As of &scf; 2.18.0, since our <literal>cf-deployment</literal> version is 9.5
+   , the <literal>cflinuxfs2</literal> stack is no longer supported, as was
+   advised in &scf; 2.17.1 or &cap; 1.4.1. The <literal>cflinuxfs2</literal>
+   buildpack is no longer shipped, but if you are upgrading from an earlier
+   version, <literal>cflinuxfs2</literal> will not be removed. However, for
+   migration purposes, we encourage all admins to move to
+   <literal>cflinuxfs3</literal> or <literal>sle15</literal> as newer buildpacks
+   will not work with the deprecated <literal>cflinuxfs2</literal>. If you still
+   want to use the older stack, you will need to build an older version of a
+   buildpack to continue for the application to work, but you will be
+   unsupported. (If you are running on <literal>sle12</literal>, we will be
+   retiring that stack in a future version so start planning your migration to
+   <literal>sle15</literal>. The procedure is described below.)
+  </para>
+  <procedure>
+   <step>
+    <para>
+     Migrate applications to the new stack using one of the methods listed. Note
+     that both methods will cause application downtime. Downtime can be avoided
+     by following a Blue-Green Deployment strategy. See
+     <link xlink:href="https://docs.cloudfoundry.org/devguide/deploy-apps/blue-green.html"/>
+     for details.
+    </para>
+    <para>
+     Note that stack association support is available as of &cfcli; v6.39.0.
+    </para>
+    <itemizedlist>
      <listitem>
       <para>
-       When upgrading from &productname; 1.3.0 to 1.3.1, running <command>helm upgrade</command> does not require the <command>--recreate-pods</command> option to be used. A change to the active/passive model has allowed for previously unready pods to be upgraded, which allows for zero app downtime during the upgrade process.
+       Option 1 - Migrating applications using the Stack Auditor plugin.
       </para>
       <para>
-       Upgrades between other versions will require the <command>--recreate-pods</command> option when using the <command>helm upgrade</command> command. For example, the command to upgrade <literal>uaa</literal> from &productname; 1.2.1 to 1.3.0 will be as follows:
-
+       Stack Auditor rebuilds the application onto the new stack without a
+       change in the application source code. If you want to move to a new stack
+       with updated code, please follow Option 2 below. For additional
+       information about the Stack Auditor plugin, see
+       <link xlink:href="https://docs.cloudfoundry.org/adminguide/stack-auditor.html"/>.
       </para>
-<screen>&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-uaa</replaceable> suse/uaa \
-    --values scf-config-values.yaml</screen>      
+      <procedure>
+       <step>
+        <para>
+         Install the Stack Auditor plugin for the &cfcli;. For instructions, see
+         <link xlink:href="https://docs.cloudfoundry.org/adminguide/stack-auditor.html#install"/>.
+        </para>
+       </step>
+       <step>
+        <para>
+         Identify the stack applications are using. The audit lists all
+         applications in orgs you have access to. To list all applications in
+         your &cap; deployment, ensure you are logged in as a user with access
+         to all orgs.
+        </para>
+<screen>&prompt.user;cf audit-stack</screen>
+        <para>
+         For each application requiring migration, perform the steps below.
+        </para>
+       </step>
+       <step>
+        <para>
+         If necessary, switch to the org and space the application is deployed
+         to.
+        </para>
+<screen>&prompt.user;cf target ORG SPACE</screen>
+       </step>
+       <step>
+        <para>
+         Change the stack to <literal>sle15</literal>.
+        </para>
+<screen>&prompt.user;cf change-stack APP_NAME sle15</screen>
+       </step>
+       <step>
+        <para>
+         Identify all buildpacks associated with the <literal>sle12</literal>
+         and <literal>cflinuxfs2</literal> stacks.
+        </para>
+<screen>&prompt.user;cf buildpacks</screen>
+       </step>
+       <step>
+        <para>
+         Remove all buildpacks associated with the <literal>sle12</literal>
+         and <literal>cflinuxfs2</literal> stacks.
+        </para>
+<screen>&prompt.user;cf delete-buildpack BUILDPACK -s sle12
+
+&prompt.user;cf delete-buildpack BUILDPACK -s cflinuxfs2</screen>
+       </step>
+       <step>
+        <para>
+         Remove the <literal>sle12</literal> and <literal>cflinuxfs2</literal>
+         stacks.
+        </para>
+<screen>&prompt.user;cf delete-stack sle12
+
+&prompt.user;cf delete-stack cflinuxfs2</screen>
+       </step>
+      </procedure>
      </listitem>
-    </varlistentry>
-</variablelist>'>
+     <listitem>
+      <para>
+       Option 2 - Migrating applications using the &cfcli;.
+      </para>
+      <para>
+       Perform the following for all orgs and spaces in your &cap; deployment.
+       Ensure you are logged in as a user with access to all orgs.
+      </para>
+      <procedure>
+       <step>
+        <para>
+         Target an org and space.
+        </para>
+<screen>&prompt.user;cf target ORG SPACE</screen>
+       </step>
+       <step>
+        <para>
+         Identify the stack an applications in the org and space is using.
+        </para>
+<screen>&prompt.user;cf app APP_NAME</screen>
+       </step>
+       <step>
+        <para>
+         Re-push the app with the <literal>sle15</literal> stack using one of
+         the following methods.
+        </para>
+        <itemizedlist>
+         <listitem>
+          <para>
+           Push the application with the stack option, <command>-s</command>
+           passed.
+          </para>
+<screen>&prompt.user;cf push APP_NAME -s sle15</screen>
+         </listitem>
+         <listitem>
+          <procedure>
+           <step>
+            <para>
+             Update the application manifest file to include
+             <literal>stack: sle15</literal>. See
+             <link xlink:href="https://docs.cloudfoundry.org/devguide/deploy-apps/manifest-attributes.html#stack"/>
+             for details.
+            </para>
+<screen>---
+  ...
+  stack: sle15
+</screen>
+           </step>
+           <step>
+            <para>
+              Push the application.
+            </para>
+<screen>&prompt.user;cf push APP_NAME</screen>
+           </step>
+          </procedure>
+         </listitem>
+        </itemizedlist>
+       </step>
+       <step>
+        <para>
+         Identify all buildpacks associated with the <literal>sle12</literal>
+         and <literal>cflinuxfs2</literal> stacks.
+        </para>
+<screen>&prompt.user;cf buildpacks</screen>
+       </step>
+       <step>
+        <para>
+         Remove all buildpacks associated with the <literal>sle12</literal>
+         and <literal>cflinuxfs2</literal> stacks.
+        </para>
+<screen>&prompt.user;cf delete-buildpack BUILDPACK -s sle12
+
+&prompt.user;cf delete-buildpack BUILDPACK -s cflinuxfs2</screen>
+       </step>
+       <step>
+        <para>
+         Remove the <literal>sle12</literal> and <literal>cflinuxfs2</literal>
+         stacks using the CF API. See
+         <link xlink:href="https://apidocs.cloudfoundry.org/7.11.0/#stacks"/>
+         for details.
+        </para>
+        <para>
+         List all stacks then find the GUID of the <literal>sle12</literal>
+         <literal>cflinuxfs2</literal> stacks.
+        </para>
+<screen>&prompt.user;cf curl /v2/stacks</screen>
+        <para>
+         Delete the <literal>sle12</literal> and <literal>cflinuxfs2</literal>
+         stacks.
+        </para>
+<screen>&prompt.user;cf curl -X DELETE /v2/stacks/SLE12_STACK_GUID
+
+&prompt.user;cf curl -X DELETE /v2/stacks/CFLINUXFS2_STACK_GUID
+</screen>
+       </step>
+      </procedure>
+     </listitem>
+    </itemizedlist>
+   </step>
+  </procedure>
+ </warning>
+'>
+
+<!--ENTITY uaa-in-scf.......................................................-->
+
+<!ENTITY uaa-in-scf
+'<note xmlns="http://docbook.org/ns/docbook">
+  <title>Embedded <literal>uaa</literal> in <literal>scf</literal></title>
+  <para>
+   The &uaa; (<literal>uaa</literal>) Server is included as an optional
+   feature of the <literal>scf</literal> &helm; chart. This simplifies the &cap;
+   deployment process as a separate installation and/or upgrade of
+   <literal>uaa</literal> is no longer a prerequisite to installing and/or
+   upgrading <literal>scf</literal>.
+  </para>
+  <para>
+   It is important to note that:
+  </para>
+  <itemizedlist>
+   <listitem>
+    <para>
+     This feature should only be used when <literal>uaa</literal> is not
+     shared with other projects.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     You <emphasis>cannot</emphasis> migrate from an existing external
+     <literal>uaa</literal> to an embedded one. In this situation, enabling
+     this feature during an upgrade will result in a single admin account.
+    </para>
+   </listitem>
+  </itemizedlist>
+  <para>
+   To enable this feature, add the following to your
+   <filename>scf-config-values.yaml</filename>.
+  </para>
+<screen>enable:
+  uaa: true
+</screen>
+  <para>
+   When deploying and/or upgrading <literal>scf</literal>, run
+   <command>helm install</command> and/or <command>helm upgrade</command> and
+   note that:
+  </para>
+  <itemizedlist>
+   <listitem>
+    <para>
+     Installing and/or upgrading <literal>uaa</literal> using
+     <command>helm install suse/uaa ...</command> and/or
+     <command>helm upgrade</command> is no longer required.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     It is no longer necessary to set the <literal>UAA_CA_CERT</literal>
+     parameter. Previously, this parameter was passed the
+     <literal>CA_CERT</literal> variable, which was assigned the CA certificate
+     of <literal>uaa</literal>.
+    </para>
+   </listitem>
+  </itemizedlist>
+ </note>'>
+
+<!--ENTITY deployment-platforms.............................................-->
+
+<!ENTITY deployment-platforms
+'<itemizedlist xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <listitem>
+   <para>
+    For &susecaaspreg;, see <xref linkend="cha-cap-depl-caasp"/>.
+   </para>
+  </listitem>
+  <listitem>
+   <para>
+    For &aks-full;, see <xref linkend="cha-cap-depl-aks"/>.
+   </para>
+  </listitem>
+  <listitem>
+   <para>
+    For &eks-full;, see <xref linkend="cha-cap-depl-eks"/>.
+   </para>
+  </listitem>
+  <listitem>
+   <para>
+    For &gke-full;, see <xref linkend="cha-cap-depl-gke"/>.
+   </para>
+  </listitem>
+ </itemizedlist>'>
+
+<!--ENTITY resize-persistent-volume.........................................-->
+
+<!ENTITY resize-persistent-volume
+'<sect1 xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Resizing Persistent Volumes</title>
+  <para>
+   Depending on your workloads, the default persistent volume (PV) sizes of your
+   &cap; deployment may be insufficient. This section describes the process to
+   resize a persistent volume in your &cap; deployment, by modifying the
+   persistent volumes claim (PVC) object.
+  </para>
+  <para>
+   Note that PVs can only be expanded, but cannot be shrunk.
+   shrunk.
+  </para>
+  <sect2>
+   <title>Prerequisites</title>
+   <para>
+    The following are required in order to use the process below to resize a PV.
+   </para>
+   <itemizedlist>
+    <listitem>
+     <para>
+      &kube; 1.11 or newer.
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      The volume being expanded is among the list of supported volume types.
+      Refer to the list at
+      <link xlink:href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#expanding-persistent-volumes-claims"/>
+     </para>
+    </listitem>
+   </itemizedlist>
+  </sect2>
+  <sect2>
+   <title>Example Procedure</title>
+   <para>
+    The following describes the process required to resize a PV, using the PV and PVC associated with <literal>uaa</literal>&apos;s
+    <literal>mysql</literal> as an example.
+   </para>
+   <procedure>
+    <step>
+     <para>
+      Find the storage class and PVC associated with the PV being expanded. In This example, the storage class is called <literal>persistent</literal> and the PVC is called <literal>mysql-data-mysql-0</literal>.
+     </para>
+<screen>&prompt.user;kubectl get persistentvolume</screen>
+    </step>
+    <step>
+     <para>
+      Verify whether the storage class has
+      <literal>allowVolumeExpansion</literal> set to <literal>true</literal>.
+      If it does not, run the following command to update the storage class.
+     </para>
+<screen>&prompt.user;kubectl get storageclass <replaceable>persistent</replaceable> --output json</screen>
+     <para>
+      If it does not, run the below command to update the storage class.
+     </para>
+<screen>&prompt.user;kubectl patch storageclass <replaceable>persistent</replaceable> \
+--patch &apos;{"allowVolumeExpansion": true}&apos;
+</screen>
+    </step>
+    <step>
+     <para>
+      Cordon all nodes in your cluster.
+     </para>
+     <substeps>
+      <step>
+<screen>&prompt.user;export VM_NODES=$(kubectl get nodes -o name)</screen>
+      </step>
+      <step>
+<screen>&prompt.user;for i in $VM_NODES
+ do
+  kubectl cordon `echo "${i//node\/}"`
+done
+</screen>
+      </step>
+     </substeps>
+    </step>
+    <step>
+     <para>
+      Increase the storage size of the PVC object associated with the PV being
+      expanded.
+     </para>
+<screen>&prompt.user;kubectl patch persistentvolumeclaim --namespace <replaceable>uaa</replaceable> <replaceable>mysql-data-mysql-0</replaceable> \
+--patch &apos;{"spec": {"resources": {"requests": {"storage": "25Gi"}}}}&apos;
+</screen>
+    </step>
+    <step>
+     <para>
+      List all pods that use the PVC, in any namespace.
+     </para>
+<screen>&prompt.user;kubectl get pods --all-namespaces --output=json | jq -c &apos;.items[] | {name: .metadata.name, namespace: .metadata.namespace, claimName: .spec |  select( has ("volumes") ).volumes[] | select( has ("persistentVolumeClaim") ).persistentVolumeClaim.claimName }&apos;
+</screen>
+    </step>
+    <step>
+     <para>
+      Restart all pods that use the PVC.
+     </para>
+<screen>&prompt.user;kubectl delete pod <replaceable>mysql-0</replaceable> --namespace <replaceable>uaa</replaceable>
+</screen>
+    </step>
+    <step>
+     <para>
+      Run <command>kubectl describe persistentvolumeclaim</command> and monitor the <literal>status.conditions</literal> field.
+     </para>
+<screen>&prompt.user;watch &apos;kubectl get persistentvolumeclaim --namespace <replaceable>uaa</replaceable> <replaceable>mysql-data-mysql-0</replaceable> --output json&apos;
+</screen>
+     <para>
+      When the following is observed, press
+      <keycombo><keycap function="control"/><keycap>C</keycap></keycombo> to
+      exit the <command>watch</command> command and proceed to the next step.
+     </para>
+     <itemizedlist>
+      <listitem>
+       <para>
+        <literal>status.conditions.message</literal> is
+       </para>
+<screen>message: Waiting for user to (re-)start a pod to finish file system resize of volume on node.</screen>
+      </listitem>
+      <listitem>
+       <para>
+         <literal>status.conditions.type</literal> is
+       </para>
+<screen>type: FileSystemResizePending</screen>
+      </listitem>
+     </itemizedlist>
+    </step>
+    <step>
+     <para>
+      Uncordon all nodes in your cluster.
+     </para>
+<screen>&prompt.user;for i in $VM_NODES
+ do
+  kubectl uncordon `echo "${i//node\/}"`
+done
+</screen>
+    </step>
+    <step>
+     <para>
+      Wait for the resize to finish. Verify the storage size values match for
+      <literal>status.capacity.storage</literal> and
+      <literal>spec.resources.requests.storage</literal>.
+     </para>
+<screen>&prompt.user;watch &apos;kubectl get persistentvolumeclaim --namespace <replaceable>uaa</replaceable> <replaceable>mysql-data-mysql-0</replaceable> --output json&apos;
+</screen>
+    </step>
+    <step>
+     <para>
+      Also verify the storage size in the pod itself is updated.
+     </para>
+<screen>&prompt.user;kubectl --namespace <replaceable>uaa</replaceable> exec <replaceable>mysql-0</replaceable> -- df --human-readable</screen>
+    </step>
+   </procedure>
+  </sect2>
+ </sect1>'>
+
+<!--ENTITY watch-uaa............................................-->
+
+<!ENTITY watch-uaa
+'<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch --color &apos;kubectl get pods --namespace uaa&apos;
+</screen>'>
+
+<!--ENTITY watch-scf............................................-->
+
+<!ENTITY watch-scf
+'<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch --color &apos;kubectl get pods --namespace scf&apos;
+</screen>'>
+
+<!--ENTITY min-deploy-note..................................................-->
+
+<!ENTITY min-deploy-note
+'<important xmlns="http://docbook.org/ns/docbook">
+  <para>
+   The prerequisites and configurations described is this chapter only reflect
+   the requirements for a minimal &productname; deployment. For a more
+   production-ready environment, consider incoporating the following features:
+  </para>
+  <variablelist>
+   <varlistentry>
+    <term>Stratos Web Console</term>
+    <listitem>
+     <para>
+      For details, see <xref linkend="cha-cap-install-stratos"/>.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>High Availability</term>
+    <listitem>
+     <para>
+      For details, see <xref linkend="cha-cap-ha"/>.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>LDAP Integration</term>
+    <listitem>
+     <para>
+      For details, see <xref linkend="cha-cap-ldap"/>.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>External Log Server Integration</term>
+    <listitem>
+     <para>
+      For details, see <xref linkend="cha-cap-logging"/>.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>Managing Certificates</term>
+    <listitem>
+     <para>
+      For details, see <xref linkend="cha-cap-certificates"/>.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>Other Features</term>
+    <listitem>
+     <para>
+      Refer to the &admin; at
+      <xref linkend="part-cap-administration"/> for additional features.
+     </para>
+    </listitem>
+   </varlistentry>
+  </variablelist>
+ </important>'>
+
+<!--ENTITY log-types-and-fetch..............................................-->
+
+<!ENTITY log-types-and-fetch
+'<itemizedlist xmlns="http://docbook.org/ns/docbook">
+  <listitem>
+   <para>
+    Application logs provide information specific to a given application that
+    has been deployed to your &cap; cluster and can be accessed through:
+   </para>
+   <itemizedlist>
+    <listitem>
+     <para>
+      The &cfcli; using the <command>cf logs</command> command
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+      The application&apos;s log stream within the Stratos console
+     </para>
+    </listitem>
+   </itemizedlist>
+  </listitem>
+  <listitem>
+   <para>
+    Access to logs for a given component of your &cap; deployment can be
+    obtained by:
+   </para>
+   <itemizedlist>
+    <listitem>
+     <para>
+      The <command>kubectl logs</command> command
+     </para>
+     <para>
+      The following example retrieves the logs of the <literal>router</literal>
+      container of <literal>router-0</literal> pod in the <literal>scf</literal>
+      namespace
+     </para>
+<screen>&prompt.user;kubectl logs --namespace scf <replaceable>router-0</replaceable> <replaceable>router</replaceable></screen>
+    </listitem>
+    <listitem>
+     <para>
+      Direct access to the log files using the following:
+     </para>
+     <orderedlist>
+      <listitem>
+       <para>
+        Open a shell to the container of the component using the
+        <command>kubectl exec</command> command
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        Navigate to the logs directory at
+        <filename>/var/vcap/sys/logs</filename>, at which point there will be
+        subdirectories containing the log files for access.
+       </para>
+<screen>&prompt.user;kubectl exec --stdin --tty --namespace scf router-0 /bin/bash
+
+router/0:/# cd /var/vcap/sys/log
+
+router/0:/var/vcap/sys/log# ls -R
+.:
+gorouter  loggregator_agent
+
+./gorouter:
+access.log  gorouter.err.log  gorouter.log  post-start.err.log  post-start.log
+
+./loggregator_agent:
+agent.log</screen>
+      </listitem>
+     </orderedlist>
+    </listitem>
+   </itemizedlist>
+  </listitem>
+ </itemizedlist>'>
+
+ <!--ENTITY defaul-scf-namespace-note.........................................-->
+
+ <!ENTITY defaul-scf-namespace-note
+ '<important xmlns="http://docbook.org/ns/docbook">
+   <title>Non-default &scf; namespace</title>
+   <para>If you used a non-default namespace for &scf;, you need to change the
+     <literal>UAA_ZONE</literal> environment variable in the
+     <filename>scf-config-values.yaml</filename> to the correct namespace. You
+     can do so in the <literal>env</literal> section:
+   </para>
+<screen>
+ env:
+   # Enter the domain you created for your CAP cluster
+   DOMAIN: example.com
+
+   # uaa host and port
+   UAA_HOST: uaa.example.com
+   UAA_PORT: 2793
+   # scf namespace, default is "scf"
+   UAA_ZONE: scf2
+</screen>
+ </important>'>

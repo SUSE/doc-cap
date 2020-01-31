@@ -4,18 +4,18 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.depl-kube-requirements"
+<chapter version="5.0" xml:id="cha-cap-depl-kube-requirements"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
  <info>
-  <title>Running &productname; on non-&suse; &caasp; &kube; Systems</title>
+  <title>Running &productname; on non-&caasp; &kube; Systems</title>
   <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
    <dm:bugtracker></dm:bugtracker>
    <dm:translation>yes</dm:translation>
   </dm:docmanager>
  </info>
- <sect1 xml:id="sec.cap.changes.kube-reqs">
+ <sect1 xml:id="sec-cap-changes-kube-reqs">
   <title>&kube; Requirements</title>
 
   <para>
@@ -26,12 +26,17 @@
   <itemizedlist>
    <listitem>
     <para>
-     Kubernetes API version 1.8+
+     &kube; API version of at least 1.10
     </para>
    </listitem>
    <listitem>
+    <!-- para -->
+    &kernel-prereq;
+   </listitem>
+   <listitem>
     <para>
-     Kernel parameter <literal>swapaccount=1</literal>
+     If your &kube; nodes have swap, then kernel parameter
+     <literal>swapaccount=1</literal> is set
     </para>
    </listitem>
    <listitem>
@@ -64,7 +69,7 @@
    </listitem>
    <listitem>
     <para>
-     Docker must be configured to allow privileged containers
+     &docker; must be configured to allow privileged containers
     </para>
    </listitem>
    <listitem>
@@ -76,7 +81,8 @@
    </listitem>
    <listitem>
     <para>
-     Privileged must be enabled in <literal>kubelet</literal>
+     For &kube; deployments prior to version 1.15, privileged must be enabled
+     in <literal>kubelet</literal>
     </para>
    </listitem>
    <listitem>
@@ -87,7 +93,13 @@
    </listitem>
    <listitem>
     <para>
-     Helm's Tiller has to be installed and active, with Tiller on the &kube;
+     Usage with &cap; requires &helm; 2 and/or iterations of its minor releases.
+     Compatibility between &cap; and &helm; 3 is not supported.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Helm's &tiller; has to be installed and active, with &tiller; on the &kube;
      cluster and Helm on your remote administration machine
     </para>
    </listitem>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha-cap-depl-eirini"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <title>Eirini</title>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+ </info>
+
+ <para>
+  Eirini, an alternative to Diego, is a scheduler for the &cf; Application
+  Runtime (CFAR) that runs &cf; user applications in &kube;. For details about
+  Eirini, see <link xlink:href="https://www.cloudfoundry.org/project-eirini/"/>
+  and <link xlink:href="http://eirini.cf"/>
+ </para>
+
+ <warning>
+  <title>Technology Preview</title>
+  <para>
+   Eirini is currently included in &productname; as a technology preview to
+   allow users to evaluate. It is <emphasis>not</emphasis> supported for use in
+   production deployments.
+  </para>
+  <para>
+   As a technology preview, Eirini contains certain limitations to its
+   functionality. These are outlined below:
+  </para>
+  <itemizedlist>
+   <listitem>
+    <para>
+     Air gapped environments or usage of manual certificates are currently not
+     supported.
+    </para>
+   </listitem>
+  </itemizedlist>
+ </warning>
+
+ <sect1 xml:id="sec-cap-eirini-enable">
+  <title>Enabling Eirini</title>
+
+  <procedure>
+   <step>
+    <para>
+     To enable Eirini, and disable Diego, add the following to your
+     <filename>scf-config-values.yaml</filename> file.
+    </para>
+<screen>enable:
+  eirini: true
+kube:
+  auth: rbac
+env:
+  DEFAULT_STACK: cflinuxfs3
+</screen>
+   </step>
+   <step>
+    <para>
+     To enable persistence, refer to the instructions at
+     <link xlink:href="https://github.com/SUSE/scf/wiki/Persistence-with-Eirini-in-SCF"/>.
+    </para>
+   </step>
+   <step>
+    <para>
+     Deploy <literal>uaa</literal> and <literal>scf</literal>.
+    </para>
+    <para>
+     Refer to the following for platform-specific instructions:
+    </para>
+    &deployment-platforms;
+   </step>
+   <step>
+    <para>
+     After initiating the <command>helm install</command> command to deploy
+     <literal>scf</literal>, The secret generator will create a certificate
+     signing request that must be approved by an administrator before deployment
+     will continue. To do so, run the command below where <literal>scf</literal>
+     should be replaced with your namespace of your <literal>scf</literal>
+     deployment.
+    </para>
+<screen>&prompt.user;kubectl certificate approve <replaceable>scf</replaceable>-bits-service-ssl-cert</screen>
+    <para>
+     Note that manual approval of CSRs is recommended.
+    </para>
+    <para>
+     An alternative to manual approval of the CSR is to pass
+     <command>--set env.KUBE_CSR_AUTO_APPROVAL=true</command> as part of the
+     <command>helm install</command> command. This flag will allow the CSR to
+     be automatically approved. Operators should take caution with this approach
+     as it will provide the secrets genrator with a cluster role binding that
+     allows it to approve <emphasis>all</emphasis> CSRs made to the &kube; signer.
+    </para>
+   </step>
+   <step>
+    <para>
+     Depending on your cluster configuration, Metrics Server may need to be
+     deployed. Use &helm; to install the latest stable Metrics Server.
+    </para>
+    <para>
+     Note that <literal>--kubelet-insecure-tls</literal> is not recommended for
+     production usage, but can be useful in test clusters with self-signed
+     Kubelet serving certificates. For production, use
+     <literal>--tls-private-key-file</literal>.
+    </para>
+<screen>&prompt.user;helm install stable/metrics-server --name=metrics-server --set args[0]="--kubelet-preferred-address-types=InternalIP" --set args[1]="--kubelet-insecure-tls"</screen>
+   </step>
+   <step>
+    <para>
+     As of &scf; 2.18.0, <command>cf push</command> with Eirini does not work on
+     &eks-full; and &gke-full; by default. To get <command>cf push</command> to work with
+     &aks; and &gke;, you need to apply
+     a workaround of deleting a webhook by doing the following:
+    </para>
+<screen>&prompt.user;kubectl delete mutatingwebhookconfigurations eirini-x-mutating-hook-eirini</screen>
+    <para>
+     Deleting the webhook means that the <literal>eirini-persi</literal> service
+     would not be available. Note that this workaround is not needed on &aks-full;.
+    </para>
+   </step>
+  </procedure>
+ </sect1>
+</chapter>

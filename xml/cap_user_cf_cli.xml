@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.cf-cli"
+<chapter version="5.0" xml:id="cha-cap-cf-cli"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -15,7 +15,7 @@
    <dm:translation>yes</dm:translation>
   </dm:docmanager>
  </info>
- <sect1 xml:id="sec.cap.cf-cli">
+ <sect1 xml:id="sec-cap-cf-cli">
   <title>Using the &cfcli; with &productname;</title>
 
   <para>
@@ -60,7 +60,7 @@
         kubectl get pods --namespace scf
 
     to spot-check if everything is up and running, or
-        watch -c 'kubectl get pods --namespace scf'
+        watch --color 'kubectl get pods --namespace scf'
 
     to monitor continuously.</screen>
 
@@ -69,7 +69,7 @@
   </para>
 
 <screen>&prompt.user;helm status $(helm list | awk '/cf-([0-9]).([0-9]).*/{print$1}') | \
-sed -n -e '/NOTES/,$p'</screen>
+sed --quiet --expression '/NOTES/,$p'</screen>
 
   <para>
    You need to provide the API endpoint of your &productname; instance to log
@@ -77,25 +77,25 @@ sed -n -e '/NOTES/,$p'</screen>
    <filename>scf-config-values.yaml</filename>, plus the
    <literal>api.</literal> prefix, as it shows in the above welcome screen. Set
    your endpoint, and use <command>--skip-ssl-validation</command> when you
-   have self-signed SSL certificates. It asks for an email address, but you
+   have self-signed SSL certificates. It asks for an e-mail address, but you
    must enter <literal>admin</literal> instead (you cannot change this to a
    different username, though you may create additional users), and the
    password is the one you created in
    <filename>scf-config-values.yaml</filename>:
   </para>
 
-<screen>&prompt.user;cf login --skip-ssl-validation  -a https://api.example.com 
+<screen>&prompt.user;cf login --skip-ssl-validation -a https://api.example.com
 API endpoint: https://api.example.com
 
 Email> admin
 
-Password> 
+Password>
 Authenticating...
 OK
 
 Targeted org system
 
-API endpoint:   https://api.example.com (API version: 2.101.0)
+API endpoint:   https://api.example.com (API version: 2.134.0)
 User:           admin
 Org:            system
 Space:          No space targeted, use 'cf target -s SPACE'</screen>
@@ -123,8 +123,8 @@ Space:          No space targeted, use 'cf target -s SPACE'</screen>
 
 <screen>&prompt.user;cf passwd
 Current Password>
-New Password> 
-Verify Password> 
+New Password>
+Verify Password>
 Changing password...
 OK
 Please log in again</screen>
@@ -178,7 +178,7 @@ Please log in again</screen>
 
   <para>
    After you have set up a service broker (see
-   <xref linkend="cha.cap.depl-sbs"/>), create new services:
+   <xref linkend="cha-cap-service-brokers"/>), create new services:
   </para>
 
 <screen>&prompt.user;cf create-service <replaceable>service-name</replaceable> <replaceable>default</replaceable> <replaceable>mydb</replaceable></screen>
@@ -194,6 +194,18 @@ Please log in again</screen>
    and changes to existing apps.
   </para>
 
-<screen> &prompt.user;cf push <replaceable>new-app</replaceable> -b <replaceable>buildpack</replaceable></screen>
+<screen>&prompt.user;cf push <replaceable>new-app</replaceable> -b <replaceable>buildpack</replaceable></screen>
+
+  <para>
+   If you need to debug your application or run one-off tasks, start an SSH
+   session into your application container.
+  </para>
+<screen>&prompt.user;cf ssh <replaceable>appname</replaceable></screen>
+
+  <para>
+   When the SSH connection is established, run the following to have the
+   environment match that of the application and its associated buildpack.
+  </para>
+<screen>&prompt.user;/tmp/lifecycle/shell</screen>
  </sect1>
 </chapter>

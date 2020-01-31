@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.custom-app-domains"
+<chapter version="5.0" xml:id="cha-cap-custom-app-domains"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -31,7 +31,7 @@
   This chapter describes the changes required to allow applications to use a
   separate domain.
  </para>
- <sect1 xml:id="sec.cap.customizing-app-domains">
+ <sect1 xml:id="sec-cap-customizing-app-domains">
   <title>Customizing Application Domains</title>
 
   <para>
@@ -55,14 +55,14 @@
    If <literal>uaa</literal> is deployed, pass your <literal>uaa</literal>
    secret and certificate to <literal>scf</literal>. Otherwise deploy
    <literal>uaa</literal> first (See
-   <xref linkend="sec.cap.install-uaa-prod"/>), then proceed with this step:
+   <xref linkend="sec-cap-install-uaa-prod"/>), then proceed with this step:
   </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
--o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 </screen>
 
   <para>
@@ -83,18 +83,15 @@
   </para>
 
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
---values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}"
+--values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}" \
+--version &latestscfchart;
 </screen>
 
-  <para>
-   Monitor the progess of the deployment:
-  </para>
-
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
+  &scf-deploy-complete;
 
   <para>
-   When all pods are in a ready state, do the following to confirm custom
-   application domains have been configured correctly.
+   When the <literal>scf</literal> is complete, do the following to confirm
+   custom application domains have been configured correctly.
   </para>
 
   <para>
@@ -138,7 +135,7 @@ instances:         1/1
 usage:             1G x 1 instances
 routes:            <replaceable>myapp.appdomain.com</replaceable>
 last uploaded:     Mon 14 Jan 11:08:02 PST 2019
-stack:             sle12
+stack:             sle15
 buildpack:         ruby
 start command:     bundle exec rackup config.ru -p $PORT
 

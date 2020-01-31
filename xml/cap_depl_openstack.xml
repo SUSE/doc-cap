@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.install-openstack"
+<chapter version="5.0" xml:id="cha-cap-install-openstack"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -26,7 +26,7 @@
  <important>
      &readmefirst;
  </important>
- <sect1 xml:id="sec.cap.prereqs-openstack">
+ <sect1 xml:id="sec-cap-prereqs-openstack">
   <title>Prerequisites</title>
 
   <para>
@@ -38,23 +38,27 @@
   <itemizedlist>
    <listitem>
     <para>
-     8GB of memory per &caasp; dashboard and &kube; master nodes
+     8 GB of memory per &caasp; dashboard and &kube; master nodes
     </para>
    </listitem>
    <listitem>
     <para>
-     16GB of memory per &kube; worker
+     16 GB of memory per &kube; worker
     </para>
    </listitem>
    <listitem>
     <para>
-     40GB disk space per &caasp; dashboard and &kube; master nodes
+     40 GB disk space per &caasp; dashboard and &kube; master nodes
     </para>
    </listitem>
    <listitem>
     <para>
-     60GB disk space per &kube; worker
+     &node-size; GB disk space per &kube; worker
     </para>
+   </listitem>
+   <listitem>
+    <!-- para -->
+    &kernel-prereq;
    </listitem>
    <listitem>
     <para>
@@ -71,8 +75,11 @@
     </para>
    </listitem>
   </itemizedlist>
+
+  &min-deploy-note;
+
  </sect1>
- <sect1 xml:id="sec.cap.setup-openstack">
+ <sect1 xml:id="sec-cap-setup-openstack">
   <title>Create a New OpenStack Project</title>
 
   <para>
@@ -145,7 +152,7 @@ workers = 2</screen>
 
 <screen>&prompt.user;terraform init</screen>
  </sect1>
- <sect1 xml:id="sec.cap.deploy-caasp">
+ <sect1 xml:id="sec-cap-deploy-caasp">
   <title>Deploy &productname;</title>
 
   <para>
@@ -176,13 +183,17 @@ workers = 2</screen>
    the <filename>automation/caasp-openstack-terraform/ssh</filename> directory.
   </para>
  </sect1>
- <sect1 xml:id="sec.cap.bootstrap-caasp">
-  <title>Bootstrap &productname;</title>
+ <sect1 xml:id="sec-cap-bootstrap-caasp">
+  <title>Bootstrapping &productname;</title>
 
   <para>
    The following examples use the <literal>xip.io</literal> wildcard DNS
    service. You may use your own DNS/DHCP services that you have set up in
    OpenStack in place of <literal>xip.io</literal>.
+  </para>
+  <para>
+   For more information about networking requirements, see
+   <xref linkend="sec-cap-prereqs-prod"/>.
   </para>
 
   <itemizedlist>
@@ -223,7 +234,7 @@ workers = 2</screen>
    </listitem>
    <listitem>
     <para>
-     For the <guimenu>External Kubernetes API FQDN</guimenu>, use the public
+     For the <guimenu>External &kube; API FQDN</guimenu>, use the public
      (floating) IP address of the &caasp; master and append the
      <literal>.xip.io</literal> domain suffix
     </para>
@@ -239,7 +250,7 @@ workers = 2</screen>
 
   <para></para>
  </sect1>
- <sect1 xml:id="sec.cap.grow-rootfs">
+ <sect1 xml:id="sec-cap-grow-rootfs">
   <title>Growing the Root Filesystem</title>
 
   <para>

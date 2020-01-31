@@ -24,7 +24,7 @@
   We provide HTML and PDF versions of our books in different languages.
   Documentation for our products is available at
   <link
-  xlink:href="http://www.suse.com/documentation/"/>, where you can also
+  xlink:href="http://documentation.suse.com/"/>, where you can also
   find the latest updates and browse or download the documentation in various
   formats.
  </para>
@@ -35,7 +35,7 @@
 
  <variablelist>
   <varlistentry os="sles;sled">
-   <term><xref linkend="book.cap.guides"/></term>
+   <term><xref linkend="book-cap-guides"/></term>
    <listitem>
     <para>
      The &productname; guide is a comprehensive guide providing deployment,

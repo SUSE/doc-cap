@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.certificates"
+<chapter version="5.0" xml:id="cha-cap-certificates"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -16,119 +16,67 @@
   </dm:docmanager>
  </info>
  <para>
-  The traffic of your &productname; deployment can be made more secure through
-  the use of TLS certificates.
+  This chapter describes the process to deploy &productname;
+  installed with certificates signed by an external Certificate Authority.
  </para>
- <sect1 xml:id="sec.cap.cert-properties">
+ <sect1 xml:id="sec-cap-cert-properties">
   <title>Certificate Characteristics</title>
 
   <para>
-   When obtaining or generating your certificates, ensure that they are encoded
-   in the PEM format. The appropriate Subject Alternative Names (SAN) should
-   also be included as part of the certificate.
+   Ensure the certificates you use have the following characteristics:
   </para>
 
   <itemizedlist>
    <listitem>
     <para>
-     Certificates for the <literal>scf</literal> router should include:
+     The certificate is encoded in the PEM format.
     </para>
-    <itemizedlist>
-     <listitem>
-      <para>
-       *.DOMAIN A wildcard certificate is suggested as deployed applications on
-       the &cap; cluster will have URLs in the form of
-       <literal>APP_NAME.DOMAIN</literal>
-      </para>
-     </listitem>
-    </itemizedlist>
    </listitem>
    <listitem>
     <para>
-     Certificates for the <literal>uaa</literal> server should include:
+     In order to secure <literal>uaa</literal>-related traffic, the certificate's
+     Subject Alternative Name (SAN) should include the domains
+     <replaceable>uaa.example.com</replaceable> and
+     <replaceable>*.uaa.example.com</replaceable>, where <replaceable>example.com</replaceable>
+     is replaced with the <literal>DOMAIN</literal> set in your
+     <filename>scf-config-values.yaml</filename>.
     </para>
-    <itemizedlist>
-     <listitem>
-      <para>
-       uaa.DOMAIN
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       *.uaa.DOMAIN
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       uaa
-      </para>
-     </listitem>
-    </itemizedlist>
+   </listitem>
+   <listitem>
+    <para>
+     In order to secure <literal>scf</literal>-related traffic, the certificate's
+     Subject Alternative Name (SAN) should include the domain
+     <replaceable>*.example.com</replaceable>, where <replaceable>example.com</replaceable>
+     is replaced with the <literal>DOMAIN</literal> in your
+     <filename>scf-config-values.yaml</filename>.
+    </para>
    </listitem>
   </itemizedlist>
  </sect1>
- <sect1 xml:id="sec.cap.cert-deployment">
-  <title>Deploying Custom Certificates</title>
+ <sect1 xml:id="sec-cap-cert-config">
+  <title>Deployment Configuration</title>
 
   <para>
-   Certificates used in &cap; are configurable through the
-   <filename>values.yaml</filename> files for the deployment of
-   <literal>scf</literal> and <literal>uaa</literal> respectively. To specify a
-   certificate, set the value for the certificate and its corresponding private
-   key under the <literal>secrets:</literal> section using the following
-   properties.
+   Certificates used in &productname; are installed through a configuration file,
+   called <filename>scf-config-values.yaml</filename>. To specify a
+   certificate, set the value of the certificate and its corresponding private
+   key under the <literal>secrets:</literal> section.
   </para>
 
-  <itemizedlist>
-   <listitem>
-    <para>
-     In the <literal>values.yaml</literal> for <literal>scf</literal> specify
-     the <literal>ROUTER_SSL_CERT</literal> property and the corresponding
-     <literal>ROUTER_SSL_KEY</literal>.
-    </para>
-    <note>
-     <para>
-      Note the use of the "|" character which indicates the use of a literal
-      scalar. See the
-      <link xlink:href="http://yaml.org/spec/1.2/spec.html#id2795688">YAML
-      spec</link> for more information.
-     </para>
-    </note>
-<screen>secrets:
-  ROUTER_SSL_CERT: |
-    -----BEGIN CERTIFICATE-----
-    MIIEEjCCAfoCCQCWC4NErLzy3jANBgkqhkiG9w0BAQsFADBGMQswCQYDVQQGEwJD
-    QTETMBEGA1UECAwKU29tZS1TdGF0ZTEOMAwGA1UECgwFTXlPcmcxEjAQBgNVBAMM
-    CU15Q0Euc2l0ZTAeFw0xODA5MDYxNzA1MTRaFw0yMDAxMTkxNzA1MTRaMFAxCzAJ
-    ...
-    xtNNDwl2rnA+U0Q48uZIPSy6UzSmiNaP3PDR+cOak/mV8s1/7oUXM5ivqkz8pEJo
-    M3KrIxZ7+MbdTvDOh8lQplvFTeGgjmUDd587Gs4JsormqOsGwKd1BLzQbGELryV9
-    1usMOVbUuL8mSKVvgqhbz7vJlW1+zwmrpMV3qgTMoHoJWGx2n5g=
-    -----END CERTIFICATE-----
+  <note>
+   <para>
+    Note the use of the "|" character which indicates the use of a literal
+    scalar. See the
+    <link xlink:href="http://yaml.org/spec/1.2/spec.html#id2795688"/> for more information.
+   </para>
+  </note>
 
-  ROUTER_SSL_KEY: |
-    -----BEGIN RSA PRIVATE KEY-----
-    MIIEpAIBAAKCAQEAm4JMchGSqbZuqc4LdryJpX2HnarWPOW0hUkm60DL53f6ehPK
-    T5Dtb2s+CoDX9A0iTjGZWRD7WwjpiiuXUcyszm8y9bJjP3sIcTnHWSgL/6Bb3KN5
-    G5D8GHz7eMYkZBviFvygCqEs1hmfGCVNtgiTbAwgBTNsrmyx2NygnF5uy4KlkgwI
-    ...
-    GORpbQKBgQDB1/nLPjKxBqJmZ/JymBl6iBnhIgVkuUMuvmqES2nqqMI+r60EAKpX
-    M5CD+pq71TuBtbo9hbjy5Buh0+QSIbJaNIOdJxU7idEf200+4anzdaipyCWXdZU+
-    MPdJf40awgSWpGdiSv6hoj0AOm+lf4AsH6yAqw/eIHXNzhWLRvnqgA==
-    -----END RSA PRIVATE KEY---- </screen>
-   </listitem>
-   <listitem>
-    <para>
-     The <literal>--skip-ssl-validation</literal> option will not be used when
-     setting a target API endpoint or logging in with the &cfcli;. As a result,
-     a certificate will need to be specified for the <literal>uaa</literal>
-     component as well. In the <literal>values.yaml</literal> for
-     <literal>uaa</literal>, specify the <literal>UAA_SERVER_CERT</literal>
-     property and the corresponding <literal>UAA_SERVER_KEY</literal>. If a
-     self-signed certificate is used, then the
-     <literal>INTERNAL_CA_CERT</literal> property and its associated
-     <literal>INTERNAL_CA_KEY</literal> will need to be set as well.
-    </para>
+  <para>
+   Certificates are installed to the <literal>uaa</literal> component by setting
+   the values <literal>UAA_SERVER_CERT</literal> and <literal>UAA_SERVER_CERT_KEY</literal>.
+   For example:
+  </para>
+
 <screen>secrets:
   UAA_SERVER_CERT: |
     -----BEGIN CERTIFICATE-----
@@ -141,7 +89,7 @@
     3xoI
     -----END CERTIFICATE-----
 
-  UAA_SERVER_KEY: |
+  UAA_SERVER_CERT_KEY: |
     -----BEGIN PRIVATE KEY-----
     MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDhRlcoZAVwUkg0
     sdExkBnPenhLG5FzQM3wm9t4erbSQulKjeFlBa9b0+RH6gbYDHh5+NyiL0L89txO
@@ -151,49 +99,60 @@
     wPQYJsrcObenRwsGy2+A6NiIg2AVJwHASFG65taoV+1A061P3oPDtyIH/UPhRUoC
     OULPS8fbHefNiSvZTNVKwj8=
     -----END PRIVATE KEY-----
-
-  INTERNAL_CA_CERT: |
-    -----BEGIN CERTIFICATE-----
-    MIIFljCCA36gAwIBAgIBADANBgkqhkiG9w0BAQ0FADBcMQswCQYDVQQGEwJDQTEL
-    MAkGA1UECAwCQkMxEjAQBgNVBAcMCVZhbmNvdXZlcjERMA8GA1UECgwITXlDYXBP
-    cmcxGTAXBgNVBAMMEE15Q2FwT3JnIFJvb3QgQ0EwHhcNMTgwOTE0MjA1MzU5WhcN
-    ...
-    PlezSFbDGGIc1beUs1gNMwJki7fs/jDjpA7TKuUDzoGSqDiJXeQAluBILHHQ4q2B
-    KuLcZc6LbPsaADmtTbx+Ww/ZzIlF3ENVVvtrWTl5MOV3VhoJwsKmFiNLtkMuppBY
-    bhbFkKwtW9xnUzXwjUCy87WPLx84xdBuL/nvJhoMUN75JklvtVkzyX/X
-    -----END CERTIFICATE-----
-
-  INTERNAL_CA_KEY: |
-    -----BEGIN RSA PRIVATE KEY-----
-    MIIJKQIBAAKCAgEA/kK6Hw1da9aBwdbP6+wjiR/pSLv6ilNAxtOcKfaNKtc71nwO
-    Hjw62ZLBkS2ZtwdNpt5QuueIsUXvFiy7xz4TzyAATXVLR0GBkaHl/PwlwSN5nTMC
-    JT3T+89tg4UDFhcdGSZXjQyGZINLK6dHivuAcL3zgEZQwr6UeZINFb27WhsTZEMC
-    ...
-    0qmnlGxjAdwan+PrarR6ztyp/bYcAvQhgEwc9oF2hj9wBhkdWVNVQ4LaxGtUfV4S
-    yhbc7dZNw17fXhgVMZPDTRBfwwrcJ6KcF7g1PCsaGcuOPZWxroemvn28ytYBt1IG
-    tfIdEIQIUTDVM4K2wiE6bwslIYwv5pEBLAdWG0gw8KCZl+ffTNOv+8PkdaiD
-    -----END RSA PRIVATE KEY-----</screen>
-   </listitem>
-  </itemizedlist>
+</screen>
 
   <para>
-   Once all pods are up and running, verify by running the <command>cf
-   api</command> command followed by the <command>cf login</command> command
-   and entering in your credentials. Both commands should be executed without
-   using the <literal>--skip-ssl-validation</literal> option.
+   Certificates are installed to the <literal>scf</literal> component by setting
+   the values <literal>ROUTER_SSL_CERT</literal> and
+   <literal>ROUTER_SSL_CERT_KEY</literal>. In addition, set
+   <literal>UAA_CA_CERT</literal> with the root certificate of the Certificate
+   Authority used to sign your certificate. For example:
   </para>
 
-<screen>cf api https://api.example.com
-cf login</screen>
+<screen>secrets:
+  ROUTER_SSL_CERT: |
+    -----BEGIN CERTIFICATE-----
+    MIIEEjCCAfoCCQCWC4NErLzy3jANBgkqhkiG9w0BAQsFADBGMQswCQYDVQQGEwJD
+    QTETMBEGA1UECAwKU29tZS1TdGF0ZTEOMAwGA1UECgwFTXlPcmcxEjAQBgNVBAMM
+    CU15Q0Euc2l0ZTAeFw0xODA5MDYxNzA1MTRaFw0yMDAxMTkxNzA1MTRaMFAxCzAJ
+    ...
+    xtNNDwl2rnA+U0Q48uZIPSy6UzSmiNaP3PDR+cOak/mV8s1/7oUXM5ivqkz8pEJo
+    M3KrIxZ7+MbdTvDOh8lQplvFTeGgjmUDd587Gs4JsormqOsGwKd1BLzQbGELryV9
+    1usMOVbUuL8mSKVvgqhbz7vJlW1+zwmrpMV3qgTMoHoJWGx2n5g=
+    -----END CERTIFICATE-----
 
-  <sect2 xml:id="sec.cap.cert-multiple">
+  ROUTER_SSL_CERT_KEY: |
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEpAIBAAKCAQEAm4JMchGSqbZuqc4LdryJpX2HnarWPOW0hUkm60DL53f6ehPK
+    T5Dtb2s+CoDX9A0iTjGZWRD7WwjpiiuXUcyszm8y9bJjP3sIcTnHWSgL/6Bb3KN5
+    G5D8GHz7eMYkZBviFvygCqEs1hmfGCVNtgiTbAwgBTNsrmyx2NygnF5uy4KlkgwI
+    ...
+    GORpbQKBgQDB1/nLPjKxBqJmZ/JymBl6iBnhIgVkuUMuvmqES2nqqMI+r60EAKpX
+    M5CD+pq71TuBtbo9hbjy5Buh0+QSIbJaNIOdJxU7idEf200+4anzdaipyCWXdZU+
+    MPdJf40awgSWpGdiSv6hoj0AOm+lf4AsH6yAqw/eIHXNzhWLRvnqgA==
+    -----END RSA PRIVATE KEY----
+
+  UAA_CA_CERT: |
+    -----BEGIN CERTIFICATE-----
+    MIIDaSjCAjKgAwIBAgIQRK+wgNajJ7qJMDmGLvhAazANBgkqhkiG9w0BAQUFADA/
+    MTQwIgYDVQQKExtEaWdpdGFsIFNpZ25hdHVyZSBUcnVzdCBDby4xFzAVBgNVBAMT
+    DkITVCBSb290IENBIFg7MB4XDTAwMDkzMDIxMTIxOVoXDTIxMDkzMDE0MDExNVow
+    ...
+    R8srzJmwN0jP41ZL9c8PDHIyh8bwRLtTcm1D9SZImlJnt1ir/md2cXjbDaJWFBM5
+    NvaEkqgCWjBH4d1QB7wCCZAA62RjYJsWvIjJEubSfZGL+T0yjWW06XyxV3bqxbYo
+    NTQVZRzI9neWagqNdwvYkQsEjgfbKbYK7p2MEIAL
+    -----END CERTIFICATE-----
+</screen>
+
+  <sect2 xml:id="sec-cap-cert-multiple">
    <title>Configuring Multiple Certificates</title>
    <para>
     &cap; supports configurations that use multiple certificates. To specify
     multiple certificates with their associated keys, replace the
-    <literal>ROUTER_SSL_CERT</literal> and <literal>ROUTER_SSL_KEY</literal>
-    properties with the <literal>ROUTER_TLS_PEM</literal> property in your
-    <filename>values.yaml</filename> file.
+    <literal>ROUTER_SSL_CERT</literal> and
+    <literal>ROUTER_SSL_CERT_KEY</literal> properties with the
+    <literal>ROUTER_TLS_PEM</literal> property in your
+    <filename>scf-config-values.yaml</filename> file.
    </para>
 <screen>secrets:
   ROUTER_TLS_PEM: |
@@ -239,17 +198,130 @@ cf login</screen>
         -----END RSA PRIVATE KEY-----</screen>
   </sect2>
  </sect1>
- <sect1 xml:id="sec.cap.secrets-rotation">
+ <sect1 xml:id="sec-cap-cert-deploy">
+  <title>Deploying &productname; with Certificates</title>
+
+  <para>
+   Once the certificate-related values have been set in your
+   <filename>scf-config-values.yaml</filename>, deploy &productname;.
+  </para>
+
+  &uaa-in-scf;
+
+  <para>
+   If this is an initial deployment, use <command>helm install</command> to
+   deploy <literal>uaa</literal> and <literal>scf</literal>:
+  </para>
+
+  <procedure>
+   <step>
+    <para>
+     Deploy <literal>uaa</literal>:
+    </para>
+<screen>&prompt.user;helm install suse/uaa \
+--name <replaceable>susecf-uaa</replaceable> \
+--namespace uaa \
+--values scf-config-values.yaml
+</screen>
+    &uaa-deploy-complete;
+   </step>
+   <step>
+    <para>
+     Pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>:
+    </para>
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+</screen>
+   </step>
+   <step>
+    <para>
+     Deploy <literal>scf</literal>:
+    </para>
+<screen>&prompt.user;helm install suse/cf \
+--name <replaceable>susecf-scf</replaceable> \
+--namespace scf \
+--values scf-config-values.yaml \
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
+</screen>
+    &scf-deploy-complete;
+   </step>
+  </procedure>
+
+  <para>
+   If this is an existing deployment, use <command>helm upgrade</command> to
+   apply the changes to <literal>uaa</literal> and <literal>scf</literal>:
+  </para>
+
+  <procedure>
+   <step>
+    <para>
+     Upgrade <literal>uaa</literal>:
+    </para>
+<screen>&prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa \
+--values scf-config-values.yaml \
+--version &latestuaachart;
+</screen>
+   </step>
+   <step>
+    <para>
+     Wait until you have a successful <literal>uaa</literal> deployment before
+     going to the next steps, which you can monitor with the
+     <command>watch</command> command:
+    </para>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace uaa'</screen>
+   </step>
+   <step>
+    <para>
+     Pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>:
+    </para>
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+</screen>
+   </step>
+   <step>
+    <para>
+     Upgrade <literal>scf</literal>:
+    </para>
+<screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
+--values scf-config-values.yaml \
+--set "secrets.UAA_CA_CERT=${CA_CERT}" \
+--version &latestscfchart;
+</screen>
+   </step>
+   <step>
+    <para>
+     Monitor the deployment progress using the <command>watch</command> command:
+    </para>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace scf'</screen>
+   </step>
+  </procedure>
+
+  <para>
+   Once all pods are up and running, verify you can successfully set your cluster as the
+   target API endpoint by running the <command>cf api</command> command without using the
+   <command>--skip-ssl-validation</command> option.
+  </para>
+
+<screen>&prompt.user;cf api https://api.example.com</screen>
+
+ </sect1>
+ <sect1 xml:id="sec-cap-secrets-rotation">
   <title>Rotating Automatically Generated Secrets</title>
 
   <para>
    &cap; uses a number of automatically generated secrets for use internally.
    These secrets have a default expiration of 10950 days and are set through
    the <literal>CERT_EXPIRATION</literal> property in the
-   <literal>env:</literal> section of the <filename>values.yaml</filename>
+   <literal>env:</literal> section of the <filename>scf-config-values.yaml</filename>
    file. If rotation of the secrets is required, increment the value of
    <literal>secrets_generation_counter</literal> in the
-   <literal>kube:</literal> section of the <filename>values.yaml</filename>
+   <literal>kube:</literal> section of the <filename>scf-config-values.yaml</filename>
    configuration file (for example the example
    <filename>scf-config-values.yaml</filename> used in this guide) then run
    <command>helm upgrade</command>.
@@ -273,12 +345,55 @@ cf login</screen>
   </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
- -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
 &prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
- --values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}"</screen>
+--values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}" \
+--version &latestscfchart;
+</screen>
+ </sect1>
+ <sect1 xml:id="sec-cap-trusted-certs">
+   <title>Difference between TRUSTED_CERTS and ROOTFS_TRUSTED_CERTS</title>
+   <para>
+     The <literal>TRUSTED_CERTS</literal> parameter contains a list of CA certificates which become
+     available in application instance containers as files in the directory
+     <filename>/etc/cf-system-certificates</filename> and the general trust store
+     (Only cflinuxfs3).
+     The environment variable <literal>CF_SYSTEM_CERT_PATH</literal> holds the first path.
+     No difference between applications from buildpacks and from &docker; images.
+   </para>
+   <para>
+     <literal>The ROOT_TRUSTED_CERTS</literal> parameter contains a list of CA certificates which
+     are available in application instance containers through the general OS trust store.
+     Only applications based on buildpacks (and a rootfs) receive the information.
+   </para>
+   <para>
+     Summary
+   </para>
+   <itemizedlist>
+     <listitem>
+       <para>
+         Both contain additional CA certificates for applications.
+       </para>
+      </listitem>
+      <listitem>
+        <para>
+          <literal>ROOTFS_TRUSTED_CERTS</literal> only applies to applications based
+          on buildpacks and rootfs and are automatically available through
+          the OS trust store.
+        </para>
+       </listitem>
+       <listitem>
+         <para>
+           <literal>TRUSTED_CERTS</literal> applies to all applications, based on both
+           buildpacks and &docker; images. Not automatically available. Applications
+           have to use the environment variable <literal>CF_SYSTEM_CERT_PATH</literal>
+           and add the certificates themselves.
+         </para>
+        </listitem>
+   </itemizedlist>
  </sect1>
 </chapter>

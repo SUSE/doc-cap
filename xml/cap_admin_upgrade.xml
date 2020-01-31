@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.upgrade"
+<chapter version="5.0" xml:id="cha-cap-upgrade"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -15,169 +15,783 @@
    <dm:translation>yes</dm:translation>
   </dm:docmanager>
  </info>
- <sect1 xml:id="sec.cap.update">
-  <title>Upgrading &productname;</title>
-
-  <para>
-   <literal>uaa</literal>, <literal>scf</literal>, and Stratos together make up
-   a &productname; release. Maintenance updates are delivered as container
-   images from the &suse; registry and applied with &helm;.
-  </para>
-
-  <para>
+ <para>
+  <literal>uaa</literal>, <literal>scf</literal>, and Stratos together make up
+  a &productname; release. Maintenance updates are delivered as container
+  images from the &suse; registry and applied with &helm;.
+ </para>
+ <para>
    For additional upgrade information, always review the release notes
    published at
    <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/1/"/>.
+ </para>
+ <sect1 xml:id="sec-cap-upgrade-considerations">
+  <title>Important Considerations</title>
+
+  <para>
+   Before performing an upgrade, be sure to take note of the following:
   </para>
 
-  <warning>
-   <title><command>helm rollback</command> is not supported</title>
+
+  <variablelist>
+   <varlistentry>
+    <term>Perform Upgrades in Sequence</term>
+    <listitem>
+     <para>
+      &cap; only supports upgrading releases in sequential order. If there are
+      any intermediate releases between your current release and your target
+      release, they must be installed. Skipping
+      releases is not supported. See <xref linkend="sec-cap-skipped-release"/>
+      for more information.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>Preserve &helm; Value Changes during Upgrades</term>
+    <listitem>
+     <para>
+      During a <command>helm upgrade</command>, always ensure your
+      <filename>scf-config-values-yaml</filename> file is passed. This will
+      preserve any previously set &helm; values while allowing additional
+      &helm; value changes to be made.
+     </para>
+    </listitem>
+   </varlistentry>
+<!-- N/A for 1.4.1 to 1.5 upgrades
+   <varlistentry>
+    <term>Use <command>\-\-recreate-pods</command> during a <command>helm upgrade</command></term>
+    <listitem>
+     <para>
+      Note that using <command>\-\-recreate-pods</command> will cause downtime for
+      applications, but is required as multiple versions of statefulsets may
+      co-exist which can cause incompatibilities between dependent statefulsets,
+      and result in a broken upgrade.
+     </para>
+     <para>
+      When upgrading from &productname; 1.3.0 to 1.3.1, running
+      <command>helm upgrade</command> does not require the
+      <command>\-\-recreate-pods</command> option to be used. A change to the
+      active/passive model has allowed for previously unready pods to be
+      upgraded, which allows for zero app downtime during the upgrade process.
+     </para>
+     <para>
+      Upgrades between other versions will require the
+      <command>\-\-recreate-pods</command> option when using the
+      <command>helm upgrade</command> command.
+     </para>
+    </listitem>
+   </varlistentry>
+-->
+   <varlistentry>
+    <term><command>helm rollback</command> Is Not Supported</term>
+    <listitem>
+     <para>
+      <command>helm rollback</command> is not supported in &productname; or in
+      upstream &cf;, and may break your cluster completely, because database
+      migrations only run forward and cannot be reversed. Database schema can
+      change over time. During upgrades both pods of the current and the next
+      release may run concurrently, so the schema must stay compatible with the
+      immediately previous release. But there is no way to guarantee such
+      compatibility for future upgrades. One way to address this is to perform a
+      full raw data backup and restore. (See
+      <xref linkend="sec-cap-backup-restore-of-raw-data"/>)
+     </para>
+    </listitem>
+   </varlistentry>
+<!-- Does not apply for 1.4.1 to 1.5 upgrades
+   <varlistentry>
+    <term>Do Not Make Changes to Pod Counts During a Upgrade</term>
+    <listitem>
+     <para>
+      If sizing changes need to be mader, make the change either before or after
+      an upgrade. See <xref linkend="sec-cap-ha-prod"/>.
+     </para>
+    </listitem>
+   </varlistentry>
+-->
+  </variablelist>
+ </sect1>
+
+ <sect1 xml:id="sec-cap-update">
+  <title>Upgrading &productname;</title>
+
+  <para>
+   The supported upgrade method is to install all upgrades, in order. Skipping
+   releases is not supported. This table matches the Helm chart versions to
+   each release:
+  </para>
+
+  &releases-table;
+
+  <para>
+   Use <command>helm list</command> to see the version of your installed release
+   . Verify the latest release is the next sequential release from your
+   installed release. If it is, proceed with the commands below to perform the
+   upgrade. If any releases have been missed, see
+   <xref linkend="sec-cap-skipped-release"/>.
+  </para>
+
+  <para>
+   For upgrades from &productname; 1.5 to 1.5.1, if
+   the <literal>mysql</literal> roles of <literal>uaa</literal> and
+   <literal>scf</literal> are in high availability mode, it is recommended to
+   first scale them to single availability. Performing an upgrade with these
+   roles in HA mode runs the risk of encountering potential database migration
+   failures, which will lead to pods not starting.
+  </para>
+
+  <para>
+   The following sections outline the upgrade process for &productname;
+   deployments described by the given scenarios:
+  </para>
+
+  <itemizedlist>
+   <listitem>
+    <para>
+     If the <literal>mysql</literal> roles are currently running in high
+     availability mode through setting <literal>config.HA</literal> to
+     <literal>true</literal>, see <xref linkend="sec-cap-upgrade-config-ha"/>.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     If the <literal>mysql</literal> roles are currently running in high
+     availability mode through configuring custom sizing values, see
+     <xref linkend="sec-cap-upgrade-custom-sizing"/>.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     If the <literal>mysql</literal> roles are currently running in single
+     availability mode, see <xref linkend="sec-cap-upgrade-no-ha"/>.
+    </para>
+   </listitem>
+  </itemizedlist>
+
+  <sect2 xml:id="sec-cap-upgrade-config-ha">
+   <title>&ha; <literal>mysql</literal> through <literal>config.HA</literal></title>
    <para>
-    <command>helm rollback</command> is not supported in &productname; or in
-    upstream &cf;, and may break your cluster completely, because database
-    migrations only run forward and cannot be reversed. Database schema can
-    change over time. During upgrades both pods of the current and the next
-    release may run concurrently, so the schema must stay compatible with the
-    immediately previous release. But there is no way to guarantee such
-    compatibility for future upgrades. One way to address this is to perform a
-    full raw data backup and restore. (See
-    <xref linkend="sec.cap.backup-restore-of-raw-data"/>)
+    This section describes the upgrade process for deployments where the
+    <literal>mysql</literal> roles of <literal>uaa</literal> and
+    <literal>scf</literal> are currently in high availability mode through
+    setting <literal>config.HA</literal> to <literal>true</literal> (see
+    <xref linkend="sec-cap-ha-simple"/>).
    </para>
-  </warning>
-
-<!--TODO insert table entity-->
-
-  <para>
-   Do not make changes to pod counts when you upgrade. You may make sizing
-   changes before or after an upgrade (see <xref linkend="sec.cap.ha-prod"/>).
-  </para>
-
-  <para>
-   Use &helm; to check for updates:
-  </para>
-
-<screen>&prompt.user;helm repo update
-Hang tight while we grab the latest from your chart repositories...
-...Skip local chart repository
-...Successfully got an update from the "stable" chart repository
-...Successfully got an update from the "suse" chart repository
-Update Complete. ⎈ Happy Helming!⎈
-</screen>
-
-  <para>
-   Get your currently-installed release versions and chart names (your releases
-   may have different names than the examples), and then view the upgrade
-   versions:
-  </para>
-
-<screen>&prompt.user;helm list
-NAME            REVISION  UPDATED                  STATUS    CHART           NAMESPACE
-<replaceable>susecf-console</replaceable>  1         Tue Aug 14 11:53:28 2018 DEPLOYED  console-2.0.0   stratos  
-<replaceable>susecf-scf</replaceable>      1         Tue Aug 14 10:58:16 2018 DEPLOYED  cf-2.11.0       scf      
-<replaceable>susecf-uaa</replaceable>      1         Tue Aug 14 10:49:30 2018 DEPLOYED  uaa-2.11.0      uaa
-
-&prompt.user;helm search suse
-NAME                            VERSION DESCRIPTION
-suse/cf-opensuse                &latestscfchart;  A Helm chart for SUSE Cloud Foundry
-suse/uaa-opensuse               &latestuaachart;  A Helm chart for SUSE UAA
-suse/cf                         &latestscfchart;  A Helm chart for SUSE Cloud Foundry
-suse/cf-usb-sidecar-mysql       1.0.1   A Helm chart for SUSE Universal Service Broker ...
-suse/cf-usb-sidecar-postgres    1.0.1   A Helm chart for SUSE Universal Service Broker ...
-suse/console                    &lateststratoschart;   A Helm chart for deploying Stratos UI Console
-suse/metrics                    1.0.0   A Helm chart for Stratos Metrics
-suse/nginx-ingress              0.28.3  An nginx Ingress controller that uses ConfigMap...
-suse/uaa                        &latestuaachart;  A Helm chart for SUSE UAA
-</screen>
-
-  <para>
-   View all charts in a release, and their versions:
-  </para>
-
-<screen>&prompt.user;helm search suse/uaa -l
-NAME            VERSION     DESCRIPTION              
-suse/uaa        2.15.2      A Helm chart for SUSE UAA
-suse/uaa        2.14.5      A Helm chart for SUSE UAA
-suse/uaa        2.13.3      A Helm chart for SUSE UAA
-suse/uaa        2.11.0      A Helm chart for SUSE UAA
-suse/uaa        2.10.1      A Helm chart for SUSE UAA
-suse/uaa        2.8.0       A Helm chart for SUSE UAA
-suse/uaa        2.7.0       A Helm chart for SUSE UAA
-...
-</screen>
-
-  <para>
-   When you have verified that the upgrade is the next release from your
-   current release, run the following commands to perform the upgrade. What if
-   you missed a release? See <xref linkend="sec.cap.skipped-release"/>.
-  </para>
-
-  <important>
-   <title>Changes to Commands</title>
    <para>
-    Take note of the new commands for extracting and using secrets and
-    certificates. If you are still on the &productname; 1.1 release, update
-    your <filename>scf-config-values.yaml</filename> file with the changes for
-    secrets handling and external IP addresses. (See
-    <xref linkend="sec.cap.configure-prod"/> for an example.)
+    The following example assumes your current
+    <filename>scf-config-values.yaml</filename> file contains:
    </para>
-  </important>
+<screen>config:
+  HA: true
+</screen>
+   <procedure>
+    <step>
+     <para>
+      For the <literal>uaa</literal> deployment, scale the instance count of the
+      <literal>mysql</literal> role to 1 and remove the persistent volume claims
+      associated with the removed <literal>mysql</literal> instances.
+     </para>
+     <substeps>
+      <step>
+       <para>
+        Scale the <literal>mysql</literal> instance count to 1.
+       </para>
+       <para>
+	Create a custom configuration file, called
+	<filename>ha-strict-false-single-mysql.yaml</filename> in this example,
+	with the values below. The file uses the
+	<literal>config.HA_strict</literal> feature to allow setting the
+	<literal>mysql</literal> role to a single instance while other roles are
+	kept HA. Note that it is assumed <literal>config.HA=true</literal> is set
+	in your existing <filename>scf-config-values.yaml</filename> file.
+       </para>
+<screen>config:
+  HA_strict: false
+sizing:
+  mysql:
+    count: 1
+</screen>
+       <para>
+        Perform the scaling.
+       </para>
+<screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
+--values scf-config-values.yaml \
+--values <replaceable>ha-strict-false-single-mysql.yaml</replaceable> \
+--version 2.18.0
+</screen>
+       <para>
+        Monitor progress using the <command>watch</command> command.
+       </para>
+       &watch-uaa;
+      </step>
+      <step>
+       <para>
+        Delete the persistent volume claims (PVC) associated with the removed
+        <literal>mysql</literal> instances from the <literal>uaa</literal>
+        namespace. <emphasis>Do not</emphasis> delete the persistent volumes
+	(PV).
+       </para>
+       <para>
+        When <literal>config.HA</literal> is set to <literal>true</literal>,
+	there are 3 instances of the<literal>mysql</literal> role. This means
+	that after scaling to single availability, the PVCs associated with
+	<literal>mysql-1</literal> and <literal>mysql-2</literal> need to be
+	deleted.
+       </para>
+<screen>&prompt.user;kubectl delete persistentvolumeclaim --namespace uaa mysql-data-mysql-1
 
-  <para>
-   Just like your initial installation, wait for each command to complete
-   before running the next command. Monitor progress with the
-   <command>watch</command> command for each namespace, for example
-   <command>watch -c 'kubectl get pods --namespace uaa'</command>. First
-   upgrade <literal>uaa</literal>:
-  </para>
+&prompt.user;kubectl delete persistentvolumeclaim --namespace uaa mysql-data-mysql-2
+</screen>
+      </step>
+     </substeps>
+    </step>
+    <step>
+     <para>
+      For the <literal>scf</literal> deployment, scale the instance count of the
+      <literal>mysql</literal> role to 1 and remove the persistent volume claims
+      associated with the removed <literal>mysql</literal> instances.
+     </para>
+     <substeps>
+      <step>
+       <para>
+        Scale the <literal>mysql</literal> instance count to 1.
+       </para>
+       <para>
+	Reuse the custom configuration file, called
+	<filename>ha-strict-false-single-mysql.yaml</filename>, created earlier.
+	The file uses the <literal>config.HA_strict</literal> feature to allow
+	setting the <literal>mysql</literal> role to a single instance while other
+	roles are kept HA. Note that it is assumed
+	<literal>config.HA=true</literal> is set in your existing
+	<filename>scf-config-values.yaml</filename> file.
+       </para>
+       <para>
+        Perform the scaling. 
+       </para>
+<screen>&prompt.user;helm upgrade susecf-scf suse/cf \
+--values scf-config-values.yaml \
+--values <replaceable>ha-strict-false-single-mysql.yaml</replaceable> \
+--version 2.18.0
+</screen>
+       <para>
+        Monitor progress using the <command>watch</command> command.
+       </para>
+       &watch-scf;
+      </step>
+      <step>
+       <para>
+        Delete the persistent volume claims (PVC) associated with the removed
+        <literal>mysql</literal> instances from the <literal>scf</literal>
+        namespace. <emphasis>Do not</emphasis> delete the persistent volumes
+	(PV).
+       </para>
+       <para>
+        When <literal>config.HA</literal> is set to <literal>true</literal>,
+	there are 3 instances of the<literal>mysql</literal> role. This means
+	that after scaling to single availability, the PVCs associated with
+	<literal>mysql-1</literal> and <literal>mysql-2</literal> need to be
+	deleted.
+       </para>
+<screen>&prompt.user;kubectl delete persistentvolumeclaim --namespace scf mysql-data-mysql-1
 
-<screen>&prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa \
-    --values scf-config-values.yaml</screen>
-
-  <important>
-   &recreate-pods;
-  </important>
-
-  <para>
-   Then extract the <literal>uaa</literal> secret for <literal>scf</literal> to
-   use:
-  </para>
-
+&prompt.user;kubectl delete persistentvolumeclaim --namespace scf mysql-data-mysql-2
+</screen>
+      </step>
+     </substeps>
+    </step>
+    <step>
+     <para>
+      Get the latest updates from your &helm; chart repositories. This will
+      allow upgrading to newer releases of the &productname; charts.
+     </para>
+<screen>&prompt.user;helm repo update</screen>
+    </step>
+    <step>
+     <para>
+      Upgrade <literal>uaa</literal>.
+     </para>
+     <para>
+      Reuse the custom configuration file, called
+      <filename>ha-strict-false-single-mysql.yaml</filename>, created earlier.
+      The file uses the <literal>config.HA_strict</literal> feature to allow
+      setting the <literal>mysql</literal> role to a single instance while other
+      roles are kept HA. Note that it is assumed
+      <literal>config.HA=true</literal> is set in your existing
+      <filename>scf-config-values.yaml</filename> file.
+     </para>
+<screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
+--values scf-config-values.yaml \
+--values <replaceable>ha-strict-false-single-mysql.yaml</replaceable> \
+--version 2.19.1
+</screen>
+     <para>
+      Monitor progress using the <command>watch</command> command.
+     </para>
+     &watch-uaa;
+    </step>
+    <step>
+     <para>
+      Extract the <literal>uaa</literal> secret and certificate for
+      <literal>scf</literal> to use.
+     </para>
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
--o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"</screen>
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+</screen>
+    </step>
+    <step>
+     <para>
+      Upgrade <literal>scf</literal>.
+     </para>
+     <para>
+      Reuse the custom configuration file, called
+      <filename>ha-strict-false-single-mysql.yaml</filename>, created earlier.
+      The file uses the <literal>config.HA_strict</literal> feature to allow
+      setting the <literal>mysql</literal> role to a single instance while other
+      roles are kept HA. Note that it is assumed
+      <literal>config.HA=true</literal> is set in your existing
+      <filename>scf-config-values.yaml</filename> file.
+     </para>
+     <para>
+      Perform the upgrade.
+     </para>
+<screen>&prompt.user;helm upgrade susecf-scf suse/cf \
+--values scf-config-values.yaml \
+--values <replaceable>ha-strict-false-single-mysql.yaml</replaceable> \
+--version 2.19.1 \
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
+</screen>
+     <para>
+      Monitor progress using the <command>watch</command> command.
+     </para>
+     &watch-scf;
+    </step>
+    <step>
+     <para>
+      Scale the entire <literal>uaa</literal> deployment, including
+      the <literal>mysql</literal> role, back to the default
+      high availability mode.
+     </para>
+     <para>
+      Create a custom configuration file, called
+      <filename>ha-strict-true.yaml</filename> in this example,
+      with the values below. The file sets <literal>config.HA_strict</literal>
+      to <literal>true</literal>, which enforces all roles, including
+      <literal>mysql</literal>, are at the required minimum required instance
+      count of 3 for a default HA configuration. Note that it is assumed
+      <literal>config.HA=true</literal> is set in your existing
+      <filename>scf-config-values.yaml</filename> file.
+     </para>
+<screen>config:
+  HA_strict: true
+</screen>
+     <para>
+      Perform the scaling.
+     </para>
+<screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
+--values scf-config-values.yaml \
+--values <replaceable>ha-strict-true.yaml</replaceable> \
+--version 2.19.1
+</screen>
+     <para>
+      Monitor progress using the <command>watch</command> command.
+     </para>
+     &watch-uaa;
+    </step>
+    <step>
+     <para>
+      Extract the <literal>uaa</literal> secret and certificate for
+      <literal>scf</literal> to use.
+     </para>
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
-  <para>
-   Upgrade <literal>scf</literal>, and note that if you see an error message
-   like <literal>lost connection to pod Error: UPGRADE FAILED: transport is
-   closing</literal>, this is normal. If you can run <command>watch -c 'kubectl
-   get pods --namespace scf'</command> then everything is all right.
-  </para>
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+</screen>
+    </step>
+    <step>
+     <para>
+      Scale the entire <literal>scf</literal> deployment, including
+      the <literal>mysql</literal> role, back to the default
+      high availability mode.
+     </para>
+     <para>
+      Reuse the custom configuration file, called
+      <filename>ha-strict-true.yaml</filename> in this example,
+      created earlier. The file sets <literal>config.HA_strict</literal>
+      to <literal>true</literal>, which enforces all roles, including
+      <literal>mysql</literal>, are at the required minimum required instance
+      count of 3 for a default HA configuration. Note that it is assumed
+      <literal>config.HA=true</literal> is set in your existing
+      <filename>scf-config-values.yaml</filename> file.
+     </para>
+<screen>&prompt.user;helm upgrade susecf-scf suse/cf \
+--values scf-config-values.yaml \
+--values <replaceable>ha-strict-true.yaml</replaceable> \
+--version 2.19.1 \
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
+     </screen>
+    </step>
+    <step>
+     <para>
+      If installed, upgrade Stratos.
+     </para>
+<screen>&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-console</replaceable> suse/console \
+--values scf-config-values.yaml \
+--version 2.6.0
+</screen>
+    </step>
+   </procedure>
+  </sect2>
 
-<screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
---values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}"</screen>
+  <sect2 xml:id="sec-cap-upgrade-custom-sizing">
+   <title>&ha; <literal>mysql</literal> through Custom Sizing Values</title>
+   <para>
+    This section describes the upgrade process for deployments where the
+    <literal>mysql</literal> roles of <literal>uaa</literal> and
+    <literal>scf</literal> are currently in high availability mode by
+    configuring custom sizing values (see <xref linkend="sec-cap-ha-custom"/>).
+   </para>
 
-  <important>
-   &recreate-pods;
-  </important>
+   <procedure>
+    <step>
+     <para>
+      For the <literal>uaa</literal> deployment, scale the instance count of the
+      <literal>mysql</literal> role to 1 and remove the persistent volume claims
+      associated with the removed <literal>mysql</literal> instances.
+     </para>
+     <substeps>
+      <step>
+       <para>
+        Scale the <literal>mysql</literal> instance count to 1.
+       </para>
+       <para>
+        Modify your existing custom sizing configuration file, called
+        <filename>uaa-sizing.yaml</filename> in this example, so that the
+        <literal>mysql</literal> role has a count of 1.
+       </para>
+<screen>sizing:
+  mysql:
+    count: 1
+</screen>
+       <para>
+        Perform the scaling.
+       </para>
+<screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
+--values scf-config-values.yaml \
+--values <replaceable>uaa-sizing.yaml</replaceable> \
+--version 2.18.0
+</screen>
+       <para>
+        Monitor progress using the <command>watch</command> command.
+       </para>
+       &watch-uaa;
+      </step>
+      <step>
+       <para>
+        Delete the persistent volume claims (PVC) associated with the removed
+        <literal>mysql</literal> instances from the <literal>uaa</literal>
+        namespace. <emphasis>Do not</emphasis> delete the persistent volumes
+	(PV).
+       </para>
+       <para>
+        This example assumes <literal>mysql.count</literal> was previously set
+        to 3 instances in your custom sizing configuration file. This means
+        that after scaling to single availability, the PVCs associated with
+        <literal>mysql-1</literal> and <literal>mysql-2</literal> need to be
+        deleted.
+       </para>
+       <para>
+        If your <literal>mysql.count</literal> was previously set to 5 or 7
+	instances, repeat the procedure. For 5 instances, the PVCs associated
+	with <literal>mysql-3</literal> and <literal>mysql-4</literal> would
+	need to be deleted as well. For 7 instances, the PVCs associated with
+	<literal>mysql-3</literal>, <literal>mysql-4</literal>,
+	<literal>mysql-5</literal>, and <literal>mysql-6</literal> would need to
+	be deleted as well.
+       </para>
+<screen>&prompt.user;kubectl delete persistentvolumeclaim --namespace uaa mysql-data-mysql-1
 
-  <para>
-   Then upgrade Stratos:
-  </para>
+&prompt.user;kubectl delete persistentvolumeclaim --namespace uaa mysql-data-mysql-2
+</screen>
+      </step>
+     </substeps>
+    </step>
+    <step>
+     <para>
+      For the <literal>scf</literal> deployment, scale the instance count of the
+      <literal>mysql</literal> role to 1 and remove the persistent volume claims
+      associated with the removed <literal>mysql</literal> instances.
+     </para>
+     <substeps>
+      <step>
+       <para>
+        Scale the <literal>mysql</literal> instance count to 1.
+       </para>
+       <para>
+        Modify your existing custom sizing configuration file, called
+        <filename>scf-sizing.yaml</filename> in this example, so that the
+        <literal>mysql</literal> role has a count of 1.
+       </para>
+<screen>sizing:
+  mysql:
+    count: 1
+</screen>
+       <para>
+        Perform the scaling.
+       </para>
+<screen>&prompt.user;helm upgrade susecf-scf suse/cf \
+--values scf-config-values.yaml \
+--values <replaceable>scf-sizing.yaml</replaceable> \
+--version 2.18.0
+</screen>
+       <para>
+        Monitor progress using the <command>watch</command> command.
+       </para>
+       &watch-scf;
+      </step>
+      <step>
+       <para>
+        Delete the persistent volume claims (PVC) associated with the removed
+        <literal>mysql</literal> instances from the <literal>scf</literal>
+        namespace. <emphasis>Do not</emphasis> delete the persistent volumes
+	(PV).
+       </para>
+       <para>
+        This example assumes <literal>mysql.count</literal> was previously set
+        to 3 instances in your custom sizing configuration file. This means
+        that after scaling to single availability, the PVCs associated with
+        <literal>mysql-1</literal> and <literal>mysql-2</literal> need to be
+        deleted.
+       </para>
+       <para>
+        If your <literal>mysql.count</literal> was previously set to 5 or 7
+	instances, repeat the procedure. For 5 instances, the PVCs associated
+	with <literal>mysql-3</literal> and <literal>mysql-4</literal> would
+	need to be deleted as well. For 7 instances, the PVCs associated with
+	<literal>mysql-3</literal>, <literal>mysql-4</literal>,
+	<literal>mysql-5</literal>, and <literal>mysql-6</literal> would need to
+	be deleted as well.
+       </para>
+<screen>&prompt.user;kubectl delete persistentvolumeclaim --namespace scf mysql-data-mysql-1
 
-<screen>&prompt.user;helm upgrade <replaceable>susecf-console</replaceable> suse/console \
- --values scf-config-values.yaml</screen>
+&prompt.user;kubectl delete persistentvolumeclaim --namespace scf mysql-data-mysql-2
+</screen>
+      </step>
+     </substeps>
+    </step>
+    <step>
+     <para>
+      Get the latest updates from your &helm; chart repositories. This will
+      allow upgrading to newer releases of the &productname; charts.
+     </para>
+<screen>&prompt.user;helm repo update</screen>
+    </step>
+    <step>
+     <para>
+      Upgrade <literal>uaa</literal>.
+     </para>
+     <para>
+      Reuse your existing custom sizing configuration file, called
+      <filename>uaa-sizing.yaml</filename> in this example, where the
+      <literal>mysql</literal> role has a count of 1.
+     </para>
+<screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
+--values scf-config-values.yaml \
+--values <replaceable>uaa-sizing.yaml</replaceable> \
+--version 2.19.1
+</screen>
+     <para>
+      Monitor progress using the <command>watch</command> command.
+     </para>
+     &watch-uaa;
+    </step>
+    <step>
+     <para>
+      Extract the <literal>uaa</literal> secret and certificate for
+      <literal>scf</literal> to use.
+     </para>
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
-  <important>
-   &recreate-pods;
-  </important>
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+</screen>
+    </step>
+    <step>
+     <para>
+      Upgrade <literal>scf</literal>.
+     </para>
+     <para>
+      Reuse your existing custom sizing configuration file, called
+      <filename>scf-sizing.yaml</filename> in this example, where the
+      <literal>mysql</literal> role has a count of 1.
+     </para>
+<screen>&prompt.user;helm upgrade susecf-scf suse/cf \
+--values scf-config-values.yaml \
+--values <replaceable>scf-sizing.yaml</replaceable> \
+--version 2.19.1 \
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
+</screen>
+     <para>
+      Monitor progress using the <command>watch</command> command.
+     </para>
+     &watch-scf;
+    </step>
+    <step>
+     <para>
+      Scale the entire <literal>uaa</literal> deployment, including
+      the <literal>mysql</literal> role, back to high availability mode. This
+      example assumes the <literal>mysql.count</literal> was previously set to
+      3 instances.
+     </para>
+     <para>
+      Note that the <literal>mysql</literal> role requires at least 3 instances
+      for high availability and must have an odd number of instances.
+     </para>
+     <para>
+      Modify your existing custom sizing configuration file, called
+      <filename>uaa-sizing.yaml</filename> in this example, so that the 
+      <literal>mysql</literal> role has a count of 3.
+     </para>
+<screen>sizing:
+  mysql:
+    count: 3
+</screen>
+     <para>
+      Perform the scaling.
+     </para>
+<screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
+--values scf-config-values.yaml \
+--values <replaceable>uaa-sizing.yaml</replaceable> \
+--version 2.19.1
+</screen>
+     <para>
+      Monitor progress using the <command>watch</command> command.
+     </para>
+     &watch-uaa;
+    </step>
+    <step>
+     <para>
+      Extract the <literal>uaa</literal> secret and certificate for
+      <literal>scf</literal> to use.
+     </para>
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+</screen>
+    </step>
+    <step>
+     <para>
+      Scale the entire <literal>scf</literal> deployment, including
+      the <literal>mysql</literal> role, back to high availability mode. This
+      example assumes the <literal>mysql.count</literal> was previously set to
+      3 instances.
+     </para>
+     <para>
+      Note the <literal>mysql</literal> role requires at least 3 instances for
+      high availability and must have an odd number of instances.
+     </para>
+     <para>
+      Modify your existing custom sizing configuration file, called
+      <filename>scf-sizing.yaml</filename> in this example, so that the 
+      <literal>mysql</literal> role has a count of 3.
+     </para>
+<screen>&prompt.user;helm upgrade susecf-scf suse/cf \
+--values scf-config-values.yaml \
+--values <replaceable>scf-sizing.yaml</replaceable> \
+--version 2.19.1 \
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
+     </screen>
+    </step>
+    <step>
+     <para>
+      If installed, upgrade Stratos.
+     </para>
+<screen>&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-console</replaceable> suse/console \
+--values scf-config-values.yaml \
+--version 2.6.0
+</screen>
+    </step>
+   </procedure>
+  </sect2>
+
+  <sect2 xml:id="sec-cap-upgrade-no-ha">
+   <title>Single Availability <literal>mysql</literal></title>
+   <para>
+    This section describes the upgrade process for deployments where the
+    <literal>mysql</literal> roles of <literal>uaa</literal> and
+    <literal>scf</literal> are currently in single availability mode.
+   </para>
+
+   <procedure>
+    <step>
+     <para>
+      Get the latest updates from your &helm; chart repositories. This will
+      allow upgrading to newer releases of the &productname; charts.
+     </para>
+<screen>&prompt.user;helm repo update</screen>
+    </step>
+    <step>
+     <para>
+      Upgrade <literal>uaa</literal>.
+     </para>
+<screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
+--values scf-config-values.yaml \
+--version 2.19.1
+</screen>
+     <para>
+      Monitor progress using the <command>watch</command> command.
+     </para>
+     &watch-uaa;
+    </step>
+    <step>
+     <para>
+      Extract the <literal>uaa</literal> secret and certificate for
+      <literal>scf</literal> to use.
+     </para>
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+</screen>
+    </step>
+    <step>
+     <para>
+      Upgrade <literal>scf</literal>.
+     </para>
+<screen>&prompt.user;helm upgrade susecf-scf suse/cf \
+--values scf-config-values.yaml \
+--version 2.19.1 \
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
+</screen>
+     <para>
+      Monitor progress using the <command>watch</command> command.
+     </para>
+     &watch-scf;
+    </step>
+    <step>
+     <para>
+      If installed, upgrade Stratos.
+     </para>
+<screen>&prompt.user;helm upgrade --recreate-pods <replaceable>susecf-console</replaceable> suse/console \
+--values scf-config-values.yaml \
+--version 2.6.0
+</screen>
+    </step>
+   </procedure>
+  </sect2>
 <!-- Internal cf-usb broker broker endpoint URL change involving 1.3 -->
 
   <xi:include href="sec_cf_usb_url.xml"/>
  </sect1>
- <sect1 xml:id="sec.cap.skipped-release">
+ <sect1 xml:id="sec-cap-skipped-release">
   <title>Installing Skipped Releases</title>
 
   <para>
@@ -192,8 +806,11 @@ suse/uaa        2.7.0       A Helm chart for SUSE UAA
    option to install a specific version:
   </para>
 
-<screen>&prompt.user;helm upgrade --recreate-pods --version 2.11.0 <replaceable>susecf-uaa</replaceable> suse/uaa \
---values scf-config-values.yaml</screen>
+<screen>&prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa \
+--values scf-config-values.yaml
+--recreate-pods \
+--version 2.11.0 
+</screen>
 
   <para>
    Be sure to install the corresponding versions for <literal>scf</literal> and

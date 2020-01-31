@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.logging"
+<chapter version="5.0" xml:id="cha-cap-logging"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -16,81 +16,15 @@
   </dm:docmanager>
  </info>
  <para>
-  There are two types of logs in a deployment of &cap;, applications logs and
-  component logs.
+  There are two types of logs in a deployment of &productname;, applications
+  logs and component logs. The following provides a brief overview of each log
+  type and how to retrieve them for monitoring and debugging use.
  </para>
- <itemizedlist>
-  <listitem>
-   <para>
-    Application logs provide information specific to a given application that
-    has been deployed to your &cap; cluster and can be accessed through:
-   </para>
-   <itemizedlist>
-    <listitem>
-     <para>
-      The &cfcli; using the <command>cf logs</command> command
-     </para>
-    </listitem>
-    <listitem>
-     <para>
-      The application's log stream within the Stratos console
-     </para>
-    </listitem>
-   </itemizedlist>
-  </listitem>
-  <listitem>
-   <para>
-    Access to logs for a given component of your &cap; deployment can be
-    obtained by:
-   </para>
-   <itemizedlist>
-    <listitem>
-     <para>
-      The <command>kubectl logs</command> command
-     </para>
-     <para>
-      The following example retrieves the logs of the
-      <literal>router-0</literal> pod in the <literal>scf</literal> namespace
-     </para>
-<screen>&prompt.user;kubectl logs --namespace scf api-group-0</screen>
-    </listitem>
-    <listitem>
-     <para>
-      Direct access to the log files using the following:
-     </para>
-     <orderedlist>
-      <listitem>
-       <para>
-        Open a shell to the container of the component using the
-        <command>kubectl exec</command> command
-       </para>
-      </listitem>
-      <listitem>
-       <para>
-        Navigate to the logs directory at
-        <filename>/var/vcap/sys/logs</filename>, at which point there will be
-        subdirectories containing the log files for access.
-       </para>
-<screen>&prompt.user;kubectl exec -it --namespace scf router-0 /bin/bash
 
-router/0:/# cd /var/vcap/sys/log
+ <!-- itemizedlist of log types and how to fetch them -->
+ &log-types-and-fetch;
 
-router/0:/var/vcap/sys/log# ls -R
-.:
-gorouter  loggregator_agent
-
-./gorouter:
-access.log  gorouter.err.log  gorouter.log  post-start.err.log	post-start.log
-
-./loggregator_agent:
-agent.log</screen>
-      </listitem>
-     </orderedlist>
-    </listitem>
-   </itemizedlist>
-  </listitem>
- </itemizedlist>
- <sect1 xml:id="sec.cap.log-external">
+ <sect1 xml:id="sec-cap-log-external">
   <title>Logging to an External Syslog Server</title>
 
   <para>
@@ -98,7 +32,7 @@ agent.log</screen>
    where additional processing and analysis can be performed.
   </para>
 
-  <sect2 xml:id="sec.cap.log-configuring">
+  <sect2 xml:id="sec-cap-log-configuring">
    <title>Configuring &cap;</title>
    <para>
     In your <filename>scf-config-values.yaml</filename> file add the following
@@ -111,31 +45,76 @@ agent.log</screen>
   SCF_LOG_PROTOCOL: "tcp"</screen>
   </sect2>
 
-  <sect2 xml:id="sec.cap.log-elk">
+  <sect2 xml:id="sec-cap-log-elk">
    <title>Example using the ELK Stack</title>
    <para>
     The ELK stack is an example of an external syslog server where log data can
-    be sent to for log management. The ELK stack consists of
-    <link xlink:href="https://www.elastic.co/products/elasticsearch">Elasticsearch</link>,
-    <link xlink:href="https://www.elastic.co/products/logstash">Logstash</link>,
-    and
-    <link xlink:href="https://www.elastic.co/products/kibana">Kibana</link>.
+    be sent to for log management. The ELK stack consists of:
    </para>
-   <sect3 xml:id="sec.cap.log-elk-prerequisites">
+   <variablelist>
+    <varlistentry>
+     <term><tag class="element">Elasticsearch</tag></term>
+     <listitem>
+      <para>
+       A tool for search and analytics. For more information, refer to
+       <link xlink:href="https://www.elastic.co/products/elasticsearch"/>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><tag class="element">Logstash</tag></term>
+     <listitem>
+      <para>
+       A tool for data processing. For more information, refer to
+       <link xlink:href="https://www.elastic.co/products/logstash"/>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><tag class="element">Kibana</tag>
+     </term>
+     <listitem>
+      <para>
+       A tool for data visualization. For more information, refer to
+       <link xlink:href="https://www.elastic.co/products/kibana"/>.
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+
+   <sect3 xml:id="sec-cap-log-elk-prerequisites">
     <title>Prerequisites</title>
     <para>
-     Java 8 is required by both
-     <link xlink:href="https://www.elastic.co/guide/en/elasticsearch/reference/current/setup.html#jvm-version">Elasticsearch</link>
-     and
-     <link xlink:href="https://www.elastic.co/guide/en/logstash/6.x/installing-logstash.html#installing-logstash">Logstash</link>.
+     Java 8 is required by:
     </para>
+     <variablelist>
+      <varlistentry>
+       <term><tag class="element">Elasticsearch</tag>
+       </term>
+       <listitem>
+        <para>
+         For more information, refer to
+         <link xlink:href="https://www.elastic.co/guide/en/elasticsearch/reference/current/setup.html#jvm-version"/>.
+        </para>
+       </listitem>
+      </varlistentry>
+      <varlistentry>
+       <term><tag class="element">Logstash</tag></term>
+       <listitem>
+        <para>
+         For more information, refer to
+         <link xlink:href="https://www.elastic.co/guide/en/logstash/6.x/installing-logstash.html#installing-logstash"/>.
+        </para>
+       </listitem>
+      </varlistentry>
+     </variablelist>
    </sect3>
-   <sect3 xml:id="sec.cap.log-elasticsearch">
+
+   <sect3 xml:id="sec-cap-log-elasticsearch">
     <title>Installing and Configuring Elasticsearch</title>
     <para>
-     See
-     <link xlink:href="https://www.elastic.co/guide/en/elasticsearch/reference/current/_installation.html">installing
-     Elasticsearch</link> to find available installation methods.
+     For methods of installing Elasticsearch, refer to
+     <link xlink:href="https://www.elastic.co/guide/en/elasticsearch/reference/7.1/install-elasticsearch.html"/>.
     </para>
     <para>
      After installation, modify the config file
@@ -145,12 +124,11 @@ agent.log</screen>
 <screen>network.host: localhost
 	</screen>
    </sect3>
-   <sect3 xml:id="sec.cap.log-logstash">
+   <sect3 xml:id="sec-cap-log-logstash">
     <title>Installing and Configuring Logstash</title>
     <para>
-     See
-     <link xlink:href="https://www.elastic.co/guide/en/logstash/current/installing-logstash.html">installing
-     Logstash</link> to find available installation methods.
+     For methods of installing Logstash, refer to
+     <link xlink:href="http://www.elastic.co/guide/en/logstash/7.1/installing-logstash.html"/>.
     </para>
     <para>
      After installation, create the configuration file
@@ -174,35 +152,32 @@ output {
 }
 	</screen>
     <para>
-     See
-     <link xlink:href="https://www.elastic.co/guide/en/logstash/current/input-plugins.html">input
-     plugins</link> and
-     <link xlink:href="https://www.elastic.co/guide/en/logstash/current/output-plugins.html">output
-     plugins</link> for additional configuration options as well as other
-     plugins available. For this example, we will demonstrate the flow of data
-     through the stack, but
-     <link xlink:href="https://www.elastic.co/guide/en/logstash/current/filter-plugins.html">filter
-     plugins</link> can also be specified to perform processing of the log
-     data.
+     Additional input plug-ins can be found at
+     <link xlink:href="https://www.elastic.co/guide/en/logstash/current/input-plugins.html"/>
+     and output plug-ins can be found at
+     <link xlink:href="https://www.elastic.co/guide/en/logstash/current/output-plugins.html"/>.
+     For this example, we will demonstrate the flow of data through the stack,
+     but filter plugins can also be specified to perform processing of the log
+     data. For more details about filter plug-ins, refer to
+     <link xlink:href="https://www.elastic.co/guide/en/logstash/current/filter-plugins.html"/>.
     </para>
    </sect3>
-   <sect3 xml:id="sec.cap.log-kibana">
+   <sect3 xml:id="sec-cap-log-kibana">
     <title>Installing and Configuring Kibana</title>
     <para>
-     See
-     <link xlink:href="https://www.elastic.co/guide/en/kibana/current/install.html">installing
-     Kibana</link> to find available installation methods.
+     For methods of installing Kibana, refer to
+     <link xlink:href="https://www.elastic.co/guide/en/kibana/7.1/install.html"/>.
     </para>
     <para>
-     No configuration changes are required at this point. Refer to the
-     <link xlink:href="https://www.elastic.co/guide/en/kibana/current/settings.html">configuring
-     settings</link> for additonal properties that you can specify in your
+     No configuration changes are required at this point. Refer to
+     <link xlink:href="https://www.elastic.co/guide/en/kibana/current/settings.html"/>
+     for additonal properties that can configured through the
      <filename>kibana.yml</filename> file.
     </para>
    </sect3>
   </sect2>
  </sect1>
- <sect1 xml:id="sec.cap.log-levels">
+ <sect1 xml:id="sec-cap-log-levels">
   <title>Log Levels</title>
 
   <para>
@@ -236,25 +211,103 @@ output {
     <para>
      error: error conditions
     </para>
-<screen>&lt;11>1 2018-08-21T17:59:48.321059+00:00 api-group-0 vcap.cloud_controller_ng - - -  {"timestamp":1534874388.3206334,"message":"Mysql2::Error: MySQL server has gone away: SELECT count(*) AS `count` FROM `tasks` WHERE (`state` = 'RUNNING') LIMIT 1","log_level":"error","source":"cc.db","data":{},"thread_id":47367387197280,"fiber_id":47367404488760,"process_id":3400,"file":"/var/vcap/packages/cloud_controller_ng/cloud_controller_ng/vendor/bundle/ruby/2.4.0/gems/sequel-4.49.0/lib/sequel/database/logging.rb","lineno":88,"method":"block in log_each"}</screen>
+<screen>&lt;11>1 2018-08-21T17:59:48.321059+00:00 api-group-0 vcap.cloud_controller_ng
+- - -
+{"timestamp":1534874388.3206334,"message":"Mysql2::Error: MySQL
+server has gone away: SELECT count(*) AS `count` FROM `tasks` WHERE
+(`state` = 'RUNNING') LIMIT 1","log_level":"error","source":"cc.db","data":
+{},"thread_id":47367387197280,"fiber_id":47367404488760,"process_id":3400,"file":"/
+var/vcap/packages/cloud_controller_ng/cloud_controller_ng/vendor/bundle/ruby/2.4.0/
+gems/sequel-4.49.0/lib/sequel/database/logging.rb","lineno":88,"method":"block in
+log_each"}
+</screen>
    </listitem>
    <listitem>
     <para>
      warn: warning conditions
     </para>
-<screen>&lt;12>1 2018-08-21T18:49:37.651186+00:00 api-group-0 vcap.cloud_controller_ng - - -  {"timestamp":1534877377.6507676,"message":"Invalid bearer token: #&lt;CF::UAA::InvalidSignature: Signature verification failed> [\"/var/vcap/packages/cloud_controller_ng/cloud_controller_ng/vendor/bundle/ruby/2.4.0/gems/cf-uaa-lib-3.14.3/lib/uaa/token_coder.rb:118:in `decode'\", \"/var/vcap/packages/cloud_controller_ng/cloud_controller_ng/vendor/bundle/ruby/2.4.0/gems/cf-uaa-lib-3.14.3/lib/uaa/token_coder.rb:212:in `decode_at_reference_time'\", \"/var/vcap/packages-src/8d7a6cd54ff4180c0094fc9aefbe3e5f43169e13/cloud_controller_ng/lib/cloud_controller/uaa/uaa_token_decoder.rb:70:in `decode_token_with_key'\", \"/var/vcap/packages-src/8d7a6cd54ff4180c0094fc9aefbe3e5f43169e13/cloud_controller_ng/lib/cloud_controller/uaa/uaa_token_decoder.rb:58:in `block in decode_token_with_asymmetric_key'\", \"/var/vcap/packages-src/8d7a6cd54ff4180c0094fc9aefbe3e5f43169e13/cloud_controller_ng/lib/cloud_controller/uaa/uaa_token_decoder.rb:56:in `each'\", \"/var/vcap/packages-src/8d7a6cd54ff4180c0094fc9aefbe3e5f43169e13/cloud_controller_ng/lib/cloud_controller/uaa/uaa_token_decoder.rb:56:in `decode_token_with_asymmetric_key'\", \"/var/vcap/packages-src/8d7a6cd54ff4180c0094fc9aefbe3e5f43169e13/cloud_controller_ng/lib/cloud_controller/uaa/uaa_token_decoder.rb:29:in `decode_token'\", \"/var/vcap/packages-src/8d7a6cd54ff4180c0094fc9aefbe3e5f43169e13/cloud_controller_ng/lib/cloud_controller/security/security_context_configurer.rb:22:in `decode_token'\", \"/var/vcap/packages-src/8d7a6cd54ff4180c0094fc9aefbe3e5f43169e13/cloud_controller_ng/lib/cloud_controller/security/security_context_configurer.rb:10:in `configure'\", \"/var/vcap/packages/cloud_controller_ng/cloud_controller_ng/middleware/security_context_setter.rb:12:in `call'\", \"/var/vcap/packages/cloud_controller_ng/cloud_controller_ng/middleware/vcap_request_id.rb:15:in `call'\", \"/var/vcap/packages/cloud_controller_ng/cloud_controller_ng/middleware/cors.rb:49:in `call_app'\", \"/var/vcap/packages/cloud_controller_ng/cloud_controller_ng/middleware/cors.rb:14:in `call'\", \"/var/vcap/packages/cloud_controller_ng/cloud_controller_ng/middleware/request_metrics.rb:12:in `call'\", \"/var/vcap/packages/cloud_controller_ng/cloud_controller_ng/vendor/bundle/ruby/2.4.0/gems/rack-1.6.9/lib/rack/builder.rb:153:in `call'\", \"/var/vcap/packages/cloud_controller_ng/cloud_controller_ng/vendor/bundle/ruby/2.4.0/gems/thin-1.7.0/lib/thin/connection.rb:86:in `block in pre_process'\", \"/var/vcap/packages/cloud_controller_ng/cloud_controller_ng/vendor/bundle/ruby/2.4.0/gems/thin-1.7.0/lib/thin/connection.rb:84:in `catch'\", \"/var/vcap/packages/cloud_controller_ng/cloud_controller_ng/vendor/bundle/ruby/2.4.0/gems/thin-1.7.0/lib/thin/connection.rb:84:in `pre_process'\", \"/var/vcap/packages/cloud_controller_ng/cloud_controller_ng/vendor/bundle/ruby/2.4.0/gems/thin-1.7.0/lib/thin/connection.rb:50:in `block in process'\", \"/var/vcap/packages/cloud_controller_ng/cloud_controller_ng/vendor/bundle/ruby/2.4.0/gems/eventmachine-1.0.9.1/lib/eventmachine.rb:1067:in `block in spawn_threadpool'\"]","log_level":"warn","source":"cc.uaa_token_decoder","data":{"request_guid":"f3e25c45-a94a-4748-7ccf-5a72600fbb17::774bdb79-5d6a-4ccb-a9b8-f4022afa3bdd"},"thread_id":47339751566100,"fiber_id":47339769104800,"process_id":3245,"file":"/var/vcap/packages-src/8d7a6cd54ff4180c0094fc9aefbe3e5f43169e13/cloud_controller_ng/lib/cloud_controller/uaa/uaa_token_decoder.rb","lineno":35,"method":"rescue in decode_token"}</screen>
+<screen>&lt;12>1 2018-08-21T18:49:37.651186+00:00 api-group-0 vcap.cloud_controller_ng
+- - -
+{"timestamp":1534877377.6507676,"message":"Invalid bearer token:
+#&lt;CF::UAA::InvalidSignature: Signature verification failed> [\"/var/vcap/
+packages/cloud_controller_ng/cloud_controller_ng/vendor/bundle/ruby/2.4.0/gems/
+cf-uaa-lib-3.14.3/lib/uaa/token_coder.rb:118:in `decode'\", \"/var/vcap/packages/
+cloud_controller_ng/cloud_controller_ng/vendor/bundle/ruby/2.4.0/gems/cf-uaa-
+lib-3.14.3/lib/uaa/token_coder.rb:212:in `decode_at_reference_time'\", \"/var/
+vcap/packages-src/8d7a6cd54ff4180c0094fc9aefbe3e5f43169e13/cloud_controller_ng/
+lib/cloud_controller/uaa/uaa_token_decoder.rb:70:in `decode_token_with_key'\",
+\"/var/vcap/packages-src/8d7a6cd54ff4180c0094fc9aefbe3e5f43169e13/
+cloud_controller_ng/lib/cloud_controller/uaa/uaa_token_decoder.rb:58:in
+`block in decode_token_with_asymmetric_key'\", \"/var/vcap/packages-
+src/8d7a6cd54ff4180c0094fc9aefbe3e5f43169e13/cloud_controller_ng/
+lib/cloud_controller/uaa/uaa_token_decoder.rb:56:in `each'\", \"/
+var/vcap/packages-src/8d7a6cd54ff4180c0094fc9aefbe3e5f43169e13/
+cloud_controller_ng/lib/cloud_controller/uaa/uaa_token_decoder.rb:56:in
+`decode_token_with_asymmetric_key'\", \"/var/vcap/packages-
+src/8d7a6cd54ff4180c0094fc9aefbe3e5f43169e13/cloud_controller_ng/lib/
+cloud_controller/uaa/uaa_token_decoder.rb:29:in `decode_token'\", \"/var/vcap/
+packages-src/8d7a6cd54ff4180c0094fc9aefbe3e5f43169e13/cloud_controller_ng/lib/
+cloud_controller/security/security_context_configurer.rb:22:in `decode_token'\", \"/
+var/vcap/packages-src/8d7a6cd54ff4180c0094fc9aefbe3e5f43169e13/cloud_controller_ng/
+lib/cloud_controller/security/security_context_configurer.rb:10:in `configure'\",
+\"/var/vcap/packages/cloud_controller_ng/cloud_controller_ng/middleware/
+security_context_setter.rb:12:in `call'\", \"/var/vcap/packages/cloud_controller_ng/
+cloud_controller_ng/middleware/vcap_request_id.rb:15:in `call'\", \"/var/vcap/
+packages/cloud_controller_ng/cloud_controller_ng/middleware/cors.rb:49:in
+`call_app'\", \"/var/vcap/packages/cloud_controller_ng/cloud_controller_ng/
+middleware/cors.rb:14:in `call'\", \"/var/vcap/packages/cloud_controller_ng/
+cloud_controller_ng/middleware/request_metrics.rb:12:in `call'\", \"/
+var/vcap/packages/cloud_controller_ng/cloud_controller_ng/vendor/bundle/
+ruby/2.4.0/gems/rack-1.6.9/lib/rack/builder.rb:153:in `call'\", \"/var/vcap/
+packages/cloud_controller_ng/cloud_controller_ng/vendor/bundle/ruby/2.4.0/
+gems/thin-1.7.0/lib/thin/connection.rb:86:in `block in pre_process'\", \"/
+var/vcap/packages/cloud_controller_ng/cloud_controller_ng/vendor/bundle/
+ruby/2.4.0/gems/thin-1.7.0/lib/thin/connection.rb:84:in `catch'\", \"/var/
+vcap/packages/cloud_controller_ng/cloud_controller_ng/vendor/bundle/ruby/2.4.0/
+gems/thin-1.7.0/lib/thin/connection.rb:84:in `pre_process'\", \"/var/vcap/
+packages/cloud_controller_ng/cloud_controller_ng/vendor/bundle/ruby/2.4.0/
+gems/thin-1.7.0/lib/thin/connection.rb:50:in `block in process'\", \"/
+var/vcap/packages/cloud_controller_ng/cloud_controller_ng/vendor/bundle/
+ruby/2.4.0/gems/eventmachine-1.0.9.1/lib/eventmachine.rb:1067:in `block in
+spawn_threadpool'\"]","log_level":"warn","source":"cc.uaa_token_decoder","data":
+{"request_guid":"f3e25c45-a94a-4748-7ccf-5a72600fbb17::774bdb79-5d6a-4ccb-a9b8-
+f4022afa3bdd"},"thread_id":47339751566100,"fiber_id":47339769104800,"process_id":3245,"file":"/
+var/vcap/packages-src/8d7a6cd54ff4180c0094fc9aefbe3e5f43169e13/cloud_controller_ng/
+lib/cloud_controller/uaa/uaa_token_decoder.rb","lineno":35,"method":"rescue in
+decode_token"}
+</screen>
    </listitem>
    <listitem>
     <para>
      info: informational messages
     </para>
-<screen>&lt;14>1 2018-08-21T22:42:54.324023+00:00 api-group-0 vcap.cloud_controller_ng - - -  {"timestamp":1534891374.3237739,"message":"Started GET \"/v2/info\" for user: , ip: 127.0.0.1 with vcap-request-id: 45e00b66-e0b7-4b10-b1e0-2657f43284e7 at 2018-08-21 22:42:54 UTC","log_level":"info","source":"cc.api","data":{"request_guid":"45e00b66-e0b7-4b10-b1e0-2657f43284e7"},"thread_id":47420077354840,"fiber_id":47420124921300,"process_id":3200,"file":"/var/vcap/packages/cloud_controller_ng/cloud_controller_ng/middleware/request_logs.rb","lineno":12,"method":"call"}</screen>
+<screen>&lt;14>1 2018-08-21T22:42:54.324023+00:00 api-group-0 vcap.cloud_controller_ng
+- - -
+{"timestamp":1534891374.3237739,"message":"Started GET
+\"/v2/info\" for user: , ip: 127.0.0.1 with vcap-request-id:
+45e00b66-e0b7-4b10-b1e0-2657f43284e7 at 2018-08-21 22:42:54
+UTC","log_level":"info","source":"cc.api","data":{"request_guid":"45e00b66-
+e0b7-4b10-
+b1e0-2657f43284e7"},"thread_id":47420077354840,"fiber_id":47420124921300,"process_id":3200,"file":
+var/vcap/packages/cloud_controller_ng/cloud_controller_ng/middleware/
+request_logs.rb","lineno":12,"method":"call"}
+</screen>
    </listitem>
    <listitem>
     <para>
      debug: debugging messages
     </para>
-<screen>&lt;15>1 2018-08-21T22:45:15.146838+00:00 api-group-0 vcap.cloud_controller_ng - - -  {"timestamp":1534891515.1463814,"message":"dispatch VCAP::CloudController::InfoController get /v2/info","log_level":"debug","source":"cc.api","data":{"request_guid":"b228ef6d-af5e-4808-af0b-791a37f51154"},"thread_id":47420125585200,"fiber_id":47420098783620,"process_id":3200,"file":"/var/vcap/packages-src/8d7a6cd54ff4180c0094fc9aefbe3e5f43169e13/cloud_controller_ng/lib/cloud_controller/rest_controller/routes.rb","lineno":12,"method":"block in define_route"}</screen>
+<screen>&lt;15>1 2018-08-21T22:45:15.146838+00:00 api-group-0 vcap.cloud_controller_ng
+- - -
+{"timestamp":1534891515.1463814,"message":"dispatch
+VCAP::CloudController::InfoController get /v2/
+info","log_level":"debug","source":"cc.api","data":{"request_guid":"b228ef6d-
+af5e-4808-
+af0b-791a37f51154"},"thread_id":47420125585200,"fiber_id":47420098783620,"process_id":3200,"file":
+var/vcap/packages-src/8d7a6cd54ff4180c0094fc9aefbe3e5f43169e13/cloud_controller_ng/
+lib/cloud_controller/rest_controller/routes.rb","lineno":12,"method":"block in
+define_route"}
+</screen>
    </listitem>
    <listitem>
     <para>
@@ -265,7 +318,17 @@ output {
     <para>
      debug2: lowest-level debugging message
     </para>
-<screen>&lt;15>1 2018-08-21T22:46:02.173445+00:00 api-group-0 vcap.cloud_controller_ng - - -  {"timestamp":1534891562.1731355,"message":"(0.006130s) SELECT * FROM `delayed_jobs` WHERE ((((`run_at` &lt;= '2018-08-21 22:46:02') AND (`locked_at` IS NULL)) OR (`locked_at` &lt; '2018-08-21 18:46:02') OR (`locked_by` = 'cc_api_worker.api.0.1')) AND (`failed_at` IS NULL) AND (`queue` IN ('cc-api-0'))) ORDER BY `priority` ASC, `run_at` ASC LIMIT 5","log_level":"debug2","source":"cc.background","data":{},"thread_id":47194852110160,"fiber_id":47194886034680,"process_id":3296,"file":"/var/vcap/packages/cloud_controller_ng/cloud_controller_ng/vendor/bundle/ruby/2.4.0/gems/sequel-4.49.0/lib/sequel/database/logging.rb","lineno":88,"method":"block in log_each"}</screen>
+<screen>&lt;15>1 2018-08-21T22:46:02.173445+00:00 api-group-0 vcap.cloud_controller_ng - - -
+{"timestamp":1534891562.1731355,"message":"(0.006130s) SELECT * FROM `delayed_jobs`
+WHERE ((((`run_at` &lt;= '2018-08-21 22:46:02') AND (`locked_at` IS NULL)) OR
+(`locked_at` &lt; '2018-08-21 18:46:02') OR (`locked_by` = 'cc_api_worker.api.0.1'))
+AND (`failed_at` IS NULL) AND (`queue` IN ('cc-api-0'))) ORDER BY `priority`
+ASC, `run_at` ASC LIMIT 5","log_level":"debug2","source":"cc.background","data":
+{},"thread_id":47194852110160,"fiber_id":47194886034680,"process_id":3296,"file":"/
+var/vcap/packages/cloud_controller_ng/cloud_controller_ng/vendor/bundle/ruby/2.4.0/
+gems/sequel-4.49.0/lib/sequel/database/logging.rb","lineno":88,"method":"block in
+log_each"}
+</screen>
    </listitem>
   </itemizedlist>
  </sect1>

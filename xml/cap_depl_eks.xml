@@ -4,12 +4,12 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<chapter version="5.0" xml:id="cha.cap.eks"
+<chapter version="5.0" xml:id="cha-cap-depl-eks"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
  <info>
-  <title>Deploying &productname; on Amazon EKS</title>
+  <title>Deploying &productname; on &eks-full; (EKS)</title>
   <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
    <dm:bugtracker></dm:bugtracker>
    <dm:translation>yes</dm:translation>
@@ -19,45 +19,71 @@
      &readmefirst;
  </important>
  <para>
-  This chapter describes how to deploy &productname; on Amazon EKS, using
+  This chapter describes how to deploy &productname; on &eks-full; (EKS), using
   Amazon's Elastic Load Balancer to provide fault-tolerant access to your
   cluster.
  </para>
- <sect1 xml:id="sec.cap.eks-prereqs">
+ <sect1 xml:id="sec-cap-eks-prereqs">
   <title>Prerequisites</title>
 
   <para>
-   You need an <link xlink:href="https://aws.amazon.com/">Amazon EKS
-   account</link>. See
-   <link xlink:href="https://docs.aws.amazon.com/eks/latest/userguide/getting-started.html">Getting
-   Started with Amazon EKS</link> for instructions on creating a &kube; cluster
-   for your &productname; deployment.
+   The following are required to deploy and use &productname; on EKS:
   </para>
 
-  <para>
-   When you create your cluster, use node sizes that are at least
-   <literal>t2.large</literal>. The <literal>NodeVolumeSize</literal> must be a
-   minimum of 60GB.
-  </para>
+  <itemizedlist>
+   <listitem>
+    <para>
+     An Amazon AWS account. For details, refer to
+     <link xlink:href="https://aws.amazon.com/"/>.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Create an &eks; cluster by following the instructions at
+     <link xlink:href="https://docs.aws.amazon.com/eks/latest/userguide/getting-started.html"/>.
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       When you create your cluster, use node sizes that are at least
+       <literal>t2.large</literal>
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       The <literal>NodeVolumeSize</literal> must be a minimum of &node-size; GB.
+      </para>
+     </listitem>
+     <listitem>
+      <!-- para -->
+      &kernel-prereq;
+     </listitem>
+    </itemizedlist>
+   </listitem>
+   <listitem>
+    <para>
+     Identity and Access Management (IAM) is configured for your users. See
+     <xref linkend="sec-cap-eks-iam"/> for guidance.
+    </para>
+   </listitem>
 
-  <para>
-   Take note of special configurations that are required to successfully deploy
-   &productname; on EKS in <xref linkend="sec.cap.install-scf-eks"/>.
-  </para>
+   <!-- listitems: Install steps and links -->
+   &cfcli-prereq;
+   &kubectl-prereq;
+   &curl-prereq;
+  </itemizedlist>
 
-  <para>
-   <xref linkend="sec.cap.eks-iam"/> provides guidance on configuring Identity
-   and Access Management (IAM) for your users.
-  </para>
+  &min-deploy-note;
+
  </sect1>
- <sect1 xml:id="sec.cap.eks-iam">
+ <sect1 xml:id="sec-cap-eks-iam">
   <title>IAM Requirements for EKS</title>
 
   <para>
    These IAM policies provide sufficient access to use EKS.
   </para>
 
-  <sect2 xml:id="sec.cap.eks-unscoped">
+  <sect2 xml:id="sec-cap-eks-unscoped">
    <title>Unscoped Operations</title>
    <para>
     Some of these permissions are very broad. They are difficult to scope
@@ -117,7 +143,7 @@
 }</screen>
   </sect2>
 
-  <sect2 xml:id="sec.cap.eks-scoped">
+  <sect2 xml:id="sec-cap-eks-scoped">
    <title>Scoped Operations</title>
    <para>
     These policies deal with sensitive access controls, such as passing roles
@@ -207,45 +233,11 @@
 }</screen>
   </sect2>
  </sect1>
- <sect1 xml:id="sec.cap.eks-helm">
-  <title>The &helm; CLI and &tiller;</title>
 
-  <para>
-   Get the latest version of &helm;, and installation instructions, from the
-   <link xlink:href="https://docs.helm.sh/using_helm/#quickstart">&helm;
-   Quickstart Guide</link>. Then create a &tiller; service account to give
-   &tiller; sufficient permissions to make changes on your cluster. Create a
-   configuration file, which in this example is
-   <filename>rbac-config.yaml</filename>:
-  </para>
+ <!-- sect1 for helm client and tiller installation -->
+ &install-helm-tiller;
 
-<screen>apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: tiller
-  namespace: kube-system
----
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
-metadata:
-  name: tiller
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-  - kind: ServiceAccount
-    name: tiller
-    namespace: kube-system</screen>
-
-  <para>
-   Apply it to your cluster with these commands:
-  </para>
-
-<screen>&prompt.user;kubectl create -f rbac-config.yaml
-&prompt.user;helm init --service-account tiller</screen>
- </sect1>
- <sect1 xml:id="sec.cap.eks-storage-class">
+ <sect1 xml:id="sec-cap-eks-storage-class">
   <title>Default Storage Class</title>
 
   <para>
@@ -263,31 +255,17 @@ metadata:
     kubernetes.io/cluster-service: "true"
 provisioner: kubernetes.io/aws-ebs
 parameters:
-  type: gp2</screen>
+  type: gp2
+allowVolumeExpansion: true
+</screen>
 
   <para>
    Then apply the new storage class configuration with this command:
   </para>
 
-<screen>&prompt.user;kubectl create -f storage-class.yaml</screen>
+<screen>&prompt.user;kubectl create --filename storage-class.yaml</screen>
  </sect1>
- <sect1 xml:id="sec.cap.eks-secgroup-rules">
-  <title>Security Group rules</title>
-
-  <para>
-   In your EC2 virtual machine list, add the following rules to the security
-   group to any one of your nodes:
-  </para>
-
-<screen>Type		   Protocol     Port Range      Source          Description
-HTTP               TCP          80              0.0.0.0/0       CAP HTTP
-Custom TCP Rule    TCP          2793            0.0.0.0/0       CAP UAA
-Custom TCP Rule    TCP          2222            0.0.0.0/0       CAP SSH
-Custom TCP Rule    TCP          4443            0.0.0.0/0       CAP WSS
-Custom TCP Rule    TCP          443             0.0.0.0/0       CAP HTTPS
-Custom TCP Rule    TCP          20000-20009     0.0.0.0/0       TCP Routing</screen>
- </sect1>
- <sect1 xml:id="sec.cap.eks.dns">
+ <sect1 xml:id="sec-cap-eks-dns">
   <title>DNS Configuration</title>
 
   <para>
@@ -304,82 +282,10 @@ Custom TCP Rule    TCP          20000-20009     0.0.0.0/0       TCP Routing</scr
    <literal>example.com</literal> as the example domain:
   </para>
 
-  <informaltable>
-   <tgroup cols="2">
-    <thead>
-     <row>
-      <entry>Domains</entry>
-      <entry>Services</entry>
-     </row>
-    </thead>
-    <tbody>
-     <row>
-      <entry>uaa.example.com</entry>
-      <entry>uaa/uaa-public</entry>
-     </row>
-     <row>
-      <entry>*.uaa.example.com</entry>
-      <entry>uaa/uaa-public</entry>
-     </row>
-     <row>
-      <entry>example.com</entry>
-      <entry>scf/router-public</entry>
-     </row>
-     <row>
-      <entry>*.example.com</entry>
-      <entry>scf/router-public</entry>
-     </row>
-     <row>
-      <entry>tcp.example.com</entry>
-      <entry>scf/tcp-router-public</entry>
-     </row>
-     <row>
-      <entry>ssh.example.com</entry>
-      <entry>scf/diego-access-public</entry>
-     </row>
-    </tbody>
-   </tgroup>
-  </informaltable>
+&dns-tables;
 
-  <para>
-   A &productname; cluster exposes these four services:
-  </para>
-
-  <informaltable>
-   <tgroup cols="2">
-    <thead>
-     <row>
-      <entry>&kube; service descriptions</entry>
-      <entry>&kube; service names</entry>
-     </row>
-    </thead>
-    <tbody>
-     <row>
-      <entry>User Account and Authentication (<literal>uaa</literal>)</entry>
-      <entry>uaa-uaa-public</entry>
-     </row>
-     <row>
-      <entry>Cloud Foundry (CF) TCP routing service</entry>
-      <entry>tcp-router-tcp-router-public</entry>
-     </row>
-     <row>
-      <entry>CF application SSH access</entry>
-      <entry>diego-ssh-ssh-proxy-public</entry>
-     </row>
-     <row>
-      <entry>CF router</entry>
-      <entry>router-gorouter-public</entry>
-     </row>
-    </tbody>
-   </tgroup>
-  </informaltable>
-
-  <para>
-   <literal>uaa-uaa-public</literal> is in the <literal>uaa</literal>
-   namespace, and the rest are in the <literal>scf</literal> namespace.
-  </para>
  </sect1>
- <sect1 xml:id="sec.cap.eks-configuration">
+ <sect1 xml:id="sec-cap-eks-configuration">
   <title>Deployment Configuration</title>
 
   <para>
@@ -387,17 +293,20 @@ Custom TCP Rule    TCP          20000-20009     0.0.0.0/0       TCP Routing</scr
    for your configuration.
   </para>
 
-<screen>env:
+<screen>### example deployment configuration file
+### scf-config-values.yaml
+
+env:
   DOMAIN: <replaceable>example.com</replaceable>
   UAA_HOST: uaa.<replaceable>example.com</replaceable>
   UAA_PORT: 2793
-  
+
   GARDEN_ROOTFS_DRIVER: overlay-xfs
   GARDEN_APPARMOR_PROFILE: ""
-  
+
 services:
   loadbalanced: true
-  
+
 kube:
   storage_class:
     # Change the value to the storage class you use
@@ -410,16 +319,24 @@ kube:
     username: ""
     password: ""
   organization: "cap"
-  
+
 secrets:
   # Create a very strong password for user 'admin'
   CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
 
   # Create a very strong password, and protect it because it
   # provides root access to everything
-  UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable></screen>
+  UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
+</screen>
+
+  <!-- Explains usage of some Helm values used in the example/minimal values.yaml-->
+  &config-value-usage;
+
+  <!-- Reiterates importance of this password -->
+  &protect-uaa-admin-secret;
+
  </sect1>
- <sect1 xml:id="sec.cap.eks-deploy">
+ <sect1 xml:id="sec-cap-eks-deploy">
 <!-- maybe change some of the content in this section to an entity (cjs, feb
       12 2019_-->
 
@@ -435,26 +352,26 @@ secrets:
     <para>
      Download the &suse; &kube; charts repository
      (<xref
-     linkend="sec.cap.addrepo-eks"/>)
+     linkend="sec-cap-addrepo-eks"/>)
     </para>
    </step>
    <step>
     <para>
      Deploy <literal>uaa</literal>, then create appropriate CNAMEs
-     (<xref linkend="sec.cap.install-uaa-eks"/>)
+     (<xref linkend="sec-cap-install-uaa-eks"/>)
     </para>
    </step>
    <step>
     <para>
      Copy the <literal>uaa</literal> secret and certificate to the
      <literal>scf</literal> namespace, deploy <literal>scf</literal>, create
-     CNAMES (<xref linkend="sec.cap.install-scf-eks"/>)
+     CNAMES (<xref linkend="sec-cap-install-scf-eks"/>)
     </para>
    </step>
   </procedure>
  </sect1>
- <sect1 xml:id="sec.cap.addrepo-eks">
-  <title>Add the &kube; charts repository</title>
+ <sect1 xml:id="sec-cap-addrepo-eks">
+  <title>Add the &kube; Charts Repository</title>
 
   <para>
    Download the &suse; &kube; charts repository with &helm;:
@@ -468,30 +385,22 @@ secrets:
   </para>
 
 <screen>&prompt.user;helm repo list
-NAME            URL                                             
+NAME            URL
 stable          https://kubernetes-charts.storage.googleapis.com
-local           http://127.0.0.1:8879/charts                    
+local           http://127.0.0.1:8879/charts
 suse            https://kubernetes-charts.suse.com/</screen>
 
   <para>
    List your chart names, as you will need these for some operations:
   </para>
 
-<screen>&prompt.user;helm search suse
-NAME                        	VERSION	DESCRIPTION
-suse/cf-opensuse            	&latestscfchart;  A Helm chart for SUSE Cloud Foundry
-suse/uaa-opensuse           	&latestuaachart;  A Helm chart for SUSE UAA
-suse/cf                     	&latestscfchart;  A Helm chart for SUSE Cloud Foundry
-suse/cf-usb-sidecar-mysql   	1.0.1  	A Helm chart for SUSE Universal Service Broker ...
-suse/cf-usb-sidecar-postgres	1.0.1  	A Helm chart for SUSE Universal Service Broker ...
-suse/console                	&lateststratoschart;   A Helm chart for deploying Stratos UI Console
-suse/metrics                	1.0.0  	A Helm chart for Stratos Metrics
-suse/nginx-ingress          	0.28.3 	An nginx Ingress controller that uses ConfigMap...
-suse/uaa                    	&latestuaachart;  A Helm chart for SUSE UAA
-</screen>
+&helm-search-suse;
+
  </sect1>
- <sect1 xml:id="sec.cap.install-uaa-eks">
+ <sect1 xml:id="sec-cap-install-uaa-eks">
   <title>Deploy <literal>uaa</literal></title>
+
+  &uaa-in-scf;
 
   <para>
    Use &helm; to deploy the <literal>uaa</literal> (User Account and
@@ -504,117 +413,108 @@ suse/uaa                    	&latestuaachart;  A Helm chart for SUSE UAA
 --namespace uaa \
 --values scf-config-values.yaml</screen>
 
-  <para>
-   Wait until you have a successful <literal>uaa</literal> deployment before
-   going to the next steps, which you can monitor with the
-   <command>watch</command> command:
-  </para>
-
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace uaa'</screen>
+  &uaa-deploy-complete;
 
   <para>
-   When the status shows RUNNING for all of the <literal>uaa</literal> pods,
-   create CNAMEs for the required domains. (See
-   <xref linkend="sec.cap.eks.dns"/>.) Use <command>kubectl</command> to find
-   the service hostnames. These hostnames include the <literal>elb</literal>
-   sub-domain, so use this to get the correct results:
+   When <literal>uaa</literal> is finished deploying, create CNAMEs for the
+   required domains. (See <xref linkend="sec-cap-eks-dns"/>.) Use
+   <command>kubectl</command> to find the service host names. These host names
+   include the <literal>elb</literal> sub-domain, so use this to get the
+   correct results:
   </para>
 
 <screen>&prompt.user;kubectl get services --namespace uaa | grep elb</screen>
 
-  <important>
-&completed-pods;
-  </important>
+  <para>
+   Use <command>curl</command> to verify you are able to connect to the
+   <literal>uaa</literal> OAuth server on the DNS name configured:
+  </para>
+<screen>&prompt.user;curl --insecure https://uaa.example.com:2793/.well-known/openid-configuration</screen>
+  <para>
+   This should return a JSON object, as this abbreviated example shows:
+  </para>
+<screen>{"issuer":"https://uaa.example.com:2793/oauth/token",
+"authorization_endpoint":"https://uaa.example.com:2793
+/oauth/authorize","token_endpoint":"https://uaa.example.com:2793/oauth/token"
+</screen>
+
  </sect1>
- <sect1 xml:id="sec.cap.install-scf-eks">
+ <sect1 xml:id="sec-cap-install-scf-eks">
   <title>Deploy <literal>scf</literal></title>
 
   <para>
-   Because of the way EKS runs health checks, &cap; requires an edit to one of
-   the <literal>scf</literal> &helm; charts, and then after a successful
-   <literal>scf</literal> deployment remove a listening port from the Elastic
-   Load Balancer's listeners list.
-  </para>
-
-  <para>
-   On your remote admin machine, look in
-   <filename>~.helm/cache/archive/cf-2.15.2.tgz</filename>. Extract the
-   <filename>cf-2.15.2.tgz</filename>archive, and add this to the
-   <literal>ports</literal> section of
-   <filename>templates/tcp-router.yaml</filename>:
-  </para>
-
-<screen>
-- name: "healthcheck"
-  port: 8080
-  protocol: "TCP"
-  targetPort: "healthcheck"
-</screen>
-
-  <para>
-   The section should look like this:
-  </para>
-
-<screen>
-    ports:
-    - name: "healthcheck"
-      port: 8080
-      protocol: "TCP"
-      targetPort: "healthcheck"
-    {{- range $port := until (int .Values.sizing.tcp_router.ports.tcp_route.count) }}
-    - name: "tcp-route-{{ $port }}"
-      port: {{ add 20000 $port }}
-      protocol: "TCP"
-      targetPort: "tcp-route-{{ $port }}"
-    {{- end }}
-    selector:
-      app.kubernetes.io/component: "tcp-router" 
-      </screen>
-
-  <para>
-   Now pass your <literal>uaa</literal> secret and certificate to
-   <literal>scf</literal>, then use &helm; to install &suse; &cf;:
+   Before deploying <literal>scf</literal>, ensure the DNS records for the
+   <literal>uaa</literal> domains have been set up as specified in the
+   previous section. Next, pass your <literal>uaa</literal> secret and
+   certificate to <literal>scf</literal>, then use &helm; to deploy
+   <literal>scf</literal>:
   </para>
 
 <screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
--o jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
 &prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
--o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
 
 &prompt.user;helm install suse/cf \
 --name <replaceable>susecf-scf</replaceable> \
 --namespace scf \
 --values scf-config-values.yaml \
---set "secrets.UAA_CA_CERT=${CA_CERT}"</screen>
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
+</screen>
+
+  &scf-deploy-complete;
 
   <para>
-   Sit back and wait for the pods come online:
+   Before traffic is routed to EKS load balancers, health checks are performed
+   on them. These health checks require access to ports on the
+   <literal>tcp-router</literal> service, which are only opened by request via
+   <command>cf map-route</command> and other associated commands.
   </para>
 
-<screen>&prompt.user;watch -c 'kubectl get pods --namespace scf'</screen>
+  <para>
+   Use <command>kubectl patch</command> to patch the
+   <literal>tcp-router</literal> service to expose a port to the EKS load
+   balancer so the health checks can be completed.
+  </para>
+
+<screen>&prompt.user;kubectl patch service tcp-router-tcp-router-public --namespace scf \
+--type strategic \
+--patch '{"spec": {"ports": [{"name": "healthcheck", "port": 8080}]}}'
+</screen>
 
   <para>
-   Remove port 8080 from the load balancer's listeners list:
+   Remove port 8080 from the load balancer's listeners list. This ensures the
+   port is not exposed to external traffic while still allowing it to serve
+   as the port for health checks internally.
   </para>
 
 <screen>&prompt.user;aws elb delete-load-balancer-listeners \
---load-balancer-name  healthcheck   \
+--load-balancer-name  <replaceable>a635338ecc2ed11e607790a6b408ef5f</replaceable> \
 --load-balancer-ports 8080
 </screen>
 
   <para>
-   Now health checks should operate correctly. When the status shows RUNNING
+   Where the <literal>--load-balancer-name</literal> can be found by examining
+   the <literal>EXTERNAL-IP</literal> field after running command below. The
+   load balancer name will be the string preceding the first
+   <literal>-</literal> character.
+  </para>
+ 
+<screen>&prompt.user;kubectl get service -n scf tcp-router-tcp-router-public</screen>
+
+  <para>
+   The health checks should now operate correctly. When the status shows RUNNING
    for all of the <literal>scf</literal> pods, create CNAMEs for the required
-   domains. (See <xref linkend="sec.cap.eks.dns"/>) Use
-   <command>kubectl</command> to find the service hostnames. These hostnames
+   domains. (See <xref linkend="sec-cap-eks-dns"/>) Use
+   <command>kubectl</command> to find the service host names. These host names
    include the <literal>elb</literal> sub-domain, so use this to get the
    correct results:
   </para>
 
 <screen>&prompt.user;kubectl get services --namespace scf | grep elb</screen>
  </sect1>
- <sect1 xml:id="sec.cap.aws-service-broker">
+ <sect1 xml:id="sec-cap-aws-service-broker">
   <title>Deploying and Using the AWS Service Broker</title>
 
   <para>
@@ -623,7 +523,7 @@ suse/uaa                    	&latestuaachart;  A Helm chart for SUSE UAA
    &suse; &cap;.
   </para>
 
-  <sect2 xml:id="sec.cap.aws-service-broker-prereqs">
+  <sect2 xml:id="sec-cap-aws-service-broker-prereqs">
    <title>Prerequisites</title>
    <para>
     Deploying and using the AWS Service Broker requires the following:
@@ -632,7 +532,7 @@ suse/uaa                    	&latestuaachart;  A Helm chart for SUSE UAA
     <listitem>
      <para>
       &cap; has been successfully deployed on Amazon EKS as described earlier
-      in this chapter (see <xref linkend="cha.cap.eks"/>)
+      in this chapter (see <xref linkend="cha-cap-depl-eks"/>)
      </para>
     </listitem>
     <listitem>
@@ -659,7 +559,7 @@ suse/uaa                    	&latestuaachart;  A Helm chart for SUSE UAA
    </itemizedlist>
   </sect2>
 
-  <sect2 xml:id="sec.cap.aws-service-broker-setup">
+  <sect2 xml:id="sec-cap-aws-service-broker-setup">
    <title>Setup</title>
    <procedure>
     <step>
@@ -729,11 +629,12 @@ suse/uaa                    	&latestuaachart;  A Helm chart for SUSE UAA
       </step>
       <step>
        <para>
-        Create a signing request:
+	Create a signing request. Replace <literal>BROKER_NAMESPACE</literal> with the namespace assigned in Step 3:
        </para>
 <screen>&prompt.user;openssl req -newkey rsa:4096 -keyout tls.key.encrypted -out tls.req -days 365 \
   -passout pass:<replaceable>1234</replaceable> \
-  -subj '/CN=aws-servicebroker.${BROKER_NAMESPACE}' -batch \
+  -subj '/CN=aws-servicebroker.'${BROKER_NAMESPACE} -batch \
+  -subj '/CN=aws-servicebroker-aws-servicebroker.aws-sb.svc.cluster.local' -batch
   &lt;/dev/null
 </screen>
       </step>
@@ -755,32 +656,44 @@ suse/uaa                    	&latestuaachart;  A Helm chart for SUSE UAA
      <para>
       Install the AWS service broker as documented at
       <link xlink:href="https://github.com/awslabs/aws-servicebroker/blob/master/docs/getting-started-k8s.md"/>.
-      Skip the installation of the Kubernetes Service Catalog. While installing
+      Skip the installation of the &kube; Service Catalog. While installing
       the AWS Service Broker, make sure to update the &helm; chart version (the
-      version as of this writing is <literal>1.0.0-beta.3</literal>). For the
+      version as of this writing is <literal>1.0.1</literal>). For the
       broker install, pass in a value indicating the Cluster Service Broker
       should not be installed (for example <command>--set
       deployClusterServiceBroker=false</command>). Ensure an account and role
       with adequate IAM rights is chosen (see
-      <xref linkend="sec.cap.aws-service-broker-prereqs"/>:
+      <xref linkend="sec-cap-aws-service-broker-prereqs"/>:
      </para>
 <screen>&prompt.user;helm install aws-sb/aws-servicebroker \
 	     --name aws-servicebroker \
-	     --namespace ${BROKER_NAMESPACE} \
-	     --version 1.0.0-beta.3 \
-	     --set aws.secretkey=$aws_access_key \
-	     --set aws.accesskeyid=$aws_key_id \
+	     --namespace $BROKER_NAMESPACE \
+	     --version 1.0.1 \
+	     --set aws.secretkey=$AWS_ACCESS_KEY \
+	     --set aws.accesskeyid=$AWS_KEY_ID \
 	     --set deployClusterServiceBroker=false \
 	     --set tls.cert="$(base64 -w0 tls.pem)" \
 	     --set tls.key="$(base64 -w0 tls.key)" \
-	     --set-string aws.targetaccountid=${AWS_TARGET_ACCOUNT_ID} \
-	     --set aws.targetrolename=${AWS_TARGET_ROLE_NAME} \
+	     --set-string aws.targetaccountid=$AWS_TARGET_ACCOUNT_ID \
+	     --set aws.targetrolename=$AWS_TARGET_ROLE_NAME \
 	     --set aws.tablename=awssb \
-	     --set aws.vpcid=$vpcid \
-	     --set aws.region=$aws_region \
+	     --set aws.vpcid=$VPC_ID \
+	     --set aws.region=$AWS_REGION \
 	     --set authenticate=false
 </screen>
-    </step>
+     <para>
+      To find the values of <option>aws.targetaccoundid</option>, <option>
+      aws.targetrolename</option>, and <option>vpcId</option> run the following
+      command.
+     </para>
+<screen>&prompt.user;aws eks describe-cluster --name $CLUSTER_NAME</screen>
+     <para>
+      For <option>aws.targetaccoundid</option> and <option>aws.targetrolename
+      </option>, examine the <literal>cluster.roleArn</literal> field. For
+      <option>vpcId</option>, refer to the
+      <literal>cluster.resourcesVpcConfig.vpcId</literal> field.
+     </para>
+   </step>
     <step>
      <para>
       Log into your &cap; deployment. Select an organization and space to work
@@ -802,7 +715,7 @@ suse/uaa                    	&latestuaachart;  A Helm chart for SUSE UAA
       username and password parameters are only used as dummy values to pass to
       the <command>cf</command> command:
      </para>
-<screen>&prompt.user;cf create-service-broker aws-servicebroker <replaceable>username</replaceable> <replaceable>password</replaceable>  https://aws-servicebroker.${BROKER_NAMESPACE}</screen>
+<screen>&prompt.user;cf create-service-broker aws-servicebroker <replaceable>username</replaceable> <replaceable>password</replaceable> https://aws-servicebroker-aws-servicebroker.aws-sb.svc.cluster.local</screen>
     </step>
     <step>
      <para>
@@ -827,7 +740,7 @@ suse/uaa                    	&latestuaachart;  A Helm chart for SUSE UAA
     </step>
     <step>
      <para>
-      Create a service instance. As an example, a custom MySQL instance can be
+      Create a service instance. As an example, a custom &mysql; instance can be
       created as:
      </para>
 <screen>&prompt.user;cf create-service rdsmysql custom mysql-instance-name -c '{
@@ -835,19 +748,20 @@ suse/uaa                    	&latestuaachart;  A Helm chart for SUSE UAA
   "BackupRetentionPeriod": 0,
   "MasterUsername": "master",
   "DBInstanceClass": "db.t2.micro",
+  "EngineVersion": "5.7.17",
   "PubliclyAccessible": "true",
-  "region": "${AWS_REGION}",
+  "region": "$AWS_REGION",
   "StorageEncrypted": "false",
-  "VpcId": "${AWS_VPC}",
-  "target_account_id": "${AWS_TARGET_ACCOUNT_ID}",
-  "target_role_name": "${AWS_TARGET_ROLE_NAME}"
+  "VpcId": "$VPC_ID",
+  "target_account_id": "$AWS_TARGET_ACCOUNT_ID",
+  "target_role_name": "$AWS_TARGET_ROLE_NAME"
 }'
      </screen>
     </step>
    </procedure>
   </sect2>
 
-  <sect2 xml:id="sec.cap.aws-service-broker-cleanup">
+  <sect2 xml:id="sec-cap-aws-service-broker-cleanup">
    <title>Cleanup</title>
    <para>
     When the AWS Service Broker and its services are no longer required,
@@ -886,4 +800,7 @@ suse/uaa                    	&latestuaachart;  A Helm chart for SUSE UAA
    </procedure>
   </sect2>
  </sect1>
+
+ <!-- sect1 for PV resizing -->
+ &resize-persistent-volume;
 </chapter>

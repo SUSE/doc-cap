@@ -2,14 +2,20 @@
 <!-- Product-specific                                                       -->
 <!-- ====================================================================== -->
 
-<!ENTITY productname    "&suse; Cloud Application Platform">
-<!ENTITY productnamereg "&suse;&reg; Cloud Application Platform">
-<!ENTITY productnumber  "1.3.1">
+<!ENTITY productname    "&suse; &cap;">
+<!ENTITY productnamereg "&suse;&reg; &cap;">
+<!ENTITY productnumber  "1.5.1">
 <!ENTITY github.url     "https://github.com/SUSE/doc-cap">
 <!ENTITY cap            "Cloud Application Platform">
-<!ENTITY latestuaachart "2.15.2">
-<!ENTITY latestscfchart "2.15.2">
-<!ENTITY lateststratoschart "2.3.0">
+<!ENTITY kernel_version "3.19">
+<!ENTITY latestuaachart "2.19.1">
+<!ENTITY latestscfchart "2.19.1">
+<!ENTITY lateststratoschart "2.6.1">
+<!ENTITY metrics-version "1.1.1">
+<!ENTITY minibroker-version "0.3.1">
+<!ENTITY chart-appversion "1.5.1">
+<!ENTITY aksnodeversion "1.11.9">
+<!ENTITY node-size    "80">
 <!ENTITY cfcli        "cf CLI">
 <!ENTITY guide         "<citetitle xmlns='http://docbook.org/ns/docbook'>Deployment, Administration, and User Guide</citetitle>">
 <!-- ====================================================================== -->
@@ -18,10 +24,11 @@
 
 
 
-<!ENTITY caasp        "CaaS Platform">
+<!ENTITY caasp        "&suse; CaaS Platform">
 <!ENTITY susecaaspreg "&suse;&reg; CaaS Platform">
 <!ENTITY cf           "Cloud Foundry">
 <!ENTITY scf          "&suse; Cloud Foundry">
+<!ENTITY uaa          "User Account and Authentication">
 <!ENTITY susemicros   "&suse; MicroOS">
 <!ENTITY ses	      "&suse; Enterprise Storage">
 <!ENTITY tiller	      "Tiller">
@@ -140,10 +147,10 @@
 <!ENTITY aareg         "<phrase xmlns='http://docbook.org/ns/docbook'>AppArmor&reg;</phrase>">
 <!ENTITY sudo          "<command xmlns='http://docbook.org/ns/docbook'>sudo</command>">
 <!ENTITY pk            "PolKit">
-<!ENTITY mariadb       "Maria DB">
+<!ENTITY mariadb       "MariaDB">
 <!ENTITY selnx         "SELinux">
 <!ENTITY postgresql    "PostgreSQL">
-<!ENTITY mysql         "MariaDB">
+<!ENTITY mysql         "MySQL">
 <!ENTITY jeos          "JeOS"><!-- Just enough OS -->
 <!ENTITY stap          "SystemTap">
 <!ENTITY oprof         "OProfile">
@@ -161,10 +168,14 @@
 <!-- Cloud Platforms                                               -->
 <!-- ============================================================= -->
 
-<!ENTITY ms             "Microsoft">
-<!ENTITY azureks        "Azure Kubernetes Service">
-<!ENTITY msaks            "&ms; &azureks;">
-<!ENTITY aks             "Microsoft AKS">
+<!ENTITY ms            "Microsoft">
+<!ENTITY aks           "&ms; AKS">
+<!ENTITY aks-full      "&ms; Azure &kube; Service">
+<!ENTITY eks           "Amazon EKS">
+<!ENTITY eks-full      "Amazon Elastic &kube; Service">
+<!ENTITY gke           "Google GKE">
+<!ENTITY gke-full      "Google &kube; Engine">
+
 <!-- ============================================================= -->
 <!-- Virtualization                                                -->
 <!-- ============================================================= -->
@@ -276,19 +287,19 @@
 <!-- Do not change                                                 -->
 <!-- ============================================================= -->
 
-<!--<!ENTITY fresh_namespace 
+<!--<!ENTITY fresh_namespace
 '<para>
 Always install to a fresh namespace.
 </para>
 <para>
-    If you are not creating a fresh &productname; installation, but have deleted 
+    If you are not creating a fresh &productname; installation, but have deleted
     a previous deployment and are starting over, you must create new namespaces
-    with the 
+    with the
     <command>kubectl create namespace <replaceable>name</replaceable></command>
-        command. 
-    Do not re-use your old namespaces. The <command>helm delete</command> command 
-    does not remove generated secrets from the SCF and UAA namespaces as it is 
-    not aware of them. These leftover secrets will cause problems. See 
+        command.
+    Do not re-use your old namespaces. The <command>helm delete</command> command
+    does not remove generated secrets from the SCF and UAA namespaces as it is
+    not aware of them. These leftover secrets will cause problems. See
     <xref linkend="sec.cap.rebuild.depl"/> for more information.
 </para>'> -->
 
@@ -308,4 +319,3 @@ Always install to a fresh namespace.
 
 <!--                             End of file                       -->
 <!-- ............................................................. -->
-

@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<preface version="5.0" xml:id="preface.deployment"
+<preface version="5.0" xml:id="preface-deployment"
   xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -22,12 +22,11 @@
   which runs on &sle; containers.
  </para>
  <para>
-  &scf; is designed to run on any Kubernetes cluster. This guide describes how
-  to deploy it on
-  <link xlink:href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_deployment/data/book_caasp_deployment.html">SUSE
-  Container as a Service (CaaS) Platform 3.0</link>, Microsoft AKS, and Amazon
-  EKS.
+  &cap; is designed to run on any &kube; cluster. This guide describes how
+  to deploy it on:
  </para>
+ <!-- Platforms covered by guide -->
+ &deployment-platforms;
  <xi:include href="common_intro_target_audience_i.xml"/>
  <xi:include href="common_intro_available_doc_i.xml"/>
  <xi:include href="common_intro_feedback_i.xml"/>

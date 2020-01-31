@@ -1,0 +1,1183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha-cap-depl-gke"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <title>Deploying &productname; on &gke-full; (GKE)</title>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+ </info>
+ <important>
+     &readmefirst;
+ </important>
+ <para>
+  &productname; supports deployment on &gke-full; (GKE). This chapter describes the steps
+  to prepare a &productname; deployment on GKE using its integrated network load balancers. See
+  <link xlink:href="https://cloud.google.com/kubernetes-engine/"/>
+  for more information on GKE.
+ </para>
+ <sect1 xml:id="sec-cap-prereqs-gke">
+  <title>Prerequisites</title>
+
+  <para>
+   The following are required to deploy and use &productname; on GKE:
+  </para>
+
+  <itemizedlist>
+   <listitem>
+    <para>
+     A Google Cloud Platform (GCP) user account or a service account with the
+     following IAM roles. If you do not have an account, visit
+     <link xlink:href="https://console.cloud.google.com/"/> to create one.
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       <literal>compute.admin</literal>. For details regarding this role, refer to
+       <link xlink:href="https://cloud.google.com/iam/docs/understanding-roles#compute-engine-roles"/>.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       <literal>container.admin</literal>. For details regarding this role, refer to
+       <link xlink:href="https://cloud.google.com/kubernetes-engine/docs/how-to/iam#predefined"/>.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       <literal>iam.serviceAccountUser</literal>. For details regarding this role, refer to
+       <link xlink:href="https://cloud.google.com/kubernetes-engine/docs/how-to/iam#primitive"/>.
+      </para>
+     </listitem>
+    </itemizedlist>
+   </listitem>
+   <listitem>
+    <para>
+     Access to a GCP project with the &kube; Engine API enabled. If a
+     project needs to be created, refer to
+     <link xlink:href="https://cloud.google.com/apis/docs/getting-started#creating_a_google_project"/>.
+     To enable access to the API, refer to
+     <link xlink:href="https://cloud.google.com/apis/docs/getting-started#enabling_apis"/>.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     <command>gcloud</command>, the primary command line interface to Google
+     Cloud Platform. See
+     <link xlink:href="https://cloud.google.com/sdk/gcloud/"/> for more
+     information and installation instructions.
+    </para>
+   </listitem>
+
+   <!-- listitems: Install steps and links -->
+   &cfcli-prereq;
+   &kubectl-prereq;
+   &jq-prereq;
+   &curl-prereq;
+   &sed-prereq;
+  </itemizedlist>
+
+  &min-deploy-note;
+
+ </sect1>
+ <sect1 xml:id="sec-cap-create-gke-cluster">
+  <title>Creating a GKE cluster</title>
+
+  <para>
+   In order to deploy &productname;, create a cluster that:
+  </para>
+
+  <itemizedlist>
+   <listitem>
+    <para>
+     Is a <literal>Zonal</literal>, <literal>Regional</literal>, or
+     <literal>Private</literal> type. Do not use a <literal>Alpha</literal>
+     cluster.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Uses <literal>Ubuntu</literal> as the host operating system. If using the
+     <literal>gcloud</literal> CLI, include <command>--image-type=UBUNTU</command>
+     during the cluster creation.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Allows access to all Cloud APIs (in order for storage to work correctly).
+	    <!--	    https://stackoverflow.com/questions/48759906/how-to-allow-allow-full-access-to-all-cloud-apis-for-cloud-api-access-scopes-f?rq=1
+
+	    https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances#changeserviceaccountandscopes
+	    -->
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Has at least 3 nodes of machine type <literal>n1-standard-4</literal>. If using the
+     <literal>gcloud</literal> CLI, include <command>--machine-type=n1-standard-4</command>
+     and <command>--num-nodes=3</command> during the cluster creation. For details, see
+     <link xlink:href="https://cloud.google.com/compute/docs/machine-types#standard_machine_types"/>.
+    </para>
+   </listitem>
+   <listitem>
+    <!-- para -->
+    &kernel-prereq;
+   </listitem>
+   <listitem>
+    <para>
+     Has at least &node-size; GB local storage per node.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     (Optional) Uses preemptible nodes to keep costs low. For detials, see
+     <link xlink:href="https://cloud.google.com/kubernetes-engine/docs/how-to/preemptible-vms"/>.
+    </para>
+   </listitem>
+  </itemizedlist>
+  <procedure>
+   <step>
+    <para>
+     Set a name for your cluster:
+    </para>
+<screen>&prompt.user;export CLUSTER_NAME=<replaceable>"cap"</replaceable></screen>
+   </step>
+   <step>
+    <para>
+     Set the zone for your cluster:
+    </para>
+<screen>&prompt.user;export CLUSTER_ZONE=<replaceable>"us-west1-a"</replaceable></screen>
+   </step>
+   <step>
+    <para>
+     Set the number of nodes for your cluster:
+    </para>
+<screen>&prompt.user;export NODE_COUNT=3</screen>
+   </step>
+   <step>
+    <para>
+     Create the cluster:
+    </para>
+<screen>&prompt.user;gcloud container clusters create ${CLUSTER_NAME} \
+--image-type=UBUNTU \
+--machine-type=n1-standard-4 \
+--zone ${CLUSTER_ZONE} \
+--num-nodes=$NODE_COUNT \
+--no-enable-basic-auth \
+--no-issue-client-certificate \
+--no-enable-autoupgrade \
+--metadata disable-legacy-endpoints=true
+</screen>
+    <itemizedlist>
+     <listitem>
+      <para>
+       Specify the <command>--no-enable-basic-auth</command> and
+       <command>--no-issue-client-certificate</command> flags so that
+       <command>kubectl</command> does not use basic or client certificate
+       authentication, but uses OAuth Bearer Tokens instead. Configure the
+       flags to suit your desired authentication mechanism.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       Specify <command>--no-enable-autoupgrade</command> to disable
+       automatic upgrades.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       Disable legacy metadata server endpoints using
+       <command>--metadata disable-legacy-endpoints=true</command> as a best
+       practice as indicated in
+       <link xlink:href="https://cloud.google.com/compute/docs/storing-retrieving-metadata#default"/>.
+      </para>
+     </listitem>
+    </itemizedlist>
+   </step>
+  </procedure>
+ </sect1>
+
+ <sect1 xml:id="sec-cap-gke-kubeconfig">
+  <title>Get <literal>kubeconfig</literal> File</title>
+
+  <para>
+   Get the <literal>kubeconfig</literal> file for your cluster.
+  </para>
+
+<screen>&prompt.user;gcloud container clusters get-credentials --zone ${CLUSTER_ZONE:?required} ${CLUSTER_NAME:?required}</screen>
+
+ </sect1>
+
+ <!-- sect1 for helm client and tiller installation -->
+ &install-helm-tiller;
+
+ <sect1 xml:id="sec-cap-gke-storage">
+  <title>Default Storage Class</title>
+  <para>
+   This example creates a <literal>pd-ssd</literal>
+   storage class for your cluster.  Create a file named
+   <filename>storage-class.yaml</filename> with the following:
+  </para>
+<screen>---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+  labels:
+    addonmanager.kubernetes.io/mode: EnsureExists
+    kubernetes.io/cluster-service: "true"
+  name: persistent
+parameters:
+  type: pd-ssd
+provisioner: kubernetes.io/gce-pd
+reclaimPolicy: Delete
+allowVolumeExpansion: true
+</screen>
+  <para>
+   Create the new storage class using the manifest defined:
+  </para>
+<screen>&prompt.user;kubectl create --filename <replaceable>storage-class.yaml</replaceable></screen>
+  <para>
+   Specify the newly created created storage class, called <literal>persistent</literal>,
+   as the value for <literal>kube.storage_class.persistent</literal> in your
+   deployment configuration file, like this example:
+  </para>
+<screen>kube:
+  storage_class:
+    persistent: "persistent"
+</screen>
+  <para>
+   See <xref linkend="sec-cap-gke-config"/> for a complete example deployment
+   configuration file, <filename>scf-config-values.yaml</filename>.
+  </para>
+ </sect1>
+
+ <sect1 xml:id="sec-cap-gke-dns">
+  <title>DNS Configuration</title>
+
+  <para>
+   This section provides an overview of the domain and sub-domains that require
+   A records to be set up for. The process is described in more detail in the
+   deployment section.
+  </para>
+
+  <para>
+   The following table lists the required domain and sub-domains, using
+   <literal>example.com</literal> as the example domain:
+  </para>
+
+&dns-tables;
+ </sect1>
+ <sect1 xml:id="sec-cap-gke-config">
+  <title>Deployment Configuration</title>
+  <para>
+   It is not necessary to create any DNS records before deploying
+   <literal>uaa</literal>. Instead, after <literal>uaa</literal>
+   is running you will find the load balancer IP address that was automatically
+   created during deployment, and then create the necessary records.
+  </para>
+  <para>
+   The following file, <filename>scf-config-values.yaml</filename>, provides a
+   complete example deployment configuration. Enter the fully-qualified domain
+   name (FQDN) that you intend to use for <literal>DOMAIN</literal> and
+   <literal>UAA_HOST</literal>.
+  </para>
+<screen>
+### example deployment configuration file
+### scf-config-values.yaml
+
+env:
+  # the FQDN of your domain
+  DOMAIN: <replaceable>example.com</replaceable>
+  # the UAA prefix is required
+  UAA_HOST: uaa.<replaceable>example.com</replaceable>
+  UAA_PORT: 2793
+  GARDEN_ROOTFS_DRIVER: "overlay-xfs"
+
+kube:
+  storage_class:
+    persistent: "persistent"
+  auth: rbac
+
+secrets:
+  # Create a very strong password for user 'admin'
+  CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
+
+  # Create a very strong password, and protect it because it
+  # provides root access to everything
+  UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
+
+services:
+  loadbalanced: true
+</screen>
+
+  <!-- Explains usage of some Helm values used in the example/minimal values.yaml-->
+  &config-value-usage;
+
+  <!-- Reiterates importance of this password -->
+  &protect-uaa-admin-secret;
+
+ </sect1>
+
+ <sect1 xml:id="sec-cap-addrepo-gke">
+  <title>Add the &kube; charts repository</title>
+
+  <para>
+   Download the &suse; &kube; charts repository with &helm;:
+  </para>
+
+<screen>&prompt.user;helm repo add <replaceable>suse</replaceable> https://kubernetes-charts.suse.com/</screen>
+
+  <para>
+   You may replace the example <replaceable>suse</replaceable> name with any
+   name. Verify with <command>helm</command>:
+  </para>
+
+<screen>&prompt.user;helm repo list
+NAME       URL
+stable     https://kubernetes-charts.storage.googleapis.com
+local      http://127.0.0.1:8879/charts
+suse       https://kubernetes-charts.suse.com/
+</screen>
+
+  <para>
+   List your chart names, as you will need these for some operations:
+  </para>
+
+&helm-search-suse;
+
+ </sect1>
+ <sect1 xml:id="sec-cap-cap-on-gke">
+  <title>Deploying &productname;</title>
+  <para>
+   This section describes how to deploy &productname; on &gke;, and how to
+   configure your DNS records.
+  </para>
+
+  <sect2 xml:id="sec-cap-gke-deploy-uaa">
+   <title>Deploy <literal>uaa</literal></title>
+
+   &uaa-in-scf;
+
+   <para>
+    Use &helm; to deploy the <literal>uaa</literal> server:
+   </para>
+<screen>&prompt.user;helm install suse/uaa \
+--name <replaceable>susecf-uaa</replaceable> \
+--namespace <replaceable>uaa</replaceable> \
+--values <replaceable>scf-config-values.yaml</replaceable>
+</screen>
+   &uaa-deploy-complete;
+   <para>
+    Once the <literal>uaa</literal> deployment completes, a <literal>uaa</literal>
+    service will be exposed on a load balancer public IP. The name of the service
+    ends with <literal>-public</literal>. In the following example, the
+    <literal>uaa-uaa-public</literal> service is exposed on
+    <replaceable>35.197.11.229</replaceable> and port <literal>2793</literal>.
+   </para>
+<screen>&prompt.user;kubectl get services --namespace uaa | grep public
+uaa-uaa-public    LoadBalancer   10.0.67.56     35.197.11.229  2793:30206/TCP
+</screen>
+   <para>
+    Use the DNS service of your choice to set up DNS A records for the service
+    from the previous step. Use the public load balancer IP associated with the
+    service to create domain mappings:
+   </para>
+   <itemizedlist>
+    <listitem>
+     <para>
+      For the <literal>uaa-uaa-public</literal> service, map the following domains:
+     </para>
+     <variablelist>
+      <varlistentry>
+       <term>uaa.DOMAIN</term>
+       <listitem>
+        <para>
+         Using the example values, an A record for
+         <literal>uaa.example.com</literal> that points to
+         <replaceable>35.197.11.229</replaceable>
+        </para>
+       </listitem>
+      </varlistentry>
+      <varlistentry>
+       <term>*.uaa.DOMAIN</term>
+       <listitem>
+        <para>
+         Using the example values, an A record for
+         <literal>*.uaa.example.com</literal> that points to
+         <replaceable>35.197.11.229</replaceable>
+        </para>
+       </listitem>
+      </varlistentry>
+     </variablelist>
+    </listitem>
+   </itemizedlist>
+   <para>
+    Use <command>curl</command> to verify you are able to connect to the
+    <literal>uaa</literal> OAuth server on the DNS name configured:
+   </para>
+<screen>&prompt.user;curl --insecure https://uaa.example.com:2793/.well-known/openid-configuration</screen>
+   <para>
+    This should return a JSON object, as this abbreviated example shows:
+   </para>
+<screen>{"issuer":"https://uaa.example.com:2793/oauth/token",
+"authorization_endpoint":"https://uaa.example.com:2793
+/oauth/authorize","token_endpoint":"https://uaa.example.com:2793/oauth/token"
+</screen>
+  </sect2>
+
+  <sect2 xml:id="sec-cap-gke-deploy-scf">
+   <title>Deploy <literal>scf</literal></title>
+   <para>
+    Before deploying <literal>scf</literal>, ensure the DNS records for the
+    <literal>uaa</literal> domains have been set up as specified in the
+    previous section. Next, pass your <literal>uaa</literal> secret and
+    certificate to <literal>scf</literal>, then use &helm; to deploy
+    <literal>scf</literal>:
+   </para>
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+
+&prompt.user;helm install suse/cf \
+--name <replaceable>susecf-scf</replaceable> \
+--namespace scf \
+--values scf-config-values.yaml \
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
+</screen>
+   &scf-deploy-complete;
+   <para>
+    Once the deployment completes, a number of public services will be setup
+    using load balancers that has been configured with corresponding load
+    balancing rules and probes as well as having the correct ports opened in
+    the firewall settings.
+   </para>
+   <para>
+    List the services that have been exposed on the load balancer public IP.
+    The name of these services end in <literal>-public</literal>:
+   </para>
+<screen>&prompt.user;kubectl get services --namespace scf | grep public
+diego-ssh-ssh-proxy-public                  LoadBalancer   10.23.249.196  35.197.32.244  2222:31626/TCP                                                                                                                                    1d
+router-gorouter-public                      LoadBalancer   10.23.248.85   35.197.18.22   80:31213/TCP,443:30823/TCP,4443:32200/TCP                                                                                                         1d
+tcp-router-tcp-router-public                LoadBalancer   10.23.241.17   35.197.53.74   20000:30307/TCP,20001:30630/TCP,20002:32524/TCP,20003:32344/TCP,20004:31514/TCP,20005:30917/TCP,20006:31568/TCP,20007:30701/TCP,20008:31810/TCP   1d
+</screen>
+   <para>
+    Use the DNS service of your choice to set up DNS A records for the services
+    from the previous step. Use the public load balancer IP associated with the
+    service to create domain mappings:
+   </para>
+   <itemizedlist>
+    <listitem>
+     <para>
+      For the <literal>router-gorouter-public</literal> service, map the following domains:
+     </para>
+     <variablelist>
+      <varlistentry>
+       <term>DOMAIN</term>
+       <listitem>
+        <para>
+         Using the example values, an A record for
+         <replaceable>example.com</replaceable> that points to
+         <replaceable>35.197.18.22</replaceable> would be created.
+        </para>
+       </listitem>
+      </varlistentry>
+      <varlistentry>
+       <term>*.DOMAIN</term>
+       <listitem>
+        <para>
+         Using the example values, an A record for
+         <replaceable>*.example.com</replaceable> that points to
+         <replaceable>35.197.18.22</replaceable> would be created.
+        </para>
+       </listitem>
+      </varlistentry>
+     </variablelist>
+    </listitem>
+    <listitem>
+     <para>
+      For the <literal>diego-ssh-ssh-proxy-public</literal> service, map the following domain:
+     </para>
+     <variablelist>
+      <varlistentry>
+       <term>ssh.DOMAIN</term>
+       <listitem>
+        <para>
+         Using the example values, an A record for
+         <replaceable>ssh.example.com</replaceable> that points to
+         <replaceable>35.197.32.244</replaceable> would be created.
+        </para>
+       </listitem>
+      </varlistentry>
+     </variablelist>
+    </listitem>
+    <listitem>
+     <para>
+      For the <literal>tcp-router-tcp-router-public</literal> service, map the following domain:
+     </para>
+     <variablelist>
+      <varlistentry>
+       <term>tcp.DOMAIN</term>
+       <listitem>
+        <para>
+         Using the example values, an A record for
+         <replaceable>tcp.example.com</replaceable> that points to
+         <replaceable>35.197.53.74</replaceable> would be created.
+        </para>
+       </listitem>
+      </varlistentry>
+     </variablelist>
+    </listitem>
+   </itemizedlist>
+   <para>
+    Your load balanced deployment of &cap; is now complete. Verify you can
+    access the API endpoint:
+   </para>
+<screen>&prompt.user;cf api --skip-ssl-validation https://api.example.com</screen>
+  </sect2>
+ </sect1>
+
+ <sect1 xml:id="sec-cap-gke-service-broker">
+  <title>Deploying and Using the Google Cloud Platform Service Broker</title>
+
+  <para>
+   The Google Cloud Platform (GCP) Service Broker is designed for use with &cf;
+   and &kube;. It is compliant with v2.13 of the Open Service Broker API (see
+   <link xlink:href="https://www.openservicebrokerapi.org/"/>) and provides
+   support for the services listed at
+   <link xlink:href="https://github.com/GoogleCloudPlatform/gcp-service-broker/tree/master#open-service-broker-for-google-cloud-platform"/>.
+  </para>
+  <para>
+   This section describes the how to deploy and use the GCP Service Broker, as a
+   &scf; application, on &productname;.
+  </para>
+
+  <sect2 xml:id="sec-cap-gke-service-broker-apis">
+   <title>Enable APIs</title>
+
+   <procedure>
+    <step>
+     <para>
+      From the GCP console, click the <guimenu>Navigation menu</guimenu>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Click <guimenu>APIs &amp; Services</guimenu> and then
+      <guimenu>Library</guimenu>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Enable the following:
+     </para>
+     <itemizedlist>
+      <listitem>
+       <para>
+        The Google Cloud Resource Manager API. For more information, see
+	<link xlink:href="https://console.cloud.google.com/apis/api/cloudresourcemanager.googleapis.com"/>.
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        The Google Identity and Access Management (IAM) API. For more
+	information, see
+	<link xlink:href="https://console.cloud.google.com/apis/api/iam.googleapis.com/overview"/>.
+       </para>
+      </listitem>
+     </itemizedlist>
+    </step>
+    <step>
+     <para>
+      Additionally, enable the APIs for the services that will be used. Refer to
+      <link xlink:href="https://github.com/GoogleCloudPlatform/gcp-service-broker/tree/master#open-service-broker-for-google-cloud-platform"/>
+      to see the services available and the corresponding APIs that will need to
+      be enabled. The examples in this section will require enabling the
+      following APIs:
+     </para>
+     <itemizedlist>
+      <listitem>
+       <para>
+        The Google Cloud SQL API. For more information, see
+	<link xlink:href="https://console.cloud.google.com/apis/library/sql-component.googleapis.com"/>.
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        The Google Cloud SQL Admin API. For more information, see
+	<link xlink:href="https://console.cloud.google.com/apis/library/sqladmin.googleapis.com"/>.
+       </para>
+      </listitem>
+     </itemizedlist>
+    </step>
+   </procedure>
+  </sect2>
+  <sect2 xml:id="sec-cap-gke-service-broker-service-account">
+   <title>Create a Service Account</title>
+
+   <para>
+    A service account allows non-human users to authenticate with and be
+    authorized to interact with Google APIs. To learn more about service
+    accounts, see
+    <link xlink:href="https://cloud.google.com/iam/docs/understanding-service-accounts"/>.
+    The service account created here will be used by the GCP Service Broker
+    application so that it can interact with the APIs to provision resources.
+   </para>
+   <procedure>
+    <step>
+     <para>
+      From the GCP console, click the <guimenu>Navigation menu</guimenu>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Go to <guimenu>IAM &amp; admin</guimenu> and click <guimenu>Service
+      accounts</guimenu>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Click <guimenu>Create Service Account</guimenu>.
+     </para>
+    </step>
+    <step>
+     <para>
+      In the <guimenu>Service account name</guimenu> field, enter a name.
+     </para>
+    </step>
+    <step>
+     <para>
+      Click <guimenu>Create</guimenu>.
+     </para>
+    </step>
+    <step>
+     <para>
+      In the <guimenu>Service account permissions</guimenu> section, add the
+      following roles:
+     </para>
+     <itemizedlist>
+      <listitem>
+       <para>
+        <guimenu>Project > Editor</guimenu>
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        <guimenu>Cloud SQL > Cloud SQL Admin</guimenu>
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        <guimenu>Compute Engine > Compute Admin</guimenu>
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        <guimenu>Service Accounts > Service Account User</guimenu>
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        <guimenu>Cloud Services > Service Broker Admin</guimenu>
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        <guimenu>IAM > Security Admin</guimenu>
+       </para>
+      </listitem>
+     </itemizedlist>
+    </step>
+    <step>
+     <para>
+      Click <guimenu>Continue</guimenu>.
+     </para>
+    </step>
+    <step>
+     <para>
+      In the <guimenu>Create key</guimenu> section, click <guimenu>Create
+      Key</guimenu>.
+     </para>
+    </step>
+    <step>
+     <para>
+      In the <guimenu>Key type</guimenu> field, select <literal>JSON</literal>
+      and click <guimenu>Create</guimenu>. Save the file to a secure location.
+      This will be required when deploying the GCP Service Broker application.
+     </para>
+    </step>
+    <step>
+     <para>
+      Click <guimenu>Done</guimenu> to finish creating the service account.
+     </para>
+    </step>
+   </procedure>
+  </sect2>
+  <sect2 xml:id="sec-cap-gke-service-broker-database">
+   <title>Create a Database for the GCP Service Broker</title>
+
+   <para>
+    The GCP Service Broker requires a database to store information about the
+    resources it provisions. Any database that adheres to the &mysql; protocol
+    may be used, but it is recommended to use a GCP Cloud SQL instance, as
+    outlined in the following steps.
+   </para>
+   <procedure>
+    <step>
+     <para>
+      From the GCP console, click the <guimenu>Navigation menu</guimenu>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Under the <guimenu>Storage</guimenu> section, click
+      <guimenu>SQL</guimenu>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Click <guimenu>Create Instance</guimenu>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Click <guimenu>Choose &mysql;</guimenu> to select &mysql; as the database
+      engine.
+     </para>
+    </step>
+    <step>
+     <para>
+      In the <guimenu>Instance ID</guimenu> field, enter an identifier for &mysql;
+      instance.
+     </para>
+    </step>
+    <step>
+     <para>
+      In the <guimenu>Root password</guimenu> field, set a password for the root
+      user.
+     </para>
+    </step>
+    <step>
+     <para>
+      Click <guimenu>Show configuration options</guimenu> to see additonal
+      configuration options.
+     </para>
+    </step>
+    <step>
+     <para>
+      Under the <guimenu>Set connectivity</guimenu> section, click
+      <guimenu>Add network</guimenu> to add an authorized network.
+     </para>
+    </step>
+    <step>
+     <para>
+      In the <guimenu>Network</guimenu> field, enter
+      <literal>0.0.0.0/0</literal> and click <guimenu>Done</guimenu>.
+     </para>
+    </step>
+    <step>
+     <para>
+      Optionally, create SSL certificates for the database and store them in a
+      secure location.
+     </para>
+    </step>
+    <step>
+     <para>
+      Click <guimenu>Create</guimenu> and wait for the &mysql; instance to finish
+      creating.
+     </para>
+    </step>
+    <step>
+     <para>
+      After the &mysql; instance is finished creating, connect to it using either
+      the Cloud Shell or the <command>mysql</command> command line client.
+     </para>
+     <itemizedlist>
+      <listitem>
+       <para>
+        To connect using Cloud Shell:
+       </para>
+       <procedure>
+        <step>
+         <para>
+          Click on the instance ID of the &mysql; instance.
+         </para>
+        </step>
+        <step>
+         <para>
+          In the <guimenu>Connect to this instance</guimenu> section of the
+          <guimenu>Overview</guimenu> tab, click
+          <guimenu>Connect using Cloud Shell</guimenu>.
+         </para>
+        </step>
+        <step>
+         <para>
+          After the shell is opened, the <command>gcloud sql connect</command>
+          command is displayed. Press <keycap>Enter</keycap> to connect to the
+          &mysql; instance as the root user.
+         </para>
+        </step>
+        <step>
+         <para>
+          When prompted, enter the password for the root user set in an earlier
+          step.
+         </para>
+        </step>
+       </procedure>
+      </listitem>
+      <listitem>
+       <para>
+        To connect using the <command>mysql</command> command line client:
+       </para>
+       <procedure>
+        <step>
+         <para>
+          Click on the instance ID of the &mysql; instance.
+         </para>
+        </step>
+        <step>
+         <para>
+          In the <guimenu>Connect to this instance</guimenu> section of the
+          <guimenu>Overview</guimenu> tab, take note of the IP address. For
+          example, <replaceable>11.22.33.44</replaceable>.
+         </para>
+        </step>
+        <step>
+         <para>
+          Using the <command>mysql</command> command line client, run the
+          following command.
+         </para>
+<screen>&prompt.user;mysql -h <replaceable>11.22.33.44</replaceable> -u root -p</screen>
+        </step>
+        <step>
+         <para>
+          When prompted, enter the password for the root user set in an earlier
+          step.
+         </para>
+        </step>
+       </procedure>
+      </listitem>
+     </itemizedlist>
+    </step>
+    <step>
+     <para>
+      After connecting to the &mysql; instance, run the following commands to
+      create an initial user. The service broker will use this user to connect
+      to the service broker database.
+     </para>
+<screen>CREATE DATABASE servicebroker;
+CREATE USER '<replaceable>gcpdbuser</replaceable>'@'%' IDENTIFIED BY '<replaceable>gcpdbpassword</replaceable>';
+GRANT ALL PRIVILEGES ON servicebroker.* TO '<replaceable>gcpdbuser</replaceable>'@'%' WITH GRANT OPTION;
+</screen>
+     <para>
+      Where:
+     </para>
+     <variablelist>
+      <varlistentry>
+       <term>gcpdbuser</term>
+       <listitem>
+        <para>
+         Is the username of the user the service broker will connect to the
+	 service broker database with. Replace
+	 <replaceable>gcpdbuser</replaceable> with a username of your choosing.
+	</para>
+       </listitem>
+      </varlistentry>
+      <varlistentry>
+       <term>gcpdbpassword</term>
+       <listitem>
+        <para>
+         Is the password of the user the service broker will connect to the
+	 service broker database with. Replace
+	 <replaceable>gcpdbpassword</replaceable> with a secure password of your
+	 choosing.
+	</para>
+       </listitem>
+      </varlistentry>
+     </variablelist>
+    </step>
+   </procedure>
+  </sect2>
+  <sect2 xml:id="sec-cap-gke-service-broker-deploy">
+   <title>Deploy the Service Broker</title>
+
+   <para>
+    The GCP Service Broker can be deployed as a &cf; application onto your
+    deployment of &productname;.
+   </para>
+   <procedure>
+    <step>
+     <para>
+      Get the GCP Service Broker application from Github and change to the GCP
+      Service Broker application directory.
+     </para>
+<screen>&prompt.user;git clone https://github.com/GoogleCloudPlatform/gcp-service-broker
+&prompt.user;cd gcp-service-broker
+</screen>
+    </step>
+    <step>
+     <para>
+      Update the <filename>manifest.yml</filename> file and add the environment
+      variables below and their associated values to the <literal>env</literal>
+      section:
+     </para>
+     <variablelist>
+      <varlistentry>
+       <term>ROOT_SERVICE_ACCOUNT_JSON</term>
+       <listitem>
+        <para>
+         The contents, as a string, of the JSON key file created for the service
+	 account created earlier (see
+	 <xref linkend="sec-cap-gke-service-broker-service-account"/>).
+        </para>
+       </listitem>
+      </varlistentry>
+      <varlistentry>
+       <term>SECURITY_USER_NAME</term>
+       <listitem>
+        <para>
+	 The username to authenticate broker requests. This will be the same one
+	 used in the <command>cf create-service-broker</command> command. In the
+	 examples, this is <replaceable>cfgcpbrokeruser</replaceable>.
+        </para>
+       </listitem>
+      </varlistentry>
+      <varlistentry>
+       <term>SECURITY_USER_PASSWORD</term>
+       <listitem>
+        <para>
+	 The password to authenticate broker requests. This will be the same one
+	 used in the <command>cf create-service-broker</command> command. In the
+	 examples, this is <replaceable>cfgcpbrokerpassword</replaceable>.
+        </para>
+       </listitem>
+      </varlistentry>
+      <varlistentry>
+       <term>DB_HOST</term>
+       <listitem>
+        <para>
+	 The host for the service broker database created earlier (see
+	 <xref linkend="sec-cap-gke-service-broker-database"/>. This can be
+	 found in the GCP console by clicking on the name of the database
+	 instance and examining the <guimenu>Connect to this instance</guimenu>
+	 section of the <guimenu>Overview</guimenu> tab. In the examples, this
+	 is <replaceable>11.22.33.44</replaceable>.
+        </para>
+       </listitem>
+      </varlistentry>
+      <varlistentry>
+       <term>DB_USERNAME</term>
+       <listitem>
+        <para>
+         The username used to connect to the service broker database. This was
+	 created by the <command>mysql</command> commands earlier while
+	 connected to the service broker database instance (see
+	 <xref linkend="sec-cap-gke-service-broker-database"/>). In the
+	 examples, this is <replaceable>gcpdbuser</replaceable>.
+        </para>
+       </listitem>
+      </varlistentry>
+      <varlistentry>
+       <term>DB_PASSWORD</term>
+       <listitem>
+        <para>
+	 The password of the user used to connect to the service broker
+	 database. This was created by the <command>mysql</command> commands
+	 earlier while connected to the service broker database instance (see
+	 <xref linkend="sec-cap-gke-service-broker-database"/>). In the
+	 examples, this is <replaceable>gcpdbpassword</replaceable>.
+        </para>
+       </listitem>
+      </varlistentry>
+     </variablelist>
+     <para>
+      The <filename>manifest.yml</filename> should look similar to the example
+      below.
+     </para>
+<screen>### example manifest.yml for the GCP Service Broker
+---
+applications:
+- name: gcp-service-broker
+  memory: 1G
+  buildpacks:
+  - go_buildpack
+  env:
+    GOPACKAGENAME: github.com/GoogleCloudPlatform/gcp-service-broker
+    GOVERSION: go1.12
+    ROOT_SERVICE_ACCOUNT_JSON: <replaceable>'{ ... }'</replaceable>
+    SECURITY_USER_NAME: <replaceable>cfgcpbrokeruser</replaceable>
+    SECURITY_USER_PASSWORD: <replaceable>cfgcpbrokerpassword</replaceable>
+    DB_HOST: <replaceable>11.22.33.44</replaceable>
+    DB_USERNAME: <replaceable>gcpdbuser</replaceable>
+    DB_PASSWORD: <replaceable>gcpdbpassword</replaceable>
+</screen>
+    </step>
+    <step>
+     <para>
+      After updating the <filename>manifest.yml</filename> file, deploy the
+      service broker as an application to your &cap; deployment. Specify a
+      health check type of <literal>none</literal>.
+     </para>
+<screen>&prompt.user;cf push --health-check-type none</screen>
+    </step>
+    <step>
+     <para>
+      After the service broker application is deployed, take note of the URL
+      displayed in the <literal>route</literal> field. Alternatively, run
+      <command>cf app gcp-service-broker</command> to find the URL in the
+      <literal>route</literal> field. On a browser, go to the route (for
+      example,
+      <replaceable>https://gcp-service-broker.example.com</replaceable>). You
+      should see the documentation for the GCP Service Broker.
+     </para>
+    </step>
+    <step>
+     <para>
+      Create the service broker in &scf; using the &cfcli;.
+     </para>
+<screen>&prompt.user;cf create-service-broker <replaceable>gcp-service-broker</replaceable> <replaceable>cfgcpbrokeruser</replaceable> <replaceable>cfgcpbrokerpassword</replaceable> <replaceable>https://gcp-service-broker.example.com</replaceable></screen>
+     <para>
+      Where <replaceable>https://gcp-service-broker.example.com</replaceable> is
+      replaced by the URL of the GCP Service Broker application deployed
+      to &productname;. Find the URL using
+      <command>cf app gcp-service-broker</command> and examining the
+      <literal>routes</literal> field.
+     </para>
+    </step>
+    <step>
+     <para>
+      Verify the service broker has been successfully registered.
+     </para>
+<screen>&prompt.user;cf service-brokers</screen>
+    </step>
+    <step>
+     <para>
+      List the available services and their associated plans for the GCP Service
+      Broker. For more information about the services, see
+      <link xlink:href="https://github.com/GoogleCloudPlatform/gcp-service-broker/tree/master#open-service-broker-for-google-cloud-platform"/>.
+     </para>
+<screen>&prompt.user;cf service-access -b <replaceable>gcp-service-broker</replaceable></screen>
+    </step>
+    <step>
+     <para>
+      Enable access to a service. This example enables access to the Google
+      CloudSQL &mysql; service (see
+      <link xlink:href="https://cloud.google.com/sql/"/>).
+     </para>
+<screen>&prompt.user;cf enable-service-access <replaceable>google-cloudsql-mysql</replaceable></screen>
+    </step>
+    <step>
+     <para>
+      Create an instance of the Google CloudSQL &mysql; service. This example uses
+      the <literal>mysql-db-f1-micro</literal> plan. Use the
+      <command>-c</command> flag to pass optional parameters when provisioning a
+      service. See <link xlink:href="https://github.com/GoogleCloudPlatform/gcp-service-broker/blob/master/docs/use.md"/> for the parameters that can be set for each service.
+     </para>
+<screen>&prompt.user;cf create-service <replaceable>google-cloudsql-mysql</replaceable> <replaceable>mysql-db-f1-micro</replaceable> <replaceable>mydb-instance</replaceable></screen>
+     <para>
+      Wait for the service to finish provisioning. Check the status using the
+      GCP console or with the following command.
+     </para>
+<screen>&prompt.user;cf service <replaceable>mydb-instance</replaceable> | grep status</screen>
+     <para>
+      The service can now be bound to applications and used.
+     </para>
+    </step>
+   </procedure>
+  </sect2>
+ </sect1>
+
+ <!-- sect1 for PV resizing -->
+ &resize-persistent-volume;
+
+ <sect1 xml:id="sec-cap-gke-add-capacity">
+  <title>Expanding Capacity of a &cap; Deployment on &gke;</title>
+
+  <para>
+   If the current capacity of your &cap; deployment is insufficient for your
+   workloads, you can expand the capacity using the procedure in this section.
+  </para>
+
+  <para>
+   These instructions assume you have followed the procedure in
+   <xref linkend="cha-cap-depl-gke"/> and have a running &cap; deployment on
+   &aks;. The instructions below will use environment variables defined in
+   <xref linkend="sec-cap-create-gke-cluster"/>.
+  </para>
+
+  <procedure>
+   <step>
+    <para>
+     Get the most recently created node in the cluster.
+    </para>
+<screen>&prompt.user;RECENT_VM_NODE=$(gcloud compute instances list --filter=name~${CLUSTER_NAME:?required} --format json | jq --raw-output '[sort_by(.creationTimestamp) | .[].creationTimestamp ] | last | .[0:19] | strptime("%Y-%m-%dT%H:%M:%S") | mktime')</screen>
+   </step>
+   <step>
+    <para>
+     <!-- https://cloud.google.com/kubernetes-engine/docs/how-to/resizing-a-cluster -->
+     Increase the &kube; node count in the cluster. Replace the example value
+     with the number of nodes required for your workload.
+    </para>
+<screen>&prompt.user;gcloud container clusters resize $CLUSTER_NAME \
+--num-nodes <replaceable>4</replaceable>
+</screen>
+   </step>
+   <step>
+    <para>
+     Verify the new nodes are in a <literal>Ready</literal> state before proceeding.
+    </para>
+<screen>&prompt.user;kubectl get nodes</screen>
+   </step>
+   <step>
+    <para>
+     Add or update the following in your
+     <filename>scf-config-values.yaml</filename> file to increase the number of
+     <literal>diego-cell</literal> in your &cap; deployment. Replace the
+     example value with the number required by your workflow.
+    </para>
+<screen>sizing:
+  diego_cell:
+    count: <replaceable>4</replaceable>
+</screen>
+   </step>
+   <step>
+    <para>
+     Pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>.
+    </para>
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+</screen>
+   </step>
+   <step>
+    <para>
+     Perform a <command>helm upgrade</command> to apply the change.
+    </para>
+<screen>&prompt.user;helm upgrade susecf-scf suse/cf \
+--values scf-config-values.yaml \
+--set "secrets.UAA_CA_CERT=${CA_CERT}" \
+--version &latestscfchart;
+</screen>
+   </step>
+   <step>
+    <para>
+     Monitor progress of the additional <literal>diego-cell</literal> pods:
+    </para>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace scf'</screen>
+   </step>
+  </procedure>
+ </sect1>
+</chapter>

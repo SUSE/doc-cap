@@ -5,7 +5,7 @@
 
 ## Basics
 MAIN="MAIN_cap_guides.xml"
-ROOTID="book.cap.guides"
+ROOTID=book-cap-guides
 
 ## Profiling
 #PROFOS="sles"

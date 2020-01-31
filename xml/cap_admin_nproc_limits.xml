@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha-cap-manage-nproc-limits"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <title>Managing Nproc Limits of Pods</title>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+ </info>
+
+ <warning>
+  <title>Do Not Adjust Without Guidance</title>
+  <para>
+   It is not recommended to change these values without the guidance of
+   &productname; developers. Please contact support for assistance.
+  </para>
+ </warning>
+
+ <para>
+  Nproc is the maximum number of processes allowed per user. In the case of
+  <literal>scf</literal>, the nproc value applies to the
+  <literal>vcap</literal> user. In <literal>scf</literal>, there are parameters,
+  <command>kube.limits.nproc.soft</command> and
+  <command>kube.limits.nproc.hard</command>, to configure a soft nproc limit
+  and a hard nproc limit for processes spawned by the <literal>vcap</literal>
+  user in <literal>scf</literal> pods. By default, the soft limit is 1024 while
+  the hard limit is 2048. The soft and hard limits can be changed
+  to suit your workloads. Note that the limits are applied to all pods.
+ </para>
+
+ <para>
+  When configuring the nproc limits, take note that:
+ </para>
+
+ <itemizedlist>
+  <listitem>
+   <para>
+    If the soft limit is set, the hard limit must be set as well.
+   </para>
+  </listitem>
+  <listitem>
+   <para>
+    If the hard limit is set, the soft limit must be set as well.
+   </para>
+  </listitem>
+  <listitem>
+   <para>
+    The soft limit cannot be greater than the hard limit.
+   </para>
+  </listitem>
+ </itemizedlist>
+
+ <sect1 xml:id="sec-cap-configure-and-apply-nproc">
+  <title>Configuring and Applying Nproc Limits</title>
+
+  <para>
+   To configure the nproc limits, add the following to your
+   <filename>scf-config-values.yaml</filename>. Replace
+   the example values with limits suitable for your workloads:
+  </para>
+
+<screen>kube:
+  limits:
+    nproc:
+      hard: <replaceable>3072</replaceable>
+      soft: <replaceable>2048</replaceable>
+</screen>
+
+  <sect2 xml:id="sec-cap-new-deployment-apply-nproc">
+   <title>New Deployments</title>
+
+   &uaa-in-scf;
+
+   <para>
+    For new &productname; deployments, follow the steps below to deploy
+    &productname; with nproc limits configured:
+   </para>
+
+   <procedure>
+    <step>
+     <para>
+      Deploy <literal>uaa</literal>:
+     </para>
+<screen>&prompt.user;helm install suse/uaa \
+--name <replaceable>susecf-uaa</replaceable> \
+--namespace uaa \
+--values scf-config-values.yaml
+</screen>
+     &uaa-deploy-complete;
+    </step>
+    <step>
+     <para>
+      Pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>:
+     </para>
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+</screen>
+    </step>
+    <step>
+     <para>
+      Deploy <literal>scf</literal>:
+     </para>
+<screen>&prompt.user;helm install suse/cf \
+--name <replaceable>susecf-scf</replaceable> \
+--namespace scf \
+--values scf-config-values.yaml \
+--set "secrets.UAA_CA_CERT=${CA_CERT}"
+</screen>
+    </step>
+    <step>
+     <para>
+      Monitor the deployment progress using the <command>watch</command> command:
+     </para>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace scf'</screen>
+    </step>
+    <step>
+     <para>
+      Open a shell into any container. The command below opens a shell to the default
+      container in the <literal>blobstore-0</literal> pod:
+     </para>
+<screen>&prompt.user;kubectl exec --stdin --tty <replaceable>blobstore-0</replaceable> --namespace scf -- env /bin/bash</screen>
+    </step>
+    <step>
+     <para>
+      Use the <literal>vcap</literal> user identity:
+     </para>
+<screen>&prompt.user;su vcap</screen>
+    </step>
+    <step>
+     <para>
+      Verify the maximum number of processes for the <literal>vcap</literal> user matches the limits you set:
+     </para>
+<screen>&prompt.user;ulimit -u
+
+&prompt.user;cat /etc/security/limits.conf | grep nproc
+</screen>
+    </step>
+   </procedure>
+  </sect2>
+
+  <sect2 xml:id="sec-cap-existing-deployment-apply-nproc">
+   <title>Existing Deployments</title>
+
+   &uaa-in-scf;
+
+   <para>
+    For existing &productname; deployments, follow the steps below to redeploy
+    &productname; with nproc limits configured:
+   </para>
+
+   <procedure>
+    <step>
+     <para>
+      Pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>:
+     </para>
+<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
+--output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+
+CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
+--output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+</screen>
+    </step>
+    <step>
+     <para>
+      Use <command>helm upgrade</command> to apply the change:
+     </para>
+<screen>&prompt.user;helm upgrade susecf-scf suse/cf \
+--values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}" \
+--version &latestscfchart;
+</screen>
+    </step>
+    <step>
+     <para>
+      Monitor the deployment progress using the <command>watch</command> command:
+     </para>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace scf'</screen>
+    </step>
+    <step>
+     <para>
+      Open a shell into any container. The command below opens a shell to the default
+      container in the <literal>blobstore-0</literal> pod:
+     </para>
+<screen>&prompt.user;kubectl exec --stdin --tty <replaceable>blobstore-0</replaceable> --namespace scf -- env /bin/bash</screen>
+    </step>
+    <step>
+     <para>
+      Use the <literal>vcap</literal> user identity:
+     </para>
+<screen>&prompt.user;su vcap</screen>
+    </step>
+    <step>
+     <para>
+      Verify the maximum number of processes for the <literal>vcap</literal> user matches the limits you set:
+     </para>
+<screen>&prompt.user;ulimit -u
+
+&prompt.user;cat /etc/security/limits.conf | grep nproc
+</screen>
+    </step>
+   </procedure>
+  </sect2>
+
+ </sect1>
+</chapter>
