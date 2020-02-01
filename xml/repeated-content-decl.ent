@@ -1321,3 +1321,23 @@ agent.log</screen>
    UAA_ZONE: scf2
 </screen>
  </important>'>
+
+<!--ENTITY stratos-tech-preview-note........................................-->
+
+<!ENTITY stratos-tech-preview-note
+'<note xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <title>Technology Preview Features</title>                           
+ <para>
+  Some Stratos releases may include features as part of a technology preview.
+  Technology preview features are for evaluation purposes only and
+  <emphasis role="bold">not</emphasis> supported for production use. To see the
+  technology preview features available for a given release, refer to
+  <link xlink:href="https://github.com/SUSE/stratos/blob/master/CHANGELOG.md"/>.
+ </para>
+ <para>
+  To enable technology preview features, set the
+  <literal>console.techPreview</literal> &helm; value to <literal>true</literal>
+  . For example, when running <command>helm install</command> add
+  <command>--set console.techPreview=true</command>.
+ </para>
+</note>'> 
