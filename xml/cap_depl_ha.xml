@@ -222,8 +222,8 @@ sizing:
    </important>
   <para>
     After creating your configuration files, follow the steps in
-    <xref linkend="sec-cap-configure-prod"/> until you get to
-    <xref linkend="sec-cap-install-uaa-prod"/>. Then deploy
+    <xref linkend="sec-cap-caasp-config"/> until you get to
+    <xref linkend="sec-cap-caasp-deploy-uaa"/>. Then deploy
     <literal>uaa</literal> with this command:
    </para>
 <screen>

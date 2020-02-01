@@ -138,7 +138,7 @@
 
   <para>
    &cap; is designed to run on any &kube; cluster. This guide describes how
-   to deploy it on:
+   to deploy it:
   </para>
   <!-- Platforms covered by guide -->
   &deployment-platforms;
@@ -257,9 +257,6 @@
   <para>
    This guide details the steps for deploying &scf; on &caasp;, and on
    supported &kube; environments such as &aks-full;, &gke-full;, and &eks-full;.
-   &caasp; is a specialized application development and hosting platform built
-   on the &susemicros; container host operating system, container orchestration
-   with &kube;, and &salt; for automating installation and configuration.
   </para>
 
   <important>
@@ -267,11 +264,11 @@
    <para>
     Installing and administering &productname; requires knowledge of Linux,
     &docker;, &kube;, and your &kube; platform (for example &caasp;,
-    AKS, EKS, OpenStack). You must plan resource allocation and network
-    architecture by taking into account the requirements of your &kube;
-    platform in addition to &scf; requirements. &scf; is a discrete component
-    in your cloud stack, but it still requires knowledge of administering and
-    troubleshooting the underlying stack.
+    &aks-full;, &eks-full;, and &gke-full;). You must plan resource allocation
+    and network architecture by taking into account the requirements of your
+    &kube; platform in addition to &scf; requirements. &scf; is a discrete
+    component in your cloud stack, but it still requires knowledge of
+    administering and troubleshooting the underlying stack.
    </para>
   </important>
 
@@ -281,8 +278,7 @@
    deployment includes &scf; installed on &caasp;, &eks;, &gke;, or &aks;.
    You also need a storage back-end such as &ses; or NFS, a DNS/DHCP
    server, and an Internet connection to download additional packages during
-   installation and ~10 GB of &docker; images on each &kube; worker after
-   installation. (See <xref linkend="cha-cap-depl-caasp"/>.)
+   installation and ~10 GB of &docker; images 
   </para>
 
   <para>
@@ -347,7 +343,7 @@
    </listitem>
    <listitem>
     <para>
-     Platform as a Service (Paas)
+     Platform as a Service (PaaS)
     </para>
    </listitem>
    <listitem>
