@@ -272,7 +272,7 @@
   SERVICE_MYSQL_PASS: <replaceable>mysql-admin-password</replaceable>
 
   # CAP access credentials, from your original deployment configuration
-  # (see <xref linkend="sec-cap-configure-prod"/>)
+  # file, scf-config-values.yaml
   CF_ADMIN_USER: <replaceable>admin</replaceable>
   CF_ADMIN_PASSWORD: <replaceable>password</replaceable>
   CF_DOMAIN: <replaceable>example.com</replaceable>
@@ -308,7 +308,7 @@ kube:
 
    <para>
     &productname; includes charts for &mysql; and &postgresql; (see
-    <xref linkend="sec-cap-addrepo-prod"/> for information on managing your
+    <xref linkend="sec-cap-addrepo-caasp"/> for information on managing your
     &helm; repository):
    </para>
 
@@ -399,7 +399,7 @@ kube:
   SERVICE_POSTGRESQL_SSLMODE: disable
 
   # CAP access credentials, from your original deployment configuration
-  # (see <xref linkend="sec-cap-configure-prod"/>)
+  # file, scf-config-values.yaml
   CF_ADMIN_USER: <replaceable>admin</replaceable>
   CF_ADMIN_PASSWORD: <replaceable>password</replaceable>
   CF_DOMAIN: <replaceable>example.com</replaceable>
