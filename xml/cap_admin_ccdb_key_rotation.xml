@@ -31,8 +31,10 @@
  <procedure>
   <step>
    <para>
-    Create a file called <filename>new-key-values.yaml</filename> with content
-    of the form:
+    Add <literal>env.CC_DB_CURRENT_KEY_LABEL</literal> and
+    <literal>secrets.CC_DB_ENCRYPTION_KEYS</literal> to your
+    <filename>scf-config-values.yaml</filename>. Replace the example values with
+    your own.
    </para>
 <screen>env:
   CC_DB_CURRENT_KEY_LABEL: <replaceable>new_key</replaceable>
@@ -64,7 +66,6 @@ secrets:
   <step>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
---values <replaceable>new-key-values.yaml</replaceable> \
 --set "secrets.UAA_CA_CERT=${CA_CERT}" \
 --version &latestscfchart;
    </screen>
@@ -76,19 +77,15 @@ secrets:
    <substeps>
     <step>
      <para>
-      Change the encryption key in the config file. No output should be
-      produced:
-     </para>
-<screen>&prompt.user;kubectl exec --namespace scf api-group-0 -- bash -c 'sed --in-place "/db_encryption_key:/c\\db_encryption_key: \"$(echo $CC_DB_ENCRYPTION_KEYS | jq -r .new_key)\"" /var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml'
-     </screen>
-    </step>
-    <step>
-     <para>
       Run the rotation for the encryption keys. A series of JSON-formatted log
       entries describing the key rotation progress for various Cloud Controller
       models will be displayed:
      </para>
-<screen>&prompt.user;kubectl exec --namespace scf api-group-0 -- bash -c 'export PATH=/var/vcap/packages/ruby-2.4/bin:$PATH ; export CLOUD_CONTROLLER_NG_CONFIG=/var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml ; cd /var/vcap/packages/cloud_controller_ng/cloud_controller_ng ; /var/vcap/packages/ruby-2.4/bin/bundle exec rake rotate_cc_database_key:perform'
+<screen>&prompt.user;kubectl exec --namespace scf api-group-0 -- bash -c \
+'source /var/vcap/jobs/cloud_controller_ng/bin/ruby_version.sh; \
+export CLOUD_CONTROLLER_NG_CONFIG=/var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml; \
+cd /var/vcap/packages/cloud_controller_ng/cloud_controller_ng; \
+bundle exec rake rotate_cc_database_key:perform'
      </screen>
     </step>
     <step>
@@ -105,7 +102,7 @@ secrets:
     <literal>encryption_key_label</literal> is empty, the default generated key
     is still being used
    </para>
-<screen>&prompt.user;kubectl exec --stdin --tty mysql-0 --namespace scf -- /bin/bash -c 'mysql -p${MYSQL_ADMIN_PASSWORD}'
+<screen>&prompt.user;kubectl exec --stdin --tty mysql-0 --namespace scf -- /bin/bash -c 'mysql -p${MYSQL_ADMIN_PASSWORD} --socket /var/vcap/sys/run/pxc-mysql/mysqld.sock'
 MariaDB [(none)]> select name, encrypted_environment_variables, encryption_key_label from ccdb.apps;
 +--------+--------------------------------------------------------------------------------------------------------------+----------------------+
 | name   | encrypted_environment_variables                                                                              | encryption_key_label |
