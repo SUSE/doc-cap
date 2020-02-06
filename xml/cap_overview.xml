@@ -51,12 +51,12 @@
     <itemizedlist>
      <listitem>
       <para>
-       Add support for &caasp; V4.1 and &kube; 1.16+ environments
+       Added support for &caasp; V4.1 and &kube; 1.16+ environments
       </para>
      </listitem>
      <listitem>
       <para>
-       Show last operation and service broker info for service instances
+       Display last operation and service broker info for service instances
       </para>
      </listitem>
      <listitem>
@@ -73,7 +73,7 @@
     <itemizedlist>
      <listitem>
       <para>
-       Add support for &caasp; V4.1 and &kube; 1.16+ environments
+       Added support for &caasp; V4.1 and &kube; 1.16+ environments
       </para>
      </listitem>
      <listitem>
