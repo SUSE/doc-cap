@@ -21,8 +21,8 @@
 appVersion: 1.5.2
 description: A Helm chart for SUSE Cloud Foundry
 name: cf
-version: 2.20.1
-scfVersion: 2.20.1+cf12.17.0.0.g7267fe69
+version: 2.20.3
+scfVersion: 2.20.3
 
 ---
 ---
