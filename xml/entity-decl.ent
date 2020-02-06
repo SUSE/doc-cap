@@ -8,10 +8,10 @@
 <!ENTITY github.url     "https://github.com/SUSE/doc-cap">
 <!ENTITY cap            "Cloud Application Platform">
 <!ENTITY kernel_version "3.19">
-<!ENTITY latestuaachart "2.20.1">
-<!ENTITY latestscfchart "2.20.1">
-<!ENTITY lateststratoschart "2.6.1">
-<!ENTITY metrics-version "1.1.1">
+<!ENTITY latestuaachart "2.20.3">
+<!ENTITY latestscfchart "2.20.3">
+<!ENTITY lateststratoschart "2.7.0">
+<!ENTITY metrics-version "1.1.2">
 <!ENTITY minibroker-version "0.3.1">
 <!ENTITY chart-appversion "1.5.2">
 <!ENTITY aksnodeversion "1.11.9">
