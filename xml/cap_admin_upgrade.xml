@@ -132,7 +132,7 @@
   </para>
 
   <para>
-   For upgrades from &productname; 1.5 to 1.5.1, if
+   For upgrades from &productname; 1.5.1 to 1.5.2, if
    the <literal>mysql</literal> roles of <literal>uaa</literal> and
    <literal>scf</literal> are in high availability mode, it is recommended to
    first scale them to single availability. Performing an upgrade with these
@@ -217,7 +217,7 @@ sizing:
 <screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
 --values scf-config-values.yaml \
 --values <replaceable>ha-strict-false-single-mysql.yaml</replaceable> \
---version 2.18.0
+--version 2.19.1
 </screen>
        <para>
         Monitor progress using the <command>watch</command> command.
@@ -271,7 +271,7 @@ sizing:
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
 --values <replaceable>ha-strict-false-single-mysql.yaml</replaceable> \
---version 2.18.0
+--version 2.19.1
 </screen>
        <para>
         Monitor progress using the <command>watch</command> command.
@@ -322,7 +322,7 @@ sizing:
 <screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
 --values scf-config-values.yaml \
 --values <replaceable>ha-strict-false-single-mysql.yaml</replaceable> \
---version 2.19.1
+--version 2.20.3
 </screen>
      <para>
       Monitor progress using the <command>watch</command> command.
@@ -360,7 +360,7 @@ sizing:
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
 --values <replaceable>ha-strict-false-single-mysql.yaml</replaceable> \
---version 2.19.1 \
+--version 2.20.3 \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
      <para>
@@ -393,7 +393,7 @@ sizing:
 <screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
 --values scf-config-values.yaml \
 --values <replaceable>ha-strict-true.yaml</replaceable> \
---version 2.19.1
+--version 2.20.3
 </screen>
      <para>
       Monitor progress using the <command>watch</command> command.
@@ -431,7 +431,7 @@ sizing:
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
 --values <replaceable>ha-strict-true.yaml</replaceable> \
---version 2.19.1 \
+--version 2.20.3 \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
      </screen>
     </step>
@@ -483,7 +483,7 @@ sizing:
 <screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
 --values scf-config-values.yaml \
 --values <replaceable>uaa-sizing.yaml</replaceable> \
---version 2.18.0
+--version 2.19.1
 </screen>
        <para>
         Monitor progress using the <command>watch</command> command.
@@ -546,7 +546,7 @@ sizing:
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
 --values <replaceable>scf-sizing.yaml</replaceable> \
---version 2.18.0
+--version 2.19.1
 </screen>
        <para>
         Monitor progress using the <command>watch</command> command.
@@ -602,7 +602,7 @@ sizing:
 <screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
 --values scf-config-values.yaml \
 --values <replaceable>uaa-sizing.yaml</replaceable> \
---version 2.19.1
+--version 2.20.3
 </screen>
      <para>
       Monitor progress using the <command>watch</command> command.
@@ -633,7 +633,7 @@ sizing:
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
 --values <replaceable>scf-sizing.yaml</replaceable> \
---version 2.19.1 \
+--version 2.20.3 \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
      <para>
@@ -667,7 +667,7 @@ sizing:
 <screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
 --values scf-config-values.yaml \
 --values <replaceable>uaa-sizing.yaml</replaceable> \
---version 2.19.1
+--version 2.20.3
 </screen>
      <para>
       Monitor progress using the <command>watch</command> command.
@@ -705,7 +705,7 @@ sizing:
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
 --values <replaceable>scf-sizing.yaml</replaceable> \
---version 2.19.1 \
+--version 2.20.3 \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
      </screen>
     </step>
@@ -743,7 +743,7 @@ sizing:
      </para>
 <screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
 --values scf-config-values.yaml \
---version 2.19.1
+--version 2.20.3
 </screen>
      <para>
       Monitor progress using the <command>watch</command> command.
@@ -768,7 +768,7 @@ sizing:
      </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
---version 2.19.1 \
+--version 2.20.3 \
 --set "secrets.UAA_CA_CERT=${CA_CERT}"
 </screen>
      <para>
