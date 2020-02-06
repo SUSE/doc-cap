@@ -21,10 +21,9 @@
 appVersion: 1.5.2
 description: A Helm chart for SUSE Cloud Foundry
 name: cf
-version: 2.20.3-rc1
-scfVersion: 2.20.3-rc1+cf12.17.0.0.g7175b9de
+version: 2.20.3
+scfVersion: 2.20.3+cf12.17.0.0.g7175b9de
 
----
 ---
 ---
 kube:
@@ -312,6 +311,9 @@ secrets:
 
   # The password for the cluster administrator.
   CLUSTER_ADMIN_PASSWORD: ~
+
+  # CA trusted for making TLS connections to targeted database server.
+  CREDHUB_DB_CA_CERT: ~
 
   # PEM-encoded server certificate
   # This value uses a generated default.
@@ -826,7 +828,7 @@ env:
   CLUSTER_ADMIN_AUTHORITIES: "scim.write,scim.read,openid,cloud_controller.admin,clients.read,clients.write,doppler.firehose,routing.router_groups.read,routing.router_groups.write"
 
   # 'build' attribute in the /v2/info endpoint
-  CLUSTER_BUILD: "2.20.1"
+  CLUSTER_BUILD: "2.20.3"
 
   # 'description' attribute in the /v2/info endpoint
   CLUSTER_DESCRIPTION: "SUSE Cloud Foundry"
@@ -836,6 +838,15 @@ env:
 
   # 'version' attribute in the /v2/info endpoint
   CLUSTER_VERSION: "2"
+
+  # Enables hostname verification for TLS connections to targeted database
+  # server. This property is only respected when targeting a MariaDB database.
+  # Hostname verification cannot be disabled for TLS connections to postgres
+  # databases.
+  CREDHUB_DB_HOST_VALIDATION: "true"
+
+  # Requires only TLS connections to targeted database server.
+  CREDHUB_DB_REQUIRE_TLS: "true"
 
   # Database driver to use for the external database server used to manage the
   # CF-internal databases. Only used if DB_EXTERNAL_HOST is set. Currently only
@@ -851,14 +862,18 @@ env:
   # Only used if DB_EXTERNAL_HOST is set.
   DB_EXTERNAL_PORT: "3306"
 
-  # TLS configuration for the external database server to use for the
+  # SSL configuration for the external database server to use for the
   # CF-internal databases. Only used if DB_EXTERNAL_HOST is set. Valid values
-  # depend on which database driver is in use.
-  DB_EXTERNAL_SSL_MODE: ~
+  # are 'false', 'skip-verify', 'preferred', and 'true'.
+  DB_EXTERNAL_SSL_MODE: "true"
 
   # Administrator user name for an external database server; this is required to
   # create the necessary databases. Only used if DB_EXTERNAL_HOST is set.
   DB_EXTERNAL_USER: ~
+
+  # A suffix that has to be appended to every user name for the external
+  # database; usually '@host'.
+  DB_EXTERNAL_USER_HOST_SUFFIX: ""
 
   # The standard amount of disk (in MB) given to an application when not
   # overriden by the user via manifest, command line, etc.
@@ -1154,6 +1169,16 @@ env:
 
   # Concatenation of trusted CA certificates to be made available on the cell.
   TRUSTED_CERTS: ~
+
+  # Use TLS connection for UAA database.
+  # Valid options are:
+  # enabled (use TLS with full certificate validation),
+  # enabled_skip_hostname_validation (use TLS but skip validation of common and
+  # alt names in the host certificate),
+  # enabled_skip_all_validation (use TLS but do not validate anything about the
+  # host certificate),
+  # disabled (do not use TLS)
+  UAADB_TLS: "enabled"
 
   # The host name of the UAA server (root zone)
   UAA_HOST: ~

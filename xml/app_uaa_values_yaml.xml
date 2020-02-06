@@ -21,10 +21,9 @@
 appVersion: 1.5.2
 description: A Helm chart for SUSE UAA
 name: uaa
-version: 2.20.3-rc1
-scfVersion: 2.20.3-rc1+cf12.17.0.0.g7175b9de
+version: 2.20.3
+scfVersion: 2.20.3+cf12.17.0.0.g7175b9de
 
----
 ---
 ---
 kube:
@@ -194,6 +193,10 @@ env:
   # create the necessary databases. Only used if DB_EXTERNAL_HOST is set.
   DB_EXTERNAL_USER: ~
 
+  # A suffix that has to be appended to every user name for the external
+  # database; usually '@host'. Only used if DB_EXTERNAL_HOST is set.
+  DB_EXTERNAL_USER_HOST_SUFFIX: ""
+
   # Base domain name of the UAA endpoint; `uaa.${DOMAIN}` must be correctly
   # configured to point to this UAA instance.
   DOMAIN: ~
@@ -237,6 +240,16 @@ env:
 
   # SMTP server username, for password reset emails etc.
   SMTP_USER: ~
+
+  # Use TLS connection for UAA database.
+  # Valid options are:
+  # enabled (use TLS with full certificate validation),
+  # enabled_skip_hostname_validation (use TLS but skip validation of common and
+  # alt names in the host certificate),
+  # enabled_skip_all_validation (use TLS but do not validate anything about the
+  # host certificate),
+  # disabled (do not use TLS)
+  UAADB_TLS: "enabled"
 
   # The TCP port to report as the public port for the UAA server (root zone).
   UAA_PUBLIC_PORT: "2793"
@@ -392,6 +405,9 @@ sizing:
   #   the role until a database connection is ready. Currently it only checks
   #   that a response can be obtained from the server, and not that it responds
   #   intelligently.
+  #
+  #
+  # Also: bpm
   uaa:
     # Node affinity rules can be specified here
     affinity: {}
