@@ -874,23 +874,13 @@ done
      <substeps>
       <step>
        <para>
-        Change the encryption key in the configuration file. In the example
-        command, replace <replaceable>migrated_key</replaceable> with the key
-        you set earlier:
-       </para>
-<screen>&prompt.user;kubectl exec --namespace scf api-group-0 -- bash -c \
-'sed --in-place "/db_encryption_key:/c\\db_encryption_key: \"$(echo $CC_DB_ENCRYPTION_KEYS | jq -r .<replaceable>migrated_key</replaceable>)\"" /var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml'
-</screen>
-      </step>
-      <step>
-       <para>
         Run the rotation for the encryption keys:
        </para>
 <screen>&prompt.user;kubectl exec --namespace scf api-group-0 -- bash -c \
 "source /var/vcap/jobs/cloud_controller_ng/bin/ruby_version.sh; \
 export CLOUD_CONTROLLER_NG_CONFIG=/var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml; \
 cd /var/vcap/packages/cloud_controller_ng/cloud_controller_ng; \
-bundle exec rake rotate_cc_database_key:perform
+bundle exec rake rotate_cc_database_key:perform"
 </screen>
       </step>
       <step>
