@@ -131,6 +131,17 @@
    <xref linkend="sec-cap-skipped-release"/>.
   </para>
 
+  <important>
+   <title>Upgrading &productname; When Using Minibroker</title>
+   <para>
+    If you are upgrading &productname; to 1.5.2 and already use Minibroker to
+    connect to external databases and are using &kube; 1.16 or higher, which is
+    the case with &caasp; 4.1, you will need to update the database version to
+    a compatible version and migrate your data over via the database’s suggested
+    mechanism. This may require a database export/import.
+   </para>
+  </important>
+
   <para>
    For upgrades from &productname; 1.5.1 to 1.5.2, if
    the <literal>mysql</literal> roles of <literal>uaa</literal> and
