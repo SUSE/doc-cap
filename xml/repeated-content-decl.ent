@@ -213,6 +213,16 @@ Before you start deploying &productname;, review the following documents:
       <entry>&latestscfchart;</entry>
       <entry>&lateststratoschart;</entry>
       <entry>1.1.1</entry>
+      <!-- cf-deployment 12.17: 2.144.0, cf api result: -->
+      <entry>2.144.0</entry>
+      <entry>6.49.0</entry>
+      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.49.0"/></entry>
+     </row>
+     <row>
+      <entry>1.5.1</entry>
+      <entry>2.19.1</entry>
+      <entry>2.6.0</entry>
+      <entry>1.1.0</entry>
       <!-- cf-deployment 9.5: 2.138.0, cf api result: 2.138.0 -->
       <entry>2.138.0</entry>
       <entry>6.46.1</entry>
