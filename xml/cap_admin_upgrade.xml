@@ -142,6 +142,14 @@
    </para>
   </important>
 
+  <warning>
+   <title>Upgrading from 1.5.1 When Using External Database</title>
+   <para>
+    If you are upgrading &productname; to 1.5.2 and use an external database in
+    1.5.1, please contact support for further instructions.
+   </para>
+  </warning>
+
   <para>
    For upgrades from &productname; 1.5.1 to 1.5.2, if
    the <literal>mysql</literal> roles of <literal>uaa</literal> and
