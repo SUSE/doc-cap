@@ -174,11 +174,21 @@
     </listitem>
     <listitem>
      <para>
-      An external &mysql; or &postgresql; installation with account credentials that
-      allow creating and deleting databases and users.
+      An external &mysql; or &postgresql; installation with account credentials
+      that allow creating and deleting databases and users.
      </para>
     </listitem>
    </itemizedlist>
+
+   <warning>
+    <title>Azure Databases and <literal>cf-usb</literal></title>
+    <para>
+     The <literal>cf-usb</literal> service broker is not compatible with an
+     external database hosted on Azure. We recommend using the service
+     brokers that are provided by Microsoft Azure for OSBAPI connections
+     to their hosted database services.
+    </para>
+   </warning>
 
    <para>
     For testing purposes you may create an insecure security group:
