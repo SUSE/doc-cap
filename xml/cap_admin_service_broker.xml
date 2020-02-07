@@ -174,11 +174,21 @@
     </listitem>
     <listitem>
      <para>
-      An external &mysql; or &postgresql; installation with account credentials that
-      allow creating and deleting databases and users.
+      An external &mysql; or &postgresql; installation with account credentials
+      that allow creating and deleting databases and users.
      </para>
     </listitem>
    </itemizedlist>
+
+   <warning>
+    <title>Azure Databases and <literal>cf-usb</literal></title>
+    <para>
+     The <literal>cf-usb</literal> service broker is not compatible with an
+     external database hosted on Azure. We recommend using the service
+     brokers that are provided by Microsoft Azure for OSBAPI connections
+     to their hosted database services.
+    </para>
+   </warning>
 
    <para>
     For testing purposes you may create an insecure security group:
@@ -796,6 +806,16 @@ mysql-service  1        Mon May 21 11:40:11 2018  DEPLOYED  cf-usb-sidecar-mysql
      Other options can be set too, but vary by service type.
     </para>
    </important>
+  </sect2>
+  <sect2 xml:id="sec-cap-minibroker-upgrades">
+   <title>Upgrading &productname; When Using Minibroker</title>                 
+   <para>                                                                       
+    If you are upgrading &productname; to 1.5.2 and already use Minibroker to   
+    connect to external databases and are using &kube; 1.16 or higher, which is 
+    the case with &caasp; 4.1, you will need to update the database version to  
+    a compatible version and migrate your data over via the database’s suggested
+    mechanism. This may require a database export/import.                       
+   </para>                                                                      
   </sect2>
  </sect1>
 </chapter>
