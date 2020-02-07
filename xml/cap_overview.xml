@@ -51,12 +51,18 @@
     <itemizedlist>
      <listitem>
       <para>
-       Added support for &caasp; V4.1 and &kube; 1.16+ environments
+       Improvements to the &kube; Dashboard integration (improved configuration
+       and reliability)
       </para>
      </listitem>
      <listitem>
       <para>
-       Display last operation and service broker info for service instances
+       Improved support for synchronous creation of service instances
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       Branding updated to "&suse; Stratos Console"
       </para>
      </listitem>
      <listitem>
