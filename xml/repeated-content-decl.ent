@@ -1368,7 +1368,7 @@ agent.log</screen>
   <literal>secret-generator</literal> or a self-signed certificate.
  </para>
  <para>
-If you need to set <literal>UAA_CA_CERT</literal>:<command>--set "secrets.UAA_CA_CERT=${CA_CERT}"</command>
+If you need to set <literal>UAA_CA_CERT</literal>:
  </para>
  <procedure>
   <step>
@@ -1384,7 +1384,8 @@ If you need to set <literal>UAA_CA_CERT</literal>:<command>--set "secrets.UAA_CA
   </step>
   <step>
    <para>
-    Then pass it in during your <command>helm install</command> or <command>helm upgrade</command> command using <command>--set "secrets.UAA_CA_CERT=${CA_CERT}"</command>
+    Then pass <command>--set "secrets.UAA_CA_CERT=${CA_CERT}"</command> as part
+    of your <command>helm</command> command.
    </para>
   </step>
  </procedure>

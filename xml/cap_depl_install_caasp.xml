@@ -19,7 +19,6 @@
   &readmefirst;
  </important>
 
-<!-- NEW TODO BEGIN -->
  <para>
   &productname; supports deployment on &caasp;. &caasp; is an enterprise-class
   container management solution that enables IT and DevOps professionals to more
@@ -338,26 +337,18 @@ suse       https://kubernetes-charts.suse.com/
   </sect2>
 
   <sect2 xml:id="sec-cap-caasp-deploy-scf">                                       
-   <title>Deploy <literal>scf</literal></title>                                 
-   <para>                                                                       
-    Before deploying <literal>scf</literal>, ensure the DNS records for the     
-    <literal>uaa</literal> domains have been set up as specified in the         
-    previous section. Next, pass your <literal>uaa</literal> secret and         
-    certificate to <literal>scf</literal>, then use &helm; to deploy            
-    <literal>scf</literal>:                                                     
-   </para>                                                                      
-<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \                
---output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
-                                                                                
-&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \            
---output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"           
-                                                                                
-&prompt.user;helm install suse/cf \                                             
---name <replaceable>susecf-scf</replaceable> \                                  
---namespace scf \                                                               
---values scf-config-values.yaml \                                               
---set "secrets.UAA_CA_CERT=${CA_CERT}"                                          
-</screen>                                                                       
+   <title>Deploy <literal>scf</literal></title>
+   <para>
+    Use &helm; to deploy <literal>scf</literal>:
+   </para>
+
+   &uaa-ca-cert-note;
+
+<screen>&prompt.user;helm install suse/cf \
+--name <replaceable>susecf-scf</replaceable> \
+--namespace scf \
+--values scf-config-values.yaml
+</screen>
    &scf-deploy-complete; 
 
    <para>
@@ -368,7 +359,6 @@ suse       https://kubernetes-charts.suse.com/
   </sect2>
  </sect1>
 
-<!-- NEW TODO END -->
  <sect1 xml:id="sec-cap-caasp-add-capacity">
   <title>Expanding Capacity of a &cap; Deployment on &susecaaspreg;</title>
 
@@ -410,22 +400,13 @@ suse       https://kubernetes-charts.suse.com/
    </step>
    <step>
     <para>
-     Pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>.
-    </para>
-<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
---output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
-
-&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
---output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-</screen>
-   </step>
-   <step>
-    <para>
      Perform a <command>helm upgrade</command> to apply the change.
     </para>
+
+    &uaa-ca-cert-note;
+
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
---set "secrets.UAA_CA_CERT=${CA_CERT}" \
 --version &latestscfchart;
 </screen>
    </step>
