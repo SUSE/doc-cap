@@ -46,17 +46,23 @@
    </listitem>
    <listitem>
     <para>
-     The Stratos UI has been updated to version 2.7.0:
+     Stratos Console has been updated to version 2.7.0:
     </para>
     <itemizedlist>
      <listitem>
       <para>
-       Added support for &caasp; V4.1 and &kube; 1.16+ environments
+       Improvements to the &kube; Dashboard integration (improved configuration
+       and reliability)
       </para>
      </listitem>
      <listitem>
       <para>
-       Display last operation and service broker info for service instances
+       Improved support for synchronous creation of service instances
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       Branding updated to "&suse; Stratos Console"
       </para>
      </listitem>
      <listitem>
@@ -68,7 +74,7 @@
    </listitem>
    <listitem>
     <para>
-     The Stratos Metrics has been updated to version 1.1.2:
+     Stratos Metrics has been updated to version 1.1.2:
     </para>
     <itemizedlist>
      <listitem>
