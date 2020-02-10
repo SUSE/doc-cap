@@ -239,18 +239,14 @@ sizing:
     When the <literal>uaa</literal> deployment completes, deploy SCF with these
     commands:
    </para>
-<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
---output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
-&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
---output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+   &uaa-ca-cert-note;
 
-&prompt.user;helm install suse/cf \
+<screen>&prompt.user;helm install suse/cf \
 --name <replaceable>susecf-scf</replaceable> \
 --namespace scf \
 --values scf-config-values.yaml \
---values scf-sizing.yaml \
---set "secrets.UAA_CA_CERT=${CA_CERT}"
+--values scf-sizing.yaml
 </screen>
   </sect2>
  </sect1>

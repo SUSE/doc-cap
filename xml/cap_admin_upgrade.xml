@@ -350,18 +350,6 @@ sizing:
     </step>
     <step>
      <para>
-      Extract the <literal>uaa</literal> secret and certificate for
-      <literal>scf</literal> to use.
-     </para>
-<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
---output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
-
-&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
---output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-</screen>
-    </step>
-    <step>
-     <para>
       Upgrade <literal>scf</literal>.
      </para>
      <para>
@@ -376,11 +364,13 @@ sizing:
      <para>
       Perform the upgrade.
      </para>
+
+     &uaa-ca-cert-note;
+
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
 --values <replaceable>ha-strict-false-single-mysql.yaml</replaceable> \
---version 2.20.3 \
---set "secrets.UAA_CA_CERT=${CA_CERT}"
+--version 2.20.3
 </screen>
      <para>
       Monitor progress using the <command>watch</command> command.
@@ -421,18 +411,6 @@ sizing:
     </step>
     <step>
      <para>
-      Extract the <literal>uaa</literal> secret and certificate for
-      <literal>scf</literal> to use.
-     </para>
-<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
---output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
-
-&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
---output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-</screen>
-    </step>
-    <step>
-     <para>
       Scale the entire <literal>scf</literal> deployment, including
       the <literal>mysql</literal> role, back to the default
       high availability mode.
@@ -447,11 +425,13 @@ sizing:
       <literal>config.HA=true</literal> is set in your existing
       <filename>scf-config-values.yaml</filename> file.
      </para>
+
+     &uaa-ca-cert-note;
+
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
 --values <replaceable>ha-strict-true.yaml</replaceable> \
---version 2.20.3 \
---set "secrets.UAA_CA_CERT=${CA_CERT}"
+--version 2.20.3
      </screen>
     </step>
     <step>
@@ -630,18 +610,6 @@ sizing:
     </step>
     <step>
      <para>
-      Extract the <literal>uaa</literal> secret and certificate for
-      <literal>scf</literal> to use.
-     </para>
-<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
---output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
-
-&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
---output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-</screen>
-    </step>
-    <step>
-     <para>
       Upgrade <literal>scf</literal>.
      </para>
      <para>
@@ -649,11 +617,13 @@ sizing:
       <filename>scf-sizing.yaml</filename> in this example, where the
       <literal>mysql</literal> role has a count of 1.
      </para>
+
+     &uaa-ca-cert-note;
+
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
 --values <replaceable>scf-sizing.yaml</replaceable> \
---version 2.20.3 \
---set "secrets.UAA_CA_CERT=${CA_CERT}"
+--version 2.20.3
 </screen>
      <para>
       Monitor progress using the <command>watch</command> command.
@@ -695,18 +665,6 @@ sizing:
     </step>
     <step>
      <para>
-      Extract the <literal>uaa</literal> secret and certificate for
-      <literal>scf</literal> to use.
-     </para>
-<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
---output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
-
-&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
---output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-</screen>
-    </step>
-    <step>
-     <para>
       Scale the entire <literal>scf</literal> deployment, including
       the <literal>mysql</literal> role, back to high availability mode. This
       example assumes the <literal>mysql.count</literal> was previously set to
@@ -721,11 +679,13 @@ sizing:
       <filename>scf-sizing.yaml</filename> in this example, so that the 
       <literal>mysql</literal> role has a count of 3.
      </para>
+
+     &uaa-ca-cert-note;
+
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
 --values <replaceable>scf-sizing.yaml</replaceable> \
---version 2.20.3 \
---set "secrets.UAA_CA_CERT=${CA_CERT}"
+--version 2.20.3
      </screen>
     </step>
     <step>
@@ -771,24 +731,14 @@ sizing:
     </step>
     <step>
      <para>
-      Extract the <literal>uaa</literal> secret and certificate for
-      <literal>scf</literal> to use.
-     </para>
-<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
---output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
-
-&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
---output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-</screen>
-    </step>
-    <step>
-     <para>
       Upgrade <literal>scf</literal>.
      </para>
+
+     &uaa-ca-cert-note;
+
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
---version 2.20.3 \
---set "secrets.UAA_CA_CERT=${CA_CERT}"
+--version 2.20.3
 </screen>
      <para>
       Monitor progress using the <command>watch</command> command.

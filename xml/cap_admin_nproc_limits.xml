@@ -98,24 +98,15 @@
     </step>
     <step>
      <para>
-      Pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>:
-     </para>
-<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
---output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
-
-CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
---output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-</screen>
-    </step>
-    <step>
-     <para>
       Deploy <literal>scf</literal>:
      </para>
+
+     &uaa-ca-cert-note;
+
 <screen>&prompt.user;helm install suse/cf \
 --name <replaceable>susecf-scf</replaceable> \
 --namespace scf \
---values scf-config-values.yaml \
---set "secrets.UAA_CA_CERT=${CA_CERT}"
+--values scf-config-values.yaml
 </screen>
     </step>
     <step>
@@ -162,21 +153,13 @@ CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
    <procedure>
     <step>
      <para>
-      Pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>:
-     </para>
-<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
---output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
-
-CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
---output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-</screen>
-    </step>
-    <step>
-     <para>
       Use <command>helm upgrade</command> to apply the change:
      </para>
+
+     &uaa-ca-cert-note;
+
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
---values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}" \
+--values scf-config-values.yaml \
 --version &latestscfchart;
 </screen>
     </step>

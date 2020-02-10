@@ -52,29 +52,20 @@
 </screen>
 
   <para>
-   If <literal>uaa</literal> is deployed, pass your <literal>uaa</literal>
-   secret and certificate to <literal>scf</literal>. Otherwise deploy
-   <literal>uaa</literal> first (See
-   <xref linkend="sec-cap-caasp-deploy-uaa"/>), then proceed with this step:
+   Ensure <literal>uaa</literal> has been deployed, then proceed with this step.
   </para>
-
-<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
---output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
-
-&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
---output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-</screen>
 
   <para>
    If this is an initial deployment, use <command>helm install</command> to
    deploy <literal>scf</literal>:
   </para>
 
+  &uaa-ca-cert-note;
+
 <screen>&prompt.user;helm install suse/cf \
 --name susecf-scf \
 --namespace scf \
---values scf-config-values.yaml \
---set "secrets.UAA_CA_CERT=${CA_CERT}"
+--values scf-config-values.yaml
 </screen>
 
   <para>
@@ -82,8 +73,10 @@
    apply the change:
   </para>
 
+  &uaa-ca-cert-note;
+
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
---values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}" \
+--values scf-config-values.yaml \
 --version &latestscfchart;
 </screen>
 

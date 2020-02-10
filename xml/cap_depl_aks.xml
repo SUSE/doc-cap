@@ -613,21 +613,15 @@ uaa-uaa-public    LoadBalancer   10.0.67.56     40.85.188.67   2793:32034/TCP
    <para>
     Before deploying <literal>scf</literal>, ensure the DNS records for the
     <literal>uaa</literal> domains have been set up as specified in the
-    previous section. Next, pass your <literal>uaa</literal> secret and
-    certificate to <literal>scf</literal>, then use &helm; to deploy
-    <literal>scf</literal>:
+    previous section. Next, use &helm; to deploy <literal>scf</literal>:
    </para>
-<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
---output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
 
-&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
---output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+   &uaa-ca-cert-note;
 
-&prompt.user;helm install suse/cf \
+<screen>&prompt.user;helm install suse/cf \
 --name <replaceable>susecf-scf</replaceable> \
 --namespace scf \
---values scf-config-values.yaml \
---set "secrets.UAA_CA_CERT=${CA_CERT}"
+--values scf-config-values.yaml
 </screen>
    &scf-deploy-complete;
    <para>
@@ -958,22 +952,13 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
    </step>
    <step>
     <para>
-     Pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>.
-    </para>
-<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
---output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
-
-&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
---output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-</screen>
-   </step>
-   <step>
-    <para>
      Perform a <command>helm upgrade</command> to apply the change.
     </para>
+
+    &uaa-ca-cert-note;
+
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
---set "secrets.UAA_CA_CERT=${CA_CERT}" \
 --version &latestscfchart;
 </screen>
    </step>
