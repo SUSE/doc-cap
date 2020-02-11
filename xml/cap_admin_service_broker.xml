@@ -86,6 +86,14 @@
    <link xlink:href="https://github.com/SUSE/cf-usb"/>.
   </para>
   
+  <important>
+   <title>&kube; Compatability</title>
+   <para>
+    <literal>cf-usb</literal> is currently compatible with &kube; version 1.15
+    and earlier. Usage with &kube; version 1.16 and beyond is not supported.
+   </para>
+  </important>
+
   <sect2 xml:id="sec-cap-cf-usb-enable-disable">
    <title>Enabling and Disabling Service Brokers</title>
 
