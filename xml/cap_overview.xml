@@ -595,7 +595,7 @@
      <term>eirini-persi</term>
      <listitem>
       <para>
-       Enables persistent storage for applications when using the Diego scheduler.
+       Enables persistent storage for applications when using the Eirini scheduler.
       </para>
      </listitem>
     </varlistentry>
@@ -603,7 +603,7 @@
      <term>eirini-ssh</term>
      <listitem>
       <para>
-       Provides SSH access to user applications when using the Diego scheduler.
+       Provides SSH access to user applications when using the Eirini scheduler.
       </para>
      </listitem>
     </varlistentry>
@@ -646,7 +646,8 @@
      <term>nfs-broker (privileged)</term>
      <listitem>
       <para>
-       A service broker for enabling NFS-based application persistent storage.
+       A service broker for enabling NFS-based application persistent storage
+       when using the Diego scheduler.
       </para>
      </listitem>
     </varlistentry>
