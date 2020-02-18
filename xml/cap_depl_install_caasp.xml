@@ -221,7 +221,7 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create --filename -
  </sect1>
 
  <sect1 xml:id="sec-cap-caasp-config">
-  <title>&productname; Deployment Configuration</title>
+  <title>Deployment Configuration</title>
 
   <para>
    &productname; is configured using &helm; values (see
@@ -237,6 +237,9 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create --filename -
    your &caasp; cluster (see
    <link xlink:href="https://documentation.suse.com/suse-caasp/4.1/single-html/caasp-deployment/#loadbalancer"/>). 
   </para>
+
+  &supported-domains;
+
 <screen>
 ### example deployment configuration file
 ### scf-config-values.yaml
