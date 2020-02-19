@@ -255,16 +255,15 @@
   <title>Minimum Requirements</title>
 
   <para>
-   This guide details the steps for deploying &scf; on &caasp;, and on
-   supported &kube; environments such as &aks-full;, &gke-full;, and &eks-full;.
+   This guide details the steps for deploying &scf; on
+   supported &kube; environments, namely &caasp;, &aks-full;, &gke-full;, and &eks-full;.
   </para>
 
   <important>
    <title>Required Knowledge</title>
    <para>
     Installing and administering &productname; requires knowledge of Linux,
-    &docker;, &kube;, and your &kube; platform (for example &caasp;,
-    &aks-full;, &eks-full;, and &gke-full;). You must plan resource allocation
+    &docker;, &kube;, and your &kube; platform. You must plan resource allocation
     and network architecture by taking into account the requirements of your
     &kube; platform in addition to &scf; requirements. &scf; is a discrete
     component in your cloud stack, but it still requires knowledge of
