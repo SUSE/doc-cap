@@ -111,19 +111,6 @@ env:
     </para>
 <screen>&prompt.user;helm install stable/metrics-server --name=metrics-server --set args[0]="--kubelet-preferred-address-types=InternalIP" --set args[1]="--kubelet-insecure-tls"</screen>
    </step>
-   <step>
-    <para>
-     As of &scf; 2.18.0, <command>cf push</command> with Eirini does not work on
-     &eks-full; and &gke-full; by default. To get <command>cf push</command> to work with
-     &aks; and &gke;, you need to apply
-     a workaround of deleting a webhook by doing the following:
-    </para>
-<screen>&prompt.user;kubectl delete mutatingwebhookconfigurations eirini-x-mutating-hook-eirini</screen>
-    <para>
-     Deleting the webhook means that the <literal>eirini-persi</literal> service
-     would not be available. Note that this workaround is not needed on &aks-full;.
-    </para>
-   </step>
   </procedure>
  </sect1>
 </chapter>
