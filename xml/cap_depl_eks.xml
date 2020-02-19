@@ -293,6 +293,8 @@ allowVolumeExpansion: true
    for your configuration.
   </para>
 
+  &supported-domains;
+
 <screen>### example deployment configuration file
 ### scf-config-values.yaml
 
