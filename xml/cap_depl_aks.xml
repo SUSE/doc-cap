@@ -445,16 +445,16 @@ allowVolumeExpansion: true
   </para>
   <para>
    The following file, <filename>scf-config-values.yaml</filename>, provides a
-   complete example deployment configuration. Enter the fully-qualified domain
-   name (FQDN) that you intend to use for <literal>DOMAIN</literal> and
-   <literal>UAA_HOST</literal>.
+   complete example deployment configuration.
   </para>
+
+  &supported-domains;
+
 <screen>
 ### example deployment configuration file
 ### scf-config-values.yaml
 
 env:
-  # the FQDN of your domain
   DOMAIN: <replaceable>example.com</replaceable>
   # the UAA prefix is required
   UAA_HOST: uaa.<replaceable>example.com</replaceable>

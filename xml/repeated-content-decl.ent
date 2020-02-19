@@ -112,10 +112,22 @@ Before you start deploying &productname;, review the following documents:
      </varlistentry>
      </variablelist>'>
 
+<!--ENTITY supported-domains................................................-->
+<!ENTITY supported-domains
+'<warning xmlns="http://docbook.org/ns/docbook">
+  <title>Supported Domains</title>
+  <para>
+   When selecting a domain, &productname; expects <literal>DOMAIN</literal> to
+   be either a subdomain or a root domain. Setting <literal>DOMAIN</literal> to
+   a top-level domain, such <literal>suse</literal>, is not supported.
+  </para>
+ </warning>'>
+
 <!--ENTITY dns-tables.......................................................-->
 
 <!ENTITY dns-tables
-'<informaltable xmlns="http://docbook.org/ns/docbook">
+'&supported-domains;
+ <informaltable xmlns="http://docbook.org/ns/docbook">
    <tgroup cols="2">
     <thead>
      <row>
