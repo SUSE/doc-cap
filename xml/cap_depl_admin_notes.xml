@@ -27,6 +27,15 @@
  <sect1>
   <title>Important Changes</title>
   &stack-deprecation-note;
+
+  <warning>
+   <title>Doppler Port Change</title>
+   <para>
+    As of &productname; 1.4, Doppler has been changed to use port 443 to allow
+    for SSL communication and passthrough to Ingress controller. Firewall rules
+    should be updated accordingly.
+   </para>
+  </warning>
  </sect1>
  <sect1>
   <title>Usage of &helm; Chart Fields in &cap;</title>
