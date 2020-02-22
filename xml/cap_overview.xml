@@ -751,114 +751,339 @@
     This table describes how these services operate.
    </para>
    <informaltable>
-    <tgroup cols="11">
+    <tgroup cols="5">
      <thead>
       <row>
-       <entry>Interface</entry>
-       <entry>Network Name</entry>
-       <entry>Network Protocol</entry>
-       <entry>Requestor</entry>
-       <entry>Request</entry>
-       <entry>Request Credentials</entry>
-       <entry>Request Authorization</entry>
-       <entry>Listener</entry>
-       <entry>Response</entry>
-       <entry>Response Credentials</entry>
+       <entry>Interface, Network Name, Network Protocol</entry>
+       <entry>Requestor &amp; Request</entry>
+       <entry>Request Credentials &amp; Request Authorization</entry>
+       <entry>Listener, Response &amp; Response Credentials</entry>
        <entry>Description of Operation</entry>
       </row>
      </thead>
      <tbody>
       <row>
-       <entry>1</entry>
-       <entry>External</entry>
-       <entry>HTTPS</entry>
-       <entry>Helm Client</entry>
-       <entry>Deploy &cap;</entry>
-       <entry>OAuth2 Bearer token</entry>
-       <entry>Deployment of &cap; Services on &kube;</entry>
-       <entry>&helm;/&kube; API</entry>
-       <entry>Operation ack and handle</entry>
-       <entry>TLS certificate on external endpoint</entry>
-       <entry>Operator deploys &cap; on &kube;</entry>
-      </row>
-      <row>
-       <entry>2</entry>
-       <entry>External</entry>
-       <entry>HTTPS</entry>
-       <entry>Internal &kube; components</entry>
-       <entry>Download &docker; Images</entry>
-       <entry>Refer to registry.suse.com</entry>
-       <entry>Refer to registry.suse.com</entry>
-       <entry>registry.suse.com</entry>
-       <entry>&docker; images</entry>
-       <entry>None</entry>
-       <entry>&docker; images that make up &cap; are downloaded</entry>
-      </row>
-      <row>
-       <entry>3</entry>
-       <entry>Tenant</entry>
-       <entry>HTTPS</entry>
-       <entry>&cap; components</entry>
-       <entry>Get tokens</entry>
-       <entry>OAuth2 client secret</entry>
-       <entry>Varies, based on configured OAuth2 client scopes</entry>
-       <entry><literal>uaa</literal>
+       <entry>
+        <para>
+	 1
+	</para>
+	<para>
+         External (HTTPS)
+	</para>
        </entry>
-       <entry>An OAuth2 refresh token used to interact with other service</entry>
-       <entry>TLS certificate</entry>
-       <entry>&scf; components ask <literal>uaa</literal> for tokens so they can talk to each other</entry>
+       <entry>
+        <para>
+ 	 <emphasis role="bold">Requestor</emphasis>: &helm; Client
+	</para>
+	<para>
+
+	</para>
+	<para>
+         <emphasis role="bold">Request</emphasis>: Deploy &cap;
+	</para>
+       </entry>
+       <entry>
+        <para>
+ 	 <emphasis role="bold">Request Credentials</emphasis>: OAuth2 Bearer
+	 token
+        </para>
+	<para>
+	 <emphasis role="bold">Request Authorization</emphasis>: Deployment of
+	 &cap; Services on &kube;
+	</para>
+       </entry>
+       <entry>
+	<para>
+	 <emphasis role="bold">Listener</emphasis>: &helm;/&kube; API
+	</para>	
+	<para>
+         <emphasis role="bold">Response</emphasis>: Operation ack and handle
+	</para>
+	<para>
+         <emphasis role="bold">Response Credentials</emphasis>: TLS certificate
+	 on external endpoint
+	</para>
+       </entry>
+       <entry>
+        <para>
+	 Operator deploys &cap; on &kube;
+	</para>
+       </entry>
       </row>
       <row>
-       <entry>4</entry>
-       <entry>External</entry>
-       <entry>HTTPS</entry>
-       <entry>&scf; clients</entry>
-       <entry>&scf; API Requests</entry>
-       <entry>OAuth2 Bearer token</entry>
-       <entry>&scf; application management</entry>
-       <entry>&cap; components</entry>
-       <entry>JSON object and HTTP Status code</entry>
-       <entry>TLS certificate on external endpoint</entry>
-       <entry>&cap; Clients interact with the &scf; API (for example users deploying apps)</entry>
+       <entry>
+	<para>
+	 2
+        </para>
+	<para>
+         External (HTTPS)
+	</para>	
+       </entry>
+       <entry>
+        <para>
+	 <emphasis role="bold">Requestor</emphasis>: Internal &kube; components
+	</para>
+	<para>
+         <emphasis role="bold">Request</emphasis>: Download &docker; Images
+	</para>
+       </entry>
+       <entry>
+        <para>
+ 	 <emphasis role="bold">Request Credentials</emphasis>: Refer to
+	 registry.suse.com
+	</para>
+	<para>
+ 	 <emphasis role="bold">Request Authorization</emphasis>: Refer to
+	 registry.suse.com
+	</para>
+       </entry>
+       <entry>
+        <para>
+ 	 <emphasis role="bold">Listener</emphasis>: registry.suse.com
+	</para>
+	<para>
+	 <emphasis role="bold">Response</emphasis>: &docker; images
+	</para>
+	<para>
+	 <emphasis role="bold">Response Credentials</emphasis>: None
+	</para>
+       </entry>
+       <entry>
+	<para>
+ 	 &docker; images that make up &cap; are downloaded
+	</para>
+       </entry>
       </row>
       <row>
-       <entry>5</entry>
-       <entry>External</entry>
-       <entry>WSS</entry>
-       <entry>&scf; clients</entry>
-       <entry>Log streaming</entry>
-       <entry>OAuth2 Bearer token</entry>
-       <entry>&scf; application management</entry>
-       <entry>&cap; components</entry>
-       <entry>A stream of &scf; logs</entry>
-       <entry>TLS certificate on external endpoint</entry>
-       <entry>&scf; clients ask for logs (for example user looking at application logs or administrator viewing system logs)</entry>
+       <entry>
+        <para>
+         3
+	</para>
+	<para>
+         Tenant (HTTPS)
+	</para>
+       </entry>
+       <entry>
+	<para>
+	 <emphasis role="bold">Requestor</emphasis>: &cap; components
+	</para>
+	<para>
+	 <emphasis role="bold">Request</emphasis>: Get tokens
+	</para>
+       </entry>
+       <entry>
+        <para>
+ 	 <emphasis role="bold">Request Credentials</emphasis>: OAuth2 client
+	 secret
+	</para>
+        <para>
+	 <emphasis role="bold">Request Authorization</emphasis>: Varies, based
+	 on configured OAuth2 client scopes
+	</para>
+       </entry>
+       <entry>
+	<para>
+         <emphasis role="bold">Listener</emphasis>: <literal>uaa</literal>
+	</para>
+        <para>
+	 <emphasis role="bold">Response</emphasis>: An OAuth2 refresh token used
+	 to interact with other service
+	</para>
+	<para>
+         <emphasis role="bold">Response Credentials</emphasis>: TLS certificate
+	</para>
+       </entry>
+       <entry>
+	<para>
+	 &scf; components ask <literal>uaa</literal> for tokens so they can talk
+	 to each other
+	</para>
+       </entry>
       </row>
       <row>
-       <entry>6</entry>
-       <entry>External</entry>
-       <entry>SSH</entry>
-       <entry>&scf; clients, SSH clients</entry>
-       <entry>SSH Access to Application</entry>
-       <entry>OAuth2 bearer token</entry>
-       <entry>&scf; application management</entry>
-       <entry>&cap; components</entry>
-       <entry>A duplex connection is created allowing the user to interact with a shell</entry>
-       <entry>RSA SSH Key on external endpoint</entry>
-       <entry>&scf; Clients open an SSH connection to an application's container (for example users debugging their applications)</entry>
+       <entry>
+        <para>
+         4
+	</para>
+	<para>
+         External (HTTPS)
+	</para>
+       </entry>
+       <entry>
+        <para>
+         <emphasis role="bold">Requestor</emphasis>: &scf; clients
+	</para>
+        <para>
+         <emphasis role="bold">Request</emphasis>: &scf; API Requests
+	</para>
+       </entry>
+       <entry>
+        <para>                                                                  
+	 <emphasis role="bold">Request Credentials</emphasis>: OAuth2 Bearer
+	 token
+        </para>
+        <para>                                                                  
+	 <emphasis role="bold">Request Authorization</emphasis>: &scf;
+	 application management             
+        </para>
+       </entry>
+       <entry>
+	<para>
+         <emphasis role="bold">Listener</emphasis>: &cap; components
+	</para>
+        <para>
+	 <emphasis role="bold">Response</emphasis>: JSON object and HTTP Status
+	 code
+	</para>
+	<para>
+	 <emphasis role="bold">Response Credentials</emphasis>: TLS certificate
+	 on external endpoint
+	</para>
+       </entry>
+       <entry>
+        <para>
+	 &cap; Clients interact with the &scf; API (for example users deploying
+	 apps)
+        </para>
+       </entry>
       </row>
       <row>
-       <entry>7</entry>
-       <entry>External</entry>
-       <entry>HTTPS</entry>
-       <entry>&helm;</entry>
-       <entry>Download charts</entry>
-       <entry>Refer to kubernetes-charts.suse.com</entry>
-       <entry>Refer to kubernetes-charts.suse.com</entry>
-       <entry>kubernetes-charts.suse.com</entry>
-       <entry>&helm; charts</entry>
-       <entry>TLS certificate on external endpoint</entry>
-       <entry>&helm; charts for &cap; are downloaded</entry>
+       <entry>
+        <para>
+         5
+	</para>
+	<para>
+         External (WSS)
+	</para>
+       </entry>
+       <entry>
+        <para>
+         <emphasis role="bold">Requestor</emphasis>: &scf; clients
+	</para>
+	<para>
+         <emphasis role="bold">Request</emphasis>: Log streaming
+	</para>
+       </entry>
+       <entry>
+        <para>
+ 	 <emphasis role="bold">Request Credentials</emphasis>: OAuth2 Bearer
+	 token
+	</para>
+	<para>
+	 <emphasis role="bold">Request Authorization</emphasis>: &scf;
+	 application management
+	</para>
+       </entry>
+       <entry>
+        <para>
+         <emphasis role="bold">Listener</emphasis>: &cap; components
+	</para>
+	<para>
+         <emphasis role="bold">Response</emphasis>: A stream of &scf; logs
+	</para>
+	<para>
+	 <emphasis role="bold">Response Credentials</emphasis>: TLS certificate
+	 on external endpoint
+	</para>
+       </entry>
+       <entry>
+	<para>
+	 &scf; clients ask for logs (for example user looking at application
+	 logs or administrator viewing system logs)
+	</para>
+       </entry> 
+      </row>
+      <row>
+       <entry>
+        <para>
+         6
+	</para>
+	<para>
+         External (SSH)
+	</para>
+       </entry>
+       <entry>
+        <para>
+         <emphasis role="bold">Requestor</emphasis>: &scf; clients, SSH clients
+	</para>
+	<para>
+         <emphasis role="bold">Request</emphasis>: SSH Access to Application
+	</para>
+       </entry>
+       <entry>
+        <para>
+	 <emphasis role="bold">Request Credentials</emphasis>: OAuth2 bearer
+	 token
+	</para>
+	<para>
+	 <emphasis role="bold">Request Authorization</emphasis>: &scf;
+	 application management
+	</para>
+       </entry>
+       <entry>
+        <para>
+         <emphasis role="bold">Listener</emphasis>: &cap; components
+	</para>
+        <para>
+	 <emphasis role="bold">Response</emphasis>: A duplex connection is
+	 created allowing the user to interact with a shell
+	</para>
+	<para>
+	 <emphasis role="bold">Response Credentials</emphasis>: RSA SSH Key on
+	 external endpoint
+	</para>
+       </entry> 
+       <entry>
+	<para>
+	 &scf; Clients open an SSH connection to an application's container (for
+	 example users debugging their applications)
+	</para>
+       </entry>
+      </row>
+      <row>
+       <entry>
+        <para>
+         7
+	</para>
+	<para>
+         External (HTTPS)
+	</para>
+       </entry>
+       <entry>
+        <para>
+         <emphasis role="bold">Requestor</emphasis>: &helm;
+	</para>
+	<para>
+         <emphasis role="bold">Request</emphasis>: Download charts
+	</para>
+       </entry>
+       <entry>
+        <para>
+         <emphasis role="bold">Request Credentials</emphasis>: Refer to
+	 kubernetes-charts.suse.com
+	</para>
+	<para>
+         <emphasis role="bold">Request Authorization</emphasis>: Refer to
+	 kubernetes-charts.suse.com
+	</para>
+       </entry>
+       <entry>
+        <para>
+	 <emphasis role="bold">Listener</emphasis>: kubernetes-charts.suse.com
+	</para>
+        <para>
+         <emphasis role="bold">Response</emphasis>: &helm; charts
+	</para>
+	<para>
+	 <emphasis role="bold">Response Credentials</emphasis>: &helm; charts
+	 for &cap; are downloaded
+	</para>
+       </entry>
+       <entry>
+        <para>
+         &helm; charts for &cap; are downloaded
+	</para>
+       </entry>
       </row>
      </tbody>
     </tgroup>
