@@ -283,15 +283,7 @@
    deployment includes &scf; installed on &caasp;, &eks;, &gke;, or &aks;.
    You also need a storage back-end such as &ses; or NFS, a DNS/DHCP
    server, and an Internet connection to download additional packages during
-   installation and ~10 GB of &docker; images 
-  </para>
-
-  <para>
-   A production deployment requires considerable resources. &productname;
-   includes an entitlement of &caasp;. &caasp; requires a minimum of four
-   hosts: one admin and three &kube; nodes. &scf; is then deployed on the &kube;
-   nodes. Four &caasp; nodes are not sufficient for a production deployment.
-   <xref linkend="fig-cap-min-prod-arch"/> describes a minimal production
+   installation and ~10 GB of &docker; images. <xref linkend="fig-cap-min-prod-arch"/> describes a minimal production
    deployment with &scf; deployed on a &kube; cluster containing three &kube;
    masters and three workers, plus an ingress controller, administration
    workstation, DNS/DHCP server, and a &ses; cluster.
