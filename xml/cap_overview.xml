@@ -367,8 +367,7 @@
   </figure>
 
   <para>
-   <xref linkend="fig-cap-containerized"/> illustrates how &caasp; and
-   &productname; containerize the platform itself.
+   <xref linkend="fig-cap-containerized"/> illustrates how &productname; containerize the platform itself on top of a public cloud provider.
   </para>
 
   <figure xml:id="fig-cap-containerized">
