@@ -298,10 +298,10 @@
    <title>Minimal Example Production Deployment</title>
    <mediaobject>
     <imageobject role="fo">
-     <imagedata fileref="cap-arch-prod.png" format="PNG" width="90%"/>
+     <imagedata fileref="cap-arch-prod.svg" format="SVG" width="90%"/>
     </imageobject>
     <imageobject role="html">
-     <imagedata fileref="cap-arch-prod.png"/>
+     <imagedata fileref="cap-arch-prod.svg"/>
     </imageobject>
     <textobject role="description"><phrase>network architecture of minimal production setup</phrase>
     </textobject>
@@ -361,10 +361,10 @@
    <title>Cloud Platform Comparisons</title>
    <mediaobject>
     <imageobject role="fo">
-     <imagedata fileref="cloud-101.png" format="PNG" width="75%"/>
+     <imagedata fileref="cloud-101.svg" format="SVG" width="75%"/>
     </imageobject>
     <imageobject role="html">
-     <imagedata fileref="cloud-101.png"/>
+     <imagedata fileref="cloud-101.svg"/>
     </imageobject>
     <textobject role="description"><phrase>Comparison of cloud platforms.</phrase>
     </textobject>
@@ -380,10 +380,10 @@
    <title>Containerized Platforms</title>
    <mediaobject>
     <imageobject role="fo">
-     <imagedata fileref="cap-containerized.png" format="PNG" width="75%"/>
+     <imagedata fileref="cap-containerized.svg" format="SVG" width="75%"/>
     </imageobject>
     <imageobject role="html">
-     <imagedata fileref="cap-containerized.png"/>
+     <imagedata fileref="cap-containerized.svg"/>
     </imageobject>
     <textobject role="description"><phrase>&caasp; and &productname; containerize the
       platform itself.</phrase>
@@ -490,10 +490,10 @@
     <title>&scf; Containers, Grouped by Function</title>
     <mediaobject>
      <imageobject role="fo">
-      <imagedata fileref="cap-containers.png" format="PNG" width="75%"/>
+      <imagedata fileref="cap-containers.svg" format="SVG" width="75%"/>
      </imageobject>
      <imageobject role="html">
-      <imagedata fileref="cap-containers.png"/>
+      <imagedata fileref="cap-containers.svg" format="SVG"/>
      </imageobject>
      <textobject role="description"><phrase>&scf;'s containers, grouped
             by functionality.</phrase>
