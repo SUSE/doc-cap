@@ -129,7 +129,7 @@
    All &docker; images for the &sle; builds are hosted on
    <literal>registry.suse.com</literal>. These are the commercially-supported
    images. (Community-supported images for &opensuse; are hosted on
-   <link xlink:href="https://hub.docker.com"> &docker; Hub</link>.) Product
+   <link xlink:href="https://hub.docker.com">&docker; Hub</link>.) Product
    manuals on
    <link xlink:href="https://documentation.suse.com/suse-cap/1/">&suse;
    Doc: &productname; 1</link> refer to the
@@ -277,18 +277,7 @@
    deployment includes &scf; installed on &caasp;, &eks;, &gke;, or &aks;.
    You also need a storage back-end such as &ses; or NFS, a DNS/DHCP
    server, and an Internet connection to download additional packages during
-   installation and ~10 GB of &docker; images 
-  </para>
-
-  <para>
-   A production deployment requires considerable resources. &productname;
-   includes an entitlement of &caasp; and &ses;. &ses; alone has
-   substantial requirements; see the
-   <link xlink:href="https://www.suse.com/products/suse-enterprise-storage/">Tech
-   Specs</link> for details. &caasp; requires a minimum of four hosts:
-   one admin and three &kube; nodes. &scf; is then deployed on the &kube;
-   nodes. Four &caasp; nodes are not sufficient for a production deployment.
-   <xref linkend="fig-cap-min-prod-arch"/> describes a minimal production
+   installation and ~10 GB of &docker; images. <xref linkend="fig-cap-min-prod-arch"/> describes a minimal production
    deployment with &scf; deployed on a &kube; cluster containing three &kube;
    masters and three workers, plus an ingress controller, administration
    workstation, DNS/DHCP server, and a &ses; cluster.
@@ -372,8 +361,7 @@
   </figure>
 
   <para>
-   <xref linkend="fig-cap-containerized"/> illustrates how &caasp; and
-   &productname; containerize the platform itself.
+   <xref linkend="fig-cap-containerized"/> illustrates how &productname; containerize the platform itself on top of a cloud provider.
   </para>
 
   <figure xml:id="fig-cap-containerized">
@@ -596,6 +584,30 @@
      </listitem>
     </varlistentry>
     <varlistentry>
+     <term>eirini</term>
+     <listitem>
+      <para>
+       An alternative to the Diego scheduler.
+      </para>
+     </listitem>
+    </varlistentry>
+        <varlistentry>
+     <term>eirini-persi</term>
+     <listitem>
+      <para>
+       Enables persistent storage for applications when using the Eirini scheduler.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>eirini-ssh</term>
+     <listitem>
+      <para>
+       Provides SSH access to user applications when using the Eirini scheduler.
+      </para>
+     </listitem>
+    </varlistentry>
+<varlistentry>
      <term>doppler</term>
      <listitem>
       <para>
@@ -634,7 +646,8 @@
      <term>nfs-broker (privileged)</term>
      <listitem>
       <para>
-       A service broker for enabling NFS-based application persistent storage.
+       A service broker for enabling NFS-based application persistent storage
+       when using the Diego scheduler.
       </para>
      </listitem>
     </varlistentry>
