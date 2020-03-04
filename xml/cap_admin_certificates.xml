@@ -253,7 +253,7 @@
     </para>
 <screen>&prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa \
 --values scf-config-values.yaml \
---version &latestuaachart;
+--version TODO
 </screen>
    </step>
    <step>

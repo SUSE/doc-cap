@@ -146,7 +146,7 @@
     </para>
 <screen>&prompt.user;helm upgrade susecf-uaa suse/uaa \
 --values scf-config-values.yaml \
---version &latestuaachart;
+--version TODO
 </screen>
    </step>
    <step>

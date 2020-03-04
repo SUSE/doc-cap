@@ -59,7 +59,7 @@
 
 <screen>&prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa \
 --values <replaceable>scf-config-values.yaml</replaceable> \
---version &latestuaachart;
+--version N/A
 </screen>
 
   <para>
