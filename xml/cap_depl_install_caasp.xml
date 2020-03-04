@@ -162,9 +162,10 @@
 <screen>&prompt.user;sudo zypper install helm</screen>
   <para>
    Alternatively, refer to the upstream documentation at
-   <link xlink:href="https://docs.helm.sh/using_helm/#installing-helm"/>. Usage
-   with &cap; requires &helm; 2 and/or iterations of its minor releases.
-   Compatibility between &cap; and &helm; 3 is not supported.
+   <link xlink:href="https://docs.helm.sh/using_helm/#installing-helm"/>. &cap;
+   is compatible with both &helm; 2 and &helm; 3. Examples in this guide are
+   based on &helm; 2. To use &helm; 3, refer to the &helm; documentation at
+   <link xlink:href="https://helm.sh/docs/"/>.     
   </para>
   <para>
    &tiller;, the &helm; server component, needs to be installed on your &kube;
