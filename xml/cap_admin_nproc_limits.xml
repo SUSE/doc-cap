@@ -89,8 +89,9 @@
      <para>
       Deploy <literal>uaa</literal>:
      </para>
-<screen>&prompt.user;helm install suse/uaa \
---name <replaceable>susecf-uaa</replaceable> \
+<screen>&prompt.user;kubectl create namespace uaa
+	     
+&prompt.user;helm install <replaceable>susecf-uaa</replaceable> suse/uaa \
 --namespace uaa \
 --values scf-config-values.yaml
 </screen>
@@ -103,8 +104,9 @@
 
      &uaa-ca-cert-note;
 
-<screen>&prompt.user;helm install suse/cf \
---name <replaceable>susecf-scf</replaceable> \
+<screen>&prompt.user;kubectl create namespace scf
+	     
+&prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
 --namespace scf \
 --values scf-config-values.yaml
 </screen>

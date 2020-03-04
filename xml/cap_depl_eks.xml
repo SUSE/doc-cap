@@ -410,8 +410,9 @@ suse            https://kubernetes-charts.suse.com/</screen>
    <literal>--name</literal>:
   </para>
 
-<screen>&prompt.user;helm install suse/uaa \
---name <replaceable>susecf-uaa</replaceable> \
+<screen>&prompt.user;kubectl create namespace uaa
+	  
+&prompt.user;helm install <replaceable>susecf-uaa</replaceable> suse/uaa \
 --namespace uaa \
 --values scf-config-values.yaml</screen>
 
@@ -452,8 +453,9 @@ suse            https://kubernetes-charts.suse.com/</screen>
 
   &uaa-ca-cert-note;
 
-<screen>&prompt.user;helm install suse/cf \
---name <replaceable>susecf-scf</replaceable> \
+<screen>&prompt.user;kubectl create namespace scf
+	  
+&prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
 --namespace scf \
 --values scf-config-values.yaml
 </screen>
@@ -660,21 +662,22 @@ suse            https://kubernetes-charts.suse.com/</screen>
       with adequate IAM rights is chosen (see
       <xref linkend="sec-cap-aws-service-broker-prereqs"/>:
      </para>
-<screen>&prompt.user;helm install aws-sb/aws-servicebroker \
-	     --name aws-servicebroker \
-	     --namespace $BROKER_NAMESPACE \
-	     --version 1.0.1 \
-	     --set aws.secretkey=$AWS_ACCESS_KEY \
-	     --set aws.accesskeyid=$AWS_KEY_ID \
-	     --set deployClusterServiceBroker=false \
-	     --set tls.cert="$(base64 -w0 tls.pem)" \
-	     --set tls.key="$(base64 -w0 tls.key)" \
-	     --set-string aws.targetaccountid=$AWS_TARGET_ACCOUNT_ID \
-	     --set aws.targetrolename=$AWS_TARGET_ROLE_NAME \
-	     --set aws.tablename=awssb \
-	     --set aws.vpcid=$VPC_ID \
-	     --set aws.region=$AWS_REGION \
-	     --set authenticate=false
+<screen>&prompt.user;kubectl create namespace $BROKER_NAMESPACE
+	
+&prompt.user;helm install aws-servicebroker aws-sb/aws-servicebroker \
+--namespace $BROKER_NAMESPACE \
+--version 1.0.1 \
+--set aws.secretkey=$AWS_ACCESS_KEY \
+--set aws.accesskeyid=$AWS_KEY_ID \
+--set deployClusterServiceBroker=false \
+--set tls.cert="$(base64 -w0 tls.pem)" \
+--set tls.key="$(base64 -w0 tls.key)" \
+--set-string aws.targetaccountid=$AWS_TARGET_ACCOUNT_ID \
+--set aws.targetrolename=$AWS_TARGET_ROLE_NAME \
+--set aws.tablename=awssb \
+--set aws.vpcid=$VPC_ID \
+--set aws.region=$AWS_REGION \
+--set authenticate=false
 </screen>
      <para>
       To find the values of <option>aws.targetaccoundid</option>, <option>
@@ -705,10 +708,10 @@ suse            https://kubernetes-charts.suse.com/</screen>
      <para>
       Create a service broker in <literal>scf</literal>. Note the name of the
       service broker should be the same as the one specified for the
-      <literal>--name</literal> flag in the <command>helm install</command>
-      step (for example <literal>aws-servicebroker</literal>. Note that the
-      username and password parameters are only used as dummy values to pass to
-      the <command>cf</command> command:
+      the <command>helm install</command> step (for example
+      <literal>aws-servicebroker</literal>. Note that the username and password
+      parameters are only used as dummy values to pass to the
+      <command>cf</command> command:
      </para>
 <screen>&prompt.user;cf create-service-broker aws-servicebroker <replaceable>username</replaceable> <replaceable>password</replaceable> https://aws-servicebroker-aws-servicebroker.aws-sb.svc.cluster.local</screen>
     </step>

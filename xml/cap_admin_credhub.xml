@@ -52,8 +52,9 @@
 
   &uaa-ca-cert-note;
 
-<screen>&prompt.user;helm install suse/cf \
---name <replaceable>susecf-scf</replaceable> \
+<screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
+	  
+&prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
 --namespace <replaceable>scf</replaceable> \
 --values scf-config-values.yaml \
 --set "enable.credhub=true"</screen>

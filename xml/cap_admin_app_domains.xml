@@ -62,8 +62,9 @@
 
   &uaa-ca-cert-note;
 
-<screen>&prompt.user;helm install suse/cf \
---name susecf-scf \
+<screen>&prompt.user;kubectl create namespace scf
+	  
+&prompt.user;helm install susecf-scf suse/cf \
 --namespace scf \
 --values scf-config-values.yaml
 </screen>
