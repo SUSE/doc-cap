@@ -222,9 +222,9 @@ Before you start deploying &productname;, review the following documents:
     <tbody>
      <row>
       <entry>&productnumber; (current release)</entry>
-      <entry>&latestscfchart;</entry>
-      <entry>&lateststratoschart;</entry>
-      <entry>&metrics-version;</entry>
+      <entry>&cf_chart;</entry>
+      <entry>&stratos_chart;</entry>
+      <entry>&metrics_chart;</entry>
       <!-- cf-deployment 12.17: 2.144.0, cf api result: -->
       <entry>2.144.0</entry>
       <entry>6.49.0</entry>
@@ -477,15 +477,15 @@ Before you start deploying &productname;, review the following documents:
 <!ENTITY helm-search-suse
 '<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;helm search suse
 NAME                            CHART VERSION   APP VERSION     DESCRIPTION
-suse/cf                         &latestscfchart;          &chart-appversion;           A Helm chart for &suse; &cf;
+suse/cf                         &cf_chart;          &chart_appversion;           A Helm chart for &suse; &cf;
 suse/cf-usb-sidecar-mysql       1.0.1                           A Helm chart for &suse; Universal Service Broker Sidecar fo...
 suse/cf-usb-sidecar-postgres    1.0.1                           A Helm chart for &suse; Universal Service Broker Sidecar fo...
-suse/console                    &lateststratoschart;           &chart-appversion;           A Helm chart for deploying Stratos UI Console
+suse/console                    &stratos_chart;           &chart_appversion;           A Helm chart for deploying Stratos UI Console
 suse/log-agent-rsyslog      	1.0.1        	8.39.0     	Log Agent for forwarding logs of K8s control pl...
-suse/metrics                    &metrics-version;           &chart-appversion;           A Helm chart for Stratos Metrics
-suse/minibroker                 &minibroker-version;                           A minibroker for your minikube
+suse/metrics                    &metrics_chart;           &chart_appversion;           A Helm chart for Stratos Metrics
+suse/minibroker                 &minibroker_chart;                           A minibroker for your minikube
 suse/nginx-ingress              0.28.4          0.15.0          An nginx Ingress controller that uses ConfigMap to store ...
-suse/uaa                        &latestscfchart;          &chart-appversion;           A Helm chart for &suse; UAA
+suse/uaa                        &cf_chart;          &chart_appversion;           A Helm chart for &suse; UAA
 </screen>'>
 
 <!--ENTITY chart-version-fields.............................................-->

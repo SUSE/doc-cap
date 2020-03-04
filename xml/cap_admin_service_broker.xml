@@ -123,7 +123,7 @@
 --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}" \
 --set "enable.cf_usb=false" \
---version &latestscfchart;
+--version &cf_chart;
 </screen>
 
   <para>
@@ -143,7 +143,7 @@
 --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}" \
 --set "enable.cf_usb=true" \
---version &latestscfchart;
+--version &cf_chart;
 </screen>
 
   </sect2>
@@ -510,8 +510,8 @@ kube:
      </para>
 <screen>&prompt.user;helm list
 NAME           REVISION UPDATED                   STATUS    CHART                      NAMESPACE
-susecf-console 1        Wed Aug 14 08:35:58 2018  DEPLOYED  console-&lateststratoschart;              stratos
-susecf-scf     1        Tue Aug 14 12:24:36 2018  DEPLOYED  cf-&latestscfchart;                  scf
+susecf-console 1        Wed Aug 14 08:35:58 2018  DEPLOYED  console-&stratos_chart;              stratos
+susecf-scf     1        Tue Aug 14 12:24:36 2018  DEPLOYED  cf-&cf_chart;                  scf
 susecf-uaa     1        Tue Aug 14 12:01:17 2018  DEPLOYED  uaa-&latestuaachart;                 uaa
 mysql-service  1        Mon May 21 11:40:11 2018  DEPLOYED  cf-usb-sidecar-mysql-1.0.1 mysql-sidecar
 

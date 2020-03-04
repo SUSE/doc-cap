@@ -53,7 +53,7 @@
    </listitem>
    <listitem>
     <para>
-     &node-size; GB disk space per &kube; worker
+     &node_size; GB disk space per &kube; worker
     </para>
    </listitem>
    <listitem>

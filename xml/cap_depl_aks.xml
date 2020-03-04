@@ -301,13 +301,13 @@ export NODEPOOL_NAME="mypool"
 <screen>&prompt.user;az aks create --resource-group $RG_NAME --name $AKS_NAME \
  --node-count $NODE_COUNT --admin-username $ADMIN_USERNAME \
  --ssh-key-value $SSH_KEY_VALUE --node-vm-size $NODE_VM_SIZE \
- --node-osdisk-size=&node-size; --nodepool-name $NODEPOOL_NAME \
+ --node-osdisk-size=&node_size; --nodepool-name $NODEPOOL_NAME \
  --vm-set-type AvailabilitySet
 </screen>
 
   <note>
    <para>
-    An OS disk size of at least &node-size; GB must be specified using the
+    An OS disk size of at least &node_size; GB must be specified using the
     <command>--node-osdisk-size</command> flag.
    </para>
   </note>
@@ -959,7 +959,7 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
 
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
---version &latestscfchart;
+--version &cf_chart;
 </screen>
    </step>
    <step>

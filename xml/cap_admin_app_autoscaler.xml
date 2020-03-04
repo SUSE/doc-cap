@@ -75,7 +75,7 @@
 --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}" \
 --set "enable.autoscaler=true" \
---version &latestscfchart;
+--version &cf_chart;
 </screen>
 
   <para>
@@ -95,7 +95,7 @@
 --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}" \
 --set "enable.autoscaler=false" \
---version &latestscfchart;
+--version &cf_chart;
 </screen>
 
  </sect1>
