@@ -109,8 +109,8 @@
 
    &uaa-ca-cert-note;
 
-<screen> &prompt.user;kubectl create namespace scf
-	   
+<screen> &prompt.user;kubectl create namespace <replaceable>scf</replaceable>
+
 &prompt.user;helm install <replaceable>susecf-scf</replaceable>  suse/cf \
 --namespace <replaceable>scf</replaceable> \
 --values scf-config-values.yaml \
@@ -335,12 +335,12 @@ kube:
    </para>
 
 <screen>&prompt.user;helm install <replaceable>mysql-service</replaceable> suse/cf-usb-sidecar-mysql \
-  --devel \
-  --namespace <replaceable>mysql-sidecar</replaceable> \
-  --set "env.SERVICE_LOCATION=http://cf-usb-sidecar-mysql.mysql-sidecar:8081" \
-  --set default-auth=mysql_native_password
-  --values usb-config-values.yaml \
-  --wait</screen>
+--devel \
+--namespace <replaceable>mysql-sidecar</replaceable> \
+--set "env.SERVICE_LOCATION=http://cf-usb-sidecar-mysql.mysql-sidecar:8081" \
+--set default-auth=mysql_native_password
+--values usb-config-values.yaml \
+--wait</screen>
 
    <para>
     Wait for the new pods to become ready:
@@ -561,8 +561,8 @@ mysql-service  1        Mon May 21 11:40:11 2018  DEPLOYED  cf-usb-sidecar-mysql
      </para>
 <screen>&prompt.user;kubectl create namespace minibroker
 	     
-&prompt.user;helm install minibroker suse/minibroker \
---namespace minibroker \
+&prompt.user;helm install <replaceable>minibroker</replaceable> suse/minibroker \
+--namespace <replaceable>minibroker</replaceable> \
 --set "defaultNamespace=minibroker"
 </screen>
      <para>

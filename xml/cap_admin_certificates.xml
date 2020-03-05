@@ -218,10 +218,10 @@
     <para>
      Deploy <literal>uaa</literal>:
     </para>
-<screen>&prompt.user;kubectl create namespace uaa
-	    
+<screen>&prompt.user;kubectl create namespace <replaceable>uaa</replaceable>
+
 &prompt.user;helm install <replaceable>susecf-uaa</replaceable> suse/uaa \
---namespace uaa \
+--namespace <replaceable>uaa</replaceable> \
 --values scf-config-values.yaml
 </screen>
     &uaa-deploy-complete;
@@ -233,10 +233,10 @@
 
     &uaa-ca-cert-note;
 
-<screen>&prompt.user;kubectl create namespace scf
-	    
+<screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
+
 &prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
---namespace scf \
+--namespace <replaceable>scf</replaceable> \
 --values scf-config-values.yaml
 </screen>
     &scf-deploy-complete;

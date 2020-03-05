@@ -69,10 +69,10 @@
     <para>
      Install the NGINX Ingress Controller.
     </para>
-<screen>&prompt.user;kubectl create namespace nginx-ingress
-	    
-&prompt.user;helm install nginx-ingress suse/nginx-ingress \
---namespace ingress \
+<screen>&prompt.user;kubectl create namespace <replaceable>nginx-ingress</replaceable>
+
+&prompt.user;helm install <replaceable>nginx-ingress</replaceable> suse/nginx-ingress \
+--namespace <replaceable>ingress</replaceable> \
 --set rbac.create=true
 </screen>
    </step>
@@ -218,10 +218,10 @@ ingress:
     <para>
      Deploy <literal>scf</literal>.
     </para>
-<screen>&prompt.user;kubectl create namespace scf
-	    
-&prompt.user;helm install susecf-scf suse/cf \
---namespace scf \
+<screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
+
+&prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
+--namespace <replaceable>scf</replaceable> \
 --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${INGRESS_CA_CERT}"
 </screen>

@@ -319,8 +319,8 @@ suse       https://kubernetes-charts.suse.com/
    <para>
     Use &helm; to deploy the <literal>uaa</literal> server:
    </para>
-<screen>&prompt.user;kubectl create namespace uaa
-	   
+<screen>&prompt.user;kubectl create namespace <replaceable>uaa</replaceable>
+
 &prompt.user;helm install <replaceable>susecf-uaa</replaceable> suse/uaa \
 --namespace <replaceable>uaa</replaceable> \
 --values <replaceable>scf-config-values.yaml</replaceable>
@@ -348,10 +348,10 @@ suse       https://kubernetes-charts.suse.com/
 
    &uaa-ca-cert-note;
 
-<screen>&prompt.user;kubectl create namespace scf
-	   
+<screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
+
 &prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
---namespace scf \
+--namespace <replaceable>scf</replaceable> \
 --values scf-config-values.yaml
 </screen>
    &scf-deploy-complete; 
