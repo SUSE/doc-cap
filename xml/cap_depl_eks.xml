@@ -784,7 +784,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
      <para>
       Delete the deployed &helm; chart and the namespace:
      </para>
-<screen>&prompt.user;helm delete --purge aws-servicebroker
+<screen>&prompt.user;helm delete aws-servicebroker
 &prompt.user;kubectl delete namespace ${BROKER_NAMESPACE}
 </screen>
     </step>

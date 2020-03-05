@@ -129,7 +129,7 @@ NAME            REVISION  UPDATED                  STATUS    CHART           NAM
 statefulset "mysql" deleted
 statefulset "uaa" deleted
 
-&prompt.user;helm delete --purge susecf-uaa
+&prompt.user;helm delete susecf-uaa
 release "susecf-uaa" deleted
 
 &prompt.user;kubectl delete namespace uaa
@@ -144,7 +144,7 @@ statefulset "adapter" deleted
 statefulset "api-group" deleted
 ...
 
-&prompt.user;helm delete --purge susecf-scf
+&prompt.user;helm delete susecf-scf
 release "susecf-scf" deleted
 
 &prompt.user;kubectl delete namespace scf
