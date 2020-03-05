@@ -52,16 +52,9 @@
 </screen>
 
   <para>
-   Ensure <literal>uaa</literal> has been deployed, then proceed with this step.
-  </para>
-
-  <para>
    If this is an initial deployment, use <command>helm install</command> to
    deploy <literal>scf</literal>:
   </para>
-
-  &uaa-ca-cert-note;
-
 <screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
 
 &prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
@@ -73,9 +66,6 @@
    If this is an existing deployment, use <command>helm upgrade</command> to
    apply the change:
   </para>
-
-  &uaa-ca-cert-note;
-
 <screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
 --version &cf_chart;

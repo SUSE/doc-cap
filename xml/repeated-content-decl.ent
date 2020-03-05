@@ -13,7 +13,8 @@ found" errors
 <!--ENTITY deployment-pod-status............................................-->
 
 <!ENTITY deployment-pod-status
-'<variablelist xmlns="http://docbook.org/ns/docbook">
+'<!-- TODO-CAP2 update description -->
+<variablelist xmlns="http://docbook.org/ns/docbook">
 <varlistentry>
      <term>Some Pods Show as Not Running</term>
      <listitem>
@@ -54,9 +55,9 @@ post-deployment-setup-1-hnpln   0/1       Completed</screen>
     </varlistentry>
 </variablelist>'>
 
-<!--ENTITY namespace-length ................................................-->
+<!--ENTITY release-name-length ................................................-->
 
-<!ENTITY namespace-length
+<!ENTITY release-name-length
 '<variablelist xmlns="http://docbook.org/ns/docbook">
 <varlistentry>
      <term>Length of release names</term>
@@ -210,6 +211,7 @@ Before you start deploying &productname;, review the following documents:
    <tgroup cols="7">
     <thead>
      <row>
+<!-- TODO-CAP2 update columns -->
       <entry>CAP Release</entry>
       <entry>SCF and UAA &helm; Chart Version</entry>
       <entry>Stratos &helm; Chart Version</entry>
@@ -623,40 +625,6 @@ suse/uaa                        &cf_chart;          &chart_appversion;          
   </para>
  </sect1>'>
 
-<!--ENTITY uaa-deploy-complete..............................................-->
-
-<!ENTITY uaa-deploy-complete
-'<para xmlns="http://docbook.org/ns/docbook">
-  Wait until you have a successful <literal>uaa</literal> deployment before
-  going to the next steps, which you can monitor with the
-  <command>watch</command> command:
- </para>
-<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch --color &apos;kubectl get pods --namespace uaa&apos;</screen>
- <para xmlns="http://docbook.org/ns/docbook">
-  When <literal>uaa</literal> is successfully deployed, the following is
-  observed:
- </para>
- <itemizedlist xmlns="http://docbook.org/ns/docbook">
-  <listitem>
-   <para>
-    For the <literal>secret-generation</literal> pod, the
-    <literal>STATUS</literal> is <literal>Completed</literal> and the
-    <literal>READY</literal> column is at <literal>0/1</literal>.
-   </para>
-  </listitem>
-  <listitem>
-   <para>
-    All other pods have a <literal>Running</literal> <literal>STATUS</literal>
-    and a <literal>READY</literal> value of <literal>n/n</literal>.
-   </para>
-  </listitem>
- </itemizedlist>
- <para xmlns="http://docbook.org/ns/docbook">
-  Press <keycombo><keycap function="control"/><keycap>C</keycap></keycombo> to
-  exit the <command>watch</command> command.
- </para>
-'>
-
 <!--ENTITY scf-deploy-complete..............................................-->
 
 <!ENTITY scf-deploy-complete
@@ -931,67 +899,6 @@ suse/uaa                        &cf_chart;          &chart_appversion;          
  </warning>
 '>
 
-<!--ENTITY uaa-in-scf.......................................................-->
-
-<!ENTITY uaa-in-scf
-'<note xmlns="http://docbook.org/ns/docbook">
-  <title>Embedded <literal>uaa</literal> in <literal>scf</literal></title>
-  <para>
-   The &uaa; (<literal>uaa</literal>) Server is included as an optional
-   feature of the <literal>scf</literal> &helm; chart. This simplifies the &cap;
-   deployment process as a separate installation and/or upgrade of
-   <literal>uaa</literal> is no longer a prerequisite to installing and/or
-   upgrading <literal>scf</literal>.
-  </para>
-  <para>
-   It is important to note that:
-  </para>
-  <itemizedlist>
-   <listitem>
-    <para>
-     This feature should only be used when <literal>uaa</literal> is not
-     shared with other projects.
-    </para>
-   </listitem>
-   <listitem>
-    <para>
-     You <emphasis>cannot</emphasis> migrate from an existing external
-     <literal>uaa</literal> to an embedded one. In this situation, enabling
-     this feature during an upgrade will result in a single admin account.
-    </para>
-   </listitem>
-  </itemizedlist>
-  <para>
-   To enable this feature, add the following to your
-   <filename>scf-config-values.yaml</filename>.
-  </para>
-<screen>enable:
-  uaa: true
-</screen>
-  <para>
-   When deploying and/or upgrading <literal>scf</literal>, run
-   <command>helm install</command> and/or <command>helm upgrade</command> and
-   note that:
-  </para>
-  <itemizedlist>
-   <listitem>
-    <para>
-     Installing and/or upgrading <literal>uaa</literal> using
-     <command>helm install suse/uaa ...</command> and/or
-     <command>helm upgrade</command> is no longer required.
-    </para>
-   </listitem>
-   <listitem>
-    <para>
-     It is no longer necessary to set the <literal>UAA_CA_CERT</literal>
-     parameter. Previously, this parameter was passed the
-     <literal>CA_CERT</literal> variable, which was assigned the CA certificate
-     of <literal>uaa</literal>.
-    </para>
-   </listitem>
-  </itemizedlist>
- </note>'>
-
 <!--ENTITY deployment-platforms.............................................-->
 
 <!ENTITY deployment-platforms
@@ -1174,12 +1081,6 @@ done
    </procedure>
   </sect2>
  </sect1>'>
-
-<!--ENTITY watch-uaa............................................-->
-
-<!ENTITY watch-uaa
-'<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch --color &apos;kubectl get pods --namespace uaa&apos;
-</screen>'>
 
 <!--ENTITY watch-scf............................................-->
 
@@ -1368,38 +1269,3 @@ agent.log</screen>
  </para>
 </note>'> 
 
-<!--ENTITY uaa-ca-cert-note.................................................-->
-
-<!ENTITY uaa-ca-cert-note
-'<note xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
- <title>Setting <literal>UAA_CA_CERT</literal></title>
- <para>
-  Starting with &productname; 1.5.2, you no longer need to set
-  <literal>UAA_CA_CERT</literal> when using an external UAA with a certificate
-  signed by a well known Certificate Authority (CA). It is only needed when
-  you use an external UAA with either a certificate generated by the
-  <literal>secret-generator</literal> or a self-signed certificate.
- </para>
- <para>
-If you need to set <literal>UAA_CA_CERT</literal>:
- </para>
- <procedure>
-  <step>
-   <para>
-    Obtain your UAA secret and certificate:
-   </para>
-<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
---output jsonpath=&apos;{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}&apos;)
-
-&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
---output jsonpath="{.data[&apos;internal-ca-cert&apos;]}" | base64 --decode -)"
-</screen>
-  </step>
-  <step>
-   <para>
-    Then pass <command>--set "secrets.UAA_CA_CERT=${CA_CERT}"</command> as part
-    of your <command>helm</command> command.
-   </para>
-  </step>
- </procedure>
-</note>'>

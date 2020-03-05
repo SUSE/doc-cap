@@ -101,8 +101,8 @@ routing-api-0            0/1   Running   0         16h</screen>
   </para>
 
   <para>
-   The namespace is also deleted as part of the process because the SCF and UAA
-   namespaces contain generated secrets which Helm is not aware of and will not
+   The namespace is also deleted as part of the process because the SCF 
+   namespace contain generated secrets which Helm is not aware of and will not
    remove when a release is deleted. When deleting a release, busy systems may
    encounter timeouts. By first deleting the StatefulSets, it ensures that this
    operation is more likely to succeed. Using the <command>delete
@@ -121,28 +121,14 @@ NAME            REVISION  UPDATED                  STATUS    CHART           NAM
 </screen>
 
   <para>
-   This example deletes the <literal>susecf-uaa</literal> release and
-   <literal>uaa</literal> namespace:
+   This example deletes the <literal>susecf-scf</literal> release and
+   <literal>scf</literal> namespace:
   </para>
 
-<screen>&prompt.user;kubectl delete statefulsets --all --namespace uaa
-statefulset "mysql" deleted
-statefulset "uaa" deleted
-
-&prompt.user;helm delete susecf-uaa
-release "susecf-uaa" deleted
-
-&prompt.user;kubectl delete namespace uaa
-namespace "uaa" deleted</screen>
-
-  <para>
-   Repeat the same process for the <literal>susecf-scf</literal> release
-   and <literal>scf</literal> namespace:
-  </para>
 <screen>&prompt.user;kubectl delete statefulsets --all --namespace scf
-statefulset "adapter" deleted
-statefulset "api-group" deleted
-...
+statefulset "adapter" deleted                                                   
+statefulset "api-group" deleted                                                 
+... 
 
 &prompt.user;helm delete susecf-scf
 release "susecf-scf" deleted
@@ -150,7 +136,7 @@ release "susecf-scf" deleted
 &prompt.user;kubectl delete namespace scf
 namespace "scf" deleted</screen>
 
-  <para>
+ <para>
    Then you can start over. Be sure to create new release and namespace names.
   </para>
  </sect1>

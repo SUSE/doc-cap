@@ -38,7 +38,7 @@
   <listitem>
    <para>
     All traffic can be routed through ports 80 and 443 on the controller. Tracking
-    different ports(for example, port 2793 for UAA, port (4)443 for Gorouter) is
+    different ports(for example, port (4)443 for Gorouter) is
     no longer needed. The Ingress routing rules will then manage the traffic flow
     to the appropriate backend services.
    </para>
@@ -58,7 +58,7 @@
    <step>
     <para>
      Prepare your &kube; cluster according to the documentation for your platform. Proceed
-     to the next step when you reach the <literal>uaa</literal> deployment phase for your
+     to the next step when you reach the <literal>scf</literal> deployment phase for your
      platform. Note that the DNS sections in the platform-specific documentation can be
      omitted.
     </para>
@@ -178,7 +178,6 @@ ingress:
 --namespace uaa \
 --values scf-config-values.yaml
 </screen>
-    &uaa-deploy-complete;
    </step>
    <step>
     <para>

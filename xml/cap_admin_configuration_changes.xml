@@ -34,6 +34,7 @@
  <sect1 xml:id="sec-cap-configuration-change-example">
   <title>Configuration Change Example</title>
 
+  <!-- TODO-CAP2 use a different example, LOG_LEVEL not available -->
   <para>
    Consider an example where more granular log entries are required than those
    provided by your default deployment of <literal>uaa</literal>; (default
