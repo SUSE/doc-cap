@@ -534,8 +534,9 @@ suse       https://kubernetes-charts.suse.com/
    <para>
     Use &helm; to deploy the <literal>uaa</literal> server:
    </para>
-<screen>&prompt.user;helm install suse/uaa \
---name <replaceable>susecf-uaa</replaceable> \
+<screen>&prompt.user;kubectl create namespace uaa
+
+&prompt.user;helm install <replaceable>susecf-uaa</replaceable> suse/uaa \
 --namespace <replaceable>uaa</replaceable> \
 --values <replaceable>scf-config-values.yaml</replaceable>
 </screen>
@@ -618,9 +619,10 @@ uaa-uaa-public    LoadBalancer   10.0.67.56     40.85.188.67   2793:32034/TCP
 
    &uaa-ca-cert-note;
 
-<screen>&prompt.user;helm install suse/cf \
---name <replaceable>susecf-scf</replaceable> \
---namespace scf \
+<screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
+
+&prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
+--namespace <replaceable>scf</replaceable> \
 --values scf-config-values.yaml
 </screen>
    &scf-deploy-complete;
@@ -765,8 +767,10 @@ tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.
 
 &prompt.user;helm repo update
 
-&prompt.user;helm install svc-cat/catalog --name catalog \
- --namespace catalog \
+&prompt.user;kubectl create namespace <replaceable>catalog</replaceable>
+
+&prompt.user;helm install <replaceable>catalog</replaceable> svc-cat/catalog \
+ --namespace <replaceable>catalog</replaceable> \
  --set controllerManager.healthcheck.enabled=false \
  --set apiserver.healthcheck.enabled=false
 
@@ -781,9 +785,9 @@ tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.
    Set up the service broker with your variables:
   </para>
 
-<screen>
-&prompt.user;helm install azure/open-service-broker-azure \
---name <replaceable>osba</replaceable> \
+<screen>&prompt.user;kubectl create namespace <replaceable>osba</replaceable>
+
+&prompt.user;helm install <replaceable>osba</replaceable> azure/open-service-broker-azure \
 --namespace <replaceable>osba</replaceable> \
 --set azure.subscriptionId=${SUBSCRIPTION_ID} \
 --set azure.tenantId=${TENANT_ID} \
