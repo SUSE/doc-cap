@@ -62,9 +62,10 @@
 
   &uaa-ca-cert-note;
 
-<screen>&prompt.user;helm install suse/cf \
---name susecf-scf \
---namespace scf \
+<screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
+
+&prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
+--namespace <replaceable>scf</replaceable> \
 --values scf-config-values.yaml
 </screen>
 
@@ -75,7 +76,7 @@
 
   &uaa-ca-cert-note;
 
-<screen>&prompt.user;helm upgrade susecf-scf suse/cf \
+<screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
 --version &latestscfchart;
 </screen>

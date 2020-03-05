@@ -106,9 +106,10 @@ config:
     <command>helm upgrade</command> to apply the change to an existing
     deployment.
    </para>
-<screen>&prompt.user;helm install suse/uaa \
---name susecf-uaa \
---namespace uaa \
+<screen>&prompt.user;kubectl create namespace <replaceable>uaa</replaceable>
+
+&prompt.user;helm install <replaceable>susecf-uaa</replaceable> suse/uaa \
+--namespace <replaceable>uaa</replaceable> \
 --values scf-config-values.yaml
 </screen>
    <para>
@@ -227,10 +228,10 @@ sizing:
     <xref linkend="sec-cap-caasp-deploy-uaa"/>. Then deploy
     <literal>uaa</literal> with this command:
    </para>
-<screen>
-&prompt.user;helm install suse/uaa \
---name <replaceable>susecf-uaa</replaceable> \
---namespace uaa \
+<screen>&prompt.user;kubectl create namespace <replaceable>uaa</replaceable>
+
+&prompt.user;helm install <replaceable>susecf-uaa</replaceable> suse/uaa \
+--namespace <replaceable>uaa</replaceable> \
 --values scf-config-values.yaml \
 --values uaa-sizing.yaml
 </screen>
@@ -242,9 +243,10 @@ sizing:
 
    &uaa-ca-cert-note;
 
-<screen>&prompt.user;helm install suse/cf \
---name <replaceable>susecf-scf</replaceable> \
---namespace scf \
+<screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
+
+&prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
+--namespace <replaceable>scf</replaceable> \
 --values scf-config-values.yaml \
 --values scf-sizing.yaml
 </screen>
