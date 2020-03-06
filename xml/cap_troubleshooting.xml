@@ -116,9 +116,9 @@ routing-api-0            0/1   Running   0         16h</screen>
 
 <screen>&prompt.user;helm list
 NAME            REVISION  UPDATED                  STATUS    CHART           NAMESPACE
-<replaceable>susecf-console</replaceable>  1         Tue Aug 14 11:53:28 2018 DEPLOYED  console-&lateststratoschart;   stratos
-<replaceable>susecf-scf</replaceable>      1         Tue Aug 14 10:58:16 2018 DEPLOYED  cf-&latestscfchart;       scf
-<replaceable>susecf-uaa</replaceable>      1         Tue Aug 14 10:49:30 2018 DEPLOYED  uaa-&latestuaachart;      uaa</screen>
+<replaceable>susecf-console</replaceable>  1         Tue Aug 14 11:53:28 2018 DEPLOYED  console-&stratos_chart;   stratos
+<replaceable>susecf-scf</replaceable>      1         Tue Aug 14 10:58:16 2018 DEPLOYED  cf-&cf_chart;       scf
+</screen>
 
   <para>
    This example deletes the <literal>susecf-uaa</literal> release and

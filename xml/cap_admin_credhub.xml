@@ -68,7 +68,7 @@
 --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}" \
 --set "enable.credhub=true" \
---version &latestscfchart;
+--version &cf_chart;
 </screen>
 
  <warning>
@@ -100,7 +100,7 @@
 --values scf-config-values.yaml \
 --set "secrets.UAA_CA_CERT=${CA_CERT}" \
 --set "enable.credhub=false" \
---version &latestscfchart;
+--version &cf_chart;
 </screen>
  </sect1>
  <sect1 xml:id="sec-cap-credhub-upgrade-considerations">

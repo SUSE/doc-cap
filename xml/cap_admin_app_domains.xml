@@ -78,7 +78,7 @@
 
 <screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
---version &latestscfchart;
+--version &cf_chart;
 </screen>
 
   &scf-deploy-complete;

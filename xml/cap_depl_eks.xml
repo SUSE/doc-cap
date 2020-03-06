@@ -51,7 +51,7 @@
      </listitem>
      <listitem>
       <para>
-       The <literal>NodeVolumeSize</literal> must be a minimum of &node-size; GB.
+       The <literal>NodeVolumeSize</literal> must be a minimum of &node_size; GB.
       </para>
      </listitem>
      <listitem>
