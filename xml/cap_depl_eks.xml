@@ -51,7 +51,7 @@
      </listitem>
      <listitem>
       <para>
-       The <literal>NodeVolumeSize</literal> must be a minimum of &node-size; GB.
+       The <literal>NodeVolumeSize</literal> must be a minimum of &node_size; GB.
       </para>
      </listitem>
      <listitem>
@@ -406,13 +406,13 @@ suse            https://kubernetes-charts.suse.com/</screen>
 
   <para>
    Use &helm; to deploy the <literal>uaa</literal> (User Account and
-   Authentication) server. You may create your own release
-   <literal>--name</literal>:
+   Authentication) server. You may create your own release name:
   </para>
 
-<screen>&prompt.user;helm install suse/uaa \
---name <replaceable>susecf-uaa</replaceable> \
---namespace uaa \
+<screen>&prompt.user;kubectl create namespace <replaceable>uaa</replaceable>
+	  
+&prompt.user;helm install <replaceable>susecf-uaa</replaceable> suse/uaa \
+--namespace <replaceable>uaa</replaceable> \
 --values scf-config-values.yaml</screen>
 
   &uaa-deploy-complete;
@@ -452,9 +452,10 @@ suse            https://kubernetes-charts.suse.com/</screen>
 
   &uaa-ca-cert-note;
 
-<screen>&prompt.user;helm install suse/cf \
---name <replaceable>susecf-scf</replaceable> \
---namespace scf \
+<screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
+
+&prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
+--namespace <replaceable>scf</replaceable> \
 --values scf-config-values.yaml
 </screen>
 
@@ -660,21 +661,22 @@ suse            https://kubernetes-charts.suse.com/</screen>
       with adequate IAM rights is chosen (see
       <xref linkend="sec-cap-aws-service-broker-prereqs"/>:
      </para>
-<screen>&prompt.user;helm install aws-sb/aws-servicebroker \
-	     --name aws-servicebroker \
-	     --namespace $BROKER_NAMESPACE \
-	     --version 1.0.1 \
-	     --set aws.secretkey=$AWS_ACCESS_KEY \
-	     --set aws.accesskeyid=$AWS_KEY_ID \
-	     --set deployClusterServiceBroker=false \
-	     --set tls.cert="$(base64 -w0 tls.pem)" \
-	     --set tls.key="$(base64 -w0 tls.key)" \
-	     --set-string aws.targetaccountid=$AWS_TARGET_ACCOUNT_ID \
-	     --set aws.targetrolename=$AWS_TARGET_ROLE_NAME \
-	     --set aws.tablename=awssb \
-	     --set aws.vpcid=$VPC_ID \
-	     --set aws.region=$AWS_REGION \
-	     --set authenticate=false
+<screen>&prompt.user;kubectl create namespace <replaceable>$BROKER_NAMESPACE</replaceable>
+	
+&prompt.user;helm install <replaceable>aws-servicebroker</replaceable> aws-sb/aws-servicebroker \
+--namespace <replaceable>$BROKER_NAMESPACE</replaceable> \
+--version 1.0.1 \
+--set aws.secretkey=$AWS_ACCESS_KEY \
+--set aws.accesskeyid=$AWS_KEY_ID \
+--set deployClusterServiceBroker=false \
+--set tls.cert="$(base64 -w0 tls.pem)" \
+--set tls.key="$(base64 -w0 tls.key)" \
+--set-string aws.targetaccountid=$AWS_TARGET_ACCOUNT_ID \
+--set aws.targetrolename=$AWS_TARGET_ROLE_NAME \
+--set aws.tablename=awssb \
+--set aws.vpcid=$VPC_ID \
+--set aws.region=$AWS_REGION \
+--set authenticate=false
 </screen>
      <para>
       To find the values of <option>aws.targetaccoundid</option>, <option>
@@ -705,10 +707,10 @@ suse            https://kubernetes-charts.suse.com/</screen>
      <para>
       Create a service broker in <literal>scf</literal>. Note the name of the
       service broker should be the same as the one specified for the
-      <literal>--name</literal> flag in the <command>helm install</command>
-      step (for example <literal>aws-servicebroker</literal>. Note that the
-      username and password parameters are only used as dummy values to pass to
-      the <command>cf</command> command:
+      the <command>helm install</command> step (for example
+      <literal>aws-servicebroker</literal>. Note that the username and password
+      parameters are only used as dummy values to pass to the
+      <command>cf</command> command:
      </para>
 <screen>&prompt.user;cf create-service-broker aws-servicebroker <replaceable>username</replaceable> <replaceable>password</replaceable> https://aws-servicebroker-aws-servicebroker.aws-sb.svc.cluster.local</screen>
     </step>
@@ -782,7 +784,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
      <para>
       Delete the deployed &helm; chart and the namespace:
      </para>
-<screen>&prompt.user;helm delete --purge aws-servicebroker
+<screen>&prompt.user;helm delete aws-servicebroker
 &prompt.user;kubectl delete namespace ${BROKER_NAMESPACE}
 </screen>
     </step>

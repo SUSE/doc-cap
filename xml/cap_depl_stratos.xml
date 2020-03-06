@@ -67,10 +67,11 @@ sed 's/"namespace": "default"/"namespace": "stratos"/' | kubectl create --filena
 
   &stratos-tech-preview-note;
 
-<screen>&prompt.user;helm install suse/console \
-    --name <replaceable>susecf-console</replaceable> \
-    --namespace stratos \
-    --values scf-config-values.yaml
+<screen>&prompt.user;kubectl create namespace <replaceable>stratos</replaceable>
+
+&prompt.user;helm install <replaceable>susecf-console</replaceable> suse/console \
+--namespace <replaceable>stratos</replaceable> \
+--values scf-config-values.yaml
 </screen>
 
   &stratos-deploy-complete;
@@ -262,12 +263,13 @@ gp2scoped       kubernetes.io/aws-ebs   1d
 
   &stratos-tech-preview-note;
 
-<screen>&prompt.user;helm install suse/console \
-    --name susecf-console \
-    --namespace stratos \
-    --values scf-config-values.yaml \
-    --set kube.storage_class.persistent=gp2scoped \
-    --set services.loadbalanced=true
+<screen>&prompt.user;kubectl create namespace <replaceable>stratos</replaceable>
+
+&prompt.user;helm install <replaceable>susecf-console</replaceable> suse/console \
+--namespace <replaceable>stratos</replaceable> \
+--values scf-config-values.yaml \
+--set kube.storage_class.persistent=gp2scoped \
+--set services.loadbalanced=true
 </screen>
 
   &stratos-deploy-complete;
@@ -396,11 +398,12 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <para>
    Use &helm; to install Stratos:
   </para>
-<screen>&prompt.user;helm install suse/console \
-    --name susecf-console \
-    --namespace stratos \
-    --values scf-config-values.yaml \
-    --set services.loadbalanced=true
+<screen>&prompt.user;kubectl create namespace <replaceable>stratos</replaceable>
+	  
+&prompt.user;helm install <replaceable>susecf-console</replaceable> suse/console \
+--namespace <replaceable>stratos</replaceable> \
+--values scf-config-values.yaml \
+--set services.loadbalanced=true
 </screen>
 
   &stratos-deploy-complete;
@@ -517,11 +520,12 @@ gp2scoped       kubernetes.io/aws-ebs   1d
 
   &stratos-tech-preview-note;
 
-<screen>&prompt.user;helm install suse/console \
-    --name susecf-console \
-    --namespace stratos \
-    --values scf-config-values.yaml \
-    --set services.loadbalanced=true
+<screen>&prompt.user;kubectl create namespace <replaceable>stratos</replaceable>
+
+&prompt.user;helm install <replaceable>susecf-console</replaceable> suse/console \
+--namespace <replaceable>stratos</replaceable> \
+--values scf-config-values.yaml \
+--set services.loadbalanced=true
 </screen>
 
   &stratos-deploy-complete;
@@ -888,11 +892,12 @@ sed 's/"namespace": "default"/"namespace": "metrics"/' | kubectl create --filena
    <para>
     Install Metrics with:
    </para>
-<screen>&prompt.user;helm install suse/metrics \
-    --name <replaceable>susecf-metrics</replaceable> \
-    --namespace metrics \
-    --values scf-config-values.yaml \
-    --values stratos-metrics-values.yaml</screen>
+<screen>&prompt.user;kubectl create namespace <replaceable>metrics</replaceable>
+
+&prompt.user;helm install <replaceable>susecf-metrics</replaceable> suse/metrics \
+--namespace <replaceable>metrics</replaceable> \
+--values scf-config-values.yaml \
+--values stratos-metrics-values.yaml</screen>
    <para>
     Monitor progress:
    </para>

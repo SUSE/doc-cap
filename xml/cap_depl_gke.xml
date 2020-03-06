@@ -133,7 +133,7 @@
    </listitem>
    <listitem>
     <para>
-     Has at least &node-size; GB local storage per node.
+     Has at least &node_size; GB local storage per node.
     </para>
    </listitem>
    <listitem>
@@ -371,8 +371,9 @@ suse       https://kubernetes-charts.suse.com/
    <para>
     Use &helm; to deploy the <literal>uaa</literal> server:
    </para>
-<screen>&prompt.user;helm install suse/uaa \
---name <replaceable>susecf-uaa</replaceable> \
+<screen>&prompt.user;kubectl create namespace <replaceable>uaa</replaceable>
+
+&prompt.user;helm install <replaceable>susecf-uaa</replaceable> suse/uaa \
 --namespace <replaceable>uaa</replaceable> \
 --values <replaceable>scf-config-values.yaml</replaceable>
 </screen>
@@ -445,9 +446,10 @@ uaa-uaa-public    LoadBalancer   10.0.67.56     35.197.11.229  2793:30206/TCP
 
    &uaa-ca-cert-note;
 
-<screen>&prompt.user;helm install suse/cf \
---name <replaceable>susecf-scf</replaceable> \
---namespace scf \
+<screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
+
+&prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
+--namespace <replaceable>scf</replaceable> \
 --values scf-config-values.yaml
 </screen>
    &scf-deploy-complete;
@@ -1154,7 +1156,7 @@ applications:
 
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
---version &latestscfchart;
+--version &cf_chart;
 </screen>
    </step>
    <step>

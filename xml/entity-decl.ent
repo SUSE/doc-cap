@@ -4,18 +4,17 @@
 
 <!ENTITY productname    "&suse; &cap;">
 <!ENTITY productnamereg "&suse;&reg; &cap;">
-<!ENTITY productnumber  "1.5.2">
+<!ENTITY productnumber  "2.0">
 <!ENTITY github.url     "https://github.com/SUSE/doc-cap">
 <!ENTITY cap            "Cloud Application Platform">
 <!ENTITY kernel_version "3.19">
-<!ENTITY latestuaachart "2.20.3">
-<!ENTITY latestscfchart "2.20.3">
-<!ENTITY lateststratoschart "2.7.0">
-<!ENTITY metrics-version "1.1.2">
-<!ENTITY minibroker-version "0.3.1">
-<!ENTITY chart-appversion "1.5.2">
-<!ENTITY aksnodeversion "1.11.9">
-<!ENTITY node-size    "80">
+<!ENTITY operator_chart "TODO">
+<!ENTITY cf_chart "TODO">
+<!ENTITY stratos_chart "3.0.0">
+<!ENTITY metrics_chart "1.1.2">
+<!ENTITY minibroker_chart "0.3.1">
+<!ENTITY chart_appversion "TODO">
+<!ENTITY node_size    "80">
 <!ENTITY cfcli        "cf CLI">
 <!ENTITY guide         "<citetitle xmlns='http://docbook.org/ns/docbook'>Deployment, Administration, and User Guide</citetitle>">
 <!-- ====================================================================== -->

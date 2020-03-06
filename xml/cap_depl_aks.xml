@@ -301,13 +301,13 @@ export NODEPOOL_NAME="mypool"
 <screen>&prompt.user;az aks create --resource-group $RG_NAME --name $AKS_NAME \
  --node-count $NODE_COUNT --admin-username $ADMIN_USERNAME \
  --ssh-key-value $SSH_KEY_VALUE --node-vm-size $NODE_VM_SIZE \
- --node-osdisk-size=&node-size; --nodepool-name $NODEPOOL_NAME \
+ --node-osdisk-size=&node_size; --nodepool-name $NODEPOOL_NAME \
  --vm-set-type AvailabilitySet
 </screen>
 
   <note>
    <para>
-    An OS disk size of at least &node-size; GB must be specified using the
+    An OS disk size of at least &node_size; GB must be specified using the
     <command>--node-osdisk-size</command> flag.
    </para>
   </note>
@@ -329,26 +329,7 @@ export NODEPOOL_NAME="mypool"
    Verify that you can connect to your cluster:
   </para>
 
-<screen>&prompt.user;kubectl get nodes
-NAME                    STATUS    ROLES     AGE       VERSION
-aks-mypool-47788232-0   Ready     agent     5m        v&aksnodeversion;
-aks-mypool-47788232-1   Ready     agent     6m        v&aksnodeversion;
-aks-mypool-47788232-2   Ready     agent     6m        v&aksnodeversion;
-
-&prompt.user;kubectl get pods --all-namespaces
-NAMESPACE     NAME                                READY  STATUS    RESTARTS   AGE
-kube-system   azureproxy-79c5db744-fwqcx          1/1    Running   2          6m
-kube-system   heapster-55f855b47-c4mf9            2/2    Running   0          5m
-kube-system   kube-dns-v20-7c556f89c5-spgbf       3/3    Running   0          6m
-kube-system   kube-dns-v20-7c556f89c5-z2g7b       3/3    Running   0          6m
-kube-system   kube-proxy-g9zpk                    1/1    Running   0          6m
-kube-system   kube-proxy-kph4v                    1/1    Running   0          6m
-kube-system   kube-proxy-xfngh                    1/1    Running   0          6m
-kube-system   kube-svc-redirect-2knsj             1/1    Running   0          6m
-kube-system   kube-svc-redirect-5nz2p             1/1    Running   0          6m
-kube-system   kube-svc-redirect-hlh22             1/1    Running   0          6m
-kube-system   kubernetes-dashboard-546686-mr9hz   1/1    Running   1          6m
-kube-system   tunnelfront-595565bc78-j8msn        1/1    Running   0          6m</screen>
+<screen>&prompt.user;kubectl get nodes</screen>
 
   <para>
    When all nodes are in a ready state and all pods are running, proceed to the
@@ -534,8 +515,9 @@ suse       https://kubernetes-charts.suse.com/
    <para>
     Use &helm; to deploy the <literal>uaa</literal> server:
    </para>
-<screen>&prompt.user;helm install suse/uaa \
---name <replaceable>susecf-uaa</replaceable> \
+<screen>&prompt.user;kubectl create namespace uaa
+
+&prompt.user;helm install <replaceable>susecf-uaa</replaceable> suse/uaa \
 --namespace <replaceable>uaa</replaceable> \
 --values <replaceable>scf-config-values.yaml</replaceable>
 </screen>
@@ -618,9 +600,10 @@ uaa-uaa-public    LoadBalancer   10.0.67.56     40.85.188.67   2793:32034/TCP
 
    &uaa-ca-cert-note;
 
-<screen>&prompt.user;helm install suse/cf \
---name <replaceable>susecf-scf</replaceable> \
---namespace scf \
+<screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
+
+&prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
+--namespace <replaceable>scf</replaceable> \
 --values scf-config-values.yaml
 </screen>
    &scf-deploy-complete;
@@ -765,8 +748,10 @@ tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.
 
 &prompt.user;helm repo update
 
-&prompt.user;helm install svc-cat/catalog --name catalog \
- --namespace catalog \
+&prompt.user;kubectl create namespace <replaceable>catalog</replaceable>
+
+&prompt.user;helm install <replaceable>catalog</replaceable> svc-cat/catalog \
+ --namespace <replaceable>catalog</replaceable> \
  --set controllerManager.healthcheck.enabled=false \
  --set apiserver.healthcheck.enabled=false
 
@@ -781,9 +766,9 @@ tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.
    Set up the service broker with your variables:
   </para>
 
-<screen>
-&prompt.user;helm install azure/open-service-broker-azure \
---name <replaceable>osba</replaceable> \
+<screen>&prompt.user;kubectl create namespace <replaceable>osba</replaceable>
+
+&prompt.user;helm install <replaceable>osba</replaceable> azure/open-service-broker-azure \
 --namespace <replaceable>osba</replaceable> \
 --set azure.subscriptionId=${SUBSCRIPTION_ID} \
 --set azure.tenantId=${TENANT_ID} \
@@ -959,7 +944,7 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
 
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
---version &latestscfchart;
+--version &cf_chart;
 </screen>
    </step>
    <step>

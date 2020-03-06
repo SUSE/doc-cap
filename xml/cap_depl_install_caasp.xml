@@ -402,8 +402,9 @@ suse       https://kubernetes-charts.suse.com/
    <para>
     Use &helm; to deploy the <literal>uaa</literal> server:
    </para>
-<screen>&prompt.user;helm install suse/uaa \
---name <replaceable>susecf-uaa</replaceable> \
+<screen>&prompt.user;kubectl create namespace <replaceable>uaa</replaceable>
+
+&prompt.user;helm install <replaceable>susecf-uaa</replaceable> suse/uaa \
 --namespace <replaceable>uaa</replaceable> \
 --values <replaceable>scf-config-values.yaml</replaceable>
 </screen>
@@ -430,9 +431,10 @@ suse       https://kubernetes-charts.suse.com/
 
    &uaa-ca-cert-note;
 
-<screen>&prompt.user;helm install suse/cf \
---name <replaceable>susecf-scf</replaceable> \
---namespace scf \
+<screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
+
+&prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
+--namespace <replaceable>scf</replaceable> \
 --values scf-config-values.yaml
 </screen>
    &scf-deploy-complete; 
@@ -493,7 +495,7 @@ suse       https://kubernetes-charts.suse.com/
 
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
---version &latestscfchart;
+--version &cf_chart;
 </screen>
    </step>
    <step>

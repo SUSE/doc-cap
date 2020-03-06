@@ -109,7 +109,7 @@ env:
      Kubelet serving certificates. For production, use
      <literal>--tls-private-key-file</literal>.
     </para>
-<screen>&prompt.user;helm install stable/metrics-server --name=metrics-server --set args[0]="--kubelet-preferred-address-types=InternalIP" --set args[1]="--kubelet-insecure-tls"</screen>
+<screen>&prompt.user;helm install <replaceable>metrics-server</replaceable> stable/metrics-server --set args[0]="--kubelet-preferred-address-types=InternalIP" --set args[1]="--kubelet-insecure-tls"</screen>
    </step>
   </procedure>
  </sect1>
