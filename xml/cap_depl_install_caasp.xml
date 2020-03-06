@@ -88,7 +88,89 @@
   <title>Creating a &caasp; Cluster</title>
 
   <para>
-   In order to deploy a &caasp; cluster, refer to the &caasp; Deployment Guide
+   When creating a &caasp; cluster, take note of the following general
+   guidelines to ensure there are sufficient resources available to run a
+   &productname; deployment:
+  </para>
+  <itemizedlist>
+   <listitem>
+    <para>
+     Minimum 2.3 GHz processor
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     2 vCPU per physical core
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     4 GB RAM per vCPU
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Worker nodes need a minimum of 4 vCPU and 16 GB RAM
+    </para>
+   </listitem>
+  </itemizedlist>
+  <para>
+   As a minimum, a &productname; deployment with a basic workload will require:
+  </para>
+  <itemizedlist>
+   <listitem>
+    <para>
+     1 master node
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       vCPU: 2
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       RAM: 8 GB
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       Storage: 60 GB (SSD)
+      </para>
+     </listitem>
+    </itemizedlist>
+   </listitem>
+   <listitem>
+    <para>
+     2 worker nodes. Each node configured with:
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       (v)CPU: 4
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       RAM: 16 GB
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       Storage: 100 GB
+      </para>
+     </listitem>
+    </itemizedlist>
+   </listitem>
+   <listitem>
+    <para>
+     Persistent storage: 40 GB
+    </para>
+   </listitem>
+  </itemizedlist>
+
+  <para>
+   For steps to deploy a &caasp; cluster, refer to the &caasp; Deployment Guide
    at <link xlink:href="https://documentation.suse.com/suse-caasp/4.1/single-html/caasp-deployment/"/>
   </para>
   <para>
