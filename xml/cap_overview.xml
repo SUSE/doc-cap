@@ -716,10 +716,10 @@
     <title>Simple Services Diagram</title>
     <mediaobject>
      <imageobject role="fo">
-      <imagedata fileref="cap-simple-services.png" format="PNG" width="75%"/>
+      <imagedata fileref="cap-simple-services.svg" format="SVG" width="75%"/>
      </imageobject>
      <imageobject role="html">
-      <imagedata fileref="cap-simple-services.png"/>
+      <imagedata fileref="cap-simple-services.svg" format="SVG"/>
      </imageobject>
      <textobject role="description"><phrase>Simple Services Diagram</phrase>
      </textobject>
@@ -1079,10 +1079,10 @@
     <title>Detailed Services Diagram</title>
     <mediaobject>
      <imageobject role="fo">
-      <imagedata fileref="cap-detailed-services.png" format="PNG" width="100%"/>
+      <imagedata fileref="cap-detailed-services.svg" format="SVG" width="100%"/>
      </imageobject>
      <imageobject role="html">
-      <imagedata fileref="cap-detailed-services.png" format="PNG"/>
+      <imagedata fileref="cap-detailed-services.svg" format="SVG"/>
      </imageobject>
      <textobject role="description"><phrase>Detailed Services Diagram</phrase>
      </textobject>
