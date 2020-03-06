@@ -514,7 +514,7 @@ susecf-console 1        Wed Aug 14 08:35:58 2018  DEPLOYED  console-&stratos_cha
 susecf-scf     1        Tue Aug 14 12:24:36 2018  DEPLOYED  cf-&cf_chart;                  scf
 mysql-service  1        Mon May 21 11:40:11 2018  DEPLOYED  cf-usb-sidecar-mysql-1.0.1 mysql-sidecar
 
-&prompt.user;helm delete --purge mysql-service</screen>
+&prompt.user;helm delete mysql-service</screen>
     </listitem>
    </itemizedlist>
   </sect2>
