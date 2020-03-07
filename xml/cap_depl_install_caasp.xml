@@ -243,19 +243,10 @@
 <screen>&prompt.user;sudo zypper install helm</screen>
   <para>
    Alternatively, refer to the upstream documentation at
-   <link xlink:href="https://docs.helm.sh/using_helm/#installing-helm"/>. &cap;
+   <link xlink:href="https://helm.sh/docs/intro/install/"/>. &cap;
    is compatible with both &helm; 2 and &helm; 3. Examples in this guide are
    based on &helm; 2. To use &helm; 3, refer to the &helm; documentation at
    <link xlink:href="https://helm.sh/docs/"/>.     
-  </para>
-  <para>
-   &tiller;, the &helm; server component, needs to be installed on your &kube;
-   cluster. To install, follow the instructions at
-   <link xlink:href="https://documentation.suse.com/suse-caasp/4.1/single-html/caasp-admin/#_installing_tiller"/>. Alternatively, refer to the upstream documentation at
-   <link xlink:href="https://helm.sh/docs/using_helm/#installing-tiller"/> to
-   install &tiller; with a service account and ensure your installation is
-   appropriately secured according to your requirements as described in
-   <link xlink:href="https://helm.sh/docs/using_helm/#securing-your-helm-installation"/>.
   </para>
  </sect1>
 

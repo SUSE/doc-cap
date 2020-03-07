@@ -493,7 +493,7 @@ suse/uaa                        &cf_chart;          &chart_appversion;          
 <!ENTITY chart-version-fields
 '<para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
   There are slight differences in the way &cap; uses some &helm; chart fields
-  than what is defined in <link xlink:href="https://v2.helm.sh/docs/developing_charts"/>.
+  than what is defined in <link xlink:href="https://helm.sh/docs/topics/charts/"/>.
   Take note of the following fields:
  </para>
  <variablelist xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -503,8 +503,9 @@ suse/uaa                        &cf_chart;          &chart_appversion;          
     <para>
      In &cap;, the <literal>APP VERSION</literal> field indicates the &cap;
      release that a &helm; chart belongs to. This is in contrast to indicating
-     the version of the application as defined in
-     <link xlink:href="https://v2.helm.sh/docs/developing_charts/#the-appversion-field"/>.
+the version of the application as defined in "The <literal>appVersion</literal>
+     Field" section of
+     <link xlink:href="https://helm.sh/docs/topics/charts/"/>.
      For example, in the <literal>suse/uaa</literal> &helm; chart, an
      <literal>APP VERSION</literal> of 1.4 is in reference to &cap; release 1.4
      and does not indicate <literal>uaa</literal> is version 1.4.
@@ -516,8 +517,8 @@ suse/uaa                        &cf_chart;          &chart_appversion;          
    <listitem>
     <para>
      In &cap;, the <literal>CHART VERSION</literal> field indicates the &helm;
-     chart version, the same as defined in
-     <link xlink:href="https://v2.helm.sh/docs/developing_charts/#charts-and-versioning"/>.
+     chart version, the same as defined in the "Charts and Versioning" section of
+     <link xlink:href="https://helm.sh/docs/topics/charts/"/>.
      For &cap; &helm; charts, the chart version is also the release number of the
      coresponding component. For example, in the <literal>suse/uaa</literal>
      &helm; chart, a <literal>CHART VERSION</literal> of 2.16.4 also indicates
@@ -608,18 +609,10 @@ suse/uaa                        &cf_chart;          &chart_appversion;          
   <para>
    The &helm; client, <literal>helm</literal>, can be installed on your remote
    administration computer by referring to the documentation at
-   <link xlink:href="https://v2.helm.sh/docs/using_helm/#installing-helm"/>.
+   <link xlink:href="https://helm.sh/docs/intro/install/"/>.
    &cap; is compatible with both &helm; 2 and &helm; 3. Examples in this guide
    are based on &helm; 2. To use &helm; 3, refer to the &helm; documentation at
    <link xlink:href="https://helm.sh/docs/"/>.
-  </para>
-  <para>
-   &tiller;, the &helm; server component, needs to be installed on your &kube;
-   cluster. Follow the instructions at
-   <link xlink:href="https://v2.helm.sh/docs/using_helm/#installing-tiller"/> to
-   install &tiller; with a service account and ensure your installation is
-   appropriately secured according to your requirements as described in
-   <link xlink:href="https://v2.helm.sh/docs/using_helm/#securing-your-helm-installation"/>.
   </para>
  </sect1>'>
 
