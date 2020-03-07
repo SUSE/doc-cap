@@ -234,8 +234,8 @@
   </sect2>
  </sect1>
 
- <!-- sect1 for helm client and tiller installation -->
- &install-helm-tiller;
+ <!-- sect1 for helm client installation -->
+ &install-helm;
 
  <sect1 xml:id="sec-cap-eks-storage-class">
   <title>Default Storage Class</title>

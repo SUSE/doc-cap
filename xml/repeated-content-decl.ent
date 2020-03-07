@@ -597,11 +597,11 @@ the version of the application as defined in "The <literal>appVersion</literal>
   </para>
  </important>'>
 
-<!--ENTITY install-helm-tiller..............................................-->
+<!--ENTITY install-helm..............................................-->
 
-<!ENTITY install-helm-tiller
+<!ENTITY install-helm
 '<sect1 xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <title>Install &helm; Client and &tiller;</title>
+  <title>Install the &helm; Client</title>
   <para>
    &helm; is a &kube; package manager. It consists of a client and server
    component, both of which are required in order to install and manage &cap;.
@@ -610,9 +610,8 @@ the version of the application as defined in "The <literal>appVersion</literal>
    The &helm; client, <literal>helm</literal>, can be installed on your remote
    administration computer by referring to the documentation at
    <link xlink:href="https://helm.sh/docs/intro/install/"/>.
-   &cap; is compatible with both &helm; 2 and &helm; 3. Examples in this guide
-   are based on &helm; 2. To use &helm; 3, refer to the &helm; documentation at
-   <link xlink:href="https://helm.sh/docs/"/>.
+   The examples in this guide are based on &helm; 3. For more information, refer
+   to the documentation at <link xlink:href="https://helm.sh/docs/"/>.
   </para>
  </sect1>'>
 

@@ -433,8 +433,8 @@
     </listitem>
     <listitem>
      <para>
-      &helm;, the &kube; package manager, which includes &tiller;, the &helm;
-      server, and the <command>helm</command> command line client.
+      &helm;, the &kube; package manager, and the <command>helm</command>
+      command line client.
      </para>
     </listitem>
     <listitem>
