@@ -20,7 +20,7 @@
    The Stratos user interface (UI) is a modern web-based management application
    for &cf;. It provides a graphical management console for both
    developers and system administrators. Install Stratos with &helm; after all
-   of the <literal>uaa</literal> and <literal>scf</literal> pods are running.
+   of the <literal>scf</literal> pods are running.
   </para>
 
  <sect1 xml:id="sec-cap-stratos-prod">
@@ -32,13 +32,9 @@
       &productname; domain as described in
       <xref linkend="sec-cap-caasp-config"/>. These instructions assume you
       have followed the procedure in <xref linkend="cha-cap-depl-caasp"/>,
-      have deployed <literal>uaa</literal> and <literal>scf</literal> successfully,
-      and have created a default storage class.
-      <!-- Hopefully an additional section describing how to deploy with a load
-      balancer will actually be written. cjs april 1 2019 "See
-      TODO to learn how to configure
-      Stratos to use an external load balancer."-->
-  </para>
+      have deployed <literal>scf</literal> successfully, and have created a
+      default storage class.
+ </para>
 
   <para>
    If you are using &ses; as your storage back-end, copy the secret into the
@@ -60,7 +56,7 @@ sed 's/"namespace": "default"/"namespace": "stratos"/' | kubectl create --filena
  <para>
      Use &helm; to install Stratos, using the same
      <filename>scf-config-values.yaml</filename> configuration file you used to
-     deploy<literal>uaa</literal> and <literal>scf</literal>:
+     deploy <literal>scf</literal>:
   </para>
 
   &defaul-scf-namespace-note;
@@ -219,8 +215,8 @@ stratos  1        1        3h
   <title>Deploy Stratos on &eks;</title>
 
   <para>
-   Before deploying Stratos, ensure <literal>uaa</literal> and <literal>scf</literal>
-   have been successfully deployed on &eks; (see <xref linkend="cha-cap-depl-eks"/>).
+   Before deploying Stratos, ensure <literal>scf</literal> has been successfully
+   deployed on &eks; (see <xref linkend="cha-cap-depl-eks"/>).
   </para>
   <para>
    Configure a scoped storage class for your Stratos deployment. Create a configuration
@@ -387,8 +383,8 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <title>Deploy Stratos on &aks;</title>
 
   <para>
-   Before deploying Stratos, ensure <literal>uaa</literal> and <literal>scf</literal>
-   have been successfully deployed on &aks; (see <xref linkend="cha-cap-depl-aks"/>).
+   Before deploying Stratos, ensure <literal>scf</literal> has been successfully
+   deployed on &aks; (see <xref linkend="cha-cap-depl-aks"/>).
   </para>
 
   &defaul-scf-namespace-note;
@@ -508,8 +504,8 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <title>Deploy Stratos on &gke;</title>
 
   <para>
-   Before deploying Stratos, ensure <literal>uaa</literal> and <literal>scf</literal>
-   have been successfully deployed on &gke; (see <xref linkend="cha-cap-depl-gke"/>).
+   Before deploying Stratos, ensure <literal>scf</literal> has been successfully
+   deployed on &gke; (see <xref linkend="cha-cap-depl-gke"/>).
   </para>
 
   <para>
@@ -634,9 +630,8 @@ gp2scoped       kubernetes.io/aws-ebs   1d
 
   <para>
    For instructions to upgrade Stratos, follow the process described in
-   <xref linkend="cha-cap-upgrade"/>. Take note that <literal>uaa</literal> and
-   <literal>scf</literal>, other components along with Stratos that make up a
-   &cap; release, are upgraded prior to upgrading Stratos.
+   <xref linkend="cha-cap-upgrade"/>. Take note that <literal>scf</literal> is
+   upgraded prior to upgrading Stratos.
   </para>
  </sect1>
  <sect1 xml:id="sec-cap-stratos-metrics">
@@ -809,7 +804,7 @@ firehoseExporter:
     <literal>stratos-metrics</literal> &helm; chart. As with deploying Stratos,
     you should deploy the metrics &helm; chart using the same
     <filename>scf-config-values.yaml</filename> file that was used for deploying
-    <literal>scf</literal> and <literal>uaa</literal>.
+    <literal>scf</literal>.
    </para>
    <para>
     Additionally, create a new YAML file, named

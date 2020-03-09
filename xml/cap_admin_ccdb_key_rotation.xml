@@ -50,12 +50,8 @@ secrets:
     into the cluster. This restarts relevant pods with the new information from
     the previous step:
    </para>
-
-   &uaa-ca-cert-note;
-
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
---set "secrets.UAA_CA_CERT=${CA_CERT}" \
 --version &cf_chart;
    </screen>
   </step>

@@ -77,8 +77,6 @@
   <sect2 xml:id="sec-cap-new-deployment-apply-nproc">
    <title>New Deployments</title>
 
-   &uaa-in-scf;
-
    <para>
     For new &productname; deployments, follow the steps below to deploy
     &productname; with nproc limits configured:
@@ -87,23 +85,8 @@
    <procedure>
     <step>
      <para>
-      Deploy <literal>uaa</literal>:
-     </para>
-<screen>&prompt.user;kubectl create namespace <replaceable>uaa</replaceable>
-
-&prompt.user;helm install <replaceable>susecf-uaa</replaceable> suse/uaa \
---namespace <replaceable>uaa</replaceable> \
---values scf-config-values.yaml
-</screen>
-     &uaa-deploy-complete;
-    </step>
-    <step>
-     <para>
       Deploy <literal>scf</literal>:
      </para>
-
-     &uaa-ca-cert-note;
-
 <screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
 
 &prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
@@ -145,8 +128,6 @@
   <sect2 xml:id="sec-cap-existing-deployment-apply-nproc">
    <title>Existing Deployments</title>
 
-   &uaa-in-scf;
-
    <para>
     For existing &productname; deployments, follow the steps below to redeploy
     &productname; with nproc limits configured:
@@ -157,9 +138,6 @@
      <para>
       Use <command>helm upgrade</command> to apply the change:
      </para>
-
-     &uaa-ca-cert-note;
-
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
 --version &cf_chart;

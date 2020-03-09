@@ -270,11 +270,7 @@ allowVolumeExpansion: true
 
   <para>
    Creation of the Elastic Load Balancer is triggered by a setting in the &cap;
-   deployment configuration file. First deploy <literal>uaa</literal>, then
-   create CNAMEs for your domain and <literal>uaa</literal> subdomains (see the
-   table below). Then deploy <literal>scf</literal>, and create the appropriate
-   <literal>scf</literal> CNAMEs. This is described in more detail in the
-   deployment sections.
+   deployment configuration file.
   </para>
 
   <para>
@@ -297,80 +293,11 @@ allowVolumeExpansion: true
 
 <screen>### example deployment configuration file
 ### scf-config-values.yaml
-
-env:
-  DOMAIN: <replaceable>example.com</replaceable>
-  UAA_HOST: uaa.<replaceable>example.com</replaceable>
-  UAA_PORT: 2793
-
-  GARDEN_ROOTFS_DRIVER: overlay-xfs
-  GARDEN_APPARMOR_PROFILE: ""
-
-services:
-  loadbalanced: true
-
-kube:
-  storage_class:
-    # Change the value to the storage class you use
-    persistent: "<replaceable>gp2</replaceable>"
-    shared: "<replaceable>gp2</replaceable>"
-
-  # The default registry images are fetched from
-  registry:
-    hostname: "registry.suse.com"
-    username: ""
-    password: ""
-  organization: "cap"
-
-secrets:
-  # Create a very strong password for user 'admin'
-  CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
-
-  # Create a very strong password, and protect it because it
-  # provides root access to everything
-  UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
+<!-- TODO-CAP2 -->
 </screen>
 
   <!-- Explains usage of some Helm values used in the example/minimal values.yaml-->
   &config-value-usage;
-
-  <!-- Reiterates importance of this password -->
-  &protect-uaa-admin-secret;
-
- </sect1>
- <sect1 xml:id="sec-cap-eks-deploy">
-<!-- maybe change some of the content in this section to an entity (cjs, feb
-      12 2019_-->
-
-  <title>Deploying &cap;</title>
-
-  <para>
-   The following list provides an overview of &helm; commands to complete the
-   deployment. Included are links to detailed descriptions.
-  </para>
-
-  <procedure>
-   <step>
-    <para>
-     Download the &suse; &kube; charts repository
-     (<xref
-     linkend="sec-cap-addrepo-eks"/>)
-    </para>
-   </step>
-   <step>
-    <para>
-     Deploy <literal>uaa</literal>, then create appropriate CNAMEs
-     (<xref linkend="sec-cap-install-uaa-eks"/>)
-    </para>
-   </step>
-   <step>
-    <para>
-     Copy the <literal>uaa</literal> secret and certificate to the
-     <literal>scf</literal> namespace, deploy <literal>scf</literal>, create
-     CNAMES (<xref linkend="sec-cap-install-scf-eks"/>)
-    </para>
-   </step>
-  </procedure>
  </sect1>
  <sect1 xml:id="sec-cap-addrepo-eks">
   <title>Add the &kube; Charts Repository</title>
@@ -399,59 +326,18 @@ suse            https://kubernetes-charts.suse.com/</screen>
 &helm-search-suse;
 
  </sect1>
- <sect1 xml:id="sec-cap-install-uaa-eks">
-  <title>Deploy <literal>uaa</literal></title>
 
-  &uaa-in-scf;
-
-  <para>
-   Use &helm; to deploy the <literal>uaa</literal> (User Account and
-   Authentication) server. You may create your own release name:
-  </para>
-
-<screen>&prompt.user;kubectl create namespace <replaceable>uaa</replaceable>
-	  
-&prompt.user;helm install <replaceable>susecf-uaa</replaceable> suse/uaa \
---namespace <replaceable>uaa</replaceable> \
---values scf-config-values.yaml</screen>
-
-  &uaa-deploy-complete;
-
-  <para>
-   When <literal>uaa</literal> is finished deploying, create CNAMEs for the
-   required domains. (See <xref linkend="sec-cap-eks-dns"/>.) Use
-   <command>kubectl</command> to find the service host names. These host names
-   include the <literal>elb</literal> sub-domain, so use this to get the
-   correct results:
-  </para>
-
-<screen>&prompt.user;kubectl get services --namespace uaa | grep elb</screen>
-
-  <para>
-   Use <command>curl</command> to verify you are able to connect to the
-   <literal>uaa</literal> OAuth server on the DNS name configured:
-  </para>
-<screen>&prompt.user;curl --insecure https://uaa.example.com:2793/.well-known/openid-configuration</screen>
-  <para>
-   This should return a JSON object, as this abbreviated example shows:
-  </para>
-<screen>{"issuer":"https://uaa.example.com:2793/oauth/token",
-"authorization_endpoint":"https://uaa.example.com:2793
-/oauth/authorize","token_endpoint":"https://uaa.example.com:2793/oauth/token"
-</screen>
-
+ <!-- TODO-CAP2 -->
+ <sect1 xml:id="sec-cap-eks-deploy-operator">
+  <title>Deploy <literal>operator</literal></title>
  </sect1>
- <sect1 xml:id="sec-cap-install-scf-eks">
+
+ <sect1 xml:id="sec-cap-eks-deploy-scf">
   <title>Deploy <literal>scf</literal></title>
 
   <para>
-   Before deploying <literal>scf</literal>, ensure the DNS records for the
-   <literal>uaa</literal> domains have been set up as specified in the
-   previous section. Next, use &helm; to deploy <literal>scf</literal>:
+   Next, use &helm; to deploy <literal>scf</literal>:
   </para>
-
-  &uaa-ca-cert-note;
-
 <screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
 
 &prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \

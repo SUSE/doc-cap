@@ -34,16 +34,6 @@
    </listitem>
    <listitem>
     <para>
-     In order to secure <literal>uaa</literal>-related traffic, the certificate's
-     Subject Alternative Name (SAN) should include the domains
-     <replaceable>uaa.example.com</replaceable> and
-     <replaceable>*.uaa.example.com</replaceable>, where <replaceable>example.com</replaceable>
-     is replaced with the <literal>DOMAIN</literal> set in your
-     <filename>scf-config-values.yaml</filename>.
-    </para>
-   </listitem>
-   <listitem>
-    <para>
      In order to secure <literal>scf</literal>-related traffic, the certificate's
      Subject Alternative Name (SAN) should include the domain
      <replaceable>*.example.com</replaceable>, where <replaceable>example.com</replaceable>
@@ -71,42 +61,10 @@
    </para>
   </note>
 
-  <para>
-   Certificates are installed to the <literal>uaa</literal> component by setting
-   the values <literal>UAA_SERVER_CERT</literal> and <literal>UAA_SERVER_CERT_KEY</literal>.
-   For example:
-  </para>
-
-<screen>secrets:
-  UAA_SERVER_CERT: |
-    -----BEGIN CERTIFICATE-----
-    MIIFnzCCA4egAwIBAgICEAMwDQYJKoZIhvcNAQENBQAwXDELMAkGA1UEBhMCQ0Ex
-    CzAJBgNVBAgMAkJDMRIwEAYDVQQHDAlWYW5jb3V2ZXIxETAPBgNVBAoMCE15Q2Fw
-    T3JnMRkwFwYDVQQDDBBNeUNhcE9yZyBSb290IENBMB4XDTE4MDkxNDIyNDMzNVoX
-    ...
-    IqhPRKYBFHPw6RxVTjG/ClMsFvOIAO3QsK+MwTRIGVu/MNs0wjMu34B/zApLP+hQ
-    3ZxAt/z5Dvdd0y78voCWumXYPfDw9T94B4o58FvzcM0eR3V+nVtahLGD2r+DqJB0
-    3xoI
-    -----END CERTIFICATE-----
-
-  UAA_SERVER_CERT_KEY: |
-    -----BEGIN PRIVATE KEY-----
-    MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDhRlcoZAVwUkg0
-    sdExkBnPenhLG5FzQM3wm9t4erbSQulKjeFlBa9b0+RH6gbYDHh5+NyiL0L89txO
-    JHNRGEmt+4zy+9bY7e2syU18z1orOrgdNq+8QhsSoKHJV2w+0QZkSHTLdWmAetrA
-    ...
-    ZP5BpgjrT2lGC1ElW/8AFM5TxkkOPMzDCe8HRXPUUw+2YDzyKY1YgkwOMpHlk8Cs
-    wPQYJsrcObenRwsGy2+A6NiIg2AVJwHASFG65taoV+1A061P3oPDtyIH/UPhRUoC
-    OULPS8fbHefNiSvZTNVKwj8=
-    -----END PRIVATE KEY-----
-</screen>
-
-  <para>
+ <para>
    Certificates are installed to the <literal>scf</literal> component by setting
    the values <literal>ROUTER_SSL_CERT</literal> and
-   <literal>ROUTER_SSL_CERT_KEY</literal>. In addition, set
-   <literal>UAA_CA_CERT</literal> with the root certificate of the Certificate
-   Authority used to sign your certificate. For example:
+   <literal>ROUTER_SSL_CERT_KEY</literal>. For example:
   </para>
 
 <screen>secrets:
@@ -131,17 +89,6 @@
     M5CD+pq71TuBtbo9hbjy5Buh0+QSIbJaNIOdJxU7idEf200+4anzdaipyCWXdZU+
     MPdJf40awgSWpGdiSv6hoj0AOm+lf4AsH6yAqw/eIHXNzhWLRvnqgA==
     -----END RSA PRIVATE KEY----
-
-  UAA_CA_CERT: |
-    -----BEGIN CERTIFICATE-----
-    MIIDaSjCAjKgAwIBAgIQRK+wgNajJ7qJMDmGLvhAazANBgkqhkiG9w0BAQUFADA/
-    MTQwIgYDVQQKExtEaWdpdGFsIFNpZ25hdHVyZSBUcnVzdCBDby4xFzAVBgNVBAMT
-    DkITVCBSb290IENBIFg7MB4XDTAwMDkzMDIxMTIxOVoXDTIxMDkzMDE0MDExNVow
-    ...
-    R8srzJmwN0jP41ZL9c8PDHIyh8bwRLtTcm1D9SZImlJnt1ir/md2cXjbDaJWFBM5
-    NvaEkqgCWjBH4d1QB7wCCZAA62RjYJsWvIjJEubSfZGL+T0yjWW06XyxV3bqxbYo
-    NTQVZRzI9neWagqNdwvYkQsEjgfbKbYK7p2MEIAL
-    -----END CERTIFICATE-----
 </screen>
 
   <sect2 xml:id="sec-cap-cert-multiple">
@@ -206,33 +153,16 @@
    <filename>scf-config-values.yaml</filename>, deploy &productname;.
   </para>
 
-  &uaa-in-scf;
-
   <para>
    If this is an initial deployment, use <command>helm install</command> to
-   deploy <literal>uaa</literal> and <literal>scf</literal>:
+   deploy <literal>scf</literal>:
   </para>
 
   <procedure>
    <step>
     <para>
-     Deploy <literal>uaa</literal>:
-    </para>
-<screen>&prompt.user;kubectl create namespace <replaceable>uaa</replaceable>
-
-&prompt.user;helm install <replaceable>susecf-uaa</replaceable> suse/uaa \
---namespace <replaceable>uaa</replaceable> \
---values scf-config-values.yaml
-</screen>
-    &uaa-deploy-complete;
-   </step>
-   <step>
-    <para>
      Deploy <literal>scf</literal>:
     </para>
-
-    &uaa-ca-cert-note;
-
 <screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
 
 &prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
@@ -245,45 +175,16 @@
 
   <para>
    If this is an existing deployment, use <command>helm upgrade</command> to
-   apply the changes to <literal>uaa</literal> and <literal>scf</literal>:
+   apply the changes to <literal>scf</literal>:
   </para>
 
   <procedure>
-   <step>
-    <para>
-     Upgrade <literal>uaa</literal>:
-    </para>
-<screen>&prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa \
---values scf-config-values.yaml \
---version TODO
-</screen>
-   </step>
-   <step>
-    <para>
-     Wait until you have a successful <literal>uaa</literal> deployment before
-     going to the next steps, which you can monitor with the
-     <command>watch</command> command:
-    </para>
-<screen>&prompt.user;watch --color 'kubectl get pods --namespace uaa'</screen>
-   </step>
-   <step>
-    <para>
-     Pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>:
-    </para>
-<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
---output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
-
-&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
---output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-</screen>
-   </step>
    <step>
     <para>
      Upgrade <literal>scf</literal>:
     </para>
 <screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
---set "secrets.UAA_CA_CERT=${CA_CERT}" \
 --version &cf_chart;
 </screen>
    </step>
@@ -337,14 +238,8 @@
    Next, perform a <command>helm upgrade</command> to apply the change.
   </para>
 
-<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
---output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
-
-&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
---output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-
-&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
---values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${CA_CERT}" \
+<screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
+--values scf-config-values.yaml \
 --version &cf_chart;
 </screen>
  </sect1>

@@ -106,9 +106,6 @@
    <para>
     If disabling the feature on an initial deployment, run the following command:
    </para>
-
-   &uaa-ca-cert-note;
-
 <screen> &prompt.user;kubectl create namespace <replaceable>scf</replaceable>
 
 &prompt.user;helm install <replaceable>susecf-scf</replaceable>  suse/cf \
@@ -122,27 +119,17 @@
 
 <screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
---set "secrets.UAA_CA_CERT=${CA_CERT}" \
 --set "enable.cf_usb=false" \
 --version &cf_chart;
 </screen>
 
   <para>
    To enable the feature again, run <command>helm upgrade</command> with the
-   <command>--set "enable.cf_usb=true"</command> flag. Be sure to
-   pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>
-   first:
+   <command>--set "enable.cf_usb=true"</command> flag.
   </para>
 
-<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
---output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
-
-&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
---output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-
-&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
+<screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
---set "secrets.UAA_CA_CERT=${CA_CERT}" \
 --set "enable.cf_usb=true" \
 --version &cf_chart;
 </screen>
@@ -238,34 +225,21 @@
    <title>Configuring the &mysql; Deployment</title>
 
    <para>
-    Start by extracting the <literal>uaa</literal> namespace secrets name, and
-    the <literal>uaa</literal> and <literal>scf</literal> namespaces internal
-    certificates with these commands. These will output the complete
-    certificates. Substitute your secrets name if it is different than the
-    example:
+    Start by extracting the internal certificate of <literal>scf</literal>.
+    These will output the complete certificates. Substitute your secret name if
+    it is different than the example:
    </para>
 
-<screen>&prompt.user;kubectl get pods --namespace uaa \
---output jsonpath='{.items[*].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}'
- <replaceable>secrets-2.8.0-1</replaceable>
-
-&prompt.user;kubectl get secret --namespace scf <replaceable>secrets-2.8.0-1</replaceable> --output jsonpath='{.data.internal-ca-cert}' | base64 --decode
+<screen>&prompt.user;kubectl get secret --namespace scf <replaceable>secrets-2.8.0-1</replaceable> --output jsonpath='{.data.internal-ca-cert}' | base64 --decode
  -----BEGIN CERTIFICATE-----
  MIIE8jCCAtqgAwIBAgIUT/Yu/Sv4UHl5zHZYZKCy5RKJqmYwDQYJKoZIhvcNAQEN
  [...]
  xC8x/+zT0QkvcRJBio5gg670+25KJQ==
  -----END CERTIFICATE-----
-
-&prompt.user;kubectl get secret --namespace uaa <replaceable>secrets-2.8.0-1</replaceable> --output jsonpath='{.data.internal-ca-cert}' | base64 --decode
- -----BEGIN CERTIFICATE-----
- MIIE8jCCAtqgAwIBAgIUSI02lj0a0InLb/zMrjNgW5d8EygwDQYJKoZIhvcNAQEN
- [...]
- to2GI8rPMb9W9fd2WwUXGEHTc+PqTg==
- -----END CERTIFICATE-----</screen>
+</screen>
 
    <para>
-    You will copy these certificates into your configuration file as shown
-    below.
+    You will copy the certificate into your configuration file as shown below.
    </para>
 
    <para>
@@ -296,14 +270,6 @@
     MIIE8jCCAtqgAwIBAgIUT/Yu/Sv4UHl5zHZYZKCy5RKJqmYwDQYJKoZIhvcNAQEN
     [...]
     xC8x/+zT0QkvcRJBio5gg670+25KJQ==
-    -----END CERTIFICATE-----
-
-  # UAA cert
-  UAA_CA_CERT: |
-    -----BEGIN CERTIFICATE-----
-    MIIE8jCCAtqgAwIBAgIUSI02lj0a0InLb/zMrjNgW5d8EygwDQYJKoZIhvcNAQEN
-    [...]
-    to2GI8rPMb9W9fd2WwUXGEHTc+PqTg==
     -----END CERTIFICATE-----
 
 kube:
@@ -422,14 +388,6 @@ kube:
     MIIE8jCCAtqgAwIBAgIUT/Yu/Sv4UHl5zHZYZKCy5RKJqmYwDQYJKoZIhvcNAQEN
     [...]
     xC8x/+zT0QkvcRJBio5gg670+25KJQ==
-    -----END CERTIFICATE-----
-
-  # UAA certificate
-  UAA_CA_CERT: |
-    ----BEGIN CERTIFICATE-----
-    MIIE8jCCAtqgAwIBAgIUSI02lj0a0InLb/zMrjNgW5d8EygwDQYJKoZIhvcNAQEN
-    [...]
-    to2GI8rPMb9W9fd2WwUXGEHTc+PqTg==
     -----END CERTIFICATE-----
 
   SERVICE_TYPE: postgres

@@ -511,10 +511,10 @@
   <para>
    An existing &productname; deployment's data can be migrated to a new
    &productname; deployment through a backup and restore of its raw data. The
-   process involves performing a backup and restore of both the
-   <literal>uaa</literal> and <literal>scf</literal> components respectively.
-   This procedure is agnostic of the underlying &kube; infrastructure and can be
-   included as part of your disaster recovery solution.
+   process involves performing a backup and restore of the
+   <literal>scf</literal> components respectively. This procedure is agnostic of
+   the underlying &kube; infrastructure and can be included as part of your
+   disaster recovery solution.
   </para>
 
   <sect2 xml:id="sec-cap-raw-data-prerequisites">
@@ -527,14 +527,13 @@
    <itemizedlist>
     <listitem>
      <para>
-      Access to running deployments of both <literal>uaa</literal> and
-      <literal>scf</literal> to create backups with
+      Access to a running deployment of <literal>scf</literal> to create backups
+      with
      </para>
     </listitem>
     <listitem>
      <para>
-      Access to new deployments of both <literal>uaa</literal> and
-      <literal>scf</literal> (deployed with a
+      Access to new deployments of <literal>scf</literal> (deployed with a
       <filename>scf-config-values.yaml</filename> configured according to
       <xref linkend="prepare-config-for-new-cluster"/> of
       <xref linkend="sec-cap-raw-data-restore-procedure"/>) to perform the
@@ -609,27 +608,10 @@
     <para>
      This process is intended for backing up and restoring to a target
      deployment with the same version as the source deployment. For example,
-     data from a backup of <literal>uaa</literal> version 2.18.0 should be
-     restored to a version version 2.18.0 <literal>uaa</literal> deployment.
+     data from a backup of <literal>scf</literal> version 2.18.0 should be
+     restored to a version version 2.18.0 <literal>scf</literal> deployment.
     </para>
    </note>
-   <para>
-    Perform the following steps to create a backup of your source
-    <literal>uaa</literal> deployment.
-   </para>
-   <procedure>
-    <step>
-     <para>
-      Export the UAA database into a file:
-     </para>
-<screen>&prompt.user;kubectl exec --tty mysql-0 --namespace uaa -- bash -c \
-  '/var/vcap/packages/mariadb/bin/mysqldump \
-  --defaults-file=/var/vcap/jobs/mysql/config/mylogin.cnf \
-  --socket /var/vcap/sys/run/pxc-mysql/mysqld.sock \
-  uaadb' > <replaceable>/tmp/uaadb-src.sql</replaceable>
-</screen>
-    </step>
-   </procedure>
    <para>
     Perform the following steps to create a backup of your source
     <literal>scf</literal> deployment.
@@ -712,34 +694,6 @@
      setting <literal>$KUBECONFIG</literal> correctly</link>.
     </para>
    </important>
-   <para>
-    Perform the following steps to restore your backed up data to the target
-    <literal>uaa</literal> deployment.
-   </para>
-   <procedure>
-    <step>
-     <para>
-      Recreate the UAA database on the <literal>mysql</literal> pod:
-     </para>
-<screen>&prompt.user;kubectl exec -t mysql-0 --namespace uaa -- bash -c \
-  "/var/vcap/packages/mariadb/bin/mysql \
-  --defaults-file=/var/vcap/jobs/mysql/config/mylogin.cnf \
-  --socket /var/vcap/sys/run/pxc-mysql/mysqld.sock \
-  -e 'drop database uaadb; create database uaadb;'";
-</screen>
-    </step>
-    <step>
-     <para>
-      Restore the UAA database on the <literal>mysql</literal> pod:
-     </para>
-<screen>&prompt.user;kubectl exec --stdin mysql-0 --namespace uaa -- bash -c \
-  '/var/vcap/packages/mariadb/bin/mysql \
-  --defaults-file=/var/vcap/jobs/mysql/config/mylogin.cnf \
-  --socket /var/vcap/sys/run/pxc-mysql/mysqld.sock \
-  uaadb' &lt; <replaceable>/tmp/uaadb-src.sql</replaceable>
-</screen>
-    </step>
-   </procedure>
    <para>
     Perform the following steps to restore your backed up data to the target
     <literal>scf</literal> deployment.
