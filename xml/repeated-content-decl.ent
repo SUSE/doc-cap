@@ -31,8 +31,9 @@ found" errors
 &prompt.user;kubectl get pods --namespace kubecf
 ig-kubecf-f9085246244fbe70-jvg4z   1/21    Running             0          8m28s
 </screen>
-
+      <para>
        Later the progress may look like this:
+      </para>
 <screen>
 NAME                               READY   STATUS       RESTARTS   AGE
 kubecf-adapter-0                   4/4     Running      0          6m45s
