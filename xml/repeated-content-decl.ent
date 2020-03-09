@@ -18,18 +18,43 @@ found" errors
      <term>Some Pods Show as Not Running</term>
      <listitem>
       <para>
-       Some <literal>uaa</literal> and <literal>scf</literal> pods perform only
-       deployment tasks, and it is normal for them to show as unready and
-       <literal>Completed</literal> after they have completed their tasks, as
-       these examples show:
+       During deployment, pods are spawned over time, starting with a single
+       pod whose name stars with <literal>ig-</literal>. This pod will eventually
+       disappear and will be replaced by other pods whose progress
+       then can be followed as usual.
+
+       The whole process can take around 20—30 minutes to finish.
+
+       The initial stage may look like this:
       </para>
 <screen>
-&prompt.user;kubectl get pods --namespace uaa
-secret-generation-1-z4nlz   0/1       Completed
+&prompt.user;kubectl get pods --namespace kubecf
+ig-kubecf-f9085246244fbe70-jvg4z   1/21    Running             0          8m28s
+</screen>
 
-&prompt.user;kubectl get pods --namespace scf
-secret-generation-1-m6k2h       0/1       Completed
-post-deployment-setup-1-hnpln   0/1       Completed</screen>
+       Later the progress may look like this:
+<screen>
+NAME                               READY   STATUS       RESTARTS   AGE
+kubecf-adapter-0                   4/4     Running      0          6m45s
+kubecf-api-0                       0/15    Init:30/63   0          6m38s
+kubecf-bits-0                      0/6     Init:8/15    0          6m34s
+kubecf-bosh-dns-7787b4bb88-2wg9s   1/1     Running      0          7m7s
+kubecf-bosh-dns-7787b4bb88-t42mh   1/1     Running      0          7m7s
+kubecf-cc-worker-0                 0/4     Init:5/9     0          6m36s
+kubecf-credhub-0                   0/5     Init:6/11    0          6m33s
+kubecf-database-0                  2/2     Running      0          6m36s
+kubecf-diego-api-0                 6/6     Running      2          6m38s
+kubecf-doppler-0                   0/9     Init:7/16    0          6m40s
+kubecf-eirini-0                    9/9     Running      0          6m37s
+kubecf-log-api-0                   0/7     Init:6/13    0          6m35s
+kubecf-nats-0                      4/4     Running      0          6m39s
+kubecf-router-0                    0/5     Init:5/11    0          6m33s
+kubecf-routing-api-0               0/4     Init:5/10    0          6m42s
+kubecf-scheduler-0                 0/8     Init:8/17    0          6m35s
+kubecf-singleton-blobstore-0       0/6     Init:6/11    0          6m46s
+kubecf-tcp-router-0                0/5     Init:5/11    0          6m37s
+kubecf-uaa-0                       0/6     Init:8/13    0          6m36s
+</screen>
      </listitem>
     </varlistentry>
     <varlistentry>
