@@ -49,9 +49,6 @@
    If this is an initial deployment, use <command>helm install</command> to deploy
    <literal>scf</literal> with CredHub enabled:
   </para>
-
-  &uaa-ca-cert-note;
-
 <screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
 
 &prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
@@ -66,7 +63,6 @@
 
 <screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
---set "secrets.UAA_CA_CERT=${CA_CERT}" \
 --set "enable.credhub=true" \
 --version &cf_chart;
 </screen>
@@ -85,20 +81,11 @@
 
  <para>
   To disable CredHub, run <command>helm upgrade</command> with the
-  <command>--set "enable.credhub=false"</command> flag. Be sure to
-  pass your <literal>uaa</literal> secret and certificate to <literal>scf</literal>
-  first:
+  <command>--set "enable.credhub=false"</command> flag.
  </para>
 
-<screen>&prompt.user;SECRET=$(kubectl get pods --namespace uaa \
---output jsonpath='{.items[?(.metadata.name=="uaa-0")].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
-
-&prompt.user;CA_CERT="$(kubectl get secret $SECRET --namespace uaa \
---output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-
-&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
+<screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
---set "secrets.UAA_CA_CERT=${CA_CERT}" \
 --set "enable.credhub=false" \
 --version &cf_chart;
 </screen>

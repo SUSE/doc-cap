@@ -228,8 +228,8 @@
   </itemizedlist>
  </sect1>
 
- <sect1 xml:id="sec-cap-caasp-helm">
-  <title>Install the &helm; Client</title>
+ <sect1 xml:id="sec-cap-caasp-tiller">
+  <title>Installing &helm; Client and &tiller;</title>
 
   <para>
    &helm; is a &kube; package manager. The &helm; client,
@@ -265,12 +265,9 @@
     </para>
     <para>
      If you are using &ses; you must copy the Ceph admin secret to the
-     <literal>uaa</literal> and <literal>scf</literal> namespaces used by
-     &productname;:
+     <literal>scf</literal> namespaces used by &productname;:
     </para>
 <screen>&prompt.user;kubectl get secret ceph-secret-admin --output json --namespace default | \
-sed 's/"namespace": "default"/"namespace": "uaa"/' | kubectl create --filename -
-&prompt.user;kubectl get secret ceph-secret-admin --output json --namespace default | \
 sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create --filename -
 </screen>
    </listitem>
@@ -314,41 +311,13 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create --filename -
 ### example deployment configuration file
 ### scf-config-values.yaml
 
-env:
-  DOMAIN: <replaceable>example.com</replaceable>
-  # the UAA prefix is required
-  UAA_HOST: uaa.<replaceable>example.com</replaceable>
-  UAA_PORT: 2793
-  GARDEN_ROOTFS_DRIVER: "btrfs"
-
-kube:
-  external_ips: ["&lt;CAASP_MASTER_NODE_EXTERNAL_IP>","&lt;CAASP_MASTER_NODE_INTERNAL_IP>"]
-
-  storage_class:
-    persistent: "persistent"
-    shared: "shared"
-
-  registry:
-    hostname: "registry.suse.com"
-    username: ""
-    password: ""
-  organization: "cap"
-
-secrets:
-  # Create a very strong password for user 'admin'
-  CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
-
-  # Create a very strong password, and protect it because it
-  # provides root access to everything
-  UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
+<!-- TODO-CAP2 -->
 </screen>
 
   <!-- Explains usage of some Helm values used in the example/minimal values.yaml-->
   &config-value-usage;                                                          
                                                                                 
-  <!-- Reiterates importance of this password -->                               
-  &protect-uaa-admin-secret;
- </sect1>
+</sect1>
 
  <sect1 xml:id="sec-cap-addrepo-caasp">
   <title>Add the &kube; Charts Repository</title>
@@ -381,43 +350,11 @@ suse       https://kubernetes-charts.suse.com/
  <sect1 xml:id="sec-cap-cap-on-caasp">
   <title>Deploying &productname;</title>
 
-  <sect2 xml:id="sec-cap-caasp-deploy-uaa">
-   <title>Deploy <literal>uaa</literal></title>
-
-   &uaa-in-scf;
-
-   <para>
-    Use &helm; to deploy the <literal>uaa</literal> server:
-   </para>
-<screen>&prompt.user;kubectl create namespace <replaceable>uaa</replaceable>
-
-&prompt.user;helm install <replaceable>susecf-uaa</replaceable> suse/uaa \
---namespace <replaceable>uaa</replaceable> \
---values <replaceable>scf-config-values.yaml</replaceable>
-</screen>
-   &uaa-deploy-complete;
-   <para>
-    Use <command>curl</command> to verify you are able to connect to the
-    <literal>uaa</literal> OAuth server on the DNS name configured:
-   </para>
-<screen>&prompt.user;curl --insecure https://uaa.example.com:2793/.well-known/openid-configuration</screen>
-   <para>
-    This should return a JSON object, as this abbreviated example shows:
-   </para>
-<screen>{"issuer":"https://uaa.example.com:2793/oauth/token",
-"authorization_endpoint":"https://uaa.example.com:2793
-/oauth/authorize","token_endpoint":"https://uaa.example.com:2793/oauth/token"
-</screen>
-  </sect2>
-
   <sect2 xml:id="sec-cap-caasp-deploy-scf">                                       
    <title>Deploy <literal>scf</literal></title>
    <para>
     Use &helm; to deploy <literal>scf</literal>:
    </para>
-
-   &uaa-ca-cert-note;
-
 <screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
 
 &prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
@@ -477,9 +414,6 @@ suse       https://kubernetes-charts.suse.com/
     <para>
      Perform a <command>helm upgrade</command> to apply the change.
     </para>
-
-    &uaa-ca-cert-note;
-
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
 --version &cf_chart;

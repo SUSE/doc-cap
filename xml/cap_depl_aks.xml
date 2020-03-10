@@ -22,10 +22,7 @@
   &productname; supports deployment on &aks-full;
   (AKS), Microsoft's managed &kube; service. This chapter describes the steps
   for preparing Azure for a &productname; deployment, with a basic Azure load
-  balancer. Note that you will not create any DNS records until after
-  <literal>uaa</literal> is deployed. (See
-  <link xlink:href="https://azure.microsoft.com/en-us/services/container-service/">
-  Azure Kubernetes Service (AKS)</link> for more information.)
+  balancer.
  </para>
  <para>
   In &kube; terminology a node used to be a minion, which was the name for a
@@ -340,17 +337,6 @@ export NODEPOOL_NAME="mypool"
  <!-- sect1 for helm client installation -->
  &install-helm;
 
- <sect1 xml:id="sec-cap-psp">
-  <title>Pod Security Policies</title>
-
-  <para>
-   Role-based access control (RBAC) is enabled by default on AKS. &productname;
-   1.3.1 and later do not need to be configured manually. Older &cap; releases
-   require manual PSP configuration; see <xref linkend="app-psps"/> for
-   instructions.
-  </para>
- </sect1>
-
  <sect1 xml:id="sec-cap-aks-storage">
   <title>Default Storage Class</title>
   <para>
@@ -419,12 +405,6 @@ allowVolumeExpansion: true
  <sect1 xml:id="sec-cap-aks-config">
   <title>Deployment Configuration</title>
   <para>
-   It is not necessary to create any DNS records before deploying
-   <literal>uaa</literal>. Instead, after <literal>uaa</literal>
-   is running you will find the load balancer IP address that was automatically
-   created during deployment, and then create the necessary records.
-  </para>
-  <para>
    The following file, <filename>scf-config-values.yaml</filename>, provides a
    complete example deployment configuration.
   </para>
@@ -435,41 +415,12 @@ allowVolumeExpansion: true
 ### example deployment configuration file
 ### scf-config-values.yaml
 
-env:
-  DOMAIN: <replaceable>example.com</replaceable>
-  # the UAA prefix is required
-  UAA_HOST: uaa.<replaceable>example.com</replaceable>
-  UAA_PORT: 2793
-  GARDEN_ROOTFS_DRIVER: "overlay-xfs"
-
-kube:
-  storage_class:
-    persistent: "persistent"
-    shared: "persistent"
-
-  registry:
-    hostname: "registry.suse.com"
-    username: ""
-    password: ""
-  organization: "cap"
-
-secrets:
-  # Create a very strong password for user 'admin'
-  CLUSTER_ADMIN_PASSWORD: <replaceable>password</replaceable>
-
-  # Create a very strong password, and protect it because it
-  # provides root access to everything
-  UAA_ADMIN_CLIENT_SECRET: <replaceable>password</replaceable>
-
-services:
-  loadbalanced: true
+<!-- TODO-CAP2 -->
 </screen>
 
   <!-- Explains usage of some Helm values used in the example/minimal values.yaml-->
   &config-value-usage;
 
-  <!-- Reiterates importance of this password -->
-  &protect-uaa-admin-secret;
  </sect1>
 
  <sect1 xml:id="sec-cap-addrepo-aks">
@@ -507,99 +458,16 @@ suse       https://kubernetes-charts.suse.com/
    AKS load balancer and how to configure your DNS records.
   </para>
 
-  <sect2 xml:id="sec-cap-aks-deploy-uaa">
-   <title>Deploy <literal>uaa</literal></title>
-
-   &uaa-in-scf;
-
-   <para>
-    Use &helm; to deploy the <literal>uaa</literal> server:
-   </para>
-<screen>&prompt.user;kubectl create namespace uaa
-
-&prompt.user;helm install <replaceable>susecf-uaa</replaceable> suse/uaa \
---namespace <replaceable>uaa</replaceable> \
---values <replaceable>scf-config-values.yaml</replaceable>
-</screen>
-   &uaa-deploy-complete;
-   <para>
-    After the deployment completes, a &kube; service for <literal>uaa</literal>
-    will be exposed on an Azure load balancer that is automatically set up by
-    AKS (named <literal>kubernetes</literal> in the resource group that hosts
-    the worker node VMs).
-   </para>
-   <para>
-    List the services that have been exposed on the load balancer public IP.
-    The name of these services end in <literal>-public</literal>. For example,
-    the <literal>uaa</literal> service is exposed on
-    <replaceable>40.85.188.67</replaceable> and port 2793.
-   </para>
-<screen>&prompt.user;kubectl get services --namespace uaa | grep public
-uaa-uaa-public    LoadBalancer   10.0.67.56     40.85.188.67   2793:32034/TCP
-</screen>
-   <para>
-    Use the DNS service of your choice to set up DNS A records for the service
-    from the previous step. Use the public load balancer IP associated with the
-    service to create domain mappings:
-   </para>
-   <itemizedlist>
-    <listitem>
-     <para>
-      For the <literal>uaa</literal> service, map the following domains:
-     </para>
-     <variablelist>
-      <varlistentry>
-       <term>uaa.DOMAIN</term>
-       <listitem>
-        <para>
-         Using the example values, an A record for
-         <literal>uaa.example.com</literal> that points to
-         <replaceable>40.85.188.67</replaceable>
-        </para>
-       </listitem>
-      </varlistentry>
-      <varlistentry>
-       <term>*.uaa.DOMAIN</term>
-       <listitem>
-        <para>
-         Using the example values, an A record for
-         <literal>*.uaa.example.com</literal> that points to
-         <replaceable>40.85.188.67</replaceable>
-        </para>
-       </listitem>
-      </varlistentry>
-     </variablelist>
-    </listitem>
-   </itemizedlist>
-   <para>
-    If you wish to use the DNS service provided by Azure, see the
-    <link xlink:href="https://docs.microsoft.com/en-us/azure/dns/"> Azure DNS
-    Documentation</link> to learn more.
-   </para>
-   <para>
-    Use <command>curl</command> to verify you are able to connect to the
-    <literal>uaa</literal> OAuth server on the DNS name configured:
-   </para>
-<screen>&prompt.user;curl --insecure https://uaa.example.com:2793/.well-known/openid-configuration</screen>
-   <para>
-    This should return a JSON object, as this abbreviated example shows:
-   </para>
-<screen>{"issuer":"https://uaa.example.com:2793/oauth/token",
-"authorization_endpoint":"https://uaa.example.com:2793
-/oauth/authorize","token_endpoint":"https://uaa.example.com:2793/oauth/token"
-</screen>
+  <!-- TODO-CAP2 -->
+  <sect2 xml:id="sec-cap-aks-deploy-operator">
+   <title>Deploy <literal>operator</literal></title>
   </sect2>
 
   <sect2 xml:id="sec-cap-aks-deploy-scf">
    <title>Deploy <literal>scf</literal></title>
    <para>
-    Before deploying <literal>scf</literal>, ensure the DNS records for the
-    <literal>uaa</literal> domains have been set up as specified in the
-    previous section. Next, use &helm; to deploy <literal>scf</literal>:
+    Next, use &helm; to deploy <literal>scf</literal>:
    </para>
-
-   &uaa-ca-cert-note;
-
 <screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
 
 &prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
@@ -939,9 +807,6 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
     <para>
      Perform a <command>helm upgrade</command> to apply the change.
     </para>
-
-    &uaa-ca-cert-note;
-
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
 --version &cf_chart;

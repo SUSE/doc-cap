@@ -119,8 +119,7 @@
   </para>
 
   <para>
-   &productname; is comprised of the &sle; builds of the &uaa;
-   (<literal>uaa</literal>) Server, &scf; (<literal>scf</literal>), the Stratos
+   &productname; is comprised of &scf; (<literal>scf</literal>), the Stratos
    Web user interface, and Stratos Metrics.
   </para>
 
@@ -642,8 +641,7 @@
      <term>mysql</term>
      <listitem>
       <para>
-       A &mariadb; server and component to route requests to replicas. (A
-       separate copy is deployed for <literal>uaa</literal>.)
+       A &mariadb; server and component to route requests to replicas.
       </para>
      </listitem>
     </varlistentry>
@@ -725,6 +723,7 @@
     with each other (<xref linkend="fig-cap-simple-services"/>). See
     <xref linkend="fig-cap-detailed-services"/> for a more detailed view.
    </para>
+   <!-- TODO-CAP2 update diagram -->
    <figure xml:id="fig-cap-simple-services">
     <title>Simple Services Diagram</title>
     <mediaobject>
@@ -741,6 +740,7 @@
    <para>
     This table describes how these services operate.
    </para>
+   <!-- TODO-CAP2 update descriptions -->
    <informaltable>
     <tgroup cols="5">
      <thead>

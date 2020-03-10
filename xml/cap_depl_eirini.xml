@@ -69,7 +69,7 @@ env:
    </step>
    <step>
     <para>
-     Deploy <literal>uaa</literal> and <literal>scf</literal>.
+     Deploy <literal>scf</literal>.
     </para>
     <para>
      Refer to the following for platform-specific instructions:
