@@ -68,7 +68,7 @@
   </para>
 <screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
---version &cf_chart;
+--version &kubecf_chart;
 </screen>
 
   &scf-deploy-complete;

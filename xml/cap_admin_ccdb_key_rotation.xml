@@ -52,7 +52,7 @@ secrets:
    </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
---version &cf_chart;
+--version &kubecf_chart;
    </screen>
   </step>
   <step>
