@@ -691,7 +691,7 @@ suse/uaa                        &cf_chart;          &chart_appversion;          
   going to the next steps, which you can monitor with the
   <command>watch</command> command:
  </para>
-<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch --color &apos;kubectl get pods --namespace scf&apos;</screen>
+<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch --color &apos;kubectl get pods --namespace kubecf&apos;</screen>
  <para xmlns="http://docbook.org/ns/docbook">
   When <literal>scf</literal> is successfully deployed, the following is
   observed:
@@ -699,10 +699,8 @@ suse/uaa                        &cf_chart;          &chart_appversion;          
  <itemizedlist xmlns="http://docbook.org/ns/docbook">
   <listitem>
    <para>
-    For the <literal>secret-generation</literal> and
-    <literal>post-deployment-setup</literal> pods, the <literal>STATUS</literal>
-    is <literal>Completed</literal> and the <literal>READY</literal> column is
-    at <literal>0/1</literal>.
+    <literal>dm-kubecf</literal> and <literal>ig-kubecf</literal> pods
+    spawned the final set of pods and disappeared.
    </para>
   </listitem>
   <listitem>
