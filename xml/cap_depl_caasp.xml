@@ -232,21 +232,17 @@
   <title>Installing &helm; Client and &tiller;</title>
 
   <para>
-   &helm; is a &kube; package manager. It consists of a client and server
-   component, both of which are required in order to install and manage &cap;.
-  </para>
-  <para>
-   The &helm; client, <literal>helm</literal>, can be installed on your
-   management workstation, which is part of the &caasp; package repository, by
-   running
+   &helm; is a &kube; package manager. The &helm; client,
+   <literal>helm</literal>, is required in order to install and manage &cap;. It
+   can be installed on your management workstation, which is part of the &caasp;
+   package repository, by running
   </para>
 <screen>&prompt.user;sudo zypper install helm</screen>
   <para>
    Alternatively, refer to the upstream documentation at
-   <link xlink:href="https://helm.sh/docs/intro/install/"/>. &cap;
-   is compatible with both &helm; 2 and &helm; 3. Examples in this guide are
-   based on &helm; 2. To use &helm; 3, refer to the &helm; documentation at
-   <link xlink:href="https://helm.sh/docs/"/>.     
+   <link xlink:href="https://helm.sh/docs/intro/install/"/>. The examples in
+   this guide are based on &helm; 3. For more information, refer to the
+   documentation at <link xlink:href="https://helm.sh/docs/"/>.
   </para>
  </sect1>
 

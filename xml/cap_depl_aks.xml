@@ -334,8 +334,8 @@ export NODEPOOL_NAME="mypool"
   </para>
  </sect1>
 
- <!-- sect1 for helm client and tiller installation -->
- &install-helm-tiller;
+ <!-- sect1 for helm client installation -->
+ &install-helm;
 
  <sect1 xml:id="sec-cap-aks-storage">
   <title>Default Storage Class</title>

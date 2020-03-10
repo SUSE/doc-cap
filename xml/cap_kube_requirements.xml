@@ -91,12 +91,6 @@
      <literal>containerd</literal> service definition must be set to infinity
     </para>
    </listitem>
-   <listitem>
-    <para>
-     Helm's &tiller; has to be installed and active, with &tiller; on the &kube;
-     cluster and Helm on your remote administration machine
-    </para>
-   </listitem>
   </itemizedlist>
  </sect1>
 </chapter>

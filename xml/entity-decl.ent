@@ -30,7 +30,6 @@
 <!ENTITY uaa          "User Account and Authentication">
 <!ENTITY susemicros   "&suse; MicroOS">
 <!ENTITY ses	      "&suse; Enterprise Storage">
-<!ENTITY tiller	      "Tiller">
 <!ENTITY docker	      "Docker">
 
 <!ENTITY suse      "SUSE">
