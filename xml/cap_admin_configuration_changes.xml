@@ -28,7 +28,7 @@
    configuration changes as well as perform version upgrades to &cap;. A change
    to the pod count configuration should not be applied simultaneously with a
    version upgrade. Sizing changes should be made separately, either before or
-   after, from a version upgrade (see <xref linkend="sec-cap-ha-prod"/>).
+   after, from a version upgrade.
   </para>
  </warning>
  <sect1 xml:id="sec-cap-configuration-change-example">
@@ -82,12 +82,7 @@
   <itemizedlist>
    <listitem>
     <para>
-     Cluster sizing changes (see <xref linkend="cha-cap-ha"/>)
-    </para>
-   </listitem>
-   <listitem>
-    <para>
-     Secrets rotation (see <xref linkend="sec-cap-secrets-rotation"/>)
+     Secrets rotation (see <xref linkend="cha-cap-secrets-rotation"/>)
     </para>
    </listitem>
    <listitem>

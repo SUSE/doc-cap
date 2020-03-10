@@ -73,7 +73,7 @@
 
   <para>
    See all product manuals for &productname; 2.x at
-   <link xlink:href="https://documentation.suse.com/suse-cap/1/">&productname; 1</link>.
+   <link xlink:href="https://documentation.suse.com/suse-cap/2/"/>.
   </para>
 
   <tip>
@@ -116,8 +116,7 @@
    images. (Community-supported images for &opensuse; are hosted on
    <link xlink:href="https://hub.docker.com">&docker; Hub</link>.) Product
    manuals on
-   <link xlink:href="https://documentation.suse.com/suse-cap/1/">&suse;
-   Doc: &productname; 1</link> refer to the
+   <link xlink:href="https://documentation.suse.com/suse-cap/2/"/>  refer to the
    commercially-supported &sle; version.
   </para>
 

@@ -47,11 +47,8 @@ Part: CAP Deployment Guide
   <title>Deploying &productname;</title>
   <info/>
   <xi:include href="cap_depl_admin_notes.xml"/>
-  <xi:include href="cap_depl_ingress.xml"/>
   <xi:include href="cap_depl_caasp.xml"/>
   <xi:include href="cap_depl_stratos.xml"/>
-  <xi:include href="cap_depl_ha.xml"/>
-  <xi:include href="cap_depl_ldap.xml"/>
   <xi:include href="cap_depl_aks.xml"/>
   <xi:include href="cap_depl_eks.xml"/>
   <xi:include href="cap_depl_gke.xml"/>
@@ -65,17 +62,16 @@ Part: CAP Administration Guide
   <title>&productname; Administration</title>
   <info/>
   <xi:include href="cap_admin_upgrade.xml"/>
-  <xi:include href="cap_admin_external_db.xml"/>
   <xi:include href="cap_admin_configuration_changes.xml"/>
   <xi:include href="cap_admin_create_admin.xml"/>
   <xi:include href="cap_admin_passwords.xml"/>
   <xi:include href="cap_admin_uaa_ui.xml"/>
   <xi:include href="cap_admin_ccdb_key_rotation.xml"/>
+  <xi:include href="cap_admin_secret_rotation.xml"/>
   <xi:include href="cap_admin_backup-restore.xml"/>
   <xi:include href="cap_admin_service_broker.xml"/>
   <xi:include href="cap_admin_app_autoscaler.xml"/>
   <xi:include href="cap_admin_logging.xml"/>
-  <xi:include href="cap_admin_certificates.xml"/>
   <xi:include href="cap_admin_credhub.xml"/>
   <xi:include href="cap_admin_buildpacks.xml"/>
   <xi:include href="cap_admin_app_domains.xml"/>
