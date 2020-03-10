@@ -229,7 +229,7 @@
  </sect1>
 
  <sect1 xml:id="sec-cap-caasp-tiller">
-  <title>Installing &helm; Client and &tiller;</title>
+  <title>Installing &helm; Client</title>
 
   <para>
    &helm; is a &kube; package manager. The &helm; client,
