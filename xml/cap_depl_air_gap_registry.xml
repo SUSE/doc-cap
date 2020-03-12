@@ -90,8 +90,6 @@ function mirror {
 mirror cf
 mirror console
 mirror metrics
-mirror cf-usb-sidecar-mysql
-mirror cf-usb-sidecar-postgres
 </screen>
   <para>
    The script above will both mirror to a local registry and save the images in
