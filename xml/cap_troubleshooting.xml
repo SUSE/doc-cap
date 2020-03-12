@@ -580,9 +580,9 @@ secret-generation-1-fczw4     0/1   Completed 0        16m
 uaa-0                         0/1   Running   0        16m 
 </screen>
     <para>
-     Verify if all files in the <filename>/var/vcap/store</filename> of the
-     <literal>mysql-0</literal> pod are owned by the <literal>vcap</literal>
-     user:
+     Verify if all files in the <filename>/var/vcap/store</filename> directory
+     of the <literal>mysql-0</literal> pod are owned by the
+     <literal>vcap</literal> user:
     </para>
 <screen>
 &prompt.user;kubectl exec --stdin --tty --namespace uaa mysql-0 -- bash
