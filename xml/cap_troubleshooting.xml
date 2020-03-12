@@ -440,12 +440,15 @@ end
  <sect1 xml:id="sec-cap-tbl-mysql-failure">
   <title><literal>mysql</literal> Pods Fail to Start</title>
   <para>
-   In some cases, <literal>mysql</literal> pods may fail to start due to data
-   initialization problems or incomplete transactions from a previously aborted
-   operation. This can affect the <literal>mysql</literal> pod in both
+   In some cases, <literal>mysql</literal> pods may fail to start due to various
+   reasons. This can affect the <literal>mysql</literal> pod in both
    <literal>uaa</literal> and <literal>scf</literal>.
   </para>
-  <procedure>
+  <sect2 xml:id="sec-cap-tbl-mysql-failure-data-initialization">
+   <title>
+    Data initialization or incomplete transactions
+   </title>
+   <procedure>
    <step>
     <para>
      Confirm whether the <literal>mysql</literal> pod failure is related to
@@ -545,6 +548,38 @@ recover switch to commit or rollback pending transactions.
      </step>
     </substeps>
    </step>
-  </procedure>
+   </procedure>
+  </sect2>
+  <sect2 xml:id="sec-cap-tbl-mysql-failure-file-ownership">
+   <title>File ownership issues</title>
+   <para>
+    If the <literal>mysql</literal> pod is in state <literal>READY: 0/1</literal> and <literal>STATUS: Running</literal>, like this:
+    </para>
+<screen>
+&prompt.user;kubectl get pods -namespace uaa
+NAME                          READY STATUS    RESTARTS AGE
+configgin-helper-0            1/1   Running   0        16m
+mysql-0                       0/1   Running   0        16m
+mysql-proxy-0                 1/1   Running   0        16m
+post-deployment-setup-1-lg7vl 0/1   Completed 0        16m
+secret-generation-1-fczw4     0/1   Completed 0        16m
+uaa-0                         0/1   Running   0        16m 
+</screen>
+    <para>
+     Verify if all files in the <filename>/var/vcap/store</filename> directory
+     of the <literal>mysql-0</literal> pod are owned by the
+     <literal>vcap</literal> user:
+    </para>
+<screen>
+&prompt.user;kubectl exec --stdin --tty --namespace uaa mysql-0 -- bash
+mysql/0:/# ls -Al /var/vcap/store/
+total 12
+drwx------ 2 vcap nobody 4096 Mar 9 07:41 mysql_audit_logs
+drwx------ 6 vcap nobody 4096 Mar 9 07:42 pxc-mysql 
+</screen>
+    <para>
+     If not, please verify the configuration of your NFS share.
+    </para>
+  </sect2>
  </sect1>
 </chapter>
