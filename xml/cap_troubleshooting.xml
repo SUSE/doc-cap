@@ -452,7 +452,7 @@ end
   </sect2>
  </sect1>
  <sect1 xml:id="sec-cap-tbl-mysql-failure">
-  <title><literal>mysql</literal>Pods Fail to Start</title>
+  <title><literal>mysql</literal> Pods Fail to Start</title>
   <para>
    In some cases, <literal>mysql</literal> pods may fail to start due to various
    reasons. This can affect the <literal>mysql</literal> pod in both
