@@ -547,15 +547,6 @@
      </listitem>
     </varlistentry>
     <varlistentry>
-     <term>cf-usb</term>
-     <listitem>
-      <para>
-       Universal Service Broker; &suse;'s own component for managing and
-       publishing service brokers.
-      </para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
      <term>configgin-helper</term>
      <listitem>
       <para>
