@@ -7,6 +7,7 @@
 <!ENTITY productnumber  "2.0">
 <!ENTITY github.url     "https://github.com/SUSE/doc-cap">
 <!ENTITY cap            "Cloud Application Platform">
+<!ENTITY kubecf         "KubeCF">
 <!ENTITY kernel_version "3.19">
 <!ENTITY operator_chart "TODO">
 <!ENTITY cf_chart "TODO">
