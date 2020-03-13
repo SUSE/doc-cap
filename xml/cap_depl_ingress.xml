@@ -275,7 +275,7 @@ ingress:
     </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${INGRESS_CA_CERT}" \
---version &cf_chart;
+--version &kubecf_chart;
 </screen>
    </step>
    <step>

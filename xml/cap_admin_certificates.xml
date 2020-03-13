@@ -185,7 +185,7 @@
     </para>
 <screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
---version &cf_chart;
+--version &kubecf_chart;
 </screen>
    </step>
    <step>
@@ -240,7 +240,7 @@
 
 <screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
---version &cf_chart;
+--version &kubecf_chart;
 </screen>
  </sect1>
  <sect1 xml:id="sec-cap-trusted-certs">

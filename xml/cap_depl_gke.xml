@@ -216,67 +216,13 @@
 
  </sect1>
 
- <!-- sect1 for helm client installation -->
- &install-helm;
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &install-helm;
 
  <sect1 xml:id="sec-cap-gke-storage">
-  <title>Default Storage Class</title>
-  <para>
-   This example creates a <literal>pd-ssd</literal>
-   storage class for your cluster.  Create a file named
-   <filename>storage-class.yaml</filename> with the following:
-  </para>
-<screen>---
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  annotations:
-    storageclass.kubernetes.io/is-default-class: "true"
-  labels:
-    addonmanager.kubernetes.io/mode: EnsureExists
-    kubernetes.io/cluster-service: "true"
-  name: persistent
-parameters:
-  type: pd-ssd
-provisioner: kubernetes.io/gce-pd
-reclaimPolicy: Delete
-allowVolumeExpansion: true
-</screen>
-  <para>
-   Create the new storage class using the manifest defined:
-  </para>
-<screen>&prompt.user;kubectl create --filename <replaceable>storage-class.yaml</replaceable></screen>
-  <para>
-   Specify the newly created created storage class, called <literal>persistent</literal>,
-   as the value for <literal>kube.storage_class.persistent</literal> in your
-   deployment configuration file, like this example:
-  </para>
-<screen>kube:
-  storage_class:
-    persistent: "persistent"
-</screen>
-  <para>
-   See <xref linkend="sec-cap-gke-config"/> for a complete example deployment
-   configuration file, <filename>scf-config-values.yaml</filename>.
-  </para>
+  &storage-class;
  </sect1>
 
- <sect1 xml:id="sec-cap-gke-dns">
-  <title>DNS Configuration</title>
-
-  <para>
-   This section provides an overview of the domain and sub-domains that require
-   A records to be set up for. The process is described in more detail in the
-   deployment section.
-  </para>
-
-  <para>
-   The following table lists the required domain and sub-domains, using
-   <literal>example.com</literal> as the example domain:
-  </para>
-
-&dns-tables;
- </sect1>
  <sect1 xml:id="sec-cap-gke-config">
   <title>Deployment Configuration</title>
   <para>
@@ -296,7 +242,31 @@ allowVolumeExpansion: true
   <!-- Explains usage of some Helm values used in the example/minimal values.yaml-->
   &config-value-usage;
 
-</sect1>
+ </sect1>
+
+ <!-- Begin optional features -->
+
+ <sect1 xml:id="sec-cap-gke-certificates">
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &certificates;
+ </sect1>
+
+ <sect1 xml:id="sec-cap-gke-ingress">
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &ingress-controller;
+ </sect1>
+
+ <sect1 xml:id="sec-cap-gke-high-availability">
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &high-availability;
+ </sect1>
+
+ <sect1 xml:id="sec-cap-gke-external-database">
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &external-database;
+ </sect1>
+
+ <!-- End optional features -->
 
  <sect1 xml:id="sec-cap-addrepo-gke">
   <title>Add the &kube; charts repository</title>
@@ -333,11 +303,13 @@ suse       https://kubernetes-charts.suse.com/
    configure your DNS records.
   </para>
 
-  <!-- TODO-CAP2 -->
   <sect2 xml:id="sec-cap-gke-deploy-operator">
-   <title>Deploy <literal>operator</literal></title>
+   &deploy-operator;
   </sect2>
 
+  <sect2 xml:id="kubecf">
+&deploy-kubecf;
+  </sect2>
   <sect2 xml:id="sec-cap-gke-deploy-scf">
    <title>Deploy <literal>scf</literal></title>
    <para>
@@ -991,8 +963,17 @@ applications:
   </sect2>
  </sect1>
 
+ <!-- Begin optional features -->
+
+ <sect1 xml:id="sec-cap-gke-ldap">
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &ldap;
+ </sect1>
+
+ <!-- End optional features -->
+
  <!-- sect1 for PV resizing -->
- &resize-persistent-volume;
+ <!-- &resize-persistent-volume; -->
 
  <sect1 xml:id="sec-cap-gke-add-capacity">
   <title>Expanding Capacity of a &cap; Deployment on &gke;</title>
@@ -1050,7 +1031,7 @@ applications:
     </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
---version &cf_chart;
+--version &kubecf_chart;
 </screen>
    </step>
    <step>

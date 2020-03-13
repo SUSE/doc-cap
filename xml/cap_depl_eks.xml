@@ -234,8 +234,8 @@
   </sect2>
  </sect1>
 
- <!-- sect1 for helm client installation -->
- &install-helm;
+ <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &install-helm;
 
  <sect1 xml:id="sec-cap-eks-storage-class">
   <title>Default Storage Class</title>
@@ -299,6 +299,31 @@ allowVolumeExpansion: true
   <!-- Explains usage of some Helm values used in the example/minimal values.yaml-->
   &config-value-usage;
  </sect1>
+
+ <!-- Begin optional features -->
+
+ <sect1 xml:id="sec-cap-eks-certificates">
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &certificates;
+ </sect1>
+
+ <sect1 xml:id="sec-cap-eks-ingress">
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &ingress-controller;
+ </sect1>
+
+ <sect1 xml:id="sec-cap-eks-high-availability">
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &high-availability;
+ </sect1>
+
+ <sect1 xml:id="sec-cap-eks-external-database">
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &external-database;
+ </sect1>
+
+ <!-- End optional features -->
+
  <sect1 xml:id="sec-cap-addrepo-eks">
   <title>Add the &kube; Charts Repository</title>
 
@@ -382,7 +407,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
    load balancer name will be the string preceding the first
    <literal>-</literal> character.
   </para>
- 
+
 <screen>&prompt.user;kubectl get service -n scf tcp-router-tcp-router-public</screen>
 
   <para>
@@ -548,7 +573,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
       <xref linkend="sec-cap-aws-service-broker-prereqs"/>:
      </para>
 <screen>&prompt.user;kubectl create namespace <replaceable>$BROKER_NAMESPACE</replaceable>
-	
+
 &prompt.user;helm install <replaceable>aws-servicebroker</replaceable> aws-sb/aws-servicebroker \
 --namespace <replaceable>$BROKER_NAMESPACE</replaceable> \
 --version 1.0.1 \
@@ -684,6 +709,15 @@ suse            https://kubernetes-charts.suse.com/</screen>
   </sect2>
  </sect1>
 
+ <!-- Begin optional features -->
+
+ <sect1 xml:id="sec-cap-eks-ldap">
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &ldap;
+ </sect1>
+
+ <!-- End optional features -->
+
  <!-- sect1 for PV resizing -->
- &resize-persistent-volume;
+ <!-- &resize-persistent-volume; -->
 </chapter>
