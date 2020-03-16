@@ -75,7 +75,7 @@ ccdb:
     </step>
     <step>
      <para>
-      After Helm finishes its updates, trigger the
+      After &helm; finishes its updates, trigger the
       <literal>rotate-cc-database-key</literal> errand:
      </para>
 <screen>&prompt.user;kubectl patch qjob kubecf-rotate-cc-database-key \
