@@ -64,7 +64,7 @@
 <screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
 --set "enable.credhub=true" \
---version &cf_chart;
+--version &kubecf_chart;
 </screen>
 
  <warning>
@@ -87,7 +87,7 @@
 <screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
 --set "enable.credhub=false" \
---version &cf_chart;
+--version &kubecf_chart;
 </screen>
  </sect1>
  <sect1 xml:id="sec-cap-credhub-upgrade-considerations">

@@ -67,7 +67,7 @@
 <screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
 --set "enable.autoscaler=true" \
---version &cf_chart;
+--version &kubecf_chart;
 </screen>
 
   <para>
@@ -78,7 +78,7 @@
 <screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
 --values scf-config-values.yaml \
 --set "enable.autoscaler=false" \
---version &cf_chart;
+--version &kubecf_chart;
 </screen>
 
  </sect1>

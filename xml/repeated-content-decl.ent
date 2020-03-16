@@ -250,7 +250,7 @@ Before you start deploying &productname;, review the following documents:
     <tbody>
      <row>
       <entry>&productnumber; (current release)</entry>
-      <entry>&cf_chart;</entry>
+      <entry>&kubecf_chart;</entry>
       <entry>&stratos_chart;</entry>
       <entry>&metrics_chart;</entry>
       <!-- cf-deployment 12.17: 2.144.0, cf api result: -->
@@ -505,7 +505,7 @@ Before you start deploying &productname;, review the following documents:
 <!ENTITY helm-search-suse
 '<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;helm search suse
 NAME                            CHART VERSION   APP VERSION     DESCRIPTION
-suse/cf                         &cf_chart;          &chart_appversion;           A Helm chart for &suse; &cf;
+suse/cf                         &kubecf_chart;          &chart_appversion;           A Helm chart for &suse; &cf;
 suse/cf-usb-sidecar-mysql       1.0.1                           A Helm chart for &suse; Universal Service Broker Sidecar fo...
 suse/cf-usb-sidecar-postgres    1.0.1                           A Helm chart for &suse; Universal Service Broker Sidecar fo...
 suse/console                    &stratos_chart;           &chart_appversion;           A Helm chart for deploying Stratos UI Console
@@ -513,7 +513,7 @@ suse/log-agent-rsyslog      	1.0.1        	8.39.0     	Log Agent for forwarding 
 suse/metrics                    &metrics_chart;           &chart_appversion;           A Helm chart for Stratos Metrics
 suse/minibroker                 &minibroker_chart;                           A minibroker for your minikube
 suse/nginx-ingress              0.28.4          0.15.0          An nginx Ingress controller that uses ConfigMap to store ...
-suse/uaa                        &cf_chart;          &chart_appversion;           A Helm chart for &suse; UAA
+suse/uaa                        &kubecf_chart;          &chart_appversion;           A Helm chart for &suse; UAA
 </screen>'>
 
 <!--ENTITY chart-version-fields.............................................-->
@@ -631,17 +631,22 @@ the version of the application as defined in "The <literal>appVersion</literal>
 '<sect1 xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
   <title>Install the &helm; Client</title>
   <para>
-   &helm; is a &kube; package manager. It consists of a client and server
-   component, both of which are required in order to install and manage &cap;.
+   &helm; is a &kube; package manager used to install and manage &productname;.
+   This requires installing the &helm; client, <command>helm</command>, on your
+   remote management workstation. Examples in this guide are based on &helm; 3.
+   For more information regarding &helm;, refer to the documentation at
+   <link xlink:href="https://helm.sh/docs/"/>.
   </para>
   <para>
-   The &helm; client, <literal>helm</literal>, can be installed on your remote
-   administration computer by referring to the documentation at
-   <link xlink:href="https://helm.sh/docs/intro/install/"/>.
-   The examples in this guide are based on &helm; 3. For more information, refer
-   to the documentation at <link xlink:href="https://helm.sh/docs/"/>.
+   If your remote management workstation has the &caasp; package repository,
+   install <command>helm</command> by running
   </para>
- </sect1>'>
+<screen>&prompt.user;sudo zypper install helm</screen>
+  <para>
+   Otherwise, <command>helm</command> can be installed  by referring to the
+   documentation at <link xlink:href="https://helm.sh/docs/intro/install/"/>.
+  </para>
+</sect1>'>
 
 <!--ENTITY scf-deploy-complete..............................................-->
 
@@ -1269,7 +1274,7 @@ agent.log</screen>
 
 <!ENTITY stratos-tech-preview-note
 '<note xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
- <title>Technology Preview Features</title>                           
+ <title>Technology Preview Features</title>
  <para>
   Some Stratos releases may include features as part of a technology preview.
   Technology preview features are for evaluation purposes only and
@@ -1283,5 +1288,134 @@ agent.log</screen>
   . For example, when running <command>helm install</command> add
   <command>--set console.techPreview=true</command>.
  </para>
-</note>'> 
+</note>'>
+
+<!--ENTITY storage-class.....................................................-->
+
+<!ENTITY storage-class
+'<title xmlns="http://docbook.org/ns/docbook">
+  Storage Class
+ </title>
+ <para xmlns="http://docbook.org/ns/docbook">
+  TODO-CAP2 DESCRIPTION OF STORAGE CLASS
+ </para>'>
+
+<!--ENTITY certificates......................................................-->
+
+<!ENTITY certificates
+'<title xmlns="http://docbook.org/ns/docbook">
+  Certificates
+ </title>
+ <para xmlns="http://docbook.org/ns/docbook">
+  TODO-CAP2 DESCRIPTION OF CERTIFICATES
+ </para>'>
+
+<!--ENTITY ingress-controller................................................-->
+
+<!ENTITY ingress-controller
+'<title xmlns="http://docbook.org/ns/docbook">
+  Using an Ingress Controller
+ </title>
+ <para xmlns="http://docbook.org/ns/docbook">
+  TODO-CAP2 DESCRIPTION OF INGRESS CONTROLLER
+ </para>'>
+
+<!--ENTITY high-availability.................................................-->
+
+<!ENTITY high-availability
+'<title xmlns="http://docbook.org/ns/docbook">
+  High Availability
+ </title>
+ <para xmlns="http://docbook.org/ns/docbook">
+  TODO-CAP2 DESCRIPTION OF HIGH AVAILABILITY
+ </para>'>
+
+<!--ENTITY external-database................................................-->
+
+<!ENTITY external-database
+'<title xmlns="http://docbook.org/ns/docbook">
+  External Database
+ </title>
+ <para xmlns="http://docbook.org/ns/docbook">
+  TODO-CAP2 DESCRIPTION OF EXTERNAL DATABASE
+ </para>'>
+
+<!--ENTITY ldap..............................................................-->
+
+<!ENTITY ldap
+'<title xmlns="http://docbook.org/ns/docbook">
+  LDAP Integration
+ </title>
+ <para xmlns="http://docbook.org/ns/docbook">
+  TODO-CAP2 DESCRIPTION OF LDAP
+ </para>'>
+
+<!--ENTITY deploy-operator...................................................-->
+
+<!ENTITY deploy-operator
+'<title xmlns="http://docbook.org/ns/docbook">
+  Deploy the Operator
+ </title>
+ <para xmlns="http://docbook.org/ns/docbook">
+  TODO-CAP2 DESCRIPTION OF OPERATOR
+ </para>
+ <procedure xmlns="http://docbook.org/ns/docbook">
+  <step>
+   <para>
+    First, create the namespace for the operator.
+   </para>
+<screen>&prompt.user;kubectl create namespace <replaceable>cf-operator</replaceable></screen>
+  </step>
+  <step>
+   <para>
+    Install the operator.
+   </para>
+   <para>
+    The value of <literal>global.operator.watchNamespace</literal> indicates the
+    namespace the operator will monitor for a &kubecf; deployment. This
+    namespace should be separate from the namespace used by the operator. In
+    this example, this means &kubecf; will be deployed into a namespace called
+    <literal>kubecf</literal>.
+   </para>
+<screen>&prompt.user;helm install <replaceable>cf-operator</replaceable> TODO-CHART \
+--namespace <replaceable>cf-operator</replaceable> \
+--set "global.operator.watchNamespace=<replaceable>kubecf</replaceable>"
+</screen>
+  </step>
+  <step>
+   <para>
+    Wait until &operator; is successfully deployed before proceeding. Monitor
+    the status of your &operator; deployment using the
+    <command>watch</command> command.
+   </para>
+<screen>&prompt.user;watch --color &apos;kubectl get pods -n cf-operator&apos;</screen>
+   <para>
+    TODO-CAP2 DESCRIPTION OF COMPLETE DEPLOYMENT OF OPERATOR
+    When uaa is successfully deployed, the following is observed:
+   </para>
+  </step>
+ </procedure>'>
+
+<!--ENTITY deploy-kubecf.....................................................-->
+
+<!ENTITY deploy-kubecf
+'<title xmlns="http://docbook.org/ns/docbook">
+  Deploy &kubecf;
+ </title>
+ <para xmlns="http://docbook.org/ns/docbook">
+  TODO-CAP2 DESCRIPTION
+ </para>
+ <procedure xmlns="http://docbook.org/ns/docbook">
+  <step>
+   <para>
+    Use &helm; to deploy &kubecf;.
+   </para>
+<screen>&prompt.user;helm install <replaceable>kubecf</replaceable> TODO-CHART \
+--namespace <replaceable>kubecf</replaceable> \
+--values <replaceable>kubecf-values.yaml</replaceable>
+</screen>
+  </step>
+  <step><para>2222</para></step>
+ </procedure>'>
+
 
