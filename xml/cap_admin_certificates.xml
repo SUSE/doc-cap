@@ -217,31 +217,31 @@
    or on a schedule. This is called rotating a secret.
   </para>
   <sect2 xml:id="sec-cap-secrets-rotation-finding">
-    <title>Finding secrets</title>
+    <title>Finding Secrets</title>
     <para>
      Retrieve the list of all secrets maintained by &kubecf;:
     </para>
 <screen>
-&prompt.user;kubectl get quarkssecret --namespace kubecf
+&prompt.user;kubectl get quarkssecret --namespace <replaceable>kubecf</replaceable>
     </screen>
     <para>
       To see information about a specific secret, for example the NATS
       password:
     </para>
 <screen>
-&prompt.user;kubectl get quarkssecret --namespace kubecf kubecf.var-nats-password --output yaml
+&prompt.user;kubectl get quarkssecret --namespace <replaceable>kubecf</replaceable> <replaceable>kubecf.var-nats-password</replaceable> --output yaml
    </screen>
    <para>
      Note that each quarkssecret has a corresponding regular &kube; secret
      that it controls:
    </para>
 <screen>
-&prompt.user;kubectl get secret --namespace kubecf
-&prompt.user;kubectl get secret --namespace kubecf kubecf.var-nats-password --output yaml
+&prompt.user;kubectl get secret --namespace <replaceable>kubecf</replaceable>
+&prompt.user;kubectl get secret --namespace <replaceable>kubecf</replaceable> <replaceable>kubecf.var-nats-password</replaceable> --output yaml
    </screen>
   </sect2>
   <sect2 xml:id="sec-cap-secrets-rotation-specific">
-    <title>Rotating specific secret</title>
+    <title>Rotating Specific Secrets</title>
     <para>
       To rotate a secret, for example <replaceable>kubecf.var-nats-password</replaceable>:
     </para>
@@ -253,25 +253,38 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: rotate-kubecf.var-nats-password
+  name: <replaceable>rotate-kubecf.var-nats-password</replaceable>
   labels:
     quarks.cloudfoundry.org/secret-rotation: "true"
 data:
-  secrets: '["kubecf.var-nats-password"]'
+  secrets: '["<replaceable>kubecf.var-nats-password</replaceable>"]'
        </screen>
+       <para>
+         The name of the ConfigMap can be anything allowed by &kube; syntax but
+         we recommend using a name derived from the name of the secret itself.
+       </para>
+       <para>
+         Also, the example above rotates only a single secret but 
+         the <literal>data.secrets</literal> key accepts an array of secret
+         names, allowing simultaneous rotation of many secrets. 
+       </para>
       </step>
       <step>
         <para>Apply the ConfigMap:</para>
 <screen>
-&prompt.user;kubectl apply --namespace kubecf -f /path/to/your/yaml/file
+&prompt.user;kubectl apply --namespace <replaceable>kubecf</replaceable> -f <replaceable>/path/to/your/yaml/file</replaceable>
        </screen>
        <para>
-         The result can be seen in the &operator;'s log. After the rotation
-         is complete, that is after secrets have been changed and all affected
-         pods have been restarted, delete the config map again:
-       </para>
+         The result can be seen in the &operator;'s log.</para>
+     </step>
+      <step>
+        <para>
+          After the rotation is complete, that is after secrets have been
+          changed and all affected pods have been restarted, delete the config
+          map again:
+        </para>
 <screen>
-&prompt.user;kubectl delete --namespace kubecf -f /path/to/your/yaml/file
+&prompt.user;kubectl delete <replaceable>--namespace</replaceable> kubecf -f <replaceable>/path/to/your/yaml/file</replaceable>
        </screen>
       </step>
     </procedure>
