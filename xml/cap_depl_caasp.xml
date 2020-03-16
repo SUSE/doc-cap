@@ -28,7 +28,7 @@
   easy to operate. As a result, enterprises that use &caasp; can reduce
   application delivery cycle times and improve business agility. This chapter
   describes the steps to prepare a &productname; deployment on &caasp;. See
-  <link xlink:href="https://documentation.suse.com/suse-caasp/4.1/"/>              
+  <link xlink:href="https://documentation.suse.com/suse-caasp/4.1/"/>
   for more information on &caasp;.
  </para>
 
@@ -182,7 +182,7 @@
     <para>
      At the cluster initialization step, <emphasis role="bold">do not</emphasis>
      use the <literal>--strict-capability-defaults</literal> option when running
-    </para> 
+    </para>
 <screen>&prompt.user;skuba cluster init</screen>
     <para>
      This ensures the presence of extra CRI-O capabilities compatible with
@@ -228,23 +228,7 @@
   </itemizedlist>
  </sect1>
 
- <sect1 xml:id="sec-cap-caasp-tiller">
-  <title>Installing &helm; Client</title>
-
-  <para>
-   &helm; is a &kube; package manager. The &helm; client,
-   <literal>helm</literal>, is required in order to install and manage &cap;. It
-   can be installed on your management workstation, which is part of the &caasp;
-   package repository, by running
-  </para>
-<screen>&prompt.user;sudo zypper install helm</screen>
-  <para>
-   Alternatively, refer to the upstream documentation at
-   <link xlink:href="https://helm.sh/docs/intro/install/"/>. The examples in
-   this guide are based on &helm; 3. For more information, refer to the
-   documentation at <link xlink:href="https://helm.sh/docs/"/>.
-  </para>
- </sect1>
+  &install-helm;
 
  <sect1 xml:id="sec-cap-caasp-storage">
   <title>Storage Class</title>
@@ -299,10 +283,10 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create --filename -
    <filename>scf-config-values.yaml</filename> in this guide, provides an
    example of a &productname; configuration.
   </para>
-  <para> 
+  <para>
    Ensure <literal>DOMAIN</literal> maps to the load balancer configured for
    your &caasp; cluster (see
-   <link xlink:href="https://documentation.suse.com/suse-caasp/4.1/single-html/caasp-deployment/#loadbalancer"/>). 
+   <link xlink:href="https://documentation.suse.com/suse-caasp/4.1/single-html/caasp-deployment/#loadbalancer"/>).
   </para>
 
   &supported-domains;
@@ -315,9 +299,33 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create --filename -
 </screen>
 
   <!-- Explains usage of some Helm values used in the example/minimal values.yaml-->
-  &config-value-usage;                                                          
-                                                                                
-</sect1>
+  &config-value-usage;
+
+ </sect1>
+
+ <!-- Begin optional features -->
+
+ <sect1 xml:id="sec-cap-caasp-certificates">
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &certificates;
+ </sect1>
+
+ <sect1 xml:id="sec-cap-caasp-ingress">
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &ingress-controller;
+ </sect1>
+
+ <sect1 xml:id="sec-cap-caasp-high-availability">
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &high-availability;
+ </sect1>
+
+ <sect1 xml:id="sec-cap-caasp-external-database">
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &external-database;
+ </sect1>
+
+ <!-- End optional features -->
 
  <sect1 xml:id="sec-cap-addrepo-caasp">
   <title>Add the &kube; Charts Repository</title>
@@ -350,7 +358,7 @@ suse       https://kubernetes-charts.suse.com/
  <sect1 xml:id="sec-cap-cap-on-caasp">
   <title>Deploying &productname;</title>
 
-  <sect2 xml:id="sec-cap-caasp-deploy-scf">                                       
+  <sect2 xml:id="sec-cap-caasp-deploy-scf">
    <title>Deploy <literal>scf</literal></title>
    <para>
     Use &helm; to deploy <literal>scf</literal>:
@@ -361,7 +369,7 @@ suse       https://kubernetes-charts.suse.com/
 --namespace <replaceable>scf</replaceable> \
 --values scf-config-values.yaml
 </screen>
-   &scf-deploy-complete; 
+   &scf-deploy-complete;
 
    <para>
     When the deployment completes, use the &cf; command line interface to log in
@@ -369,6 +377,13 @@ suse       https://kubernetes-charts.suse.com/
     <xref linkend="sec-cap-cf-cli"/>)
    </para>
   </sect2>
+ </sect1>
+
+ <!-- Begin optional features -->
+
+ <sect1 xml:id="sec-cap-caasp-ldap">
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &ldap;
  </sect1>
 
  <sect1 xml:id="sec-cap-caasp-add-capacity">
@@ -416,7 +431,7 @@ suse       https://kubernetes-charts.suse.com/
     </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
---version &cf_chart;
+--version &kubecf_chart;
 </screen>
    </step>
    <step>

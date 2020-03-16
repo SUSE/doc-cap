@@ -334,74 +334,13 @@ export NODEPOOL_NAME="mypool"
   </para>
  </sect1>
 
- <!-- sect1 for helm client installation -->
- &install-helm;
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &install-helm;
 
  <sect1 xml:id="sec-cap-aks-storage">
-  <title>Default Storage Class</title>
-  <para>
-   This example creates a <literal>managed-premium</literal> (see
-   <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/azure-disks-dynamic-pv"/>)
-   storage class for your cluster using the manifest defined in
-   <filename>storage-class.yaml</filename> below:
-  </para>
-
-<screen>---
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  annotations:
-    storageclass.kubernetes.io/is-default-class: "true"
-  labels:
-    kubernetes.io/cluster-service: "true"
-  name: persistent
-parameters:
-  kind: Managed
-  storageaccounttype: Premium_LRS
-provisioner: kubernetes.io/azure-disk
-reclaimPolicy: Delete
-allowVolumeExpansion: true
-</screen>
-
-  <para>
-   Then apply the new storage class configuration with this command:
-  </para>
-
-<screen>&prompt.user;kubectl create --filename storage-class.yaml</screen>
-  <para>
-   Specify the newly created created storage class, called <literal>persistent</literal>,
-   as the value for <literal>kube.storage_class.persistent</literal> in your
-   deployment configuration file, like this example:
-  </para>
-
-<screen>kube:
-  storage_class:
-    persistent: "persistent"
-    shared: "persistent"
-</screen>
-  <para>
-   See <xref linkend="sec-cap-aks-config"/> for a complete example deployment
-   configuration file, <filename>scf-config-values.yaml</filename>.
-  </para>
+  &storage-class;
  </sect1>
 
- <sect1 xml:id="sec-cap-aks-dns">
-  <title>DNS Configuration</title>
-
-  <para>
-   This section provides an overview of the domain and sub-domains that require
-   A records to be set up for. The process is described in more detail in the
-   deployment section.
-  </para>
-
-  <para>
-   The following table lists the required domain and sub-domains, using
-   <literal>example.com</literal> as the example domain:
-  </para>
-
-&dns-tables;
-
- </sect1>
  <sect1 xml:id="sec-cap-aks-config">
   <title>Deployment Configuration</title>
   <para>
@@ -422,6 +361,30 @@ allowVolumeExpansion: true
   &config-value-usage;
 
  </sect1>
+
+ <!-- Begin optional features -->
+
+ <sect1 xml:id="sec-cap-aks-certificates">
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &certificates;
+ </sect1>
+
+ <sect1 xml:id="sec-cap-aks-ingress">
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &ingress-controller;
+ </sect1>
+
+ <sect1 xml:id="sec-cap-aks-high-availability">
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &high-availability;
+ </sect1>
+
+ <sect1 xml:id="sec-cap-aks-external-database">
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &external-database;
+ </sect1>
+
+ <!-- End optional features -->
 
  <sect1 xml:id="sec-cap-addrepo-aks">
   <title>Add the &kube; Charts Repository</title>
@@ -743,8 +706,17 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
   </para>
  </sect1>
 
+ <!-- Begin optional features -->
+
+ <sect1 xml:id="sec-cap-aks-ldap">
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &ldap;
+ </sect1>
+
+ <!-- End optional features -->
+
  <!-- sect1 for PV resizing -->
- &resize-persistent-volume;
+ <!-- &resize-persistent-volume; -->
 
  <sect1 xml:id="sec-cap-aks-add-capacity">
   <title>Expanding Capacity of a &cap; Deployment on &aks;</title>
@@ -809,7 +781,7 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
     </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
 --values scf-config-values.yaml \
---version &cf_chart;
+--version &kubecf_chart;
 </screen>
    </step>
    <step>

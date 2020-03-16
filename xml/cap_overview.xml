@@ -24,62 +24,41 @@
   <itemizedlist>
    <listitem>
     <para>
-     &scf; has been updated to version &cf_chart;:
+     &kubecf; has been updated to version &kubecf_chart;:
     </para>
     <itemizedlist>
      <listitem>
       <para>
-       cf-deployment has been updated to 12.17
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       Optimized startup time for various roles
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       Added/fixed podAntiAffinity rules for various roles
+	TODO-CAP2 ITEM 1
       </para>
      </listitem>
     </itemizedlist>
    </listitem>
    <listitem>
     <para>
-     Stratos Console has been updated to version 2.7.0:
+     Stratos Console has been updated to version &stratos_chart;:
     </para>
     <itemizedlist>
      <listitem>
       <para>
-       Improvements to the &kube; Dashboard integration (improved configuration
-       and reliability)
+	TODO-CAP2 ITEM 1
       </para>
      </listitem>
      <listitem>
       <para>
-       Improved support for synchronous creation of service instances
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       Branding updated to "&suse; Stratos Console"
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       For a full list of features and fixes see <link xlink:href="https://github.com/SUSE/stratos/blob/v2-master/CHANGELOG.md#270"/>
+       For a full list of features and fixes see <link xlink:href="https://github.com/SUSE/stratos/blob/v2-master/CHANGELOG.md#300"/>
       </para>
      </listitem>
     </itemizedlist>
    </listitem>
    <listitem>
     <para>
-     Stratos Metrics has been updated to version 1.1.2:
+     Stratos Metrics has been updated to version &metrics_chart;:
     </para>
     <itemizedlist>
      <listitem>
       <para>
-       Added support for &caasp; V4.1 and &kube; 1.16+ environments
+	TODO-CAP2 ITEM 1
       </para>
      </listitem>
      <listitem>
@@ -93,7 +72,7 @@
   </itemizedlist>
 
   <para>
-   See all product manuals for &productname; 1.x at
+   See all product manuals for &productname; 2.x at
    <link xlink:href="https://documentation.suse.com/suse-cap/1/">&productname; 1</link>.
   </para>
 

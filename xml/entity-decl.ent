@@ -8,9 +8,10 @@
 <!ENTITY github.url     "https://github.com/SUSE/doc-cap">
 <!ENTITY cap            "Cloud Application Platform">
 <!ENTITY kubecf         "KubeCF">
+<!ENTITY operator       "quarks-operator">
 <!ENTITY kernel_version "3.19">
 <!ENTITY operator_chart "TODO">
-<!ENTITY cf_chart "TODO">
+<!ENTITY kubecf_chart "TODO">
 <!ENTITY stratos_chart "3.0.0">
 <!ENTITY metrics_chart "1.1.2">
 <!ENTITY minibroker_chart "0.3.1">
