@@ -18,7 +18,7 @@
  <para>
   The Cloud Controller Database (CCDB) encrypts sensitive information like
   passwords. The encryption key is generated when &kubecf; is deployed.
-  If it is compromised and needs to be rotated, new keys can be
+  If it is compromised or needs to be rotated for any other reason, new keys can be
   added. Note that existing encrypted information will not be updated. The
   encrypted information must be set again to have them re-encrypted with the
   new key. The old key cannot be dropped until all references to it are removed
@@ -40,8 +40,8 @@ ccdb:
   encryption:
     rotation:
       key_labels:
-      - encryption_key_0
-      current_key_label: encryption_key_0
+      - <replaceable>encryption_key_0</replaceable>
+      current_key_label: <replaceable>encryption_key_0</replaceable>
    </screen>
   </step>
   <step>
@@ -55,9 +55,9 @@ ccdb:
   encryption:
     rotation:
       key_labels:
-      - encryption_key_0
-      - encryption_key_1
-      current_key_label: encryption_key_1
+      - <replaceable>encryption_key_0</replaceable>
+      - <replaceable>encryption_key_1</replaceable>
+      current_key_label: <replaceable>encryption_key_1</replaceable>
    </screen>
   </step>
   <step>
@@ -79,7 +79,7 @@ ccdb:
       <literal>rotate-cc-database-key</literal> errand:
      </para>
 <screen>&prompt.user;kubectl patch qjob kubecf-rotate-cc-database-key \
---namespace kubecf \
+--namespace <replaceable>kubecf</replaceable> \
 --type merge \
 --patch '{"spec":{"trigger":{"strategy":"now"}}}'
      </screen>
