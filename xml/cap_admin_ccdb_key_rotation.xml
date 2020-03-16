@@ -67,7 +67,7 @@ ccdb:
    <substeps>
     <step>
      <para>
-      Update the &kubecf; Helm installation:
+      Update the &kubecf; &helm; installation:
      </para>
 <screen>
 &prompt.user;helm upgrade kubecf
