@@ -209,40 +209,88 @@
   <title>Rotating Automatically Generated Secrets</title>
 
   <para>
-   &cap; uses a number of automatically generated secrets for use internally.
-   These secrets have a default expiration of 10950 days and are set through
-   the <literal>CERT_EXPIRATION</literal> property in the
-   <literal>env:</literal> section of the <filename>scf-config-values.yaml</filename>
-   file. If rotation of the secrets is required, increment the value of
-   <literal>secrets_generation_counter</literal> in the
-   <literal>kube:</literal> section of the <filename>scf-config-values.yaml</filename>
-   configuration file (for example the example
-   <filename>scf-config-values.yaml</filename> used in this guide) then run
-   <command>helm upgrade</command>.
+   &cap; uses a number of automatically generated secrets (passwords and
+   certificates) for use internally provided by &operator;. This removes
+   the burden from human operators while allowing for secure communication.
+
+   From time to time, operators may wish to change such secrets, either manually
+   or on a schedule. This is called rotating a secret.
   </para>
+  <sect2 xml:id="sec-cap-secrets-rotation-finding">
+    <title>Finding Secrets</title>
+    <para>
+     Retrieve the list of all secrets maintained by &kubecf;:
+    </para>
+<screen>
+&prompt.user;kubectl get quarkssecret --namespace <replaceable>kubecf</replaceable>
+    </screen>
+    <para>
+      To see information about a specific secret, for example the NATS
+      password:
+    </para>
+<screen>
+&prompt.user;kubectl get quarkssecret --namespace <replaceable>kubecf</replaceable> <replaceable>kubecf.var-nats-password</replaceable> --output yaml
+   </screen>
+   <para>
+     Note that each quarkssecret has a corresponding regular &kube; secret
+     that it controls:
+   </para>
+<screen>
+&prompt.user;kubectl get secret --namespace <replaceable>kubecf</replaceable>
+&prompt.user;kubectl get secret --namespace <replaceable>kubecf</replaceable> <replaceable>kubecf.var-nats-password</replaceable> --output yaml
+   </screen>
+  </sect2>
+  <sect2 xml:id="sec-cap-secrets-rotation-specific">
+    <title>Rotating Specific Secrets</title>
+    <para>
+      To rotate a secret, for example <replaceable>kubecf.var-nats-password</replaceable>:
+    </para>
+    <procedure>
+      <step>
+        <para>Create a YAML file for a ConfigMap of the form:</para>
+<screen>
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: <replaceable>rotate-kubecf.var-nats-password</replaceable>
+  labels:
+    quarks.cloudfoundry.org/secret-rotation: "true"
+data:
+  secrets: '["<replaceable>kubecf.var-nats-password</replaceable>"]'
+       </screen>
+       <para>
+         The name of the ConfigMap can be anything allowed by &kube; syntax but
+         we recommend using a name derived from the name of the secret itself.
+       </para>
+       <para>
+         Also, the example above rotates only a single secret but 
+         the <literal>data.secrets</literal> key accepts an array of secret
+         names, allowing simultaneous rotation of many secrets. 
+       </para>
+      </step>
+      <step>
+        <para>Apply the ConfigMap:</para>
+<screen>
+&prompt.user;kubectl apply --namespace <replaceable>kubecf</replaceable> -f <replaceable>/path/to/your/yaml/file</replaceable>
+       </screen>
+       <para>
+         The result can be seen in the &operator;'s log.</para>
+     </step>
+      <step>
+        <para>
+          After the rotation is complete, that is after secrets have been
+          changed and all affected pods have been restarted, delete the config
+          map again:
+        </para>
+<screen>
+&prompt.user;kubectl delete <replaceable>--namespace</replaceable> kubecf -f <replaceable>/path/to/your/yaml/file</replaceable>
+       </screen>
+      </step>
+    </procedure>
+  </sect2>
 
-  <para>
-   This example demonstrates rotating the secrets of the <literal>scf</literal>
-   deployment.
-  </para>
-
-  <para>
-   First, update the <filename>scf-config-values.yaml</filename> file.
-  </para>
-
-<screen>kube:
-  # Increment this counter to rotate all generated secrets
-  secrets_generation_counter: 2</screen>
-
-  <para>
-   Next, perform a <command>helm upgrade</command> to apply the change.
-  </para>
-
-<screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
---values scf-config-values.yaml \
---version &kubecf_chart;
-</screen>
- </sect1>
+</sect1>
  <sect1 xml:id="sec-cap-trusted-certs">
    <title>Difference between TRUSTED_CERTS and ROOTFS_TRUSTED_CERTS</title>
    <para>
