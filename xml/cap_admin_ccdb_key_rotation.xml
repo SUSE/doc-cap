@@ -25,7 +25,9 @@
   from the database.
  </para>
  <para>
-  Updating these secrets is a manual process. The following procedure outlines
+  Updating these secrets is a manual process that involves decrypting the
+  current contents of the database using the old key and re-encrypting the
+  contents using a new key. The following procedure outlines
   how this is done.
  </para>
  <procedure>
@@ -62,7 +64,8 @@ ccdb:
   </step>
   <step>
    <para>
-    Perform the rotation:
+    Save the above information into a file, for example
+    <replaceable>rotate-secret.yaml</replaceable>, and perform the rotation:
    </para>
    <substeps>
     <step>
@@ -70,7 +73,7 @@ ccdb:
       Update the &kubecf; &helm; installation:
      </para>
 <screen>
-&prompt.user;helm upgrade kubecf
+&prompt.user;helm upgrade kubecf --values <replaceable>rotate-secret.yaml</replaceable> --reuse-values
      </screen>
     </step>
     <step>
