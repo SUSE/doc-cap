@@ -131,23 +131,23 @@
        <tbody>
 	<row>
 	 <entry>&mariadb;</entry>
-	 <entry>4.3.0</entry>
-	 <entry>10.1.34</entry>
+	 <entry>7.0.0</entry>
+	 <entry>10.3.18</entry>
 	</row>
 	<row>
 	 <entry>MongoDB</entry>
-	 <entry>5.3.3</entry>
-	 <entry>4.0.6</entry>
+	 <entry>7.2.9</entry>
+	 <entry>4.0.12</entry>
 	</row>
 	<row>
 	 <entry>&postgresql;</entry>
-	 <entry>6.2.1</entry>
+	 <entry>7.0.0</entry>
 	 <entry>11.5.0</entry>
 	</row>
 	<row>
 	 <entry>Redis</entry>
-	 <entry>3.7.2</entry>
-	 <entry>4.0.10</entry>
+	 <entry>9.1.12</entry>
+	 <entry>5.0.5</entry>
 	</row>
        </tbody>
       </tgroup>
