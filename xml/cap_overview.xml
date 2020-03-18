@@ -89,7 +89,8 @@
 
   <para>
    &productname; is a software platform for cloud-native application deployment
-   based on &scf; and &kube;.
+   based on &scf; and &kube;. Starting from version 2.0, it is based on
+   &operator; and &kubecf;.
   </para>
 
   <para>
@@ -231,8 +232,10 @@
   </itemizedlist>
 
   <para>
-   &scf; packages upstream &cf; &bosh; releases to produce containers
-   and configurations which are deployed to &kube; clusters using &helm;.
+   &scf; uses &operator;, a &kube; Operator deployed via a &helm; chart, to
+   install custom resource definitions that convert &bosh; releases into
+   &kube; resources, such as pods, deployments, and stateful sets. Leveraging
+   &operator; is &kubecf;, a version of &cf; deployed as &helm; chart.
   </para>
  </sect1>
  <sect1 xml:id="sec-cap-requirements">
@@ -418,6 +421,17 @@
     <listitem>
      <para>
       <command>kubectl</command>, the command line client for &kube;.
+     </para>
+    </listitem>
+    <listitem>
+     <para>
+       <command>&operator;</command>, a &kube; Operator that converts BOSH
+       releases to &kube; resources.
+     </para>
+     </listitem>
+     <listitem>
+     <para>
+       <command>&kubecf;</command>, a version of &cf; deployed via &operator;.
      </para>
     </listitem>
     <listitem>
