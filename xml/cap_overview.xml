@@ -89,8 +89,8 @@
 
   <para>
    &productname; is a software platform for cloud-native application deployment
-   based on &scf; and &kube;. Starting from version 2.0, it is based on
-   &operator; and &kubecf;.
+   based on &operator; and &kubecf;. &productname; releases prior to version 2.0 were based on
+   &scf; and &kube;.
   </para>
 
   <para>
@@ -232,10 +232,10 @@
   </itemizedlist>
 
   <para>
-   &scf; uses &operator;, a &kube; Operator deployed via a &helm; chart, to
+   &productname; uses &operator;, a &kube; Operator deployed via a &helm; chart, to
    install custom resource definitions that convert &bosh; releases into
-   &kube; resources, such as pods, deployments, and stateful sets. Leveraging
-   &operator; is &kubecf;, a version of &cf; deployed as &helm; chart.
+   &kube; resources, such as pods, deployments, and stateful sets. This is made possible
+   by leveraging &kubecf;, a version of &cf; deployed as &helm; chart.
   </para>
  </sect1>
  <sect1 xml:id="sec-cap-requirements">
