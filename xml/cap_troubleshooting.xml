@@ -547,4 +547,29 @@ recover switch to commit or rollback pending transactions.
    </step>
   </procedure>
  </sect1>
+ <sect1 xml:id="sec-cap-tbl-admission-webhook">
+  <title>Admission webhook denied</title>
+  <para>
+    When switching back to Diego from Eirini, the error below can occur:
+  </para>
+<screen>
+&prompt.user;helm install kubecf <replaceable>kubecf.tgz</replaceable> --namespace <replaceable>kubecf</replaceable> --values <replaceable>kubecf-values.yaml</replaceable>
+Error: admission webhook "validate-boshdeployment.quarks.cloudfoundry.org" denied the request: Failed to resolve manifest: Failed to interpolate ops 'kubecf-user-provided-properties' for manifest 'kubecf': Applying ops on manifest obj failed in interpolator: Expected to find exactly one matching array item for path '/instance_groups/name=eirini' but found 0
+  </screen>
+  <para>
+    To avoid this error, remove the <literal>eirini-persi-broker</literal> configuration
+    before running the command.
+  </para>
+ </sect1>
+ <sect1 xml:id="sec-cap-tbl-helm-namespace">
+  <title>Namespace does not exist</title>
+  <para>
+    When running a &helm; command, an error occurs stating that a namespace does not
+    exist. To avoid this error, create the namespace manually with &kubectl; before
+    running the command:
+  </para>
+<screen>
+&prompt.user;kubectl create namespace <replaceable>name</replaceable>
+  </screen>
+ </sect1>
 </chapter>
