@@ -565,7 +565,7 @@ Error: admission webhook "validate-boshdeployment.quarks.cloudfoundry.org" denie
   <title>Namespace does not exist</title>
   <para>
     When running a &helm; command, an error occurs stating that a namespace does not
-    exist. To avoid this error, create the namespace manually with &kubectl; before
+    exist. To avoid this error, create the namespace manually with <command>kubectl</command>; before
     running the command:
   </para>
 <screen>
