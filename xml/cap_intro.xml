@@ -31,5 +31,6 @@
  <xi:include href="common_intro_available_doc_i.xml"/>
  <xi:include href="common_intro_feedback_i.xml"/>
  <xi:include href="common_intro_typografie_i.xml"/>
+ <xi:include href="common_intro_support_statement_i.xml"/>
  <xi:include href="common_intro_making_i.xml"/>
 </preface>
