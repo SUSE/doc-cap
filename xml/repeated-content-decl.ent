@@ -1127,35 +1127,11 @@ done
      </para>
     </listitem>
    </varlistentry>
-   <varlistentry>
-    <term>High Availability</term>
-    <listitem>
-     <para>
-      For details, see <xref linkend="cha-cap-ha"/>.
-     </para>
-    </listitem>
-   </varlistentry>
-   <varlistentry>
-    <term>LDAP Integration</term>
-    <listitem>
-     <para>
-      For details, see <xref linkend="cha-cap-ldap"/>.
-     </para>
-    </listitem>
-   </varlistentry>
-   <varlistentry>
+  <varlistentry>
     <term>External Log Server Integration</term>
     <listitem>
      <para>
       For details, see <xref linkend="cha-cap-logging"/>.
-     </para>
-    </listitem>
-   </varlistentry>
-   <varlistentry>
-    <term>Managing Certificates</term>
-    <listitem>
-     <para>
-      For details, see <xref linkend="cha-cap-certificates"/>.
      </para>
     </listitem>
    </varlistentry>
@@ -1307,8 +1283,78 @@ agent.log</screen>
   Certificates
  </title>
  <para xmlns="http://docbook.org/ns/docbook">
-  TODO-CAP2 DESCRIPTION OF CERTIFICATES
- </para>'>
+  This section describes the process to secure traffic passing through your
+  &productname; deployment. This is achieved by using certificates to set up
+  Transport Layer Security (TLS) for the router component.
+ </para>
+ <sect2 xmlns="http://docbook.org/ns/docbook">
+  <title>Certificate Characteristics</title>
+  <para>
+   Ensure the certificates you use have the following characteristics:
+  </para>
+  <itemizedlist>
+   <listitem>
+    <para>
+     The certificate is encoded in the PEM format.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     The certificate is signed by an external Certificate Authority (CA).
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     The certificate&apos;s Subject Alternative Name (SAN) include the domain
+     <replaceable>*.example.com</replaceable>, where <replaceable>example.com</replaceable>
+     is replaced with the <literal>system_domain</literal> in your
+     <filename>kubecf-config-values.yaml</filename>.
+    </para>
+   </listitem>
+  </itemizedlist>
+ </sect2>
+ <sect2 xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Deployment Configuration</title>
+  <para>
+   The certificate used to secure your deployment is passed through the
+   <filename>kubecf-config-values.yaml</filename> configuration file. To specify
+   a certificate, set the value of the certificate and its corresponding private
+   key using the <literal>router.tls.crt</literal> and
+   <literal>router.tls.key</literal> &helm; values in the
+   <literal>settings:</literal> section.
+  </para>
+  <note>
+   <para>
+    Note the use of the "|" character which indicates the use of a literal
+    scalar. See the
+    <link xlink:href="http://yaml.org/spec/1.2/spec.html#id2795688"/> for more information.
+   </para>
+  </note>
+<screen>settings:
+  router:
+    tls:
+      crt: |
+        -----BEGIN CERTIFICATE-----
+        MIIEEjCCAfoCCQCWC4NErLzy3jANBgkqhkiG9w0BAQsFADBGMQswCQYDVQQGEwJD
+        QTETMBEGA1UECAwKU29tZS1TdGF0ZTEOMAwGA1UECgwFTXlPcmcxEjAQBgNVBAMM
+        CU15Q0Euc2l0ZTAeFw0xODA5MDYxNzA1MTRaFw0yMDAxMTkxNzA1MTRaMFAxCzAJ
+        ...
+        xtNNDwl2rnA+U0Q48uZIPSy6UzSmiNaP3PDR+cOak/mV8s1/7oUXM5ivqkz8pEJo
+        M3KrIxZ7+MbdTvDOh8lQplvFTeGgjmUDd587Gs4JsormqOsGwKd1BLzQbGELryV9
+        1usMOVbUuL8mSKVvgqhbz7vJlW1+zwmrpMV3qgTMoHoJWGx2n5g=
+        -----END CERTIFICATE-----
+      key: |
+        -----BEGIN RSA PRIVATE KEY-----
+        MIIEpAIBAAKCAQEAm4JMchGSqbZuqc4LdryJpX2HnarWPOW0hUkm60DL53f6ehPK
+        T5Dtb2s+CoDX9A0iTjGZWRD7WwjpiiuXUcyszm8y9bJjP3sIcTnHWSgL/6Bb3KN5
+        G5D8GHz7eMYkZBviFvygCqEs1hmfGCVNtgiTbAwgBTNsrmyx2NygnF5uy4KlkgwI
+        ...
+        GORpbQKBgQDB1/nLPjKxBqJmZ/JymBl6iBnhIgVkuUMuvmqES2nqqMI+r60EAKpX
+        M5CD+pq71TuBtbo9hbjy5Buh0+QSIbJaNIOdJxU7idEf200+4anzdaipyCWXdZU+
+        MPdJf40awgSWpGdiSv6hoj0AOm+lf4AsH6yAqw/eIHXNzhWLRvnqgA==
+        -----END RSA PRIVATE KEY----
+</screen>
+ </sect2>'>
 
 <!--ENTITY ingress-controller................................................-->
 
@@ -1316,19 +1362,502 @@ agent.log</screen>
 '<title xmlns="http://docbook.org/ns/docbook">
   Using an Ingress Controller
  </title>
+ <para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  An Ingress controller (see <link xlink:href="https://kubernetes.io/docs/concepts/services-networking/ingress/"/>) is a &kube; resource that manages traffic to services in a &kube; cluster.
+ </para>
  <para xmlns="http://docbook.org/ns/docbook">
-  TODO-CAP2 DESCRIPTION OF INGRESS CONTROLLER
- </para>'>
+  Using an Ingress controller has the benefit of:
+ </para>
+ <itemizedlist xmlns="http://docbook.org/ns/docbook">
+  <listitem>
+   <para>
+    Having only one load balancer.
+   </para>
+  </listitem>
+  <listitem>
+   <para>
+    SSL can be terminated on the controller.
+   </para>
+  </listitem>
+  <listitem>
+   <para>
+    All traffic can be routed through ports 80 and 443 on the controller. Tracking
+    different ports(for example, port (4)443 for Gorouter) is
+    no longer needed. The Ingress routing rules will then manage the traffic flow
+    to the appropriate backend services.
+   </para>
+  </listitem>
+ </itemizedlist>
+ <para xmlns="http://docbook.org/ns/docbook">
+  Note that only the NGINX Ingress Controller has been verified to be
+  compatible with &cap;. Other Ingress controller alternatives may work, but
+  compatibility with &cap; is not supported.
+ </para>
+ <sect2 xmlns="http://docbook.org/ns/docbook">
+  <title>Deploying NGINX Ingress Controller</title>
+  <procedure>
+   <step>
+    <para>
+     Prepare your &kube; cluster according to the documentation for your platform. Proceed
+     to the next step when you reach the <literal>scf</literal> deployment phase for your
+     platform. Note that the DNS sections in the platform-specific documentation can be
+     omitted.
+    </para>
+    <!-- Platforms covered by guide -->
+    &deployment-platforms;
+   </step>
+   <step>
+    <para>
+     Install the NGINX Ingress Controller.
+    </para>
+<screen>&prompt.user;kubectl create namespace <replaceable>nginx-ingress</replaceable>
+
+&prompt.user;helm install <replaceable>nginx-ingress</replaceable> suse/nginx-ingress \
+--namespace <replaceable>ingress</replaceable> \
+--set rbac.create=true
+</screen>
+   </step>
+   <step>
+    <para>
+     Monitor the progess of the deployment:
+    </para>
+<screen>&prompt.user;watch --color &apos;kubectl get pods --namespace ingress&apos;</screen>
+   </step>
+   <step>
+    <para>
+     After the deployment completes, the Ingress controller service will be deployed
+     with either an external IP or a hostname. For &caasp;, &aks;, and &gke;, this
+     will be an IP and for &eks;, it will be a hostname. Find the external IP or
+     hostname.
+    </para>
+<screen>&prompt.user;kubectl get services nginx-ingress-controller --namespace ingress</screen>
+    <para>
+     You will get output similar to the following.
+    </para>
+<screen>NAME                       TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)
+nginx-ingress-controller   LoadBalancer   <replaceable>10.63.248.70</replaceable>   <replaceable>35.233.191.177</replaceable>   80:30344/TCP,443:31386/TCP
+</screen>
+   </step>
+   <step>
+    <para>
+     Set up appropriate DNS records (CNAME for &eks;, A records for &caasp;, &aks;,
+     and &gke;) corresponding to the controller service IP or hostname with the following
+     entries. Replace <replaceable>example.com</replaceable> with your actual domain.
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       <replaceable>example.com</replaceable>
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       <replaceable>*.example.com</replaceable>
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       <replaceable>uaa.example.com</replaceable>
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       <replaceable>*.uaa.example.com</replaceable>
+      </para>
+     </listitem>
+    </itemizedlist>
+   </step>
+   <step>
+    <para>
+     Obtain a PEM formatted certificate and ensure it includes Subject Alternative
+     Names (SAN) for <literal>uaa</literal> and <literal>scf</literal> listed in
+     the previous step.
+    </para>
+   </step>
+   <step>
+    <para>
+     Add the following to your configuration file,
+     <filename>scf-config-values.yaml</filename>, to trigger the creation of the Ingress
+     objects. Ensure <literal>crt</literal> and <literal>key</literal> are encoded in
+     the PEM format. Note the port changes, this ensures all communications to
+     <literal>uaa</literal> are routed through the Ingress controller.
+    </para>
+    <para>
+     The <literal>nginx.ingress.kubernetes.io/proxy-body-size</literal> value indicates the maximum
+     client request body size. Actions such as pushing an application through <command>cf push</command>
+     can result in larger request body sizes depending on the application type you work with. This value
+     will need to be adapted to your workflow.
+    </para>
+<screen>UAA_PORT: 443
+UAA_PUBLIC_PORT: 443
+...
+ingress:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: <replaceable>1024m</replaceable>
+  tls:
+    crt: |
+      -----BEGIN CERTIFICATE-----
+      MIIE8jCCAtqgAwIBAgIUT/Yu/Sv8AUl5zHXXEKCy5RKJqmYwDQYJKoZIhvcMOQMM
+      [...]
+      xC8x/+zB7XlvcRJRio6kk670+25ABP==
+      -----END CERTIFICATE-----
+    key: |
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIE8jCCAtqgAwIBAgIUSI02lj2b2ImLy/zMrjNgW5d8EygwQSVJKoZIhvcYEGAW
+      [...]
+      to2WV7rPMb9W9fd2vVUXKKHTc+PiNg==
+      -----END RSA PRIVATE KEY-----
+</screen>
+   </step>
+   <step>
+    <para>
+     Deploy <literal>uaa</literal>.
+    </para>
+<screen>&prompt.user;helm install suse/uaa \
+--name susecf-uaa \
+--namespace uaa \
+--values scf-config-values.yaml
+</screen>
+   </step>
+   <step>
+    <para>
+     When all <literal>uaa</literal> pods are up and ready, verify
+     <literal>uaa</literal> is working. Pass the CA certificate used to sign
+     the Ingress controller certificate as the value of
+     <command>--cacert</command>.
+    </para>
+<screen>&prompt.user;curl --cacert <replaceable>INGRESS_CONTROLLER_CA_CERT</replaceable> <replaceable>https://uaa.example.com/.well-known/openid-configuration</replaceable></screen>
+   </step>
+   <step>
+    <para>
+     Update the Ingress controller to set up TCP forwarding
+    </para>
+<screen>&prompt.user;helm upgrade nginx-ingress suse/nginx-ingress \
+  --reuse-values \
+  --set "tcp.20000=scf/tcp-router-tcp-router-public:20000" \
+  --set "tcp.20001=scf/tcp-router-tcp-router-public:20001" \
+  --set "tcp.20002=scf/tcp-router-tcp-router-public:20002" \
+  --set "tcp.20003=scf/tcp-router-tcp-router-public:20003" \
+  --set "tcp.20004=scf/tcp-router-tcp-router-public:20004" \
+  --set "tcp.20005=scf/tcp-router-tcp-router-public:20005" \
+  --set "tcp.20006=scf/tcp-router-tcp-router-public:20006" \
+  --set "tcp.20007=scf/tcp-router-tcp-router-public:20007" \
+  --set "tcp.20008=scf/tcp-router-tcp-router-public:20008" \
+  --set "tcp.2222=scf/diego-ssh-ssh-proxy-public:2222"
+</screen>
+   </step>
+   <step>
+    <para>
+     Set up the <literal>scf</literal> deployment to trust the CA certificate
+     that signed the certificate of the Ingress Controller.
+    </para>
+<screen>&prompt.user;export INGRESS_CA_CERT=$(cat ingress-ca-cert.pem)</screen>
+   </step>
+   <step>
+    <para>
+     Deploy <literal>scf</literal>.
+    </para>
+<screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
+
+&prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
+--namespace <replaceable>scf</replaceable> \
+--values scf-config-values.yaml \
+--set "secrets.UAA_CA_CERT=${INGRESS_CA_CERT}"
+</screen>
+    &scf-deploy-complete;
+   </step>
+   <step>
+    <para>
+     When the deployment completes, verify you are able to login using the
+     &cfcli;.
+    </para>
+<screen>&prompt.user;cf login https://api.example.com -u <replaceable>username</replaceable> -p <replaceable>password</replaceable></screen>
+   </step>
+  </procedure>
+ </sect2>
+ <sect2 xmlns="http://docbook.org/ns/docbook">
+  <title>Changing the Max Body Size</title>
+  <para>
+   The <literal>nginx.ingress.kubernetes.io/proxy-body-size</literal> value indicates the maximum
+   client request body size. Actions such as pushing an application through <command>cf push</command>
+   can result in larger request body sizes depending on the application type you work with. If your
+   current setting is insufficient, you may encounter a <literal>413 Request Entity Too Large</literal>
+   error.
+  </para>
+  <para>
+   The maximum client request body size can be changed to adapt to your workflow using the following.
+  </para>
+  <procedure>
+   <step>
+    <para>
+     Add <literal>nginx.ingress.kubernetes.io/proxy-body-size</literal> to your <filename>scf-config-values.yaml</filename>
+     and specify a value.
+    </para>
+<screen>ingress:
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: <replaceable>1024m</replaceable>
+</screen>
+   </step>
+   <step>
+    <para>
+     Set up the <literal>scf</literal> deployment to trust the CA certificate
+     that signed the certificate of the Ingress Controller.
+    </para>
+<screen>&prompt.user;export INGRESS_CA_CERT=$(cat ingress-ca-cert.pem)</screen>
+   </step>
+   <step>
+    <para>
+     Use <command>helm upgrade</command> to apply the change.
+    </para>
+<screen>&prompt.user;helm upgrade susecf-scf suse/cf \
+--values scf-config-values.yaml --set "secrets.UAA_CA_CERT=${INGRESS_CA_CERT}" \
+--version &kubecf_chart;
+</screen>
+   </step>
+   <step>
+    <para>
+     Monitor the deployment progress using the <command>watch</command> command.
+    </para>
+<screen>&prompt.user;watch --color &apos;kubectl get pods --namespace scf&apos;</screen>
+   </step>
+  </procedure>
+ </sect2>'>
 
 <!--ENTITY high-availability.................................................-->
 
 <!ENTITY high-availability
 '<title xmlns="http://docbook.org/ns/docbook">
-  High Availability
+  &ha;
  </title>
- <para xmlns="http://docbook.org/ns/docbook">
-  TODO-CAP2 DESCRIPTION OF HIGH AVAILABILITY
- </para>'>
+ <sect2 xmlns="http://docbook.org/ns/docbook">
+  <title>Configuring &cap; for &ha;</title>
+  <para>
+   There are two ways to make your &productname; deployment highly available.
+   The first method is to set the <literal>high_availability</literal> parameter
+   in your deployment configuration file to <literal>true</literal>. The second
+   method is to create custom configuration files with your own sizing values.
+  </para>
+  <sect3>
+   <title>Prerequisites</title>
+   <itemizedlist>
+    <listitem>
+     <para>
+<!-- TODO-CAP2 Verfiy if still needed? -->
+      A running deployment of &productname; where the database roles,
+      <literal>mysql</literal>, are single availability for
+      <literal>scf</literal>. By starting with single availability
+      <literal>mysql</literal> roles then transitioning to high availability
+      <literal>mysql</literal> roles, it allows other resources dependent on the
+      database to come up properly. It is not recommended for initial
+      deployments of &productname; to have the <literal>mysql</literal> roles in
+      high availability mode.
+     </para>
+    </listitem>
+   </itemizedlist>
+  </sect3>
+  <sect3>
+   <title>Finding Default and Allowable Sizing Values</title>
+   <para>
+    The <literal>sizing:</literal> section in the &helm;
+    <filename>values.yaml</filename> files for the <literal>scf</literal> chart
+    describes which roles can be scaled, and the scaling options for each role.
+    You may use <command>helm inspect</command> to read the
+    <literal>sizing:</literal> section in the &helm; chart:
+   </para>
+<screen>&prompt.user;helm inspect suse/cf | less +/sizing:</screen>
+   <para>
+    Another way is to use Perl to extract the information for each role from
+    the <literal>sizing:</literal> section.
+   </para>
+<screen>
+&prompt.user;helm inspect values suse/cf | \
+perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail|scale|count/ }&apos;
+
+<!-- TODO-CAP2 replace example -->
+</screen>
+   <para>
+    The default <filename>values.yaml</filename> files are also included in
+    this guide at <xref linkend="app-kubecf-values-yaml"/>.
+   </para>
+  </sect3>
+  <sect3>
+   <title>Using the <literal>high_availability</literal> &helm; Property</title>
+   <important>
+    &fresh-namespace;
+    </important>
+   <para>
+    One way to make your &productname; deployment highly available is
+    to use the <literal>high_availability</literal> &helm; property. In your
+    <filename>kubecf-config-values.yaml</filename>, set this property to
+    <literal>true</literal>. This changes the size of all roles to the minimum
+    required for a highly available deployment. Your configuration file,
+    <filename>kubecf-config-values.yaml</filename>, should include the following.
+   </para>
+<screen>high_availability: true</screen>
+<!-- TODO-CAP2 Keep if requirement for single mysql before HA is still valid. 
+     Remove if not -->
+   <para>
+    Use <command>helm install</command> to deploy or
+    <command>helm upgrade</command> to apply the change to an existing
+    deployment.
+   </para>
+<screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
+
+&prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
+--namespace <replaceable>scf</replaceable> \
+--values scf-config-values.yaml
+</screen>
+  </sect3>
+  <sect3>
+   <title>Using Custom Sizing Configurations</title>
+   <para>
+    Another method to make your &productname; deployment highly available is           
+    to explicitly configure the instance count of a instance group.
+
+    To see the full list of configurable instance groups, refer to default &kubecf; <filename>values.yaml</filename> file in the appendix at <xref linkend="app-kubecf-values-yaml"/>.
+
+    When sizing values are specified, it takes precedence over the <literal>high_availability</literal> property.
+
+    The following is an of a example &ha; configuration. The example values are not meant to be
+    copied, as these depend on your particular deployment and requirements.
+   </para>
+<screen>sizing:
+  adapter:
+    instances: 2
+  api:
+    instances: 2
+  asactors:
+    instances: 2
+  asapi:
+    instances: 2
+  asmetrics:
+    instances: 2
+  asnozzle:
+    instances: 2
+  auctioneer:
+    instances: 2
+  bits:
+    instances: 2
+  cc_worker:
+    instances: 2
+  credhub:
+    instances: 2
+  database:
+    instances: 2
+  diego_api:
+    instances: 2
+  diego_cell:
+    instances: 2
+  doppler:
+    instances: 2
+  eirini:
+    instances: 3
+  log_api:
+    instances: 2
+  nats:
+    instances: 2
+  router:
+    instances: 2
+  routing_api:
+    instances: 2
+  scheduler:
+    instances: 2
+  uaa:
+    instances: 2
+  tcp_router:
+    instances: 2
+</screen>
+<!-- TODO-CAP2 Verify if still valid
+   <para>
+    When using custom sizing configurations, take note that the
+    <literal>mysql</literal> instance group for <literal>scf</literal> must have
+    have an odd number of instances.
+   </para>
+-->
+   <important>
+    &fresh-namespace;
+   </important>
+  </sect3>
+ </sect2>
+ <sect2 xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Availability Zones</title>
+  <para>
+   Availability Zones (AZ) are logical arrangements of compute nodes within a
+   region that provide isolation from each other. A deployment that is
+   distributed across multiple AZs can use this separation to increase
+   resiliency against downtime in the event a given zone experiences issues.
+  </para>
+  <para>
+   Refer to the following for platform-specific information about availability
+   zones:
+  </para>
+  <itemizedlist>
+   <listitem>
+    <para>
+     <link xlink:href="https://azure.microsoft.com/en-ca/updates/availability-zones-az-support-for-aks/"/>
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     <link xlink:href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html"/>
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     <link xlink:href="https://cloud.google.com/compute/docs/regions-zones/"/>
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     <link xlink:href="https://docs.cloudfoundry.org/concepts/high-availability.html#azs"/>
+    </para>
+   </listitem>
+  </itemizedlist>
+  <sect3>
+   <title>Availability Zone Information Handling</title>
+   <para>
+    In &cap;, availability zone handling is done using the
+    <literal>AZ_LABEL_NAME</literal> &helm; chart value. By default,
+    <literal>AZ_LABEL_NAME</literal> is set to
+    <literal>failure-domain.beta.kubernetes.io/zone</literal>, which is the
+    predefined &kube; label for availability zones. On most public cloud
+    providers, nodes will already have this label set and availability zone
+    support will work without further configuration. For on-premise
+    installations, it is recommended that nodes are labeled with the same label.
+   </para>
+   <para>
+    Run the following to see the labels on your nodes.
+   </para>
+<screen>&prompt.user;kubectl get nodes --show-labels</screen>
+   <para>
+    To label a node, use <command>kubectl label nodes </command>. For example:
+   </para>
+<screen>&prompt.user;kubectl label nodes <replaceable>cap-worker-1</replaceable> <replaceable>failure-domain.beta.kubernetes.io/zone=zone-1</replaceable></screen>
+   <para>
+    To see which node and availability zone a given
+    <literal>diego-cell</literal> pod is assigned to, refer to the following
+    example:
+   </para>
+<screen>&prompt.user;kubectl logs <replaceable>diego-cell-0</replaceable> --namespace scf | grep ^AZ</screen>
+   <para>
+    For more information on the
+    <literal>failure-domain.beta.kubernetes.io/zone</literal> label, see
+    <link xlink:href="https://kubernetes.io/docs/reference/kubernetes-api/labels-annotations-taints/#failure-domainbetakubernetesiozone"/>.
+   </para>
+   <para>
+    Note that due to a bug in &cap; 1.4 and earlier, this label was not working for <literal>AZ_LABEL_NAME</literal>.
+   </para>
+   <important>
+    <title>Performance with Availability Zones</title>
+    <para>
+     For the best performance, all availability zones should have a similar
+     number of nodes because app instances will be evenly distributed, so that
+     each zone has about the same number of instances.
+    </para>
+   </important>
+  </sect3>
+ </sect2>'>
 
 <!--ENTITY external-database................................................-->
 
@@ -1337,8 +1866,95 @@ agent.log</screen>
   External Database
  </title>
  <para xmlns="http://docbook.org/ns/docbook">
-  TODO-CAP2 DESCRIPTION OF EXTERNAL DATABASE
- </para>'>
+  By default, &kubecf; includes a single-availability database provided by the
+  <literal>cf-mysql-release</literal>. &kubecf; can be configured to use an
+  external database system, such as a data service offered by a cloud service
+  provider or an existing high availability database server.
+ </para>
+ <para xmlns="http://docbook.org/ns/docbook">
+  The current &productname; release is compatible with the following types of
+  external databases:
+ </para>
+ <itemizedlist xmlns="http://docbook.org/ns/docbook">
+  <listitem>
+   <para>
+    &mysql;
+   </para>
+  </listitem>
+  <listitem>
+   <para>
+    &postgresql;
+   </para>
+  </listitem>
+ </itemizedlist>
+ <sect2 xmlns="http://docbook.org/ns/docbook">
+  <title>Configuration</title>
+  <para>
+   This section describes how to enable and configure your deployment to connect
+   to an external database. The configuration options are specified through
+   &helm; values inside the <filename>kubecf-config-values.yaml</filename>. The
+   deployment and configuration of the external database itself is the
+   responsibility of the operator and beyond the scope of this documentation. It
+   is assumed the external database has been deployed and accessible.
+  </para>
+  <important>
+   <title>Configuration during Initial Install Only</title>
+   <para>
+    Configuration of &productname; to use an external database
+    <emphasis role="bold">must</emphasis> be done during the initial
+    installation and cannot be changed afterwards.
+   </para>
+  </important>
+<!-- TODO-CAP2 Update based on outcome of database seeder script -->
+  <para>
+   The following snippet of the <filename>kubecf-config-values.yaml</filename>
+   contains an example of an external database configuration.
+  </para>
+<screen>features:
+  embedded_database:
+    enabled: false
+  external_database:
+    enabled: true
+    require_ssl: false
+    ca_cert: ~
+    type: ~
+    host: ~
+    port: ~
+    databases:
+      uaa:
+        name: uaa
+        password: <replaceable>root</replaceable>
+        username: <replaceable>root</replaceable>
+      cc:
+        name: cloud_controller
+        password: <replaceable>root</replaceable>
+        username: <replaceable>root</replaceable>
+      bbs:
+        name: diego
+        password: <replaceable>root</replaceable>
+        username: <replaceable>root</replaceable>
+      routing_api:
+        name: routing-api
+        password: <replaceable>root</replaceable>
+        username: <replaceable>root</replaceable>
+      policy_server:
+        name: network_policy
+        password: <replaceable>root</replaceable>
+        username: <replaceable>root</replaceable>
+      silk_controller:
+        name: network_connectivity
+        password: <replaceable>root</replaceable>
+        username: <replaceable>root</replaceable>
+      locket: 
+        name: locket
+        password: <replaceable>root</replaceable>
+        username: <replaceable>root</replaceable>
+      credhub:        
+        name: credhub
+        password: <replaceable>root</replaceable>
+        username: <replaceable>root</replaceable>
+</screen>
+ </sect2>'>
 
 <!--ENTITY ldap..............................................................-->
 
@@ -1346,9 +1962,191 @@ agent.log</screen>
 '<title xmlns="http://docbook.org/ns/docbook">
   LDAP Integration
  </title>
- <para xmlns="http://docbook.org/ns/docbook">
-  TODO-CAP2 DESCRIPTION OF LDAP
- </para>'>
+ <para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  &productname; can be integrated with
+  <link xlink:href="https://docs.cloudfoundry.org/uaa/identity-providers.html">identity
+  providers</link> to help manage authentication of users. The Lightweight
+  Directory Access Protocol (LDAP) is an example of an identity provider that
+  &cap; integrates with. This section describes the necessary components and
+  steps in order to configure the integration. See
+  <link xlink:href="https://docs.cloudfoundry.org/uaa/uaa-user-management.html">User
+  Account and Authentication LDAP Integration</link> for more information.
+ </para>
+ <sect2 xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Prerequisites</title>
+  <para>
+   The following prerequisites are required in order to complete an LDAP
+   integration with &productname;.
+  </para>
+  <itemizedlist>
+   <!-- listitem Links to CF CLI -->
+   &cfcli-prereq;
+   <!-- listitem Links to UAAC and describes install -->
+   &uaac-prereq;
+   <listitem>
+    <para>
+     An LDAP server and the credentials for a user/service account with
+     permissions to search the directory.
+    </para>
+   </listitem>
+  </itemizedlist>
+ </sect2>
+ <sect2 xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Example LDAP Integration</title>
+  <para>
+   Run the following commands to complete the integration of your &cap;
+   deployment and LDAP server. In this example, <literal>scf</literal> has
+   been deployed to a namespace named <replaceable>scf</replaceable>.
+  </para>
+  <procedure>
+   &uaac-target;
+   &uaac-authenticate;
+   <step>
+    <para>
+     Create the LDAP identity provider. A 201 response will be returned when
+     the identity provider is successfully created. See the
+     <link xlink:href="http://docs.cloudfoundry.org/api/uaa/version/4.21.0/index.html#ldap">UAA
+     API Reference</link> and
+     <link xlink:href="https://github.com/cloudfoundry/uaa/blob/4.21.0/docs/UAA-LDAP.md">&cf;
+     UAA-LDAP Documentation</link>for information regarding the request
+     parameters and additional options available to configure your identity
+     provider.
+    </para>
+    <para>
+     The following is an example of a <literal>uaac curl</literal> command and
+     its request parameters used to create an identity provider. Specify the
+     parameters according to your LDAP server&apos;s credentials and directory
+     structure. Ensure the user specifed in the <literal>bindUserDn</literal>
+     has permissions to search the directory.
+    </para>
+<screen>&prompt.user;uaac curl /identity-providers?rawConfig=true \
+    --request POST \
+    --insecure \
+    --header &apos;Content-Type: application/json&apos; \
+    --header &apos;X-Identity-Zone-Subdomain: <replaceable>scf</replaceable>&apos; \
+    --data &apos;{
+  "type" : "ldap",
+  "config" : {
+    "ldapProfileFile" : "ldap/ldap-search-and-bind.xml",
+    "baseUrl" : "<replaceable>ldap://ldap.example.com:389</replaceable>",
+    "bindUserDn" : "<replaceable>cn=admin,dc=example,dc=com</replaceable>",
+    "bindPassword" : "<replaceable>password</replaceable>",
+    "userSearchBase" : "<replaceable>dc=example,dc=com</replaceable>",
+    "userSearchFilter" : "<replaceable>uid</replaceable>={0}",
+    "ldapGroupFile" : "ldap/ldap-groups-map-to-scopes.xml",
+    "groupSearchBase" : "<replaceable>dc=example,dc=com</replaceable>",
+    "groupSearchFilter" : "<replaceable>member</replaceable>={0}"
+  },
+  "originKey" : "ldap",
+  "name" : "<replaceable>My LDAP Server</replaceable>",
+  "active" : true
+  }&apos;
+</screen>
+   </step>
+   <step>
+    <para>
+     Verify the LDAP identify provider has been created in the
+     <replaceable>scf</replaceable> zone. The output should now contain an entry for
+     the <literal>ldap</literal> type.
+    </para>
+<screen>&prompt.user;uaac curl /identity-providers --insecure --header "X-Identity-Zone-Id: <replaceable>scf</replaceable>"</screen>
+   </step>
+   <step>
+    <para>
+     Use the &cfcli; to target your &productname; deployment.
+    </para>
+<screen>&prompt.user;cf api --skip-ssl-validation https://api.example.com</screen>
+   </step>
+   <step>
+    <para>
+     Log in as an administrator.
+    </para>
+<screen>&prompt.user;cf login
+API endpoint: https://api.example.com
+
+Email> admin
+
+Password>
+Authenticating...
+OK
+</screen>
+   </step>
+   <step>
+    <para>
+     Create users associated with your LDAP identity provider.
+    </para>
+<screen>&prompt.user;cf create-user <replaceable>username</replaceable> --origin ldap
+Creating user username...
+OK
+
+TIP: Assign roles with &apos;cf set-org-role&apos; and &apos;cf set-space-role&apos;.
+</screen>
+   </step>
+   <step>
+    <para>
+     Assign the user a role. Roles define the permissions a user has for a
+     given org or space and a user can be assigned multiple roles. See
+     <link xlink:href="https://docs.cloudfoundry.org/concepts/roles.html">Orgs,
+     Spaces, Roles, and Permissions</link> for available roles and their
+     corresponding permissions. The following example assumes that an org named
+     <replaceable>Org</replaceable> and a space named
+     <replaceable>Space</replaceable> have already been created.
+    </para>
+<screen>&prompt.user;cf set-space-role <replaceable>username</replaceable> <replaceable>Org</replaceable> <replaceable>Space</replaceable> <replaceable>SpaceDeveloper</replaceable>
+Assigning role RoleSpaceDeveloper to user username in org Org / space Space as admin...
+OK
+&prompt.user;cf set-org-role <replaceable>username</replaceable> Org OrgManager
+Assigning role OrgManager to user username in org Org as admin...
+OK
+</screen>
+   </step>
+   <step>
+    <para>
+     Verify the user can log into your &productname; deployment using their
+     associated LDAP server credentials.
+    </para>
+<screen>&prompt.user;cf login
+API endpoint: https://api.example.com
+
+Email> username
+
+Password>
+Authenticating...
+OK
+
+
+
+API endpoint:   https://api.example.com (API version: 2.115.0)
+User:           username@ldap.example.com
+</screen>
+   </step>
+  </procedure>
+  <para>
+   If the LDAP identity provider is no longer needed, it can be removed with the following
+   steps.
+  </para>
+  <procedure>
+   <step>
+    <para>
+     Obtain the ID of your identity provider.
+    </para>
+<screen>&prompt.user;uaac curl /identity-providers \
+    --insecure \
+    --header "Content-Type:application/json" \
+    --header "Accept:application/json" \
+    --header"X-Identity-Zone-Id:<replaceable>scf</replaceable>"</screen>
+   </step>
+   <step>
+    <para>
+     Delete the identity provider.
+    </para>
+<screen>&prompt.user;uaac curl /identity-providers/<replaceable>IDENTITY_PROVIDER_ID</replaceable> \
+    --request DELETE \
+    --insecure \
+    --header "X-Identity-Zone-Id:<replaceable>scf</replaceable>"</screen>
+   </step>
+  </procedure>
+ </sect2>'>
 
 <!--ENTITY deploy-operator...................................................-->
 
