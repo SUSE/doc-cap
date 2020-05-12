@@ -2216,4 +2216,49 @@ User:           username@ldap.example.com
   <step><para>2222</para></step>
  </procedure>'>
 
+<!--ENTITY config-new-vs-existing............................................-->
 
+<!ENTITY config-new-vs-existing
+'<para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  After making the change above, and any other configuration changes, apply the
+   update by doing the following:
+  </para>
+  <itemizedlist xmlns="http://docbook.org/ns/docbook">
+   <listitem>
+    <para>
+     For an initial deployment, continue to the deployment steps for your platform:
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       For &caasp;, see <xref linkend="sec-cap-cap-on-caasp"/>.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       For &aks;, see <xref linkend="sec-cap-cap-on-aks"/>.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       For &eks;, see <xref linkend="sec-cap-cap-on-eks"/>.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       For &gke;, see <xref linkend="sec-cap-cap-on-gke"/>.
+      </para>
+     </listitem>
+    </itemizedlist>
+   </listitem> 
+   <listitem>
+    <para>
+     For an existing deployment, use <command>helm upgrade</command> to apply
+     the change.
+    </para>
+<screen>&prompt.user;helm upgrade <replaceable>kubecf</replaceable> suse/kubecf \
+--values <replaceable>kubecf-config-values.yaml</replaceable> \
+--version &kubecf_chart;
+</screen>
+   </listitem>
+  </itemizedlist>'>

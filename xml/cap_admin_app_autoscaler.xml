@@ -57,29 +57,22 @@
   <title>Enabling and Disabling the App-AutoScaler Service</title>
 
   <para>
-   By default, the App-AutoScaler service is not enabled as part of a &scf;
-   deployment. To enable it, run <command>helm upgrade</command> with the
-   <command>--set "enable.autoscaler=true"</command> flag on an existing
-   <literal>scf</literal> deployment.
-   first:
+   App-AutoScaler is disabled by default. To enable it, add the following the following
+   block to your &values-file; file.
   </para>
 
-<screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
---values scf-config-values.yaml \
---set "enable.autoscaler=true" \
---version &kubecf_chart;
+<screen>features:
+  autoscaler:
+    enabled: true
 </screen>
 
   <para>
-   To disable the App-AutoScaler service, run <command>helm upgrade</command>
-   with the <command>--set "enable.autoscaler=false"</command> flag.
+   To disable App-AutoScaler again, update the above block in your &values-file;
+   so that <literal>enabled</literal> is set to <literal>false</literal>.
   </para>
 
-<screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
---values scf-config-values.yaml \
---set "enable.autoscaler=false" \
---version &kubecf_chart;
-</screen>
+  <!-- Applying change to new vs existing deployments -->
+  &config-new-vs-existing;
 
  </sect1>
 

@@ -18,6 +18,7 @@
 <!ENTITY chart_appversion "TODO">
 <!ENTITY node_size    "80">
 <!ENTITY cfcli        "cf CLI">
+<!ENTITY values-file   "<filename xmlns='http://docbook.org/ns/docbook'>kubecf-config-values.yaml</filename>">
 <!ENTITY guide         "<citetitle xmlns='http://docbook.org/ns/docbook'>Deployment, Administration, and User Guide</citetitle>">
 <!-- ====================================================================== -->
 <!-- Company and Products                                                   -->
