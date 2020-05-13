@@ -10,6 +10,7 @@
 <!ENTITY kubecf         "KubeCF">
 <!ENTITY operator       "cf-operator">
 <!ENTITY kernel_version "3.19">
+<!ENTITY min_kube       "1.14">
 <!ENTITY operator_chart "TODO">
 <!ENTITY kubecf_chart "2.0">
 <!ENTITY stratos_chart "3.0.0">

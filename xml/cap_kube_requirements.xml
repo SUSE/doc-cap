@@ -26,7 +26,7 @@
   <itemizedlist>
    <listitem>
     <para>
-     &kube; API version of at least 1.10
+     &kube; API version of at least &min_kube;
     </para>
    </listitem>
    <listitem>

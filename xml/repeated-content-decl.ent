@@ -234,14 +234,16 @@ Before you start deploying &productname;, review the following documents:
 <!ENTITY releases-table
 '<!-- TODO remember to keep this table updated -->
   <informaltable xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
-   <tgroup cols="7">
+   <tgroup cols="9">
     <thead>
      <row>
 <!-- TODO-CAP2 update columns -->
       <entry>CAP Release</entry>
-      <entry>SCF and UAA &helm; Chart Version</entry>
+      <entry>&operator; &helm; Chart Version</entry>
+      <entry>&kubecf; &helm; Chart Version</entry>
       <entry>Stratos &helm; Chart Version</entry>
       <entry>Stratos Metrics &helm; Chart Version</entry>
+      <entry>Minimum &kube; Version Required</entry>
       <entry>CF API Implemented</entry>
       <entry>Known Compatible CF CLI Version</entry>
       <entry>CF CLI URL</entry>
@@ -250,136 +252,19 @@ Before you start deploying &productname;, review the following documents:
     <tbody>
      <row>
       <entry>&productnumber; (current release)</entry>
+      <entry>&operator_chart;</entry>
       <entry>&kubecf_chart;</entry>
       <entry>&stratos_chart;</entry>
       <entry>&metrics_chart;</entry>
+      <entry>&min_kube;</entry>
       <!-- cf-deployment 12.17: 2.144.0, cf api result: -->
       <entry>2.144.0</entry>
       <entry>6.49.0</entry>
       <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.49.0"/></entry>
      </row>
-     <row>
-      <entry>1.5.1</entry>
-      <entry>2.19.1</entry>
-      <entry>2.6.0</entry>
-      <entry>1.1.0</entry>
-      <!-- cf-deployment 9.5: 2.138.0, cf api result: 2.138.0 -->
-      <entry>2.138.0</entry>
-      <entry>6.46.1</entry>
-      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.46.1"/></entry>
-     </row>
-     <row>
-      <entry>1.5</entry>
-      <entry>2.18.0</entry>
-      <entry>2.5.3</entry>
-      <entry>1.1.0</entry>
-      <!-- cf-deployment 9.5: 2.138.0, cf api result: 2.138.0 -->
-      <entry>2.138.0</entry>
-      <entry>6.46.1</entry>
-      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.46.1"/></entry>
-     </row>
-     <row>
-      <entry>1.4.1</entry>
-      <entry>2.17.1</entry>
-      <entry>2.4.0</entry>
-      <entry>1.0.0</entry>
-      <!-- cf-deployment 7.11: 2.134.0, cf api result: 2.134.0 -->
-      <entry>2.134.0</entry>
-      <entry>6.46.0</entry>
-      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.46.0"/></entry>
-     </row>
-     <row>
-      <entry>1.4</entry>
-      <entry>2.16.4</entry>
-      <entry>2.4.0</entry>
-      <entry>1.0.0</entry>
-      <!-- cf-deployment 6.10: 2.128, cf api result: 2.134.0 -->
-      <entry>2.134.0</entry>
-      <entry>6.44.1</entry>
-      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.44.1"/></entry>
-     </row>
-     <row>
-      <entry>1.3.1</entry>
-      <entry>2.15.2</entry>
-      <entry>2.3.0</entry>
-      <entry>1.0.0</entry>
-      <!-- cf-deployment 3.6.0 -->
-      <entry>2.120.0</entry>
-      <entry>6.42.0</entry>
-      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.42.0"/></entry>
-     </row>
-     <row>
-      <entry>1.3</entry>
-      <entry>2.14.5</entry>
-      <entry>2.2.0</entry>
-      <entry>1.0.0</entry>
-      <!-- cf-deployment 2.7.0 -->
-      <entry>2.115.0</entry>
-      <entry>6.40.1</entry>
-      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.40.1"/></entry>
-     </row>
-     <row>
-      <entry>1.2.1</entry>
-      <entry>2.13.3</entry>
-      <entry>2.1.0</entry>
-      <entry></entry>
-      <!-- cf-deployment 2.7.0 -->
-      <entry>2.115.0</entry>
-      <entry>6.39.1</entry>
-      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.39.1"/></entry>
-     </row>
-     <row>
-      <entry>1.2.0</entry>
-      <entry>2.11.0</entry>
-      <entry>2.0.0</entry>
-      <entry></entry>
-      <!-- cf-deployment 1.36.0 -->
-      <entry>2.112.0</entry>
-      <entry>6.38.0</entry>
-      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.38.0"/></entry>
-     </row>
-     <row>
-      <entry>1.1.1</entry>
-      <entry>2.10.1</entry>
-      <entry>1.1.0</entry>
-      <entry></entry>
-      <!-- cf-deployment 1.21.0 -->
-      <entry>2.106.0</entry>
-      <entry>6.37.0</entry>
-      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.37.0"/></entry>
-     </row>
-     <row>
-      <entry>1.1.0</entry>
-      <entry>2.8.0</entry>
-      <entry>1.1.0</entry>
-      <entry></entry>
-      <!-- cf-deployment 1.15.0 -->
-      <entry>2.103.0</entry>
-      <entry>6.36.1</entry>
-      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.36.1"/></entry>
-     </row>
-     <row>
-      <entry>1.0.1</entry>
-      <entry>2.7.0</entry>
-      <entry>1.0.2</entry>
-      <entry></entry>
-      <!-- cf-deployment 1.9.0 -->
-      <entry>2.101.0</entry>
-      <entry>6.34.1</entry>
-      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.34.1"/></entry>
-     </row>
-     <row>
-      <entry>1.0</entry>
-      <entry>2.6.11</entry>
-      <entry>1.0.0</entry>
-      <entry></entry>
-      <entry></entry>
-      <entry>6.34.0</entry>
-      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.34.0"/></entry>
-     </row>
     </tbody>
    </tgroup>
-   </informaltable>'>
+  </informaltable>'>
 
 <!--ENTITY cfcli-prereq.....................................................-->
 
