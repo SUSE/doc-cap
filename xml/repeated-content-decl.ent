@@ -207,7 +207,7 @@ Before you start deploying &productname;, review the following documents:
 <!ENTITY releases-table
 '<!-- TODO remember to keep this table updated -->
   <informaltable xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
-   <tgroup cols="7">
+   <tgroup cols="8">
     <thead>
      <row>
       <entry>CAP Release</entry>
