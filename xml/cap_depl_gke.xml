@@ -303,6 +303,8 @@ suse       https://kubernetes-charts.suse.com/
    configure your DNS records.
   </para>
 
+    &kubecf-operator-versions;
+
   <sect2 xml:id="sec-cap-gke-deploy-operator">
    &deploy-operator;
   </sect2>

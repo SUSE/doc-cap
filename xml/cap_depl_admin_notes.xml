@@ -72,6 +72,8 @@
  <sect1>
   <title>Releases and Associated Versions</title>
 
+  &kubecf-operator-versions;
+
   <para>
    The supported upgrade method is to install all upgrades, in order. Skipping
    releases is not supported. This table matches the &helm; chart versions to
