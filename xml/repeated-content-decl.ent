@@ -1158,8 +1158,16 @@ agent.log</screen>
   Storage Class
  </title>
  <para xmlns="http://docbook.org/ns/docbook">
-  TODO-CAP2 DESCRIPTION OF STORAGE CLASS
- </para>'>
+  In &productname; some instance groups, such as <literal>bits</literal>,
+  <literal>database</literal> and <literal>singleton-blobstore</literal>
+  require a storage class. The storage class used can be specified by setting
+  the <literal>kube.storage_class</literal> value in your &values-file; file as
+  seen in the example below. If this is not set, the default storage class is
+  used and may differ based on your &kube; provider.
+ </para>
+<screen xmlns="http://docbook.org/ns/docbook">kube:
+  storage_class: <replaceable>my-storage-class</replaceable>
+</screen>'>
 
 <!--ENTITY certificates......................................................-->
 
