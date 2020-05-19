@@ -421,6 +421,8 @@ suse       https://kubernetes-charts.suse.com/
    AKS load balancer and how to configure your DNS records.
   </para>
 
+    &kubecf-operator-versions;
+
   <!-- TODO-CAP2 -->
   <sect2 xml:id="sec-cap-aks-deploy-operator">
    <title>Deploy <literal>operator</literal></title>

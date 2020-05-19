@@ -360,6 +360,8 @@ suse            https://kubernetes-charts.suse.com/</screen>
    configure your DNS records.
   </para>
 
+    &kubecf-operator-versions;
+
   <sect2 xml:id="sec-cap-eks-deploy-operator">
    <title>Deploy <literal>operator</literal></title>
   </sect2>

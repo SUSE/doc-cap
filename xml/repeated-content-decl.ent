@@ -2147,3 +2147,15 @@ User:           username@ldap.example.com
 </screen>
    </listitem>
   </itemizedlist>'>
+
+<!--ENTITY kubecf-operator-versions..........................................-->
+
+<!ENTITY kubecf-operator-versions
+'<warning xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>&kubecf; and &operator; versions</title>
+  <para xmlns="http://docbook.org/ns/docbook">
+   &kubecf; and &operator; interoperate closely. Before you deploy a
+   specific version combination, make sure they were confirmed to work. For more
+   information see <xref linkend="cha-cap-depl-notes-releases"/>.
+  </para>
+ </warning>'>
