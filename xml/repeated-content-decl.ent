@@ -2156,6 +2156,6 @@ User:           username@ldap.example.com
   <para xmlns="http://docbook.org/ns/docbook">
    &kubecf; and &operator; interoperate closely. Before you deploy a
    specific version combination, make sure they were confirmed to work. For more
-   information see <xref linkend="sec-cap-changes"/>.
+   information see <xref linkend="cha-cap-depl-notes-releases"/>.
   </para>
  </warning>'>

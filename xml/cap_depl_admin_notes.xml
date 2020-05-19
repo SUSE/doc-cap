@@ -69,7 +69,7 @@
 
 &dns-tables;
 </sect1>
- <sect1>
+ <sect1 xml:id="cha-cap-depl-notes-releases">
   <title>Releases and Associated Versions</title>
 
   &kubecf-operator-versions;
