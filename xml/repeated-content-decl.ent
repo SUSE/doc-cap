@@ -1744,6 +1744,65 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
   </sect3>
  </sect2>'>
 
+<!--ENTITY external-blobstore...............................................-->
+
+<!ENTITY external-blobstore
+'<title xmlns="http://docbook.org/ns/docbook">
+  External Blobstore
+ </title>
+ <para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  &cf; Application Runtime (CFAR) uses a blobstore (see
+  <link xlink:href="https://docs.cloudfoundry.org/concepts/cc-blobstore.html"/>)
+  to store the source code that developers push, stage, and run. This  section
+  explains how to configure an external blobstore for the Cloud Controller
+  component of your &productname; deployment.
+ </para>
+ <para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  &productname; relies on <filename>ops files</filename> (see
+  <link xlink:href="https://github.com/cloudfoundry/cf-deployment/blob/master/operations/README.md"/>)
+  provided by cf-deployment (see <link xlink:href="https://github.com/cloudfoundry/cf-deployment"/>)
+  releases for external blobstore configurations. The default configuration for
+  the blobstore is <literal>singleton</literal>.
+ </para>
+ <sect2 xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Configuration</title>
+  <para>
+   Currently &productname; supports Amazon Simple Storage Service (Amazon S3,
+   see <link xlink:href="https://aws.amazon.com/s3/"/>) as an external blobstore
+   . In order to configure Amazon S3 as an external blobstore, set the following
+   in your <filename>kubecf-config-values.yaml</filename> file and replace the
+   example values.
+  </para>
+<screen>features:
+  blobstore:
+    provider: s3
+    s3:
+      aws_region: <replaceable>"us-east-1"</replaceable>
+      blobstore_access_key_id:  <replaceable>AWS-ACCESS-KEY-ID</replaceable>
+      blobstore_secret_access_key: <replaceable>AWS-SECRET-ACCESS-KEY></replaceable>
+      # User provided value for the blobstore admin password.
+      blobstore_admin_users_password: <replaceable>PASSWORD</replaceable>
+      # The following values are used as S3 bucket names. The buckets are automatically created if not present.
+      app_package_directory_key: <replaceable>APP-BUCKET-NAME</replaceable>
+      buildpack_directory_key: <replaceable>BUILDPACK-BUCKET-NAME</replaceable>
+      droplet_directory_key: <replaceable>DROPLET-BUCKET-NAME</replaceable>
+      resource_directory_key: <replaceable>RESOURCE-BUCKET-NAME</replaceable>
+</screen>
+  <warning>
+   <title><literal>us-east-1</literal> as Only Valid Region</title>
+   <para>
+    Currently, there is a limitation where only <literal>us-east-1</literal> can
+    be chosen as the <literal>aws_region</literal>. For more information about
+    this issue, see
+    <link xlink:href="https://github.com/cloudfoundry-incubator/kubecf/issues/656"/>.
+   </para>
+  </warning>
+  <para>
+   Ensure the supplied AWS credentials have appropriate permissions as described
+   at <link xlink:href="https://docs.cloudfoundry.org/deploying/common/cc-blobstore-config.html#fog-aws-iam"/>.
+  </para>
+ </sect2>'>
+
 <!--ENTITY external-database................................................-->
 
 <!ENTITY external-database
