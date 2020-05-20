@@ -87,11 +87,9 @@
  <sect1 xml:id="sec-cap-overview">
   <title>&productname; Overview</title>
    <para>
-    &productname; is a software platform for cloud-native application deployment
-    based on &operator; and &kubecf;, with additional supporting services and
-    components. The core of the platform is &scf;, a &cf; distribution for &kube;
-    which runs on &sle; containers. &productname; releases prior to version 2.0
-    were based on &scf; and &kube;.
+    &productname; is a software platform for cloud-native applications based on
+    Cloud Foundry Application Runtime (&operator;, &kubecf;, and Stratos) with
+    additional supporting components.
    </para>
 
   <para>
