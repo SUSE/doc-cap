@@ -4,7 +4,7 @@
   <!ENTITY % entities SYSTEM "entity-decl.ent">
     %entities;
 ]>
-<sect1 version="5.0" xmlns="http://docbook.org/ns/docbook"
+<sect1 version="5.0" xmlns="http://docbook.org/ns/docbook" xml:id="sec-cap-support-statement"
  xmlns:xi="http://www.w3.org/2001/XInclude"
  xmlns:xlink="http://www.w3.org/1999/xlink">
  <title>Support Statement for &productname;</title>
