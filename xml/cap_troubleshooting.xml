@@ -22,6 +22,30 @@
   release must deploy successfully, with no failed pods, before deploying the
   next release.
  </para>
+ <para>
+  Before proceeding with in depth troubleshooting, ensure the following have
+  been met as defined in the Support Statement at <xref linkend="sec-cap-support-statement"/>.
+ </para>
+ <orderedlist>
+   <listitem>
+    <para>
+     The &kube; cluster satisfies the Requirements listed here at
+     <link xlink:href="https://documentation.suse.com/suse-cap/&productnumber;/html/cap-guides/cha-cap-depl-kube-requirements.html#sec-cap-changes-kube-reqs"/>.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     The <filename>kube-ready-state-check.sh</filename> script has been run on
+     the target &kube; cluster and does not show any configuration problems.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     A &suse; Services or Sales Engineer has verified that &productname; works
+     correctly on the target &kube; cluster.
+    </para>
+   </listitem>
+  </orderedlist>
  <sect1 xml:id="sec-cap-tbl-logging">
   <title>Logging</title>
 
