@@ -16,10 +16,9 @@
   </dm:docmanager>
  </info>
  <para>
-  &productname; is a software platform for cloud-native application
-  development, based on &cf;, with additional supporting services and
-  components. The core of the platform is &scf;, a &cf; distribution for &kube;
-  which runs on &sle; containers.
+  &productname; is a software platform for cloud-native applications based on
+  Cloud Foundry Application Runtime (&operator;, &kubecf;, and Stratos) with
+  additional supporting components.
  </para>
  <para>
   &cap; is designed to run on any &kube; cluster. This guide describes how
