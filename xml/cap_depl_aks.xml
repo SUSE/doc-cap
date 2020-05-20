@@ -379,6 +379,11 @@ export NODEPOOL_NAME="mypool"
   &high-availability;
  </sect1>
 
+ <sect1 xml:id="sec-cap-aks-external-blobstore">
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &external-blobstore;
+ </sect1>
+
  <sect1 xml:id="sec-cap-aks-external-database">
   <!-- Entry defined in xml/repeated-content-decl.ent -->
   &external-database;

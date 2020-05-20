@@ -317,6 +317,11 @@ allowVolumeExpansion: true
   &high-availability;
  </sect1>
 
+ <sect1 xml:id="sec-cap-eks-external-blobstore">
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &external-blobstore;
+ </sect1>
+
  <sect1 xml:id="sec-cap-eks-external-database">
   <!-- Entry defined in xml/repeated-content-decl.ent -->
   &external-database;

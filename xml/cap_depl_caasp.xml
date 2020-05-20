@@ -320,6 +320,11 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create --filename -
   &high-availability;
  </sect1>
 
+ <sect1 xml:id="sec-cap-caasp-external-blobstore">
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &external-blobstore;
+ </sect1>
+
  <sect1 xml:id="sec-cap-caasp-external-database">
   <!-- Entry defined in xml/repeated-content-decl.ent -->
   &external-database;
