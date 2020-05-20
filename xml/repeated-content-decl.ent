@@ -1012,14 +1012,6 @@ done
      </para>
     </listitem>
    </varlistentry>
-  <varlistentry>
-    <term>External Log Server Integration</term>
-    <listitem>
-     <para>
-      For details, see <xref linkend="cha-cap-logging"/>.
-     </para>
-    </listitem>
-   </varlistentry>
    <varlistentry>
     <term>Other Features</term>
     <listitem>
