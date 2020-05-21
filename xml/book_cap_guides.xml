@@ -53,7 +53,7 @@ Part: CAP Deployment Guide
   <xi:include href="cap_depl_eks.xml"/>
   <xi:include href="cap_depl_gke.xml"/>
   <xi:include href="cap_depl_eirini.xml"/>
-  <xi:include href="cap_depl_air_gap_registry.xml"/>
+  <!-- <xi:include href="cap_depl_air_gap_registry.xml"/> -->
  </part>
 <!--============================================================================
 Part: CAP Administration Guide
@@ -71,11 +71,11 @@ Part: CAP Administration Guide
   <xi:include href="cap_admin_backup-restore.xml"/>
   <xi:include href="cap_admin_service_broker.xml"/>
   <xi:include href="cap_admin_app_autoscaler.xml"/>
-  <xi:include href="cap_admin_logging.xml"/>
+  <!-- <xi:include href="cap_admin_logging.xml"/> -->
   <xi:include href="cap_admin_credhub.xml"/>
   <xi:include href="cap_admin_buildpacks.xml"/>
-  <xi:include href="cap_admin_app_domains.xml"/>
-  <xi:include href="cap_admin_nproc_limits.xml"/>
+  <!-- <xi:include href="cap_admin_app_domains.xml"/> -->
+  <!-- <xi:include href="cap_admin_nproc_limits.xml"/> -->
  </part>
 <!--============================================================================
 Part: CAP User Guide
