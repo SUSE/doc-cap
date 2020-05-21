@@ -33,37 +33,16 @@
   <itemizedlist>
    <listitem>
     <para>
-     An Amazon AWS account. For details, refer to
+     An Amazon AWS account with sufficient permissions. For details, refer to
      <link xlink:href="https://aws.amazon.com/"/>.
     </para>
    </listitem>
    <listitem>
     <para>
-     Create an &eks; cluster by following the instructions at
-     <link xlink:href="https://docs.aws.amazon.com/eks/latest/userguide/getting-started.html"/>.
-    </para>
-    <itemizedlist>
-     <listitem>
-      <para>
-       When you create your cluster, use node sizes that are at least
-       <literal>t2.large</literal>
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       The <literal>NodeVolumeSize</literal> must be a minimum of &node_size; GB.
-      </para>
-     </listitem>
-     <listitem>
-      <!-- para -->
-      &kernel-prereq;
-     </listitem>
-    </itemizedlist>
-   </listitem>
-   <listitem>
-    <para>
-     Identity and Access Management (IAM) is configured for your users. See
-     <xref linkend="sec-cap-eks-iam"/> for guidance.
+     <command>eksctl</command>, a command line client to create and manage
+     &kube; clusters on &eks;. See
+     <link xlink:href="https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html"/>
+     for more information and installation instructions.
     </para>
    </listitem>
 
@@ -74,197 +53,54 @@
   </itemizedlist>
 
   &min-deploy-note;
-
- </sect1>
- <sect1 xml:id="sec-cap-eks-iam">
-  <title>IAM Requirements for EKS</title>
-
-  <para>
-   These IAM policies provide sufficient access to use EKS.
-  </para>
-
-  <sect2 xml:id="sec-cap-eks-unscoped">
-   <title>Unscoped Operations</title>
-   <para>
-    Some of these permissions are very broad. They are difficult to scope
-    effectively, in part because many resources are created and named
-    dynamically when deploying an EKS cluster using the
-    <link xlink:href="https://console.aws.amazon.com/cloudformation">
-    CloudFormation</link> console. It may be helpful to enforce certain naming
-    conventions, such as prefixing cluster names with
-    <varname>${aws:username}</varname> for pattern-matching in
-    <guimenu>Conditions</guimenu>. However, this requires special consideration
-    beyond the EKS deployment guide, and should be evaluated in the broader
-    context of organizational IAM policies.
-   </para>
-<screen>{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "UnscopedOperations",
-            "Effect": "Allow",
-            "Action": [
-                "cloudformation:CreateUploadBucket",
-                "cloudformation:EstimateTemplateCost",
-                "cloudformation:ListExports",
-                "cloudformation:ListStacks",
-                "cloudformation:ListImports",
-                "cloudformation:DescribeAccountLimits",
-                "eks:ListClusters",
-                "cloudformation:ValidateTemplate",
-                "cloudformation:GetTemplateSummary",
-                "eks:CreateCluster"
-            ],
-            "Resource": "*"
-        },
-        {
-            "Sid": "EffectivelyUnscopedOperations",
-            "Effect": "Allow",
-            "Action": [
-                "iam:CreateInstanceProfile",
-                "iam:DeleteInstanceProfile",
-                "iam:GetRole",
-                "iam:DetachRolePolicy",
-                "iam:RemoveRoleFromInstanceProfile",
-                "cloudformation:*",
-                "iam:CreateRole",
-                "iam:DeleteRole",
-                "eks:*"
-            ],
-            "Resource": [
-                "arn:aws:eks:*:*:cluster/*",
-                "arn:aws:cloudformation:*:*:stack/*/*",
-                "arn:aws:cloudformation:*:*:stackset/*:*",
-                "arn:aws:iam::*:instance-profile/*",
-                "arn:aws:iam::*:role/*"
-            ]
-        }
-    ]
-}</screen>
-  </sect2>
-
-  <sect2 xml:id="sec-cap-eks-scoped">
-   <title>Scoped Operations</title>
-   <para>
-    These policies deal with sensitive access controls, such as passing roles
-    and attaching/detaching policies from roles.
-   </para>
-   <para>
-    This policy, as written, allows unrestricted use of only customer-managed
-    policies, and not Amazon-managed policies. This prevents potential security
-    holes such as attaching the <literal>IAMFullAccess</literal> policy to a
-    role. If you are using roles in a way that would be undermined by this, you
-    should strongly consider integrating a
-    <link xlink:href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html">Permissions
-    Boundary</link> before using this policy.
-   </para>
-<screen>{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "UseCustomPoliciesWithCustomRoles",
-            "Effect": "Allow",
-            "Action": [
-                "iam:DetachRolePolicy",
-                "iam:AttachRolePolicy"
-            ],
-            "Resource": [
-                "arn:aws:iam::&lt;YOUR_ACCOUNT_ID>:role/*",
-                "arn:aws:iam::&lt;YOUR_ACCOUNT_ID>:policy/*"
-            ],
-            "Condition": {
-                "ForAllValues:ArnNotLike": {
-                    "iam:PolicyARN": "arn:aws:iam::aws:policy/*"
-                }
-            }
-        },
-        {
-            "Sid": "AllowPassingRoles",
-            "Effect": "Allow",
-            "Action": "iam:PassRole",
-            "Resource": "arn:aws:iam::&lt;YOUR_ACCOUNT_ID>:role/*"
-        },
-        {
-            "Sid": "AddCustomRolesToInstanceProfiles",
-            "Effect": "Allow",
-            "Action": "iam:AddRoleToInstanceProfile",
-            "Resource": "arn:aws:iam::&lt;YOUR_ACCOUNT_ID>:instance-profile/*"
-        },
-        {
-            "Sid": "AssumeServiceRoleForEKS",
-            "Effect": "Allow",
-            "Action": "sts:AssumeRole",
-            "Resource": "arn:aws:iam::&lt;YOUR_ACCOUNT_ID>:role/&lt;EKS_SERVICE_ROLE_NAME>"
-        },
-        {
-            "Sid": "DenyUsingAmazonManagedPoliciesUnlessNeededForEKS",
-            "Effect": "Deny",
-            "Action": "iam:*",
-            "Resource": "arn:aws:iam::aws:policy/*",
-            "Condition": {
-                "ArnNotEquals": {
-                    "iam:PolicyARN": [
-                        "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
-                        "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
-                        "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-                    ]
-                }
-            }
-        },
-        {
-            "Sid": "AllowAttachingSpecificAmazonManagedPoliciesForEKS",
-            "Effect": "Allow",
-            "Action": [
-                "iam:DetachRolePolicy",
-                "iam:AttachRolePolicy"
-            ],
-            "Resource": "*",
-            "Condition": {
-                "ArnEquals": {
-                    "iam:PolicyARN": [
-                        "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
-                        "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
-                        "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-                    ]
-                }
-            }
-        }
-    ]
-}</screen>
-  </sect2>
  </sect1>
 
  <!-- Entry defined in xml/repeated-content-decl.ent -->
   &install-helm;
 
- <sect1 xml:id="sec-cap-eks-storage-class">
-  <title>Default Storage Class</title>
+ <sect1 xml:id="sec-cap-create-eks-cluster">
+  <title>Create an EKS Cluster</title>
 
   <para>
-   This example creates a simple storage class for your cluster in
-   <filename>storage-class.yaml</filename>:
+   Now you can create an EKS cluster using <command>eksctl</command>. Be sure to
+   keep in mind the following minimum requirements of the cluster.
   </para>
 
-<screen>apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: gp2
-  annotations:
-    storageclass.kubernetes.io/is-default-class: "true"
-  labels:
-    kubernetes.io/cluster-service: "true"
-provisioner: kubernetes.io/aws-ebs
-parameters:
-  type: gp2
-allowVolumeExpansion: true
+  <itemizedlist>
+   <listitem>
+    <para>
+     Node sizes are at least <literal>t2.large</literal>.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     The <literal>NodeVolumeSize</literal> must be a minimum of &node_size; GB.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     The &kube; version is at least &min_kube;.
+    </para>
+   </listitem>
+   <listitem>
+    <!-- para -->
+    &kernel-prereq;
+   </listitem>
+  </itemizedlist>
+  <para>
+   As a minimal example, the following command will create an EKS cluster. To
+   see additional configuration parameters, see <command>eksctl create cluster -\-help</command>.
+  </para>
+
+<screen>&prompt.user;eksctl create cluster \
+--nodes <replaceable>3</replaceable> --node-type <replaceable>"t2.large"</replaceable> --node-volume-size <replaceable>60</replaceable>
 </screen>
-
-  <para>
-   Then apply the new storage class configuration with this command:
-  </para>
-
-<screen>&prompt.user;kubectl create --filename storage-class.yaml</screen>
  </sect1>
+
+ <sect1 xml:id="sec-cap-eks-storage-class">
+  &storage-class;
+ </sect1>
+
  <sect1 xml:id="sec-cap-eks-dns">
   <title>DNS Configuration</title>
 
