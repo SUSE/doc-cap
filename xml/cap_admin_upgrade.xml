@@ -16,15 +16,13 @@
   </dm:docmanager>
  </info>
  <para>
-	 <!-- TODO-CAP2 -->
-  <literal>scf</literal> and Stratos together make up
-  a &productname; release. Maintenance updates are delivered as container
-  images from the &suse; registry and applied with &helm;.
+  &productname; upgrades are delivered as container images from the &suse;
+  registry and applied with &helm;.
  </para>
  <para>
    For additional upgrade information, always review the release notes
    published at
-   <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/1/"/>.
+   <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/2/"/>.
  </para>
  <sect1 xml:id="sec-cap-upgrade-considerations">
   <title>Important Considerations</title>
@@ -42,8 +40,7 @@
       &cap; only supports upgrading releases in sequential order. If there are
       any intermediate releases between your current release and your target
       release, they must be installed. Skipping
-      releases is not supported. See <xref linkend="sec-cap-skipped-release"/>
-      for more information.
+      releases is not supported.
      </para>
     </listitem>
    </varlistentry>
@@ -92,31 +89,8 @@
    Use <command>helm list</command> to see the version of your installed release
    . Verify the latest release is the next sequential release from your
    installed release. If it is, proceed with the commands below to perform the
-   upgrade. If any releases have been missed, see
-   <xref linkend="sec-cap-skipped-release"/>.
+   upgrade.
   </para>
 
- </sect1>
- <sect1 xml:id="sec-cap-skipped-release">
-  <title>Installing Skipped Releases</title>
-
-  <!-- TODO-CAP2 -->
-
-  <para>
-   By default, &helm; always installs the latest release. What if you
-   accidentally skipped a release, and need to apply it before upgrading to the
-   current release? Install the missing release by specifying the &helm; chart
-   version number. For example, your current <literal>uaa</literal> and
-   <literal>scf</literal> versions are 2.10.1. Consult the table at the
-   beginning of this chapter to see which releases you have missed. In this
-   example, the missing &helm; chart version for <literal>uaa</literal> and
-   <literal>scf</literal> is 2.11.0. Use the <command>--version</command>
-   option to install a specific version:
-  </para>
-
-<screen>&prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa \
---values scf-config-values.yaml \
---version 2.11.0 
-</screen>
  </sect1>
 </chapter>
