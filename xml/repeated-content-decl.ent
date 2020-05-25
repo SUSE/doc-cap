@@ -1752,6 +1752,7 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
   To configure your deployment to use an external database, please contact
   &suse; support or services for guidance.
  </para>
+<!--
  <para xmlns="http://docbook.org/ns/docbook">
   The current &productname; release is compatible with the following types of
   external databases:
@@ -1768,7 +1769,6 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
    </para>
   </listitem>
  </itemizedlist>
-<!--
  <sect2 xmlns="http://docbook.org/ns/docbook">
   <title>Configuration</title>
   <para>
