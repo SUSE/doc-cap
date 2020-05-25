@@ -93,7 +93,7 @@
   </para>
 
 <screen>&prompt.user;eksctl create cluster \
---nodes <replaceable>3</replaceable> --node-type <replaceable>"t2.large"</replaceable> --node-volume-size <replaceable>60</replaceable>
+--nodes <replaceable>3</replaceable> --node-type <replaceable>"t2.large"</replaceable> --node-volume-size <replaceable>&node_size;</replaceable>
 </screen>
  </sect1>
 
