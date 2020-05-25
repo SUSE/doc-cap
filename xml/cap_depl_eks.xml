@@ -92,8 +92,11 @@
    see additional configuration parameters, see <command>eksctl create cluster -\-help</command>.
   </para>
 
-<screen>&prompt.user;eksctl create cluster \
---nodes <replaceable>3</replaceable> --node-type <replaceable>"t2.large"</replaceable> --node-volume-size <replaceable>&node_size;</replaceable>
+<screen>&prompt.user;eksctl create cluster --name <replaceable>kubecf</replaceable> --version <replaceable>&min_kube;</replaceable> \
+--nodegroup-name <replaceable>standard-workers</replaceable> --node-type <replaceable>t2.large</replaceable> \
+--nodes <replaceable>3</replaceable> --node-volume-size <replaceable>&node_size;</replaceable> \
+--region <replaceable>us-east-2</replaceable> --managed \
+--ssh-access --ssh-public-key <replaceable>~/.ssh/id_rsa.pub</replaceable>
 </screen>
  </sect1>
 
