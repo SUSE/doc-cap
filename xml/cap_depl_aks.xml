@@ -426,120 +426,14 @@ suse       https://kubernetes-charts.suse.com/
    AKS load balancer and how to configure your DNS records.
   </para>
 
-    &kubecf-operator-versions;
+  &kubecf-operator-versions;
 
-  <!-- TODO-CAP2 -->
   <sect2 xml:id="sec-cap-aks-deploy-operator">
-   <title>Deploy <literal>operator</literal></title>
+   &deploy-operator;
   </sect2>
 
-  <sect2 xml:id="sec-cap-aks-deploy-scf">
-   <title>Deploy <literal>scf</literal></title>
-   <para>
-    Next, use &helm; to deploy <literal>scf</literal>:
-   </para>
-<screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
-
-&prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
---namespace <replaceable>scf</replaceable> \
---values scf-config-values.yaml
-</screen>
-   &scf-deploy-complete;
-   <para>
-    After the deployment completes, a number of public services will be setup
-    using a load balancer that has been configured with corresponding load
-    balancing rules and probes as well as having the correct ports opened in
-    Network Security Group.
-   </para>
-   <para>
-    List the services that have been exposed on the load balancer public IP.
-    The name of these services end in <literal>-public</literal>. For example,
-    the <literal>gorouter</literal> service is exposed on
-    <replaceable>23.96.32.205</replaceable>:
-   </para>
-<screen>&prompt.user;kubectl get services --namespace scf | grep public
-diego-ssh-ssh-proxy-public                  LoadBalancer   10.0.44.118    40.71.187.83   2222:32412/TCP                                                                                                                                    1d
-router-gorouter-public                      LoadBalancer   10.0.116.78    23.96.32.205   80:32136/TCP,443:32527/TCP,4443:31541/TCP                                                                                                         1d
-tcp-router-tcp-router-public                LoadBalancer   10.0.132.203   23.96.46.98    20000:30337/TCP,20001:31530/TCP,20002:32118/TCP,20003:30750/TCP,20004:31014/TCP,20005:32678/TCP,20006:31528/TCP,20007:31325/TCP,20008:30060/TCP   1d
-</screen>
-   <para>
-    Use the DNS service of your choice to set up DNS A records for the services
-    from the previous step. Use the public load balancer IP associated with the
-    service to create domain mappings:
-   </para>
-   <itemizedlist>
-    <listitem>
-     <para>
-      For the <literal>gorouter</literal> service, map the following domains:
-     </para>
-     <variablelist>
-      <varlistentry>
-       <term>DOMAIN</term>
-       <listitem>
-        <para>
-         Using the example values, an A record for
-         <replaceable>example.com</replaceable> that points to
-         <replaceable>23.96.32.205</replaceable> would be created.
-        </para>
-       </listitem>
-      </varlistentry>
-      <varlistentry>
-       <term>*.DOMAIN</term>
-       <listitem>
-        <para>
-         Using the example values, an A record for
-         <replaceable>*.example.com</replaceable> that points to
-         <replaceable>23.96.32.205</replaceable> would be created.
-        </para>
-       </listitem>
-      </varlistentry>
-     </variablelist>
-    </listitem>
-    <listitem>
-     <para>
-      For the <literal>diego-ssh</literal> service, map the following domain:
-     </para>
-     <variablelist>
-      <varlistentry>
-       <term>ssh.DOMAIN</term>
-       <listitem>
-        <para>
-         Using the example values, an A record for
-         <replaceable>ssh.example.com</replaceable> that points to
-         <replaceable>40.71.187.83</replaceable> would be created.
-        </para>
-       </listitem>
-      </varlistentry>
-     </variablelist>
-    </listitem>
-    <listitem>
-     <para>
-      For the <literal>tcp-router</literal> service, map the following domain:
-     </para>
-     <variablelist>
-      <varlistentry>
-       <term>tcp.DOMAIN</term>
-       <listitem>
-        <para>
-         Using the example values, an A record for
-         <replaceable>tcp.example.com</replaceable> that points to
-         <replaceable>23.96.46.98</replaceable> would be created.
-        </para>
-       </listitem>
-      </varlistentry>
-     </variablelist>
-    </listitem>
-   </itemizedlist>
-   <para>
-    If you wish to use the DNS service provided by Azure, see the
-    <link xlink:href="https://docs.microsoft.com/en-us/azure/dns/"> Azure DNS
-    Documentation</link> to learn more.
-   </para>
-   <para>
-    Your load balanced deployment of &cap; is now complete. Verify you can
-    access the API endpoint:
-   </para>
-<screen>&prompt.user;cf api --skip-ssl-validation https://api.example.com</screen>
+  <sect2 xml:id="sec-cap-aks-deploy-kubecf">
+   &deploy-kubecf;
   </sect2>
  </sect1>
  <sect1 xml:id="sec-cap-azure-service-broker">

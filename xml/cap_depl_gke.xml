@@ -308,115 +308,14 @@ suse       https://kubernetes-charts.suse.com/
    configure your DNS records.
   </para>
 
-    &kubecf-operator-versions;
+  &kubecf-operator-versions;
 
   <sect2 xml:id="sec-cap-gke-deploy-operator">
    &deploy-operator;
   </sect2>
 
-  <sect2 xml:id="kubecf">
-&deploy-kubecf;
-  </sect2>
-  <sect2 xml:id="sec-cap-gke-deploy-scf">
-   <title>Deploy <literal>scf</literal></title>
-   <para>
-    Next, use &helm; to deploy <literal>scf</literal>:
-   </para>
-<screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
-
-&prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
---namespace <replaceable>scf</replaceable> \
---values scf-config-values.yaml
-</screen>
-   &scf-deploy-complete;
-   <para>
-    Once the deployment completes, a number of public services will be setup
-    using load balancers that has been configured with corresponding load
-    balancing rules and probes as well as having the correct ports opened in
-    the firewall settings.
-   </para>
-   <para>
-    List the services that have been exposed on the load balancer public IP.
-    The name of these services end in <literal>-public</literal>:
-   </para>
-<screen>&prompt.user;kubectl get services --namespace scf | grep public
-diego-ssh-ssh-proxy-public                  LoadBalancer   10.23.249.196  35.197.32.244  2222:31626/TCP                                                                                                                                    1d
-router-gorouter-public                      LoadBalancer   10.23.248.85   35.197.18.22   80:31213/TCP,443:30823/TCP,4443:32200/TCP                                                                                                         1d
-tcp-router-tcp-router-public                LoadBalancer   10.23.241.17   35.197.53.74   20000:30307/TCP,20001:30630/TCP,20002:32524/TCP,20003:32344/TCP,20004:31514/TCP,20005:30917/TCP,20006:31568/TCP,20007:30701/TCP,20008:31810/TCP   1d
-</screen>
-   <para>
-    Use the DNS service of your choice to set up DNS A records for the services
-    from the previous step. Use the public load balancer IP associated with the
-    service to create domain mappings:
-   </para>
-   <itemizedlist>
-    <listitem>
-     <para>
-      For the <literal>router-gorouter-public</literal> service, map the following domains:
-     </para>
-     <variablelist>
-      <varlistentry>
-       <term>DOMAIN</term>
-       <listitem>
-        <para>
-         Using the example values, an A record for
-         <replaceable>example.com</replaceable> that points to
-         <replaceable>35.197.18.22</replaceable> would be created.
-        </para>
-       </listitem>
-      </varlistentry>
-      <varlistentry>
-       <term>*.DOMAIN</term>
-       <listitem>
-        <para>
-         Using the example values, an A record for
-         <replaceable>*.example.com</replaceable> that points to
-         <replaceable>35.197.18.22</replaceable> would be created.
-        </para>
-       </listitem>
-      </varlistentry>
-     </variablelist>
-    </listitem>
-    <listitem>
-     <para>
-      For the <literal>diego-ssh-ssh-proxy-public</literal> service, map the following domain:
-     </para>
-     <variablelist>
-      <varlistentry>
-       <term>ssh.DOMAIN</term>
-       <listitem>
-        <para>
-         Using the example values, an A record for
-         <replaceable>ssh.example.com</replaceable> that points to
-         <replaceable>35.197.32.244</replaceable> would be created.
-        </para>
-       </listitem>
-      </varlistentry>
-     </variablelist>
-    </listitem>
-    <listitem>
-     <para>
-      For the <literal>tcp-router-tcp-router-public</literal> service, map the following domain:
-     </para>
-     <variablelist>
-      <varlistentry>
-       <term>tcp.DOMAIN</term>
-       <listitem>
-        <para>
-         Using the example values, an A record for
-         <replaceable>tcp.example.com</replaceable> that points to
-         <replaceable>35.197.53.74</replaceable> would be created.
-        </para>
-       </listitem>
-      </varlistentry>
-     </variablelist>
-    </listitem>
-   </itemizedlist>
-   <para>
-    Your load balanced deployment of &cap; is now complete. Verify you can
-    access the API endpoint:
-   </para>
-<screen>&prompt.user;cf api --skip-ssl-validation https://api.example.com</screen>
+  <sect2 xml:id="sec-cap-gke-deploy-kubecf">
+   &deploy-kubecf;
   </sect2>
  </sect1>
 

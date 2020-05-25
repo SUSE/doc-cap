@@ -363,25 +363,14 @@ suse       https://kubernetes-charts.suse.com/
  <sect1 xml:id="sec-cap-cap-on-caasp">
   <title>Deploying &productname;</title>
 
-  <sect2 xml:id="sec-cap-caasp-deploy-scf">
-   <title>Deploy <literal>scf</literal></title>
-    &kubecf-operator-versions;
-   <para>
-    Use &helm; to deploy <literal>scf</literal>:
-   </para>
-<screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
+  &kubecf-operator-versions;
 
-&prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
---namespace <replaceable>scf</replaceable> \
---values scf-config-values.yaml
-</screen>
-   &scf-deploy-complete;
+  <sect2 xml:id="sec-cap-caasp-deploy-operator">
+   &deploy-operator;
+  </sect2>
 
-   <para>
-    When the deployment completes, use the &cf; command line interface to log in
-    to &suse; &cf; to deploy and manage your applications. (See
-    <xref linkend="sec-cap-cf-cli"/>)
-   </para>
+  <sect2 xml:id="sec-cap-caasp-deploy-kubecf">
+   &deploy-kubecf;
   </sect2>
  </sect1>
 

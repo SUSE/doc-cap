@@ -204,72 +204,11 @@ suse            https://kubernetes-charts.suse.com/</screen>
     &kubecf-operator-versions;
 
   <sect2 xml:id="sec-cap-eks-deploy-operator">
-   <title>Deploy <literal>operator</literal></title>
+   &deploy-operator;
   </sect2>
 
-  <sect2 xml:id="sec-cap-eks-deploy-scf">
-   <title>Deploy <literal>scf</literal></title>
-
-   <para>
-    Next, use &helm; to deploy <literal>scf</literal>:
-   </para>
-<screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
-
-&prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
---namespace <replaceable>scf</replaceable> \
---values scf-config-values.yaml
-</screen>
-
-   &scf-deploy-complete;
-
-   <para>
-    Before traffic is routed to EKS load balancers, health checks are performed
-    on them. These health checks require access to ports on the
-    <literal>tcp-router</literal> service, which are only opened by request via
-    <command>cf map-route</command> and other associated commands.
-   </para>
-
-   <para>
-    Use <command>kubectl patch</command> to patch the
-    <literal>tcp-router</literal> service to expose a port to the EKS load
-    balancer so the health checks can be completed.
-   </para>
-
-<screen>&prompt.user;kubectl patch service tcp-router-tcp-router-public --namespace scf \
---type strategic \
---patch '{"spec": {"ports": [{"name": "healthcheck", "port": 8080}]}}'
-</screen>
-
-   <para>
-    Remove port 8080 from the load balancer's listeners list. This ensures the
-    port is not exposed to external traffic while still allowing it to serve
-    as the port for health checks internally.
-   </para>
-
-<screen>&prompt.user;aws elb delete-load-balancer-listeners \
---load-balancer-name  <replaceable>a635338ecc2ed11e607790a6b408ef5f</replaceable> \
---load-balancer-ports 8080
-</screen>
-
-   <para>
-    Where the <literal>--load-balancer-name</literal> can be found by examining
-    the <literal>EXTERNAL-IP</literal> field after running command below. The
-    load balancer name will be the string preceding the first
-    <literal>-</literal> character.
-   </para>
-
-<screen>&prompt.user;kubectl get service -n scf tcp-router-tcp-router-public</screen>
-
-   <para>
-    The health checks should now operate correctly. When the status shows RUNNING
-    for all of the <literal>scf</literal> pods, create CNAMEs for the required
-    domains. (See <xref linkend="sec-cap-eks-dns"/>) Use
-    <command>kubectl</command> to find the service host names. These host names
-    include the <literal>elb</literal> sub-domain, so use this to get the
-    correct results:
-   </para>
-
-<screen>&prompt.user;kubectl get services --namespace scf | grep elb</screen>
+  <sect2 xml:id="sec-cap-eks-deploy-kubecf">
+   &deploy-kubecf;
   </sect2>
  </sect1>
  <sect1 xml:id="sec-cap-aws-service-broker">
