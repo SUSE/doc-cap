@@ -59,8 +59,6 @@ sed 's/"namespace": "default"/"namespace": "stratos"/' | kubectl create --filena
      deploy <literal>scf</literal>:
   </para>
 
-  &defaul-scf-namespace-note;
-
   &stratos-tech-preview-note;
 
 <screen>&prompt.user;kubectl create namespace <replaceable>stratos</replaceable>
@@ -255,8 +253,6 @@ gp2scoped       kubernetes.io/aws-ebs   1d
    Use &helm; to install Stratos:
   </para>
 
-  &defaul-scf-namespace-note;
-
   &stratos-tech-preview-note;
 
 <screen>&prompt.user;kubectl create namespace <replaceable>stratos</replaceable>
@@ -387,8 +383,6 @@ gp2scoped       kubernetes.io/aws-ebs   1d
    deployed on &aks; (see <xref linkend="cha-cap-depl-aks"/>).
   </para>
 
-  &defaul-scf-namespace-note;
-
   &stratos-tech-preview-note;
 
   <para>
@@ -511,8 +505,6 @@ gp2scoped       kubernetes.io/aws-ebs   1d
   <para>
    Use &helm; to install Stratos:
   </para>
-
-  &defaul-scf-namespace-note;
 
   &stratos-tech-preview-note;
 

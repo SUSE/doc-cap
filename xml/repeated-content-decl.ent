@@ -96,26 +96,6 @@ have a maximum length of 36 characters.
     </varlistentry>
 </variablelist>'>
 
-<!--ENTITY fresh-namespace..................................................-->
-
-<!ENTITY fresh-namespace
-'<variablelist xmlns="http://docbook.org/ns/docbook">
-<varlistentry>
-     <term>Always install to a fresh namespace</term>
-     <listitem>
-      <para>
-    If you are not creating a fresh &productname; installation, but have deleted
-    a previous deployment and are starting over, you must create new namespaces.
-    Do not re-use your old namespaces. The <command>helm delete</command> command
-    does not remove generated secrets from the <literal>scf</literal> and
-    <literal>uaa</literal> namespaces as it is
-    not aware of them. These leftover secrets may cause deployment failures. See
-    <xref linkend="sec-cap-tbl-rebuild-depl"/> for more information.
-      </para>
-     </listitem>
-    </varlistentry>
-</variablelist>'>
-
 <!--ENTITY readmefirst......................................................-->
 
 <!ENTITY readmefirst
@@ -1001,27 +981,9 @@ done
   <para>
    The prerequisites and configurations described is this chapter only reflect
    the requirements for a minimal &productname; deployment. For a more
-   production-ready environment, consider incoporating the following features:
+   production-ready environment, consider incoporating some of following optional
+   features in this chapter and the &admin; at <xref linkend="part-cap-administration"/>
   </para>
-  <variablelist>
-   <varlistentry>
-    <term>Stratos Web Console</term>
-    <listitem>
-     <para>
-      For details, see <xref linkend="cha-cap-install-stratos"/>.
-     </para>
-    </listitem>
-   </varlistentry>
-   <varlistentry>
-    <term>Other Features</term>
-    <listitem>
-     <para>
-      Refer to the &admin; at
-      <xref linkend="part-cap-administration"/> for additional features.
-     </para>
-    </listitem>
-   </varlistentry>
-  </variablelist>
  </important>'>
 
 <!--ENTITY log-types-and-fetch..............................................-->
@@ -1099,29 +1061,6 @@ agent.log</screen>
    </itemizedlist>
   </listitem>
  </itemizedlist>'>
-
- <!--ENTITY defaul-scf-namespace-note.........................................-->
-
- <!ENTITY defaul-scf-namespace-note
- '<important xmlns="http://docbook.org/ns/docbook">
-   <title>Non-default &scf; namespace</title>
-   <para>If you used a non-default namespace for &scf;, you need to change the
-     <literal>UAA_ZONE</literal> environment variable in the
-     <filename>scf-config-values.yaml</filename> to the correct namespace. You
-     can do so in the <literal>env</literal> section:
-   </para>
-<screen>
- env:
-   # Enter the domain you created for your CAP cluster
-   DOMAIN: example.com
-
-   # uaa host and port
-   UAA_HOST: uaa.example.com
-   UAA_PORT: 2793
-   # scf namespace, default is "scf"
-   UAA_ZONE: scf2
-</screen>
- </important>'>
 
 <!--ENTITY stratos-tech-preview-note........................................-->
 
@@ -1568,9 +1507,6 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
   </sect3>
   <sect3>
    <title>Using the <literal>high_availability</literal> &helm; Property</title>
-   <important>
-    &fresh-namespace;
-    </important>
    <para>
     One way to make your &productname; deployment highly available is
     to use the <literal>high_availability</literal> &helm; property. In your
@@ -1660,9 +1596,6 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
     have an odd number of instances.
    </para>
 -->
-   <important>
-    &fresh-namespace;
-   </important>
   </sect3>
  </sect2>
  <sect2 xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
