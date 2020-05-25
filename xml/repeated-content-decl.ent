@@ -2098,9 +2098,6 @@ User:           username@ldap.example.com
 '<title xmlns="http://docbook.org/ns/docbook">
   Deploy the Operator
  </title>
- <para xmlns="http://docbook.org/ns/docbook">
-  TODO-CAP2 DESCRIPTION OF OPERATOR
- </para>
  <procedure xmlns="http://docbook.org/ns/docbook">
   <step>
    <para>
@@ -2119,7 +2116,7 @@ User:           username@ldap.example.com
     this example, this means &kubecf; will be deployed into a namespace called
     <literal>kubecf</literal>.
    </para>
-<screen>&prompt.user;helm install <replaceable>cf-operator</replaceable> TODO-CHART \
+<screen>&prompt.user;helm install <replaceable>cf-operator</replaceable> suse/cf-operator \
 --namespace <replaceable>cf-operator</replaceable> \
 --set "global.operator.watchNamespace=<replaceable>kubecf</replaceable>"
 </screen>
@@ -2130,10 +2127,9 @@ User:           username@ldap.example.com
     the status of your &operator; deployment using the
     <command>watch</command> command.
    </para>
-<screen>&prompt.user;watch --color &apos;kubectl get pods -n cf-operator&apos;</screen>
+<screen>&prompt.user;watch --color &apos;kubectl get pods -n <replaceable>cf-operator</replaceable>&apos;</screen>
    <para>
-    TODO-CAP2 DESCRIPTION OF COMPLETE DEPLOYMENT OF OPERATOR
-    When uaa is successfully deployed, the following is observed:
+    <!-- TODO-CAP2 DESCRIPTION OF COMPLETE DEPLOYMENT OF OPERATOR -->
    </para>
   </step>
  </procedure>'>
@@ -2144,20 +2140,26 @@ User:           username@ldap.example.com
 '<title xmlns="http://docbook.org/ns/docbook">
   Deploy &kubecf;
  </title>
- <para xmlns="http://docbook.org/ns/docbook">
-  TODO-CAP2 DESCRIPTION
- </para>
  <procedure xmlns="http://docbook.org/ns/docbook">
   <step>
    <para>
-    Use &helm; to deploy &kubecf;.
+    Use &helm; to deploy &kubecf;. Note that you
+    <emphasis role="bold">do not</emphasis> need to manually create the
+    namespace for &kubecf;.
    </para>
-<screen>&prompt.user;helm install <replaceable>kubecf</replaceable> TODO-CHART \
+<screen>&prompt.user;helm install <replaceable>kubecf</replaceable> suse/kubecf \
 --namespace <replaceable>kubecf</replaceable> \
 --values <replaceable>kubecf-values.yaml</replaceable>
 </screen>
   </step>
-  <step><para>2222</para></step>
+  <step>
+   <para>
+    Wait until &kubecf;; is successfully deployed before proceeding. Monitor
+    the status of your &kubecf; deployment using the
+    <command>watch</command> command.
+   </para>
+<screen>&prompt.user;watch --color &apos;kubectl get pods -n <replaceable>kubecf</replaceable>&apos;</screen>
+  </step>
  </procedure>'>
 
 <!--ENTITY config-new-vs-existing............................................-->
