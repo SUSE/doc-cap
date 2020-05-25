@@ -1810,10 +1810,14 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
   External Database
  </title>
  <para xmlns="http://docbook.org/ns/docbook">
-  By default, &kubecf; includes a single-availability database provided by the
-  <literal>cf-mysql-release</literal>. &kubecf; can be configured to use an
-  external database system, such as a data service offered by a cloud service
-  provider or an existing high availability database server.
+  By default, &productname; includes a single-availability database provided by
+  the <literal>cf-mysql-release</literal>. &productname; can be configured to
+  use an external database system, such as a data service offered by a cloud
+  service provider or an existing high availability database server.
+ </para>
+ <para xmlns="http://docbook.org/ns/docbook">
+  To configure your deployment to use an external database, please contact
+  &suse; support or services for guidance.
  </para>
  <para xmlns="http://docbook.org/ns/docbook">
   The current &productname; release is compatible with the following types of
@@ -1831,6 +1835,7 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
    </para>
   </listitem>
  </itemizedlist>
+<!--
  <sect2 xmlns="http://docbook.org/ns/docbook">
   <title>Configuration</title>
   <para>
@@ -1849,7 +1854,6 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
     installation and cannot be changed afterwards.
    </para>
   </important>
-<!-- TODO-CAP2 Update based on outcome of database seeder script -->
   <para>
    The following snippet of the <filename>kubecf-config-values.yaml</filename>
    contains an example of an external database configuration.
@@ -1898,7 +1902,7 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
         password: <replaceable>root</replaceable>
         username: <replaceable>root</replaceable>
 </screen>
- </sect2>'>
+ </sect2>-->'>
 
 <!--ENTITY ldap..............................................................-->
 
