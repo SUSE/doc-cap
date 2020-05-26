@@ -190,41 +190,6 @@
      <link xlink:href="https://documentation.suse.com/suse-caasp/4.1/single-html/caasp-deployment/#_transitioning_from_docker_to_cri_o"/>
     </para>
    </listitem>
-   <listitem>
-    <para>
-     Swapaccounting is enabled on all worker nodes. For each node:
-    </para>
-    <procedure>
-     <step>
-      <para>
-       SSH into the node.
-      </para>
-      <substeps>
-       <step>
-        <para>
-	 If the <command>ssh-agent</command> is running, run:
-	</para>
-<screen>&prompt.user;ssh <replaceable>sles</replaceable>@&lt;NODE_IP_ADDRESS></screen>
-       </step>
-       <step>
-        <para>
-       	 Without the <command>ssh-agent</command> running, run:
-	</para>
-<screen>&prompt.user;ssh <replaceable>sles</replaceable>@&lt;NODE_IP_ADDRESS> -i &lt;PATH_TO_YOUR_SSH_PRIVATE_KEY></screen>
-       </step>
-      </substeps>
-     </step>
-     <step>
-      <para>
-       Enable swapaccounting on the node.
-      </para>
-<screen>&prompt.user;grep "swapaccount=1" /etc/default/grub || sudo sed -i -r 's|^(GRUB_CMDLINE_LINUX_DEFAULT=)\"(.*.)\"|\1\"\2 swapaccount=1 \"|' /etc/default/grub
-&prompt.user;sudo grub2-mkconfig -o /boot/grub2/grub.cfg
-&prompt.user;sudo systemctl reboot
-</screen>
-     </step>
-    </procedure>
-   </listitem>
   </itemizedlist>
  </sect1>
 

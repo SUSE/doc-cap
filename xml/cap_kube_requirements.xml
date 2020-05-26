@@ -35,12 +35,6 @@
    </listitem>
    <listitem>
     <para>
-     If your &kube; nodes have swap, then kernel parameter
-     <literal>swapaccount=1</literal> is set
-    </para>
-   </listitem>
-   <listitem>
-    <para>
      <command>docker info</command> must not show <literal>aufs</literal> as
      the storage driver
     </para>
