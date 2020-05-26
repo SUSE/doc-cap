@@ -48,10 +48,10 @@ Part: CAP Deployment Guide
   <info/>
   <xi:include href="cap_depl_admin_notes.xml"/>
   <xi:include href="cap_depl_caasp.xml"/>
-  <xi:include href="cap_depl_stratos.xml"/>
   <xi:include href="cap_depl_aks.xml"/>
   <xi:include href="cap_depl_eks.xml"/>
   <xi:include href="cap_depl_gke.xml"/>
+  <xi:include href="cap_depl_stratos.xml"/>
   <xi:include href="cap_depl_eirini.xml"/>
   <!-- <xi:include href="cap_depl_air_gap_registry.xml"/> -->
  </part>
