@@ -55,9 +55,6 @@
   &min-deploy-note;
  </sect1>
 
- <!-- Entry defined in xml/repeated-content-decl.ent -->
-  &install-helm;
-
  <sect1 xml:id="sec-cap-create-eks-cluster">
   <title>Create an EKS Cluster</title>
 
@@ -100,26 +97,13 @@
 </screen>
  </sect1>
 
+ <!-- Entry defined in xml/repeated-content-decl.ent -->
+ &install-helm;
+
  <sect1 xml:id="sec-cap-eks-storage-class">
   &storage-class;
  </sect1>
 
- <sect1 xml:id="sec-cap-eks-dns">
-  <title>DNS Configuration</title>
-
-  <para>
-   Creation of the Elastic Load Balancer is triggered by a setting in the &cap;
-   deployment configuration file.
-  </para>
-
-  <para>
-   The following table lists the required domain and sub-domains, using
-   <literal>example.com</literal> as the example domain:
-  </para>
-
-&dns-tables;
-
- </sect1>
  <sect1 xml:id="sec-cap-eks-configuration">
   <title>Deployment Configuration</title>
 
@@ -134,9 +118,6 @@
 ### scf-config-values.yaml
 <!-- TODO-CAP2 -->
 </screen>
-
-  <!-- Explains usage of some Helm values used in the example/minimal values.yaml-->
-  &config-value-usage;
  </sect1>
 
  <!-- Begin optional features -->
@@ -195,8 +176,6 @@ suse            https://kubernetes-charts.suse.com/</screen>
 &helm-search-suse;
 
  </sect1>
-
- <!-- TODO-CAP2 -->
  <sect1 xml:id="sec-cap-cap-on-eks">
   <title>Deploying &productname;</title>
   <para>
@@ -204,7 +183,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
    configure your DNS records.
   </para>
 
-    &kubecf-operator-versions;
+  &kubecf-operator-versions;
 
   <sect2 xml:id="sec-cap-eks-deploy-operator">
    &deploy-operator;
