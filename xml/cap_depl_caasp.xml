@@ -262,10 +262,6 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create --filename -
 
 <!-- TODO-CAP2 -->
 </screen>
-
-  <!-- Explains usage of some Helm values used in the example/minimal values.yaml-->
-  &config-value-usage;
-
  </sect1>
 
  <!-- Begin optional features -->
