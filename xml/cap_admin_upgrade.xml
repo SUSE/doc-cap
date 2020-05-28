@@ -49,7 +49,7 @@
     <listitem>
      <para>
       During a <command>helm upgrade</command>, always ensure your
-      <filename>scf-config-values-yaml</filename> file is passed. This will
+      &values-filename; file is passed. This will
       preserve any previously set &helm; values while allowing additional
       &helm; value changes to be made.
      </para>

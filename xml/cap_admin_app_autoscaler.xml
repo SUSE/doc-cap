@@ -58,7 +58,7 @@
 
   <para>
    App-AutoScaler is disabled by default. To enable it, add the following the following
-   block to your &values-file; file.
+   block to your &values-filename; file.
   </para>
 
 <screen>features:
@@ -67,7 +67,7 @@
 </screen>
 
   <para>
-   To disable App-AutoScaler again, update the above block in your &values-file;
+   To disable App-AutoScaler again, update the above block in your &values-filename;
    so that <literal>enabled</literal> is set to <literal>false</literal>.
   </para>
 

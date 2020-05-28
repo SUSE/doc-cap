@@ -63,7 +63,7 @@
 
   <para>
    To configure the nproc limits, add the following to your
-   <filename>scf-config-values.yaml</filename>. Replace
+   &values-filename;. Replace
    the example values with limits suitable for your workloads:
   </para>
 
@@ -91,7 +91,7 @@
 
 &prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
 --namespace <replaceable>scf</replaceable> \
---values scf-config-values.yaml
+--values &values-file;
 </screen>
     </step>
     <step>
@@ -139,7 +139,7 @@
       Use <command>helm upgrade</command> to apply the change:
      </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
---values scf-config-values.yaml \
+--values &values-file; \
 --version &kubecf_chart;
 </screen>
     </step>

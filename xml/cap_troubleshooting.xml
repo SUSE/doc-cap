@@ -116,7 +116,7 @@ routing-api-0            0/1   Running   0         16h</screen>
   <para>
    There may be times when you want to delete and rebuild a deployment, for
    example when there are errors in your
-   <filename>scf-config-values.yaml</filename> file, you wish to test
+   &values-filename; file, you wish to test
    configuration changes, or a deployment fails and you want to try it again.
    This has five steps: first delete the StatefulSets of the namespace
    associated with the release or releases you want to re-deploy, then delete

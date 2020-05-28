@@ -220,7 +220,7 @@ cap-aks</screen>
      <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/azure-disks-dynamic-pv">Built in
      storage classes</link>) is recommended. Note
      <literal>managed-premium</literal> has been specified in the example
-     <filename>scf-config-values.yaml</filename> used (see
+     &values-filename; used (see
      <xref linkend="sec-cap-cap-on-aks"/>):
     </para>
 <screen>&prompt.user;export NODE_VM_SIZE="<replaceable>Standard_DS4_v2</replaceable>"</screen>
@@ -344,7 +344,7 @@ export NODEPOOL_NAME="mypool"
  <sect1 xml:id="sec-cap-aks-config">
   <title>Deployment Configuration</title>
   <para>
-   The following file, <filename>scf-config-values.yaml</filename>, provides a
+   The following file, &values-filename;, provides a
    complete example deployment configuration.
   </para>
 
@@ -352,7 +352,7 @@ export NODEPOOL_NAME="mypool"
 
 <screen>
 ### example deployment configuration file
-### scf-config-values.yaml
+### &values-file;
 
 <!-- TODO-CAP2 -->
 </screen>
@@ -664,7 +664,7 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
    <step>
     <para>
      Add or update the following in your
-     <filename>scf-config-values.yaml</filename> file to increase the number of
+     &values-filename; file to increase the number of
      <literal>diego-cell</literal> in your &cap; deployment. Replace the
      example value with the number required by your workflow.
     </para>
@@ -678,7 +678,7 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
      Perform a <command>helm upgrade</command> to apply the change.
     </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
---values scf-config-values.yaml \
+--values &values-file; \
 --version &kubecf_chart;
 </screen>
    </step>

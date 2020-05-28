@@ -360,7 +360,7 @@ Before you start deploying &productname;, review the following documents:
  Authenticate to the <literal>uaa</literal> server as
  <literal>admin</literal> using the
  <literal>UAA_ADMIN_CLIENT_SECRET</literal> set in your
- <filename>scf-config-values.yaml</filename> file.
+ &values-filename; file.
 </para>
 <screen>&prompt.user;uaac token client get admin --secret <replaceable>password</replaceable></screen>
 </step>'>
@@ -458,7 +458,7 @@ the version of the application as defined in "The <literal>appVersion</literal>
 <!ENTITY config-value-usage
 '<para xmlns="http://docbook.org/ns/docbook">
   Take note of the following &helm; values when defining your
-  <filename>scf-config-values.yaml</filename> file.
+  &values-filename; file.
  </para>
  <variablelist xmlns="http://docbook.org/ns/docbook">
   <varlistentry>
@@ -1101,7 +1101,7 @@ agent.log</screen>
  </para>
  <para xmlns="http://docbook.org/ns/docbook">
   A storage class can be chosen by setting the
-  <literal>kube.storage_class</literal> value in your &values-file;
+  <literal>kube.storage_class</literal> value in your &values-filename;
   configuration file as seen in this example. Note that if there is no storage
   class designated as the default this values
   <emphasis role="bold">must</emphasis> be set.
@@ -1142,7 +1142,7 @@ agent.log</screen>
      The certificate&apos;s Subject Alternative Name (SAN) include the domain
      <replaceable>*.example.com</replaceable>, where <replaceable>example.com</replaceable>
      is replaced with the <literal>system_domain</literal> in your
-     <filename>kubecf-config-values.yaml</filename>.
+     <filename>&values-file;</filename>.
     </para>
    </listitem>
   </itemizedlist>
@@ -1151,7 +1151,7 @@ agent.log</screen>
   <title>Deployment Configuration</title>
   <para>
    The certificate used to secure your deployment is passed through the
-   <filename>kubecf-config-values.yaml</filename> configuration file. To specify
+   <filename>&values-file;</filename> configuration file. To specify
    a certificate, set the value of the certificate and its corresponding private
    key using the <literal>router.tls.crt</literal> and
    <literal>router.tls.key</literal> &helm; values in the
@@ -1268,18 +1268,18 @@ nginx-ingress-controller   LoadBalancer   <replaceable>10.63.248.70</replaceable
     <para>
      Set up DNS records corresponding to the controller service IP or hostname
      and map it to the <literal>system_domain</literal> defined in your
-     &values-file;.
+     &values-filename;.
     </para>
   </step>
    <step>
     <para>
      Obtain a PEM formatted certificate that is associated with the
-     <literal>system_domain</literal> defined in your &values-file;
+     <literal>system_domain</literal> defined in your &values-filename;
     </para>
    </step>
    <step>
     <para>
-     In your &values-file; configuration file, enable the ingress feature and
+     In your &values-filename; configuration file, enable the ingress feature and
      set the <literal>tls.crt</literal> and <literal>tls.key</literal> for the
      certificate from the previous step.
     </para>
@@ -1366,10 +1366,10 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
    <para>
     One way to make your &productname; deployment highly available is
     to use the <literal>high_availability</literal> &helm; property. In your
-    <filename>kubecf-config-values.yaml</filename>, set this property to
+    <filename>&values-file;</filename>, set this property to
     <literal>true</literal>. This changes the size of all roles to the minimum
     required for a highly available deployment. Your configuration file,
-    <filename>kubecf-config-values.yaml</filename>, should include the following.
+    <filename>&values-file;</filename>, should include the following.
    </para>
 <screen>high_availability: true</screen>
 <!-- TODO-CAP2 Keep if requirement for single mysql before HA is still valid. 
@@ -1383,7 +1383,7 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
 
 &prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
 --namespace <replaceable>scf</replaceable> \
---values scf-config-values.yaml
+--values &values-file;
 </screen>
   </sect3>
   <sect3>
@@ -1559,7 +1559,7 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
    Currently &productname; supports Amazon Simple Storage Service (Amazon S3,
    see <link xlink:href="https://aws.amazon.com/s3/"/>) as an external blobstore
    . In order to configure Amazon S3 as an external blobstore, set the following
-   in your <filename>kubecf-config-values.yaml</filename> file and replace the
+   in your <filename>&values-file;</filename> file and replace the
    example values.
   </para>
 <screen>features:
@@ -1630,7 +1630,7 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
   <para>
    This section describes how to enable and configure your deployment to connect
    to an external database. The configuration options are specified through
-   &helm; values inside the <filename>kubecf-config-values.yaml</filename>. The
+   &helm; values inside the <filename>&values-file;</filename>. The
    deployment and configuration of the external database itself is the
    responsibility of the operator and beyond the scope of this documentation. It
    is assumed the external database has been deployed and accessible.
@@ -1644,7 +1644,7 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
    </para>
   </important>
   <para>
-   The following snippet of the <filename>kubecf-config-values.yaml</filename>
+   The following snippet of the <filename>&values-file;</filename>
    contains an example of an external database configuration.
   </para>
 <screen>features:
@@ -1998,7 +1998,7 @@ User:           username@ldap.example.com
      the change.
     </para>
 <screen>&prompt.user;helm upgrade <replaceable>kubecf</replaceable> suse/kubecf \
---values <replaceable>kubecf-config-values.yaml</replaceable> \
+--values <replaceable>&values-file;</replaceable> \
 --version &kubecf_chart;
 </screen>
    </listitem>

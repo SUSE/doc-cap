@@ -534,7 +534,7 @@
     <listitem>
      <para>
       Access to new deployments of <literal>scf</literal> (deployed with a
-      <filename>scf-config-values.yaml</filename> configured according to
+      &values-filename; configured according to
       <xref linkend="prepare-config-for-new-cluster"/> of
       <xref linkend="sec-cap-raw-data-restore-procedure"/>) to perform the
       restore to
@@ -703,9 +703,9 @@
      <para>
       The target <literal>scf</literal> cluster needs to be deployed with the
       correct database encryption key(s) set in your
-      <filename>scf-config-values.yaml</filename> before data can be restored.
+      &values-filename; before data can be restored.
       How the encryption key(s) will be prepared in your
-      <filename>scf-config-values.yaml</filename> depends on the result of
+      &values-filename; depends on the result of
       <xref linkend="get-encryption-key"/> in
       <xref linkend="sec-cap-raw-data-backup-procedure"/>
      </para>
@@ -717,7 +717,7 @@
         <literal>CC_DB_CURRENT_KEY_LABEL</literal> and all the keys under the
         <literal>keys</literal> are defined under
         <literal>CC_DB_ENCRYPTION_KEYS</literal>. See the following example
-        <filename>scf-config-values.yaml</filename>:
+        &values-filename;:
        </para>
 <screen>env:
   CC_DB_CURRENT_KEY_LABEL: <replaceable>migrated_key_1</replaceable>
@@ -731,7 +731,7 @@ secrets:
       <listitem>
        <para>
         If <literal>current_key_label</literal> was not set, create one for the
-        new cluster through <filename>scf-config-values.yaml</filename> and set
+        new cluster through &values-filename; and set
         it to the <literal>$DB_ENCRYPTION_KEY</literal> value from the old
         cluster. In this example, <literal>migrated_key</literal> is the new
         <literal>current_key_label</literal> created:
