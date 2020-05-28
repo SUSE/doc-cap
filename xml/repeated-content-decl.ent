@@ -1088,13 +1088,23 @@ agent.log</screen>
 '<title xmlns="http://docbook.org/ns/docbook">
   Storage Class
  </title>
- <para xmlns="http://docbook.org/ns/docbook">
+ <para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
   In &productname; some instance groups, such as <literal>bits</literal>,
   <literal>database</literal> and <literal>singleton-blobstore</literal>
-  require a storage class. The storage class used can be specified by setting
-  the <literal>kube.storage_class</literal> value in your &values-file; file as
-  seen in the example below. If this is not set, the default storage class is
-  used and may differ based on your &kube; provider.
+  require a storage class. To learn more about storage classes, see
+  <link xlink:href="https://kubernetes.io/docs/concepts/storage/storage-classes/"/>. 
+ </para>
+ <para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  By default, &productname; will use the cluster&apos;s default storage class. 
+  To designate or change the default storage class, refer to
+  <link xlink:href="https://kubernetes.io/docs/tasks/administer-cluster/change-default-storage-class/"/>
+ </para>
+ <para xmlns="http://docbook.org/ns/docbook">
+  A storage class can be chosen by setting the
+  <literal>kube.storage_class</literal> value in your &values-file;
+  configuration file as seen in this example. Note that if there is no storage
+  class designated as the default this values
+  <emphasis role="bold">must</emphasis> be set.
  </para>
 <screen xmlns="http://docbook.org/ns/docbook">kube:
   storage_class: <replaceable>my-storage-class</replaceable>
