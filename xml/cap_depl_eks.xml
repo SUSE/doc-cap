@@ -299,13 +299,13 @@ suse            https://kubernetes-charts.suse.com/</screen>
        <para>
         Get the CA certificate:
        </para>
-<screen>kubectl get secret --namespace scf --output jsonpath='{.items[*].data.internal-ca-cert}' | base64 -di > ca.pem</screen>
+<screen>kubectl get secret --namespace kubecf --output jsonpath='{.items[*].data.internal-ca-cert}' | base64 -di > ca.pem</screen>
       </step>
       <step>
        <para>
         Get the CA private key:
        </para>
-<screen>kubectl get secret --namespace scf --output jsonpath='{.items[*].data.internal-ca-cert-key}' | base64 -di > ca.key</screen>
+<screen>kubectl get secret --namespace kubecf --output jsonpath='{.items[*].data.internal-ca-cert-key}' | base64 -di > ca.key</screen>
       </step>
       <step>
        <para>

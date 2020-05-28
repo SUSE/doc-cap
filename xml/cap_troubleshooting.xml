@@ -85,7 +85,7 @@
    have become ready:
   </para>
 
-<screen>&prompt.user;kubectl get pods --namespace scf
+<screen>&prompt.user;kubectl get pods --namespace kubecf
 NAME                     READY STATUS    RESTARTS  AGE
 router-3137013061-wlhxb  0/1   Running   0         16h
 routing-api-0            0/1   Running   0         16h</screen>
@@ -98,7 +98,7 @@ routing-api-0            0/1   Running   0         16h</screen>
    and status:
   </para>
 
-<screen>&prompt.user;kubectl describe pod --namespace scf router-3137013061-wlhxb</screen>
+<screen>&prompt.user;kubectl describe pod --namespace kubecf router-3137013061-wlhxb</screen>
 
   <para>
    This prints a lot of information, including IP addresses, routine events,
@@ -149,7 +149,7 @@ NAME            REVISION  UPDATED                  STATUS    CHART           NAM
    <literal>scf</literal> namespace:
   </para>
 
-<screen>&prompt.user;kubectl delete statefulsets --all --namespace scf
+<screen>&prompt.user;kubectl delete statefulsets --all --namespace kubecf
 statefulset "adapter" deleted                                                   
 statefulset "api-group" deleted                                                 
 ... 
@@ -208,19 +208,19 @@ namespace "scf" deleted</screen>
     <para>
      List pods in one namespace:
     </para>
-<screen>&prompt.user;kubectl get pods --namespace scf</screen>
+<screen>&prompt.user;kubectl get pods --namespace kubecf</screen>
    </listitem>
    <listitem>
     <para>
      Get detailed information about one pod:
     </para>
-<screen>&prompt.user;kubectl describe --namespace scf po/diego-cell-0</screen>
+<screen>&prompt.user;kubectl describe --namespace kubecf po/diego-cell-0</screen>
    </listitem>
    <listitem>
     <para>
      Read the log file of a pod:
     </para>
-<screen>&prompt.user;kubectl logs --namespace scf po/diego-cell-0</screen>
+<screen>&prompt.user;kubectl logs --namespace kubecf po/diego-cell-0</screen>
    </listitem>
    <listitem>
     <para>
@@ -267,7 +267,7 @@ jq '.items[] | {name: .metadata.name, cap: .status.capacity}'</screen>
     <para>
      Verify whether the error has occurred by examining the logs.
     </para>
-<screen>&prompt.user;kubectl logs autoscaler-metrics-0 autoscaler-metrics --follow --namespace scf</screen>
+<screen>&prompt.user;kubectl logs autoscaler-metrics-0 autoscaler-metrics --follow --namespace kubecf</screen>
     <para>
      If the error has occurred, the log will contain entires similar to the following.
     </para>
@@ -448,7 +448,7 @@ end
      <para>
       Restart the <literal>api-group</literal> pod.
      </para>
-<screen>&prompt.user;kubectl delete pod api-group-0 --namespace <replaceable>scf</replaceable></screen>
+<screen>&prompt.user;kubectl delete pod api-group-0 --namespace <replaceable>kubecf</replaceable></screen>
     </step>
    </procedure>
    <para>
@@ -461,117 +461,7 @@ end
 <screen>&prompt.user;cf create-buildpack <replaceable>ruby_cflinuxfs3</replaceable> <replaceable>https://github.com/cloudfoundry/ruby-buildpack/releases/download/v1.7.41/ruby-buildpack-cflinuxfs3-v1.7.41.zip</replaceable> <replaceable>1</replaceable> <replaceable>--enable</replaceable></screen>
   </sect2>
  </sect1>
- <sect1 xml:id="sec-cap-tbl-mysql-failure">
-  <title><literal>mysql</literal> Pods Fail to Start</title>
-  <para>
-   In some cases, <literal>mysql</literal> pods may fail to start due to data
-   initialization problems or incomplete transactions from a previously aborted
-   operation. This can affect the <literal>mysql</literal> pod in both
-   <literal>uaa</literal> and <literal>scf</literal>.
-  </para>
-  <procedure>
-   <step>
-    <para>
-     Confirm whether the <literal>mysql</literal> pod failure is related to
-     data initialization problems or incomplete transactions.
-    </para>
-    <substeps>
-     <step>
-      <para>
-       Perform an initial inspection of the the <literal>mysql</literal>
-       container's logs. A <literal>pre-start</literal> related error should be
-       observed. If the <literal>mysql</literal> pod from <literal>scf</literal>
-       is experiencing issues, substitute <literal>scf</literal> as the
-       namespace.
-      </para>
-<screen>&prompt.user;kubectl logs --namespace <replaceable>uaa</replaceable> <replaceable>mysql-0</replaceable></screen>
-     </step>
-     <step>
-      <para>
-       Examine the <filename>/var/vcap/sys/log/pxc-mysql/mysql.err.log</filename>
-       file from the <literal>mysql</literal> container filesystem. If the
-       <literal>mysql</literal> pod from <literal>scf</literal> is experiencing
-       issues, substitute <literal>scf</literal> as the namespace.
-      </para>
-<screen>&prompt.user;kubectl exec --stdin --tty --namespace <replaceable>uaa</replaceable> <replaceable>mysql-0</replaceable> -- bash -c 'cat /var/vcap/sys/log/pxc-mysql/mysql.err.log'</screen>
-      <para>
-       One of the following error messages should be found:
-      </para>
-      <itemizedlist>
-       <listitem>
-<screen>[ERROR] Can't open and lock privilege tables: Table 'mysql.servers' doesn't exist
-[ERROR] Fatal error: Can't open and lock privilege tables: Table 'mysql.user' doesn't exist
-</screen>
-       </listitem>
-       <listitem>
-<screen>[ERROR] Found 1 prepared transactions! It means that mysqld was not shut down properly last time and critical recovery information (last binlog or tc.log file) was manually deleted after a crash. You have to start mysqld with --tc-heuristic-
-recover switch to commit or rollback pending transactions.
-[ERROR] Aborting
-</screen>
-       </listitem>
-      </itemizedlist>
-       <para>
-        This can happen when <literal>mysql</literal> fails to initialize and
-        read its data directory, possibly due to resource limitations in the
-        cluster.
-       </para>
-     </step>
-    </substeps>
-   </step>
-   <step>
-    <para>
-     If the <literal>mysql</literal> pod failure is confirmed to be due to
-     aborted transactions, perform the following procedure to return it to
-     a running state.
-    </para>
-    <para>
-     When using the procedure, it is important to note that:
-    </para>
-    <itemizedlist>
-     <listitem>
-      <para>
-       In a high availability setup, replication will synchronize data to the
-       new, clean persistent volume claim (PVC).
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       In a single availability setup, backup your data before applying the
-       procedure as it <emphasis>will result in data loss</emphasis>. It is a
-       recommended practice to regulary backup your data.
-      </para>
-     </listitem>
-    </itemizedlist>
-    <substeps>
-     <step>
-      <para>
-       Delete the persistent volume claim (PVC) attached to the failed
-       <literal>mysql</literal> pod. Identify the name of the PVC by using
-       <command>kubectl describe pod</command> and inspecting the
-       <literal>ClaimName</literal> field. If the <literal>mysql</literal> pod
-       from <literal>scf</literal> is experiencing issues, substitute
-       <literal>scf</literal> as the namespace.
-      </para>
-<screen>&prompt.user;kubectl describe pod --namespace <replaceable>uaa</replaceable> <replaceable>mysql-0</replaceable>
-
-&prompt.user;kubectl delete persistentvolumeclaim --namespace <replaceable>uaa</replaceable> <replaceable>mysql-data-mysql-0</replaceable>
-</screen>
-     </step>
-     <step>
-      <para>
-       Immediately delete the stuck <literal>mysql</literal> pod. It is
-       important to get the order right as otherwise, PVC deletion will never
-       terminate because of the attached pod. If the <literal>mysql</literal>
-       pod from <literal>scf</literal> is experiencing issues, substitute
-       <literal>scf</literal> as the namespace.
-      </para>
-<screen>&prompt.user;kubectl delete pod --namespace <replaceable>uaa</replaceable> <replaceable>mysql-0</replaceable></screen>
-     </step>
-    </substeps>
-   </step>
-  </procedure>
- </sect1>
-  <sect1 xml:id="sec-cap-tbl-admission-webhook">
+ <sect1 xml:id="sec-cap-tbl-admission-webhook">
   <title>Admission webhook denied</title>
   <para>
     When switching back to Diego from Eirini, the error below can occur:

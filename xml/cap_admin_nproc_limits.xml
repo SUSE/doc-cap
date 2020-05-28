@@ -87,10 +87,10 @@
      <para>
       Deploy <literal>scf</literal>:
      </para>
-<screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
+<screen>&prompt.user;kubectl create namespace <replaceable>kubecf</replaceable>
 
 &prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
---namespace <replaceable>scf</replaceable> \
+--namespace <replaceable>kubecf</replaceable> \
 --values &values-file;
 </screen>
     </step>
@@ -98,14 +98,14 @@
      <para>
       Monitor the deployment progress using the <command>watch</command> command:
      </para>
-<screen>&prompt.user;watch --color 'kubectl get pods --namespace scf'</screen>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace kubecf'</screen>
     </step>
     <step>
      <para>
       Open a shell into any container. The command below opens a shell to the default
       container in the <literal>blobstore-0</literal> pod:
      </para>
-<screen>&prompt.user;kubectl exec --stdin --tty <replaceable>blobstore-0</replaceable> --namespace scf -- env /bin/bash</screen>
+<screen>&prompt.user;kubectl exec --stdin --tty <replaceable>blobstore-0</replaceable> --namespace kubecf -- env /bin/bash</screen>
     </step>
     <step>
      <para>
@@ -147,14 +147,14 @@
      <para>
       Monitor the deployment progress using the <command>watch</command> command:
      </para>
-<screen>&prompt.user;watch --color 'kubectl get pods --namespace scf'</screen>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace kubecf'</screen>
     </step>
     <step>
      <para>
       Open a shell into any container. The command below opens a shell to the default
       container in the <literal>blobstore-0</literal> pod:
      </para>
-<screen>&prompt.user;kubectl exec --stdin --tty <replaceable>blobstore-0</replaceable> --namespace scf -- env /bin/bash</screen>
+<screen>&prompt.user;kubectl exec --stdin --tty <replaceable>blobstore-0</replaceable> --namespace kubecf -- env /bin/bash</screen>
     </step>
     <step>
      <para>

@@ -34,42 +34,38 @@
  <sect1 xml:id="sec-cap-configuration-change-example">
   <title>Configuration Change Example</title>
 
-  <!-- TODO-CAP2 use a different example, LOG_LEVEL not available -->
   <para>
-   Consider an example where more granular log entries are required than those
-   provided by your default deployment of <literal>uaa</literal>; (default
-   <literal>LOG_LEVEL: "info"</literal>).
+   Consider an example where you want to enable the App-AutoScaler.
   </para>
 
   <para>
-   You would then add an entry for <literal>LOG_LEVEL</literal> to the
-   <literal>env</literal> section of your
-   &values-filename; used to deploy
-   <literal>uaa</literal>:
+   The entry below is added to your &values-filename; file and set with
+   <literal>enabled</literal> set to <literal>true</literal>.
   </para>
 
-<screen>env:
-  LOG_LEVEL: "debug2"
+<screen>features:
+  autoscaler:
+    enabled: true
 </screen>
 
   <para>
-   Then apply the change with the <command>helm upgrade</command> command. This
-   example assumes the <literal>suse/uaa</literal> &helm; chart deployed was
-   named <literal>susecf-uaa</literal>:
+   The changed is then applied with the <command>helm upgrade</command> command. This
+   example assumes the <literal>suse/kubecf</literal> &helm; chart deployed was
+   named <literal>kubecf</literal>.
   </para>
 
-<screen>&prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa \
+<screen>&prompt.user;helm upgrade <replaceable>kubecf</replaceable> suse/kubecf \
 --values <replaceable>&values-file;</replaceable> \
---version N/A
+--version &kubecf_chart;
 </screen>
 
   <para>
    When all pods are in a <literal>READY</literal> state, the configuration
-   change will also be reflected. If the chart was deployed to the
-   <literal>uaa</literal> namespace, progress can be monitored with:
+   change will also be reflected. Assuming the chart was deployed to the
+   <literal>kubecf</literal> namespace, progress can be monitored with:
   </para>
 
-<screen>&prompt.user;watch --color 'kubectl get pods --namespace uaa'</screen>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace kubecf'</screen>
  </sect1>
  <sect1 xml:id="sec-cap-configuration-change-other-examples">
   <title>Other Examples</title>

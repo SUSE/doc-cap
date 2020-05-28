@@ -892,7 +892,7 @@ done
 <!--ENTITY watch-scf............................................-->
 
 <!ENTITY watch-scf
-'<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch --color &apos;kubectl get pods --namespace scf&apos;
+'<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch --color &apos;kubectl get pods --namespace kubecf&apos;
 </screen>'>
 
 <!--ENTITY min-deploy-note..................................................-->
@@ -944,7 +944,7 @@ done
       container of <literal>router-0</literal> pod in the <literal>scf</literal>
       namespace
      </para>
-<screen>&prompt.user;kubectl logs --namespace scf <replaceable>router-0</replaceable> <replaceable>router</replaceable></screen>
+<screen>&prompt.user;kubectl logs --namespace kubecf <replaceable>router-0</replaceable> <replaceable>router</replaceable></screen>
     </listitem>
     <listitem>
      <para>
@@ -963,7 +963,7 @@ done
         <filename>/var/vcap/sys/logs</filename>, at which point there will be
         subdirectories containing the log files for access.
        </para>
-<screen>&prompt.user;kubectl exec --stdin --tty --namespace scf router-0 /bin/bash
+<screen>&prompt.user;kubectl exec --stdin --tty --namespace kubecf router-0 /bin/bash
 
 router/0:/# cd /var/vcap/sys/log
 
@@ -1300,10 +1300,10 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
     <command>helm upgrade</command> to apply the change to an existing
     deployment.
    </para>
-<screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
+<screen>&prompt.user;kubectl create namespace <replaceable>kubecf</replaceable>
 
 &prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
---namespace <replaceable>scf</replaceable> \
+--namespace <replaceable>kubecf</replaceable> \
 --values &values-file;
 </screen>
   </sect3>
@@ -1434,7 +1434,7 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
     <literal>diego-cell</literal> pod is assigned to, refer to the following
     example:
    </para>
-<screen>&prompt.user;kubectl logs <replaceable>diego-cell-0</replaceable> --namespace scf | grep ^AZ</screen>
+<screen>&prompt.user;kubectl logs <replaceable>diego-cell-0</replaceable> --namespace kubecf | grep ^AZ</screen>
    <para>
     For more information on the
     <literal>failure-domain.beta.kubernetes.io/zone</literal> label, see

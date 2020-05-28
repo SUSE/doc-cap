@@ -942,7 +942,7 @@ applications:
     <para>
      Monitor progress of the additional <literal>diego-cell</literal> pods:
     </para>
-<screen>&prompt.user;watch --color 'kubectl get pods --namespace scf'</screen>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace kubecf'</screen>
    </step>
   </procedure>
  </sect1>
