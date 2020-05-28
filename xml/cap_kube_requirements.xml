@@ -35,24 +35,24 @@
    </listitem>
    <listitem>
     <para>
-     <command>docker info</command> must not show <literal>aufs</literal> as
-     the storage driver
+     The container runtime storage driver should
+     <emphasis role="bold">not</emphasis> be <literal>aufs</literal>.
     </para>
    </listitem>
    <listitem>
     <para>
-     The &kube; cluster must have a storage class for &productname; to use. The
-     default storage class is <literal>persistent</literal>. You may specify a
-     different storage class in your deployment's
-     <filename>values.yaml</filename> file (which is called
-     &values-filename; in the examples in this
-     guide), or as a <command>helm</command> command option, for example
-     <command>--set kube.storage_class.persistent=my_storage_class</command>.
+     Presence of a storage class for &productname; to use
     </para>
    </listitem>
    <listitem>
     <para>
-     <literal>kube-dns</literal> must be be running
+     <command>kubectl</command> can authenticate with the apiserver
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     <literal>kube-dns</literal> or <literal>core-dns</literal> should be
+     running and ready
     </para>
    </listitem>
    <listitem>
@@ -63,7 +63,7 @@
    </listitem>
    <listitem>
     <para>
-     &docker; must be configured to allow privileged containers
+     The container runtime must be configured to allow privileged containers
     </para>
    </listitem>
    <listitem>
