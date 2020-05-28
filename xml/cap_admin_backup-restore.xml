@@ -621,7 +621,7 @@
      <para>
       Connect to the <literal>blobstore</literal> pod:
      </para>
-<screen>&prompt.user;kubectl exec --stdin --tty blobstore-0 --namespace scf -- env /bin/bash</screen>
+<screen>&prompt.user;kubectl exec --stdin --tty blobstore-0 --namespace kubecf -- env /bin/bash</screen>
     </step>
     <step>
      <para>
@@ -641,7 +641,7 @@
      <para>
       Export the Cloud Controller Database (CCDB) into a file:
      </para>
-<screen>&prompt.user;kubectl exec mysql-0 --namespace scf -- bash -c \
+<screen>&prompt.user;kubectl exec mysql-0 --namespace kubecf -- bash -c \
   '/var/vcap/packages/mariadb/bin/mysqldump \
   --defaults-file=/var/vcap/jobs/mysql/config/mylogin.cnf \
   --socket /var/vcap/sys/run/pxc-mysql/mysqld.sock \
@@ -661,7 +661,7 @@
       Begin by examining the configuration file for
       the<literal>current_key_label</literal> setting:
      </para>
-<screen>&prompt.user;kubectl exec --stdin --tty --namespace scf api-group-0 -- bash -c "cat /var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml | grep -A 3 database_encryption"</screen>
+<screen>&prompt.user;kubectl exec --stdin --tty --namespace kubecf api-group-0 -- bash -c "cat /var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml | grep -A 3 database_encryption"</screen>
      <itemizedlist>
       <listitem>
        <para>
@@ -676,7 +676,7 @@
         setting, run the following command and save the output for the
         restoration process:
        </para>
-<screen>&prompt.user;kubectl exec api-group-0 --namespace scf -- bash -c 'echo $DB_ENCRYPTION_KEY'</screen>
+<screen>&prompt.user;kubectl exec api-group-0 --namespace kubecf -- bash -c 'echo $DB_ENCRYPTION_KEY'</screen>
       </listitem>
      </itemizedlist>
     </step>
@@ -768,7 +768,7 @@ secrets:
 <!-- CAP 1.3 NOTE
 It appears that on 2.14.5 I need to manually terminate the loggregator_agent processes whenever I do a monit stop all, as they were not shutting down correctly (monit was just losing reference to the processes instead). Once I ensure that they were all actually terminated before proceeding to whatever the next step was, things worked fine. -->
 <screen>&prompt.user;for n in api-group-0 cc-worker-0 cc-clock-0; do
-  kubectl exec --stdin --tty --namespace scf $n -- bash -l -c 'monit stop all'
+  kubectl exec --stdin --tty --namespace kubecf $n -- bash -l -c 'monit stop all'
 done
 </screen>
     </step>
@@ -786,13 +786,13 @@ done
      </para>
 <!-- CAP 1.3 NOTE
 It appears that on 2.14.5 I need to manually terminate the loggregator_agent processes whenever I do a monit stop all, as they were not shutting down correctly (monit was just losing reference to the processes instead). Once I ensure that they were all actually terminated before proceeding to whatever the next step was, things worked fine. -->
-<screen>&prompt.user;kubectl exec --stdin --tty --namespace scf blobstore-0 -- bash -l -c 'monit stop all &amp;&amp; sleep 10 &amp;&amp; rm -rf /var/vcap/store/shared/* &amp;&amp; tar xvf blobstore-src.tgz &amp;&amp; monit start all &amp;&amp; rm blobstore-src.tgz'</screen>
+<screen>&prompt.user;kubectl exec --stdin --tty --namespace kubecf blobstore-0 -- bash -l -c 'monit stop all &amp;&amp; sleep 10 &amp;&amp; rm -rf /var/vcap/store/shared/* &amp;&amp; tar xvf blobstore-src.tgz &amp;&amp; monit start all &amp;&amp; rm blobstore-src.tgz'</screen>
     </step>
     <step>
      <para>
       Recreate the CCDB on the <literal>mysql</literal> pod:
      </para>
-<screen>&prompt.user;kubectl exec mysql-0 --namespace scf -- bash -c \
+<screen>&prompt.user;kubectl exec mysql-0 --namespace kubecf -- bash -c \
   "/var/vcap/packages/mariadb/bin/mysql \
   --defaults-file=/var/vcap/jobs/mysql/config/mylogin.cnf \
   --socket /var/vcap/sys/run/pxc-mysql/mysqld.sock \
@@ -802,7 +802,7 @@ It appears that on 2.14.5 I need to manually terminate the loggregator_agent pro
      <para>
       Restore the CCDB on the <literal>mysql</literal> pod:
      </para>
-<screen>&prompt.user;kubectl exec --stdin mysql-0 --namespace scf -- bash -c \
+<screen>&prompt.user;kubectl exec --stdin mysql-0 --namespace kubecf -- bash -c \
   '/var/vcap/packages/mariadb/bin/mysql \
   --defaults-file=/var/vcap/jobs/mysql/config/mylogin.cnf \
   --socket /var/vcap/sys/run/pxc-mysql/mysqld.sock \
@@ -815,7 +815,7 @@ It appears that on 2.14.5 I need to manually terminate the loggregator_agent pro
       <literal>cc-worker-0</literal>, and <literal>cc-clock-0</literal> pods
      </para>
 <screen>&prompt.user;for n in api-group-0 cc-worker-0 cc-clock-0; do
-  kubectl exec --stdin --tty --namespace scf $n -- bash -l -c 'monit start all'
+  kubectl exec --stdin --tty --namespace kubecf $n -- bash -l -c 'monit start all'
 done
 </screen>
     </step>
@@ -830,7 +830,7 @@ done
        <para>
         Run the rotation for the encryption keys:
        </para>
-<screen>&prompt.user;kubectl exec --namespace scf api-group-0 -- bash -c \
+<screen>&prompt.user;kubectl exec --namespace kubecf api-group-0 -- bash -c \
 "source /var/vcap/jobs/cloud_controller_ng/bin/ruby_version.sh; \
 export CLOUD_CONTROLLER_NG_CONFIG=/var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml; \
 cd /var/vcap/packages/cloud_controller_ng/cloud_controller_ng; \
@@ -841,7 +841,7 @@ bundle exec rake rotate_cc_database_key:perform"
        <para>
         Restart the <literal>api-group</literal> pod.
        </para>
-<screen>&prompt.user;kubectl delete pod api-group-0 --namespace scf --force --grace-period=0</screen>
+<screen>&prompt.user;kubectl delete pod api-group-0 --namespace kubecf --force --grace-period=0</screen>
       </step>
      </substeps>
     </step>

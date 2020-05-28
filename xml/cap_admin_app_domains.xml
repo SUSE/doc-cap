@@ -54,10 +54,10 @@
    If this is an initial deployment, use <command>helm install</command> to
    deploy <literal>scf</literal>:
   </para>
-<screen>&prompt.user;kubectl create namespace <replaceable>scf</replaceable>
+<screen>&prompt.user;kubectl create namespace <replaceable>kubecf</replaceable>
 
 &prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
---namespace <replaceable>scf</replaceable> \
+--namespace <replaceable>kubecf</replaceable> \
 --values &values-file;
 </screen>
 
