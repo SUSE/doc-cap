@@ -248,6 +248,9 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create --filename -
    &values-filename; in this guide, provides an
    example of a &productname; configuration.
   </para>
+
+  &values-file-changes;
+
   <para>
    Ensure <literal>DOMAIN</literal> maps to the load balancer configured for
    your &caasp; cluster (see

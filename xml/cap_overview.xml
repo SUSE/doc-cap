@@ -28,8 +28,11 @@
     </para>
     <itemizedlist>
      <listitem>
+      &values-file-changes;
+     </listitem>
+     <listitem>
       <para>
-	TODO-CAP2 ITEM 1
+       TODO-CAP2 ITEM1
       </para>
      </listitem>
     </itemizedlist>

@@ -348,6 +348,8 @@ export NODEPOOL_NAME="mypool"
    complete example deployment configuration.
   </para>
 
+  &values-file-changes;
+
   &supported-domains;
 
 <screen>
