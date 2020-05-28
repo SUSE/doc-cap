@@ -179,8 +179,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
  <sect1 xml:id="sec-cap-cap-on-eks">
   <title>Deploying &productname;</title>
   <para>
-   This section describes how to deploy &productname; on &eks;, and how to
-   configure your DNS records.
+   This section describes how to deploy &productname; on &eks;.
   </para>
 
   &kubecf-operator-versions;

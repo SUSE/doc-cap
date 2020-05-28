@@ -420,7 +420,7 @@ suse       https://kubernetes-charts.suse.com/
   <title>Deploying &productname;</title>
   <para>
    This section describes how to deploy &productname; with a basic
-   AKS load balancer and how to configure your DNS records.
+   AKS load balancer.
   </para>
 
   &kubecf-operator-versions;
