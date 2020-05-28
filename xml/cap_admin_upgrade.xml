@@ -78,19 +78,306 @@
   <title>Upgrading &productname;</title>
 
   <para>
-   The supported upgrade method is to install all upgrades, in order. Skipping
-   releases is not supported. This table matches the Helm chart versions to
-   each release:
+   The transition from &productname; 1.5.2 to &productname; 2.0 involves a
+   migration of data rather than a direct upgrade. This process is outlined in
+   the subsections below.
   </para>
 
-  &releases-table;
+  <sect2 xml:id="sec-cap-upgrade-1.5.2-export">
+   <title>Export Data from Existing &productname; 1.5.2 Deployment</title>
 
-  <para>
-   Use <command>helm list</command> to see the version of your installed release
-   . Verify the latest release is the next sequential release from your
-   installed release. If it is, proceed with the commands below to perform the
-   upgrade.
-  </para>
+   <procedure>
+    <step>
+     <para>
+      Export the blobstore.
+     </para>
+<screen>&prompt.user;kubectl exec --namespace scf blobstore-0 -- tar cfz - --exclude=/var/vcap/store/shared/tmp /var/vcap/store/shared > blob.tgz</screen>
+    </step>
+    <step>
+     <para>
+      Export the User Account and Authentication database (UAADB).
+     </para>
+<screen>&prompt.user;kubectl exec mysql-0 --namespace uaa -- bash -c '/var/vcap/packages/mariadb/bin/mysqldump \
+   --defaults-file=/var/vcap/jobs/mysql/config/mylogin.cnf \
+   --socket /var/vcap/sys/run/pxc-mysql/mysqld.sock \
+   uaadb' > uaadb-src.sql
+</screen>
+    </step>
+    <step>
+     <para>
+      Export the Cloud Controller database (CCDB).
+     </para>
+<screen>&prompt.user;kubectl exec mysql-0 --namespace scf -- bash -c '/var/vcap/packages/mariadb/bin/mysqldump \
+   --defaults-file=/var/vcap/jobs/mysql/config/mylogin.cnf \
+   --socket /var/vcap/sys/run/pxc-mysql/mysqld.sock \
+   ccdb' > ccdb-src.sql
+</screen>
+    </step>
+    <step>
+     <para>
+      Save database encryption key.
+     </para>
+<screen>&prompt.user;kubectl exec --stdin --tty --namespace scf api-group-0 -- bash -c "cat /var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml | grep -A 10 db_encryption" > enc_key</screen>
+    </step>
+    <step>
+     <para>
+      Lock all buildpacks.
+     </para>
+     <para>
+      When the Cloud Controller (CC) starts, it will replace all unlocked admin
+      buildpacks with the versions bundled with the release. So if the
+      buildpacks from the 1.5.2 export are required to restage applications,
+      then they need to be locked before the CCDB is exported.
+     </para>
+<screen>&prompt.user;for BP in $(cf buildpacks | perl -ne 'print if s/(_buildpack).*/\1/' | uniq); do cf update-buildpack $BP -s sle15 --lock; done
+
+&prompt.user;for BP in $(cf buildpacks | perl -ne 'print if s/(_buildpack).*/\1/' | uniq); do cf update-buildpack $BP -s cflinuxfs3 --lock; done
+</screen>
+    </step>
+    <step>
+     <para>
+      Rotate secrets and database encryption key.
+     </para>
+     <substeps>
+      <step>
+<screen>&prompt.user;upgrade --set env.CC_DB_CURRENT_KEY_LABEL=<replaceable>NEW_KEY</replaceable> --set secrets.CC_DB_ENCRYPTION_KEYS.<replaceable>NEW_KEY</replaceable>=<replaceable>abcdef</replaceable></screen>
+      </step>
+      <step>
+<screen>&prompt.user;kubectl exec --namespace scf api-group-0 -- bash -c 'source /var/vcap/jobs/cloud_controller_ng/bin/ruby_version.sh; \
+    export CLOUD_CONTROLLER_NG_CONFIG=/var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml; \
+    cd /var/vcap/packages/cloud_controller_ng/cloud_controller_ng; \
+    bundle exec rake rotate_cc_database_key:perform'
+</screen>
+      </step>
+      <step>
+<screen>&prompt.user;kubectl delete pod api-group-0 --namespace scf
+&prompt.user;kubectl delete pod cc-worker-0 --namespace scf
+&prompt.user;kubectl delete pod cc-clock-0 --namespace scf
+</screen>
+      </step>
+     </substeps>
+    </step>
+    <step>
+     <para>
+      Save the CCDB with locked buildpacks and rotated secrets/encryption keys.
+     </para>
+<screen>&prompt.user;kubectl exec mysql-0 --namespace scf -- bash -c '/var/vcap/packages/mariadb/bin/mysqldump \
+  --defaults-file=/var/vcap/jobs/mysql/config/mylogin.cnf \
+  --socket /var/vcap/sys/run/pxc-mysql/mysqld.sock \
+  ccdb' > ccdb-rotated-src.sql
+
+&prompt.user;kubectl exec --stdin --tty --namespace scf api-group-0 -- bash -c "cat /var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml | grep -A 10 db_encryption" > enc_key_rotated
+</screen>
+     </para>
+    </step>
+    <step>
+     <para>
+      Verify you have collected all required files.
+     </para>
+<screen>&prompt.user;ls -l
+-rw-r--r-- 1 501 20 217539560 May 27 18:23 blob.tgz
+-rw-r--r-- 1 501 20    231904 May 27 19:53 ccdb-rotated-src.sql
+-rw-r--r-- 1 501 20    225726 May 27 18:24 ccdb-src.sql
+-rw-r--r-- 1 501 20       220 May 27 18:29 enc_key
+-rw-r--r-- 1 501 20       245 May 27 19:51 enc_key_rotated
+-rw-r--r-- 1 501 20     66281 May 27 18:24 uaadb-src.sql
+</screen>
+    </step>
+   </procedure>
+  </sect2>
+
+  <sect2 xml:id="sec-cap-upgrade-2.0-import">
+   <title>Import Data into &productname; 2.0 Deployment</title>
+
+   <procedure>
+    <step>
+     <para>
+      Import the UAA database.
+     </para>
+     <para>
+      The current database configuration does not allow importing of a mysqldump
+      , so needs to be made more permissive
+     </para>
+<screen>&prompt.user;cat &lt;&lt;EOF | kubectl exec -i database-0 --namespace kubecf -- mysql
+SET GLOBAL pxc_strict_mode=PERMISSIVE;
+SET GLOBAL sql_mode='STRICT_ALL_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';
+set GLOBAL innodb_strict_mode='OFF';
+EOF
+</screen>
+     <para>
+      It is not possible to drop the &kubecf; database for UAA and import the
+      version from SCF. &kubecf; has additional clients and scopes that would
+      get lost. So the migration strategy is to only extract users and
+      passwords from the export, and add them to &kubecf;. Since this is a new
+      setup, none of the users should exist. Except for <literal>admin</literal>
+      , so we are only updating the password for that user.
+    </para>
+<!-- TODO insert content of script -->
+     <para>
+      The <filename>adduser.pl</filename> script will also update all identity
+      zone ids to <literal>uaa</literal>, in case the export comes from an
+      external and not an embedded UAA.
+     </para>
+<screen>&prompt.user;perl adduser.pl uaadb-src.sql > adduser.sql
+cat adduser.sql
+
+kubectl exec -i database-0 --namespace kubecf -- mysql uaa &lt; adduser.sql
+
+echo "select username from uaa.users;" | kubectl exec -i database-0 --namespace kubecf -- mysql
+cf login --skip-ssl-validation -a https://api.$(m ip).omg.howdoi.website -u admin -p changeme
+</screen>
+    </step>
+    <step>
+     <para>
+      Import the blobstore.
+     </para>
+     <para>
+      The blobstore is still empty, except for the admin buildpacks. The
+      buildpacks will be reinstalled anyways, unless the CCDB in the export has
+      them locked, so deleting them here is kind of optional.
+     </para>
+<screen>&prompt.user;kubectl exec --namespace kubecf singleton-blobstore-0 -- rm -rf /var/vcap/store/shared/cc-buildpacks
+&prompt.user;kubectl exec -i --namespace kubecf singleton-blobstore-0 -- tar xfz - -C / &lt; blob.tgz
+&prompt.user;kubectl delete pod --namespace kubecf singleton-blobstore-0
+</screen>
+    </step>
+    <step>
+     <para>
+      Import the Cloud Controller database (CCDB).
+     </para>
+     <para>
+      The CC database includes routes, that may need to be updated for the new
+      cluster. The list of migrations also includes artificial
+      "squashed migrations" that are generated by SCF to combine all previous
+      migrations into a single transaction. These squashed migrations don't
+      exist in &kubecf; and must be filtered out. The original migrations still
+      exist in the table, so no other actions are required.
+     </para>
+<screen>&prompt.user;sed "s/cf-dev.io/$(minikube ip).omg.howdoi.website/g" ccdb-src.sql >ccdb-src-minikube.sql
+&prompt.user;perl normalize.pl ccdb-src-minikube.sql > normal.sql
+
+&prompt.user;echo "drop database cloud_controller; create database cloud_controller;" | \
+     kubectl exec -i database-0 --namespace kubecf -- mysql
+&prompt.user;kubectl exec -i database-0 --namespace kubecf -- mysql cloud_controller &lt; normal.sql
+</screen>
+    </step>
+    <step>
+     <para>
+      Update the encryption key.
+     </para>
+<screen>&prompt.user;cat enc_key
+db_encryption_key: qmF4BZxVUZoVkvDdYi2crkezdNWww6mLRh32W77VsLY5xhinpunVNp1d2mzc3O7F
+
+database_encryption:
+  keys: {}
+  current_key_label: ""
+  pbkdf2_hmac_iterations: 2048
+</screen>     
+     <para>
+      When only <literal>db_encryption_key</literal> is set, we must use the
+      same legacy mechanism in &kubecf; as well.
+     </para>
+<screen>&prompt.user;cat enc_key_values.yaml
+properties:
+  api:
+    cloud_controller_ng: &amp;cc_encryption
+      cc:
+        db_encryption_key: "qmF4BZxVUZoVkvDdYi2crkezdNWww6mLRh32W77VsLY5xhinpunVNp1d2mzc3O7F"
+  cc-worker:
+    cloud_controller_worker: *cc_encryption
+  scheduler:
+    cc_deployment_updater: *cc_encryption
+    cloud_controller_clock: *cc_encryption
+</screen>
+<screen>&prompt.user;helm upgrade kubecf suse/kubecf \
+--values &values-file; \
+--values enc_key_values.yaml \
+--version &kubecf_chart;
+</screen>
+     <para>
+      Wait until <literal>api</literal>, <literal>cc-worker</literal>, and
+      <literal>scheduler</literal> have restarted.
+     </para>
+    </step>
+    <step>
+     <para>
+      Rotate the encryption key.
+     </para>
+     <para>
+      The imported data can now be decrypted with the legacy
+      <literal>db_encryption_key</literal>. For consistency we want to run a
+      rotation, so all the imported data will be re-encrypted with the current
+      &kubecf; encryption key.
+     </para>
+<screen>&prompt.user;kubectl patch qjob rotate-cc-database-key --namespace kubecf --type merge \
+      --patch '{"spec":{"trigger":{"strategy":"now"}}}'
+
+&prompt.user;kubectl logs -l quarks.cloudfoundry.org/qjob-name=rotate-cc-database-key --namespace kubecf -c logs -f
+</screen>
+    </step>
+    <step>
+     <para>
+      Verify everything works.
+     </para>
+    </step>
+   </procedure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </sect2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
  </sect1>
 </chapter>
