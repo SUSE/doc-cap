@@ -125,7 +125,7 @@ mirror metrics
   <para>
    Before deploying &cap; using <command>helm install</command>, ensure the
    following in your
-   <filename>scf-config-values.yaml</filename> has been updated to point to your
+   &values-filename; has been updated to point to your
    registry, and not <literal>registry.suse.com</literal>.
   </para>
 <screen>kube:

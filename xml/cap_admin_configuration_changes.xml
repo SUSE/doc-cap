@@ -17,7 +17,7 @@
  </info>
  <para>
   After the initial deployment of &cap;, any changes made to your &helm; chart
-  values, whether through your <filename>scf-config-values.yaml</filename> file
+  values, whether through your &values-filename; file
   or directly using &helm;'s <command>--set</command> flag, are applied using
   the <command>helm upgrade</command> command.
  </para>
@@ -44,7 +44,7 @@
   <para>
    You would then add an entry for <literal>LOG_LEVEL</literal> to the
    <literal>env</literal> section of your
-   <filename>scf-config-values.yaml</filename> used to deploy
+   &values-filename; used to deploy
    <literal>uaa</literal>:
   </para>
 
@@ -59,7 +59,7 @@
   </para>
 
 <screen>&prompt.user;helm upgrade <replaceable>susecf-uaa</replaceable> suse/uaa \
---values <replaceable>scf-config-values.yaml</replaceable> \
+--values <replaceable>&values-file;</replaceable> \
 --version N/A
 </screen>
 

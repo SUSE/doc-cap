@@ -51,7 +51,7 @@
    <step>
     <para>
      To enable Eirini, and disable Diego, add the following to your
-     <filename>scf-config-values.yaml</filename> file.
+     &values-filename; file.
     </para>
 <screen>enable:
   eirini: true

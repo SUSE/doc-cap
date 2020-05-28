@@ -35,7 +35,7 @@
   <sect2 xml:id="sec-cap-log-configuring">
    <title>Configuring &cap;</title>
    <para>
-    In your <filename>scf-config-values.yaml</filename> file add the following
+    In your &values-filename; file add the following
     configuration values to the <literal>env:</literal> section. The example
     values below are configured for an external ELK stack.
    </para>
@@ -136,7 +136,7 @@
      will name it <filename>00-scf.conf</filename>. Add the following into the
      file. Take note of the port used in the input section. This value will
      need to match the value of the <literal>SCF_LOG_PORT</literal> property in
-     your <filename>scf-config-values.yaml</filename> file.
+     your &values-filename; file.
     </para>
 <screen>input {
   tcp {
@@ -182,7 +182,7 @@ output {
 
   <para>
    The log level is configured through the
-   <filename>scf-config-values.yaml</filename> file by using the
+   &values-filename; file by using the
    <literal>LOG_LEVEL</literal> property found in the <literal>env:</literal>
    section. The <literal>LOG_LEVEL</literal> property is mapped to
    component-specific levels. Components have differing technology compositions

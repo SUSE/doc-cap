@@ -42,7 +42,7 @@
 
   <para>
    CredHub is enabled by default. To disable it, add the following the following
-   block to your &values-file; file.
+   block to your &values-filename; file.
   </para>
 
 <screen>features:
@@ -51,7 +51,7 @@
 </screen>
 
   <para>
-   To enable CredHub again, update the above block in your &values-file; so that
+   To enable CredHub again, update the above block in your &values-filename; so that
    <literal>enabled</literal> is set to <literal>true</literal>.
   </para>
 

@@ -55,7 +55,7 @@ sed 's/"namespace": "default"/"namespace": "stratos"/' | kubectl create --filena
 
  <para>
      Use &helm; to install Stratos, using the same
-     <filename>scf-config-values.yaml</filename> configuration file you used to
+     &values-filename; configuration file you used to
      deploy <literal>scf</literal>:
   </para>
 
@@ -65,7 +65,7 @@ sed 's/"namespace": "default"/"namespace": "stratos"/' | kubectl create --filena
 
 &prompt.user;helm install <replaceable>susecf-console</replaceable> suse/console \
 --namespace <replaceable>stratos</replaceable> \
---values scf-config-values.yaml
+--values &values-file;
 </screen>
 
   &stratos-deploy-complete;
@@ -112,7 +112,7 @@ stratos  1        1        3h
           domain you created for it, and its port, for example
           https://example.com:8443. Wade through the nag screens about the self-signed
    certificates and log in as <literal>admin</literal> with the password you
-   created in <filename>scf-config-values.yaml</filename>.
+   created in &values-filename;.
   </para>
 
   <!-- Image of Stratos UI console -->
@@ -259,7 +259,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
 
 &prompt.user;helm install <replaceable>susecf-console</replaceable> suse/console \
 --namespace <replaceable>stratos</replaceable> \
---values scf-config-values.yaml \
+--values &values-file; \
 --set kube.storage_class.persistent=gp2scoped \
 --set services.loadbalanced=true
 </screen>
@@ -392,7 +392,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
 	  
 &prompt.user;helm install <replaceable>susecf-console</replaceable> suse/console \
 --namespace <replaceable>stratos</replaceable> \
---values scf-config-values.yaml \
+--values &values-file; \
 --set services.loadbalanced=true
 </screen>
 
@@ -512,7 +512,7 @@ gp2scoped       kubernetes.io/aws-ebs   1d
 
 &prompt.user;helm install <replaceable>susecf-console</replaceable> suse/console \
 --namespace <replaceable>stratos</replaceable> \
---values scf-config-values.yaml \
+--values &values-file; \
 --set services.loadbalanced=true
 </screen>
 
@@ -795,7 +795,7 @@ firehoseExporter:
     In order to display metrics data with Stratos, you need to deploy the
     <literal>stratos-metrics</literal> &helm; chart. As with deploying Stratos,
     you should deploy the metrics &helm; chart using the same
-    <filename>scf-config-values.yaml</filename> file that was used for deploying
+    &values-filename; file that was used for deploying
     <literal>scf</literal>.
    </para>
    <para>
@@ -883,7 +883,7 @@ sed 's/"namespace": "default"/"namespace": "metrics"/' | kubectl create --filena
 
 &prompt.user;helm install <replaceable>susecf-metrics</replaceable> suse/metrics \
 --namespace <replaceable>metrics</replaceable> \
---values scf-config-values.yaml \
+--values &values-file; \
 --values stratos-metrics-values.yaml</screen>
    <para>
     Monitor progress:

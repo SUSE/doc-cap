@@ -108,14 +108,14 @@
   <title>Deployment Configuration</title>
 
   <para>
-   Use this example <filename>scf-config-values.yaml</filename> as a template
+   Use this example &values-filename; as a template
    for your configuration.
   </para>
 
   &supported-domains;
 
 <screen>### example deployment configuration file
-### scf-config-values.yaml
+### &values-file;
 <!-- TODO-CAP2 -->
 </screen>
  </sect1>
