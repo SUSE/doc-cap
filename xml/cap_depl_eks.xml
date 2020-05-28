@@ -111,6 +111,8 @@
    Use this example &values-filename; as a template
    for your configuration.
   </para>
+  
+  &values-file-changes;
 
   &supported-domains;
 
