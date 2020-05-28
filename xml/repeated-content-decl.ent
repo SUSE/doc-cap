@@ -322,9 +322,9 @@ suse/uaa                        &kubecf_chart;          &chart_appversion;      
 the version of the application as defined in "The <literal>appVersion</literal>
      Field" section of
      <link xlink:href="https://helm.sh/docs/topics/charts/"/>.
-     For example, in the <literal>suse/uaa</literal> &helm; chart, an
-     <literal>APP VERSION</literal> of 1.4 is in reference to &cap; release 1.4
-     and does not indicate <literal>uaa</literal> is version 1.4.
+     For example, in the <literal>suse/kubecf</literal> &helm; chart, an
+     <literal>APP VERSION</literal> of 2.0.0 is in reference to &cap; release 2.0.0
+     and does not indicate <literal>kubecf</literal> is version 2.0.0.
     </para>
    </listitem>
   </varlistentry>
@@ -336,9 +336,9 @@ the version of the application as defined in "The <literal>appVersion</literal>
      chart version, the same as defined in the "Charts and Versioning" section of
      <link xlink:href="https://helm.sh/docs/topics/charts/"/>.
      For &cap; &helm; charts, the chart version is also the release number of the
-     coresponding component. For example, in the <literal>suse/uaa</literal>
-     &helm; chart, a <literal>CHART VERSION</literal> of 2.16.4 also indicates
-     <literal>uaa</literal> is release 2.16.4.
+     coresponding component. For example, in the <literal>suse/kubecf</literal>
+     &helm; chart, a <literal>CHART VERSION</literal> of 2.2.2 also indicates
+     <literal>kubecf</literal> is release 2.2.2.
     </para>
    </listitem>
   </varlistentry>
