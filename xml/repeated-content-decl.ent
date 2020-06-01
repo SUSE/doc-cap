@@ -1909,9 +1909,9 @@ User:           username@ldap.example.com
 
 <!ENTITY values-file-changes
 '<para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
-  The format of the &values-file; file has been restructured completely.
-  Do not re-use the previous version of file. Instead, source the default file at
-  <link xlink:href="https://github.com/cloudfoundry-incubator/kubecf/blob/master/deploy/helm/kubecf/values.yaml"/>.
+  The format of the &values-filename; file has been restructured completely.
+  Do not re-use the previous version of the file. Instead, source the default file from the appendix in
+  <xref linkend="app-kubecf-values-yaml"/>.
  </para>'>
 
 <!--ENTITY cf-auth...........................................................-->
