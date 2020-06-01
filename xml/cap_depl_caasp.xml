@@ -335,6 +335,8 @@ suse       https://kubernetes-charts.suse.com/
 
   <sect2 xml:id="sec-cap-caasp-deploy-kubecf">
    &deploy-kubecf;
+
+   &cf-auth;
   </sect2>
  </sect1>
 
