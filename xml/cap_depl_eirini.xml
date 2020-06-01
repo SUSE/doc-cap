@@ -63,11 +63,20 @@ env:
   DEFAULT_STACK: cflinuxfs3
 </screen>
     <note>
-     <para>
-      Even after enabling Eirini, you will still see the
-      <literal>diego-api</literal> pod. This is normal behavior because Diego
-      is still used by Eirini for some functions.
-     </para>
+     <itemizedlist>
+      <listitem>
+       <para>
+        Even after enabling Eirini, you will still see the
+        <literal>diego-api</literal> pod. This is normal behavior because Diego
+        is still used by Eirini for some functions.
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        Eirini will only work on a cluster that has <literal>cluster.local</literal> as the cluster <literal>DOMAIN</literal>.
+       </para>
+      </listitem>
+     </itemizedlist>
     </note>
    </step>
    <step>
