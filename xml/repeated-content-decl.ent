@@ -1024,7 +1024,7 @@ agent.log</screen>
   A storage class can be chosen by setting the
   <literal>kube.storage_class</literal> value in your &values-filename;
   configuration file as seen in this example. Note that if there is no storage
-  class designated as the default this values
+  class designated as the default this value
   <emphasis role="bold">must</emphasis> be set.
  </para>
 <screen xmlns="http://docbook.org/ns/docbook">kube:
@@ -1951,7 +1951,7 @@ User:           username@ldap.example.com
 '<para xmlns="http://docbook.org/ns/docbook">
   Verify you can connect and authenticate to the cluster.
  </para>
-<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;cf api --skip-ssl-validation "https://api.<system_domain>"
+<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;cf api --skip-ssl-validation "https://api.&lt;system_domain>"
 
 # Copy the admin cluster password.
 &prompt.user;admin_pass=$(kubectl get secret \
@@ -1960,5 +1960,5 @@ User:           username@ldap.example.com
   | base64 --decode)
 
 # Use the password from the previous step when requested.
-cf auth admin "${admin_pass}"
+&prompt.user;cf auth admin "${admin_pass}"
 </screen>'>
