@@ -53,8 +53,10 @@
      To enable Eirini, and disable Diego, add the following to your
      &values-filename; file.
     </para>
-<screen>enable:
-  eirini: true
+<screen>
+features:
+  eirini:
+    enabled: true
 kube:
   auth: rbac
 env:
