@@ -21,8 +21,9 @@
  <para>
   &productname; supports deployment on &aks-full;
   (AKS), Microsoft's managed &kube; service. This chapter describes the steps
-  for preparing Azure for a &productname; deployment, with a basic Azure load
-  balancer.
+  for preparing Azure for a &productname; deployment, deployed with the default
+  Azure Standard SKU load balancer (see
+  <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/load-balancer-standard"/>).
  </para>
  <para>
   In &kube; terminology a node used to be a minion, which was the name for a
@@ -55,11 +56,6 @@
    </listitem>
    <listitem>
     <para>
-     The name of the SSH key that is attached to your Azure account.
-    </para>
-   </listitem>
-   <listitem>
-    <para>
      Your Azure account as sufficient quota. The minimal installation described
      in this chapter require 24 vCPUs. If your account has insufficient quota,
      you can request a quota increase by going to
@@ -67,6 +63,11 @@
     </para>
    </listitem>
    <listitem>
+    <para>
+     A SSH key that can be used for access to the nodes of the cluster. 
+    </para>
+   </listitem>
+  <listitem>
     <!-- para -->
     &kernel-prereq;
    </listitem>
@@ -88,17 +89,19 @@
 <screen>&prompt.user;az login</screen>
 
   <para>
-   Your Azure user needs the User Access Administrator role. Check your
+   Your Azure user needs the <literal>Contributor</literal> role. Check your
    assigned roles with the <command>az</command> command:
   </para>
 
 <screen>&prompt.user;az role assignment list --assignee <replaceable>login-name</replaceable>
 [...]
-"roleDefinitionName": "User Access Administrator",</screen>
+"roleDefinitionName": "Contributor",</screen>
 
   <para>
    If you do not have this role, then you must request it from your Azure
-   administrator.
+   administrator. Alternatively, a cluster can be set up by using a managed
+   identity. For details, refer to
+   <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/use-managed-identity"/>.
   </para>
 
   <para>
@@ -181,15 +184,7 @@ cap-aks</screen>
    </listitem>
    <listitem>
     <para>
-     Set an AKS managed cluster name. Azure's default is to use the
-     resource group name, then prepend it with <literal>MC</literal> and append
-     the location, for example <literal>MC_cap-aks_cap-aks_eastus</literal>.
-     This example uses the creator's initials for the
-     <literal>AKS_NAME</literal> environment variable, which will be mapped to
-     the <command>az</command> command's <command>--name</command> option. The
-     <command>--name</command> option is for creating arbitrary names for your
-     AKS resources. This example will create a managed cluster named
-     <literal>MC_cap-aks_cjs_eastus</literal>:
+     Provide a name for the cluster:
     </para>
 <screen>&prompt.user;export AKS_NAME=<replaceable>cjs</replaceable></screen>
    </listitem>
@@ -213,29 +208,30 @@ cap-aks</screen>
    </listitem>
    <listitem>
     <para>
-     Set the virtual machine size (see
-     <link xlink:href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-general">
-     General purpose virtual machine sizes</link>). A virtual machine size of
-     at least <literal>Standard_DS4_v2</literal> using premium storage (see
-     <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/azure-disks-dynamic-pv">Built in
-     storage classes</link>) is recommended. Note
-     <literal>managed-premium</literal> has been specified in the example
-     &values-filename; used (see
-     <xref linkend="sec-cap-cap-on-aks"/>):
+     Set the virtual machine type (see
+     <link xlink:href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-general"/>).
+     A virtual machine type of at least <literal>Standard_DS4_v2</literal> is
+     recommended:
     </para>
-<screen>&prompt.user;export NODE_VM_SIZE="<replaceable>Standard_DS4_v2</replaceable>"</screen>
+<screen>&prompt.user;export NODE_TYPE="<replaceable>Standard_DS4_v2</replaceable>"</screen>
    </listitem>
    <listitem>
     <para>
-     Set the public SSH key name associated with your Azure account:
+     Set the node disk size. At least &node; is recommended:
+    </para>
+<screen>&prompt.user;export NODE_DISK_SIZE="<replaceable>&node_size;</replaceable>"</screen>
+   </listitem>
+   <listitem>
+    <para>
+     Set the SSH key that can be used for access to the nodes of the cluster:
     </para>
 <screen>&prompt.user;export SSH_KEY_VALUE="<replaceable>~/.ssh/id_rsa.pub</replaceable>"</screen>
    </listitem>
    <listitem>
     <para>
-     Set a new admin username:
+     Set the user for SSH access to the nodes:
     </para>
-<screen>&prompt.user;export ADMIN_USERNAME="<replaceable>scf-admin</replaceable>"</screen>
+<screen>&prompt.user;export VM_ACCESS_USERNAME="<replaceable>cap-user</replaceable>"</screen>
    </listitem>
    <listitem>
     <para>
@@ -263,9 +259,10 @@ export RG_NAME="cap-aks"
 export AKS_NAME="cjs"
 export REGION="eastus"
 export NODE_COUNT="3"
-export NODE_VM_SIZE="Standard_DS4_v2"
+export NODE_TYPE="Standard_DS4_v2"
+export NODE_DISK_SIZE="&node_size;"
 export SSH_KEY_VALUE="~/.ssh/id_rsa.pub"
-export ADMIN_USERNAME="scf-admin"
+export VM_ACCESS_USERNAME="cap-user"
 export NODEPOOL_NAME="mypool"
 </screen>
 
@@ -281,33 +278,29 @@ export NODEPOOL_NAME="mypool"
 
 <screen>&prompt.user;az group create --name $RG_NAME --location $REGION</screen>
 
+
   <para>
-   List the &kube; versions currently supported by AKS (see
+   Create a new AKS managed cluster. For a full list of options for the
+   <command>az aks create</command>, refer to the documentation at
+   <link xlink:href="https://docs.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest#az-aks-create"/>:
+  </para>
+
+<screen>&prompt.user;az aks create --resource-group $RG_NAME --name $AKS_NAME \
+ --node-count $NODE_COUNT --admin-username $VM_ACCESS_USERNAME \
+ --ssh-key-value $SSH_KEY_VALUE --node-vm-size $NODE_TYPE \
+ --node-osdisk-size=NODE_DISK_SIZE --nodepool-name $NODEPOOL_NAME
+</screen>
+
+  <para>
+   If you wish to create a cluster with a specific &kube; version, pass the
+   <command>kubernetes-version</command> flag. To see the list the &kube;
+   versions currently supported by AKS (see
    <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/supported-kubernetes-versions"/>
    for more information on the AKS version support policy):
   </para>
 
 <screen>&prompt.user;az aks get-versions --location $REGION --output table
 </screen>
-
-  <para>
-   Create a new AKS managed cluster, and specify the &kube; version for
-   consistent deployments:
-  </para>
-
-<screen>&prompt.user;az aks create --resource-group $RG_NAME --name $AKS_NAME \
- --node-count $NODE_COUNT --admin-username $ADMIN_USERNAME \
- --ssh-key-value $SSH_KEY_VALUE --node-vm-size $NODE_VM_SIZE \
- --node-osdisk-size=&node_size; --nodepool-name $NODEPOOL_NAME \
- --vm-set-type AvailabilitySet
-</screen>
-
-  <note>
-   <para>
-    An OS disk size of at least &node_size; GB must be specified using the
-    <command>--node-osdisk-size</command> flag.
-   </para>
-  </note>
 
   <para>
    This takes a few minutes. When it is completed, fetch your
@@ -421,8 +414,8 @@ suse       https://kubernetes-charts.suse.com/
  <sect1 xml:id="sec-cap-cap-on-aks">
   <title>Deploying &productname;</title>
   <para>
-   This section describes how to deploy &productname; with a basic
-   AKS load balancer.
+   This section describes how to deploy &productname; with a Azure Standard SKU
+   load balancer.
   </para>
 
   &kubecf-operator-versions;
