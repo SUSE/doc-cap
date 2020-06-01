@@ -67,8 +67,7 @@ env:
       <listitem>
        <para>
         Even after enabling Eirini, you will still see the
-        <literal>diego-api</literal> pod. This is normal behavior because Diego
-        is still used by Eirini for some functions.
+        <literal>diego-api</literal> pod. This is normal behavior because the Diego pod has a component required by Eirini.
        </para>
       </listitem>
       <listitem>
