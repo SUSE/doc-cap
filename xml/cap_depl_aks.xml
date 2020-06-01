@@ -674,7 +674,7 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
     <para>
      Perform a <command>helm upgrade</command> to apply the change.
     </para>
-<screen>&prompt.user;helm upgrade susecf-scf suse/cf \
+<screen>&prompt.user;helm upgrade kubecf suse/kubecf \
 --values &values-file; \
 --version &kubecf_chart;
 </screen>
