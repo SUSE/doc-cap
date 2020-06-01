@@ -141,11 +141,11 @@ routing-api-0            0/1   Running   0         16h</screen>
 <screen>&prompt.user;helm list
 NAME            REVISION  UPDATED                  STATUS    CHART           NAMESPACE
 <replaceable>susecf-console</replaceable>  1         Tue Aug 14 11:53:28 2018 DEPLOYED  &stratos_chart;   stratos
-<replaceable>susecf-scf</replaceable>      1         Tue Aug 14 10:58:16 2018 DEPLOYED  &kubecf_chart;       scf
+<replaceable>kubecf</replaceable>      1         Tue Aug 14 10:58:16 2018 DEPLOYED  &kubecf_chart;       scf
 </screen>
 
   <para>
-   This example deletes the <literal>susecf-scf</literal> release and
+   This example deletes the <literal>kubecf</literal> release and
    <literal>scf</literal> namespace:
   </para>
 
@@ -154,8 +154,8 @@ statefulset "adapter" deleted
 statefulset "api-group" deleted                                                 
 ... 
 
-&prompt.user;helm delete susecf-scf
-release "susecf-scf" deleted
+&prompt.user;helm delete kubecf
+release "kubecf" deleted
 
 &prompt.user;kubectl delete namespace scf
 namespace "scf" deleted</screen>

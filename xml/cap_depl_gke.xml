@@ -935,7 +935,7 @@ applications:
     <para>
      Perform a <command>helm upgrade</command> to apply the change.
     </para>
-<screen>&prompt.user;helm upgrade susecf-scf suse/cf \
+<screen>&prompt.user;helm upgrade kubecf suse/kubecf \
 --values &values-file; \
 --version &kubecf_chart;
 </screen>

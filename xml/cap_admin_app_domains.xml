@@ -56,7 +56,7 @@
   </para>
 <screen>&prompt.user;kubectl create namespace <replaceable>kubecf</replaceable>
 
-&prompt.user;helm install <replaceable>susecf-scf</replaceable> suse/cf \
+&prompt.user;helm install <replaceable>kubecf</replaceable> suse/kubecf \
 --namespace <replaceable>kubecf</replaceable> \
 --values &values-file;
 </screen>
@@ -65,7 +65,7 @@
    If this is an existing deployment, use <command>helm upgrade</command> to
    apply the change:
   </para>
-<screen>&prompt.user;helm upgrade <replaceable>susecf-scf</replaceable> suse/cf \
+<screen>&prompt.user;helm upgrade <replaceable>kubecf</replaceable> suse/kubecf \
 --values &values-file; \
 --version &kubecf_chart;
 </screen>
