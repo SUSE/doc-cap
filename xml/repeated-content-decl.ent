@@ -200,7 +200,7 @@ Before you start deploying &productname;, review the following documents:
  <link xlink:href="https://kubernetes.io/docs/reference/kubectl/overview/"/>.
 </para>
 <para>
- For &slea; 12 SP3 or 15 systems, install the package
+ For &slea; 12 SP3 or 15 SP1 systems, install the package
  <package>kubernetes-client</package> from the <emphasis>Public Cloud</emphasis>
  module.
 </para>
@@ -1275,17 +1275,24 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
     <filename>&values-file;</filename>, should include the following.
    </para>
 <screen>high_availability: true</screen>
+   &sizing-priority;
   </sect3>
   <sect3>
    <title>Using Custom Sizing Configurations</title>
    <para>
     Another method to make your &productname; deployment highly available is           
-    to explicitly configure the instance count of a instance group.
+    to explicitly configure the instance count of an instance group.
+   </para>
 
-    To see the full list of configurable instance groups, refer to default &kubecf; <filename>values.yaml</filename> file in the appendix at <xref linkend="app-kubecf-values-yaml"/>.
+   &sizing-priority;
 
-    When sizing values are specified, it takes precedence over the <literal>high_availability</literal> property.
+   <para>
+    To see the full list of configurable instance groups, refer to default
+    &kubecf; <filename>values.yaml</filename> file in the appendix at
+    <xref linkend="app-kubecf-values-yaml"/>.
+   </para>
 
+   <para>
     The following is an of a example &ha; configuration. The example values are not meant to be
     copied, as these depend on your particular deployment and requirements.
    </para>
@@ -1335,91 +1342,6 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
   tcp_router:
     instances: 2
 </screen>
-<!-- TODO-CAP2 Verify if still valid
-   <para>
-    When using custom sizing configurations, take note that the
-    <literal>mysql</literal> instance group for <literal>scf</literal> must have
-    have an odd number of instances.
-   </para>
--->
-  </sect3>
- </sect2>
- <sect2 xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <title>Availability Zones</title>
-  <para>
-   Availability Zones (AZ) are logical arrangements of compute nodes within a
-   region that provide isolation from each other. A deployment that is
-   distributed across multiple AZs can use this separation to increase
-   resiliency against downtime in the event a given zone experiences issues.
-  </para>
-  <para>
-   Refer to the following for platform-specific information about availability
-   zones:
-  </para>
-  <itemizedlist>
-   <listitem>
-    <para>
-     <link xlink:href="https://azure.microsoft.com/en-ca/updates/availability-zones-az-support-for-aks/"/>
-    </para>
-   </listitem>
-   <listitem>
-    <para>
-     <link xlink:href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html"/>
-    </para>
-   </listitem>
-   <listitem>
-    <para>
-     <link xlink:href="https://cloud.google.com/compute/docs/regions-zones/"/>
-    </para>
-   </listitem>
-   <listitem>
-    <para>
-     <link xlink:href="https://docs.cloudfoundry.org/concepts/high-availability.html#azs"/>
-    </para>
-   </listitem>
-  </itemizedlist>
-  <sect3>
-   <title>Availability Zone Information Handling</title>
-   <para>
-    In &cap;, availability zone handling is done using the
-    <literal>AZ_LABEL_NAME</literal> &helm; chart value. By default,
-    <literal>AZ_LABEL_NAME</literal> is set to
-    <literal>failure-domain.beta.kubernetes.io/zone</literal>, which is the
-    predefined &kube; label for availability zones. On most public cloud
-    providers, nodes will already have this label set and availability zone
-    support will work without further configuration. For on-premise
-    installations, it is recommended that nodes are labeled with the same label.
-   </para>
-   <para>
-    Run the following to see the labels on your nodes.
-   </para>
-<screen>&prompt.user;kubectl get nodes --show-labels</screen>
-   <para>
-    To label a node, use <command>kubectl label nodes </command>. For example:
-   </para>
-<screen>&prompt.user;kubectl label nodes <replaceable>cap-worker-1</replaceable> <replaceable>failure-domain.beta.kubernetes.io/zone=zone-1</replaceable></screen>
-   <para>
-    To see which node and availability zone a given
-    <literal>diego-cell</literal> pod is assigned to, refer to the following
-    example:
-   </para>
-<screen>&prompt.user;kubectl logs <replaceable>diego-cell-0</replaceable> --namespace kubecf | grep ^AZ</screen>
-   <para>
-    For more information on the
-    <literal>failure-domain.beta.kubernetes.io/zone</literal> label, see
-    <link xlink:href="https://kubernetes.io/docs/reference/kubernetes-api/labels-annotations-taints/#failure-domainbetakubernetesiozone"/>.
-   </para>
-   <para>
-    Note that due to a bug in &cap; 1.4 and earlier, this label was not working for <literal>AZ_LABEL_NAME</literal>.
-   </para>
-   <important>
-    <title>Performance with Availability Zones</title>
-    <para>
-     For the best performance, all availability zones should have a similar
-     number of nodes because app instances will be evenly distributed, so that
-     each zone has about the same number of instances.
-    </para>
-   </important>
   </sect3>
  </sect2>'>
 
@@ -1931,3 +1853,13 @@ User:           username@ldap.example.com
 # Use the password from the previous step when requested.
 &prompt.user;cf auth admin "${admin_pass}"
 </screen>'>
+
+<!--ENTITY sizing-priority...................................................-->
+
+<!ENTITY sizing-priority
+'<important xmlns="http://docbook.org/ns/docbook">
+  <title>Sizing Priority</title>
+  <para>
+   When sizing values are specified, it takes precedence over the <literal>high_availability</literal> property.
+  </para>
+ </important>'>

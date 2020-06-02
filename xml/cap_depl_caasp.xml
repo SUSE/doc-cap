@@ -28,7 +28,7 @@
   easy to operate. As a result, enterprises that use &caasp; can reduce
   application delivery cycle times and improve business agility. This chapter
   describes the steps to prepare a &productname; deployment on &caasp;. See
-  <link xlink:href="https://documentation.suse.com/suse-caasp/4.1/"/>
+  <link xlink:href="&caasp-url;/"/>
   for more information on &caasp;.
  </para>
 
@@ -42,25 +42,9 @@
   <itemizedlist>
    <listitem>
     <para>
-     Access to one of the following platforms to deploy &caasp;:
+     Access to one of the platforms listed at
+     <link xlink:href="&caasp-url;/single-html/caasp-deployment/#_platform"/> to deploy &caasp;.
     </para>
-    <itemizedlist>
-     <listitem>
-      <para>
-       &suse; OpenStack Cloud 8
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       &vmware; VMware ESXi 6.7.0.20000
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       Bare Metal x86_64
-      </para>
-     </listitem>
-    </itemizedlist>
    </listitem>
    <listitem>
     <para>
@@ -170,7 +154,7 @@
 
   <para>
    For steps to deploy a &caasp; cluster, refer to the &caasp; Deployment Guide
-   at <link xlink:href="https://documentation.suse.com/suse-caasp/4.1/single-html/caasp-deployment/"/>
+   at <link xlink:href="&caasp-url;/single-html/caasp-deployment/"/>
   </para>
   <para>
    When proceeding through the instructions, take note of the following to
@@ -187,7 +171,7 @@
     <para>
      This ensures the presence of extra CRI-O capabilities compatible with
      &docker; containers. For more details refer to the
-     <link xlink:href="https://documentation.suse.com/suse-caasp/4.1/single-html/caasp-deployment/#_transitioning_from_docker_to_cri_o"/>
+     <link xlink:href="&caasp-url;/single-html/caasp-deployment/#_transitioning_from_docker_to_cri_o"/>
     </para>
    </listitem>
   </itemizedlist>
@@ -199,18 +183,17 @@
   <title>Storage Class</title>
 
   <para>
-   &productname; requires a persistent storage class to store persistent data
-   inside a persistent volume (PV). When a PV is provisioned, the storage class'
-   provisioner determines the volume plugin used. Create a storage class using a
-   provisioner (see
-   <link xlink:href="https://kubernetes.io/docs/concepts/storage/storage-classes/#provisioner"/>)
-   that fits your storage strategy. Examples of provisioners include:
+   In &productname; some instance groups, such as <literal>bits</literal>,
+   <literal>database</literal> and <literal>singleton-blobstore</literal>
+   require a storage class. To learn more about storage classes, see
+   <link xlink:href="https://kubernetes.io/docs/concepts/storage/storage-classes/"/>.
+   Examples of provisioners include:
   </para>
   <itemizedlist>
    <listitem>
     <para>
      &ses; (see
-     <link xlink:href="https://documentation.suse.com/suse-caasp/4.1/single-html/caasp-admin/#_RBD-dynamic-persistent-volumes"/>)
+     <link xlink:href="&caasp-url;/single-html/caasp-admin/#_RBD-dynamic-persistent-volumes"/>)
     </para>
     <para>
      If you are using &ses; you must copy the Ceph admin secret to the
@@ -228,12 +211,20 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create --filename -
    </listitem>
   </itemizedlist>
   <para>
-   By default &productname; assumes your storage class is named
-   <literal>persistent</literal>. Examples in this guide follow this assumption.
-   If your storage class uses a different name, adjust the
-   <literal>kube.storage_class.persistent</literal> value in your configuration
-   file.
+   By default, &productname; will use the cluster&apos;s default storage class.
+   To designate or change the default storage class, refer to
+   <link xlink:href="https://kubernetes.io/docs/tasks/administer-cluster/change-default-storage-class/"/>
   </para>
+  <para>
+   A storage class can be chosen by setting the
+   <literal>kube.storage_class</literal> value in your &values-filename;
+   configuration file as seen in this example. Note that if there is no storage
+   class designated as the default this values
+   <emphasis role="bold">must</emphasis> be set.
+  </para>
+<screen xmlns="http://docbook.org/ns/docbook">kube:
+  storage_class: <replaceable>my-storage-class</replaceable>
+</screen>
  </sect1>
 
  <sect1 xml:id="sec-cap-caasp-config">
@@ -252,9 +243,9 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create --filename -
   &values-file-changes;
 
   <para>
-   Ensure <literal>DOMAIN</literal> maps to the load balancer configured for
+   Ensure <literal>system_domain</literal> maps to the load balancer configured for
    your &caasp; cluster (see
-   <link xlink:href="https://documentation.suse.com/suse-caasp/4.1/single-html/caasp-deployment/#loadbalancer"/>).
+   <link xlink:href="&caasp-url;/single-html/caasp-deployment/#loadbalancer"/>).
   </para>
 
   &supported-domains;
@@ -365,7 +356,7 @@ suse       https://kubernetes-charts.suse.com/
    <step>
     <para>
      Add additional nodes to your &susecaaspreg; cluster as described in
-     <link xlink:href="https://documentation.suse.com/suse-caasp/4.1/html/caasp-admin/_cluster_management.html#adding_nodes"/>.
+     <link xlink:href="&caasp-url;/html/caasp-admin/_cluster_management.html#adding_nodes"/>.
     </para>
    </step>
    <step>
