@@ -889,11 +889,14 @@ done
   </sect2>
  </sect1>'>
 
-<!--ENTITY watch-scf............................................-->
+<!--ENTITY watch-kubecf............................................-->
 
-<!ENTITY watch-scf
-'<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch --color &apos;kubectl get pods --namespace kubecf&apos;
-</screen>'>
+<!ENTITY watch-kubecf
+'<para xmlns="http://docbook.org/ns/docbook">
+  Monitor the status of your &kubecf; deployment using the
+  <command>watch</command> command.
+ </para>
+<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch --color &apos;kubectl get pods --namespace kubecf&apos;</screen>'>
 
 <!--ENTITY min-deploy-note..................................................-->
 
@@ -1742,31 +1745,21 @@ User:           username@ldap.example.com
 <!--ENTITY deploy-kubecf.....................................................-->
 
 <!ENTITY deploy-kubecf
-'<title xmlns="http://docbook.org/ns/docbook">
-  Deploy &kubecf;
- </title>
- <procedure xmlns="http://docbook.org/ns/docbook">
-  <step>
-   <para>
-    Use &helm; to deploy &kubecf;. Note that you
-    <emphasis role="bold">do not</emphasis> need to manually create the
-    namespace for &kubecf;.
-   </para>
+'<step xmlns="http://docbook.org/ns/docbook">
+  <para>
+   Use &helm; to deploy &kubecf;. Note that you
+   <emphasis role="bold">do not</emphasis> need to manually create the namespace
+   for &kubecf;.
+  </para>
 <screen>&prompt.user;helm install <replaceable>kubecf</replaceable> suse/kubecf \
 --namespace <replaceable>kubecf</replaceable> \
 --values <replaceable>kubecf-values.yaml</replaceable> \
 --version &kubecf_chart;
 </screen>
-  </step>
-  <step>
-   <para>
-    Wait until &kubecf;; is successfully deployed before proceeding. Monitor
-    the status of your &kubecf; deployment using the
-    <command>watch</command> command.
-   </para>
-<screen>&prompt.user;watch --color &apos;kubectl get pods --namespace <replaceable>kubecf</replaceable>&apos;</screen>
-  </step>
- </procedure>'>
+ </step>
+ <step xmlns="http://docbook.org/ns/docbook">
+  &watch-kubecf;
+ </step>'>
 
 <!--ENTITY config-new-vs-existing............................................-->
 
@@ -1840,7 +1833,7 @@ User:           username@ldap.example.com
 
 <!ENTITY cf-auth
 '<para xmlns="http://docbook.org/ns/docbook">
-  Verify you can connect and authenticate to the cluster.
+  Connect and authenticate to the cluster.
  </para>
 <screen xmlns="http://docbook.org/ns/docbook">&prompt.user;cf api --skip-ssl-validation "https://api.&lt;system_domain>"
 

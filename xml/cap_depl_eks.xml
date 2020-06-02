@@ -192,8 +192,6 @@ suse            https://kubernetes-charts.suse.com/</screen>
 
   <sect2 xml:id="sec-cap-eks-deploy-kubecf">
    &deploy-kubecf;
-
-   &cf-auth;
   </sect2>
  </sect1>
  <sect1 xml:id="sec-cap-aws-service-broker">
