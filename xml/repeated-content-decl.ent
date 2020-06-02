@@ -1412,7 +1412,7 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
  </title>
  <para xmlns="http://docbook.org/ns/docbook">
   By default, &productname; includes a single-availability database provided by
-  the <literal>cf-mysql-release</literal>. &productname; can be configured to
+  the <literal>pxc</literal>. &productname; can be configured to
   use an external database system, such as a data service offered by a cloud
   service provider or an existing high availability database server.
  </para>
