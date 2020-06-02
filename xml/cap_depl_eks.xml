@@ -86,7 +86,7 @@
   </itemizedlist>
   <para>
    As a minimal example, the following command will create an EKS cluster. To
-   see additional configuration parameters, see <command>eksctl create cluster -\-help</command>.
+   see additional configuration parameters, see <command>eksctl create cluster --help</command>.
   </para>
 
 <screen>&prompt.user;eksctl create cluster --name <replaceable>kubecf</replaceable> --version <replaceable>&min_kube;</replaceable> \
