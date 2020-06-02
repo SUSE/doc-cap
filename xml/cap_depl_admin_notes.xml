@@ -28,10 +28,6 @@
   <title>Important Changes</title>
  </sect1>
  <sect1>
-  <title>Usage of &helm; Chart Fields in &cap;</title>
-  &chart-version-fields;
- </sect1>
- <sect1>
   <title>Status of Pods during Deployment</title>
   &deployment-pod-status;
  </sect1>
