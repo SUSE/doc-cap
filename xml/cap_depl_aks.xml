@@ -425,9 +425,22 @@ suse       https://kubernetes-charts.suse.com/
   </sect2>
 
   <sect2 xml:id="sec-cap-aks-deploy-kubecf">
-   &deploy-kubecf;
-
-   &cf-auth;
+   <title>Deploy &kubecf;</title>
+   <procedure>
+    &deploy-kubecf;
+    <step>
+     <para>
+      Create DNS A records for the public services.
+     </para>
+     &dns-mappings;
+    </step>
+    <step>
+     <para>
+      When all pods are fully ready, verify your deployment.
+     </para>
+     &cf-auth;
+    </step>
+   </procedure>
   </sect2>
  </sect1>
  <sect1 xml:id="sec-cap-azure-service-broker">
