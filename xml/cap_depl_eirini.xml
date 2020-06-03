@@ -53,13 +53,30 @@
      To enable Eirini, and disable Diego, add the following to your
      &values-filename; file.
     </para>
-<screen>enable:
-  eirini: true
+<screen>
+features:
+  eirini:
+    enabled: true
 kube:
   auth: rbac
 env:
   DEFAULT_STACK: cflinuxfs3
 </screen>
+    <note>
+     <itemizedlist>
+      <listitem>
+       <para>
+        Even after enabling Eirini, you will still see the
+        <literal>diego-api</literal> pod. This is normal behavior because the Diego pod has a component required by Eirini.
+       </para>
+      </listitem>
+      <listitem>
+       <para>
+        Eirini will only work on a cluster that has the parameter <literal>--cluster-domain</literal> set to <literal>cluster.local</literal>.
+       </para>
+      </listitem>
+     </itemizedlist>
+    </note>
    </step>
    <step>
     <para>
