@@ -917,7 +917,7 @@ applications:
      with the number of nodes required for your workload.
     </para>
 <screen>&prompt.user;gcloud container clusters resize $CLUSTER_NAME \
---num-nodes <replaceable>4</replaceable>
+--num-nodes <replaceable>5</replaceable>
 </screen>
    </step>
    <step>
@@ -935,7 +935,7 @@ applications:
     </para>
 <screen>sizing:
   diego_cell:
-    count: <replaceable>4</replaceable>
+    instances: <replaceable>5</replaceable>
 </screen>
    </step>
    <step>

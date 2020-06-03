@@ -387,7 +387,7 @@ suse       https://kubernetes-charts.suse.com/
     </para>
 <screen>sizing:
   diego_cell:
-    count: <replaceable>4</replaceable>
+    instances: <replaceable>5</replaceable>
 </screen>
    </step>
    <step>

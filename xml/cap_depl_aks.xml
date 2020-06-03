@@ -81,226 +81,70 @@
   </itemizedlist>
 
   &min-deploy-note;
-
-  <para>
-   Log in to your Azure Account:
-  </para>
-
-<screen>&prompt.user;az login</screen>
-
-  <para>
-   Your Azure user needs the <literal>Contributor</literal> role. Check your
-   assigned roles with the <command>az</command> command:
-  </para>
-
-<screen>&prompt.user;az role assignment list --assignee <replaceable>login-name</replaceable>
-[...]
-"roleDefinitionName": "Contributor",</screen>
-
-  <para>
-   If you do not have this role, then you must request it from your Azure
-   administrator. Alternatively, a cluster can be set up by using a managed
-   identity. For details, refer to
-   <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/use-managed-identity"/>.
-  </para>
-
-  <para>
-   You need your Azure subscription ID. Extract it with <command>az</command>:
-  </para>
-
-<screen>&prompt.user;az account show --query "{ subscription_id: id }"
-{
-"subscription_id": <replaceable>"a900cdi2-5983-0376-s7je-d4jdmsif84ca"</replaceable>
-}</screen>
-
-  <para>
-   Replace the example <varname>subscription-id</varname> in the next command
-   with your <varname>subscription-id</varname>. Then export it as an
-   environment variable and set it as the current subscription:
-  </para>
-
-<screen>&prompt.user;export SUBSCRIPTION_ID=<replaceable>"a900cdi2-5983-0376-s7je-d4jdmsif84ca"</replaceable>
-
-&prompt.user;az account set --subscription $SUBSCRIPTION_ID</screen>
-
-  <para>
-   Verify that the <literal>Microsoft.Network</literal>,
-   <literal>Microsoft.Storage</literal>, <literal>Microsoft.Compute</literal>,
-   and <literal>Microsoft.ContainerService</literal> providers are enabled:
-  </para>
-
-<screen>&prompt.user;az provider list | egrep --word-regexp 'Microsoft.Network|Microsoft.Storage|Microsoft.Compute|Microsoft.ContainerService'</screen>
-
-  <para>
-   If any of these are missing, enable them with the <command>az provider
-   register --name <replaceable>provider</replaceable></command> command.
-  </para>
  </sect1>
  <sect1 xml:id="sec-cap-create-aks-instance">
   <title>Create Resource Group and AKS Instance</title>
 
   <para>
-   Now you can create a new Azure resource group and AKS instance. Define the
-   required variables as environment variables in a file, called
-   <filename>env.sh</filename>. This helps to speed up the setup, and to
-   reduce errors. Verify your environment variables at any time by using
-   the <command>source</command> to load the file, then running
-   <command>echo $<replaceable>VARNAME</replaceable></command>, for example:
+   Log in to your Azure account, which should have the
+   <literal>Contributor</literal> role.
   </para>
 
-<screen>&prompt.user;source ./env.sh
-
-&prompt.user;echo $RG_NAME
-cap-aks</screen>
+<screen>&prompt.user;az login</screen>
 
   <para>
-   This is especially useful when you run long compound commands to extract and
-   set environment variables.
   </para>
 
-  <tip>
-   <title>Use Different Names</title>
-   <para>
-    Ensure each of your AKS clusters use unique resource group and managed
-    cluster names, and not copy the examples, especially when your Azure
-    subscription supports multiple users. Azure has no tools for sorting
-    resources by user, so creating unique names and putting everything in your
-    deployment in a single resource group helps you keep track, and you can
-    delete the whole deployment by deleting the resource group.
-   </para>
-  </tip>
-
   <para>
-   In <filename>env.sh</filename>, define the environment variables below.
-   Replace the example values with your own.
+   You can set up an AKS cluster with an automatically generated service
+   principal. Note that to be be able to create a service principal your user
+   account must have permissions to register an application with your Azure
+   Active Directory tenant, and to assign the application to a role in your
+   subscription. For details, see <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/kubernetes-service-principal#automatically-create-and-use-a-service-principal"/>.
+  </para>
+  
+  <para>
+   Alternatively, you can specify an existing service principal but the service
+   principal must have sufficient rights to be able to create resources at the
+   appropriate level, for example resource group, subscription etc. For more
+   details please see:
   </para>
 
   <itemizedlist>
    <listitem>
     <para>
-     Set a resource group name.
+      Create a service principal: <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/kubernetes-service-principal#manually-create-a-service-principal"/>
     </para>
-<screen>export RG_NAME="<replaceable>cap-aks</replaceable>"</screen>
    </listitem>
    <listitem>
     <para>
-     Provide a name for the cluster:
+     Create a role assignment for the service principal, at the subscription or
+     resource group level: <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/kubernetes-service-principal#delegate-access-to-other-azure-resources"/>
     </para>
-<screen>&prompt.user;export AKS_NAME=<replaceable>cjs</replaceable></screen>
    </listitem>
    <listitem>
     <para>
-     Set the Azure location. See
-     <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/container-service-quotas">
-     Quotas, virtual machine size restrictions, and region availability
-     in Azure Kubernetes Service (AKS)</link>
- for supported locations. Run <command>az account list-locations</command> to
- verify the correct way to spell your location name, for example East US is
- <literal>eastus</literal> in your <command>az</command> commands:
+     Create the cluster with the service principal: <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/kubernetes-service-principal#specify-a-service-principal-for-an-aks-cluster"/>
     </para>
-<screen>&prompt.user;export REGION="<replaceable>eastus</replaceable>"</screen>
-   </listitem>
-   <listitem>
-    <para>
-     Set the &kube; agent node count. (&cap; requires a minimum of 3.)
-    </para>
-<screen>&prompt.user;export NODE_COUNT="<replaceable>3</replaceable>"</screen>
-   </listitem>
-   <listitem>
-    <para>
-     Set the virtual machine type (see
-     <link xlink:href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-general"/>).
-     A virtual machine type of at least <literal>Standard_DS4_v2</literal> is
-     recommended:
-    </para>
-<screen>&prompt.user;export NODE_TYPE="<replaceable>Standard_DS4_v2</replaceable>"</screen>
-   </listitem>
-   <listitem>
-    <para>
-     Set the node disk size. At least &node; is recommended:
-    </para>
-<screen>&prompt.user;export NODE_DISK_SIZE="<replaceable>&node_size;</replaceable>"</screen>
-   </listitem>
-   <listitem>
-    <para>
-     Set the SSH key that can be used for access to the nodes of the cluster:
-    </para>
-<screen>&prompt.user;export SSH_KEY_VALUE="<replaceable>~/.ssh/id_rsa.pub</replaceable>"</screen>
-   </listitem>
-   <listitem>
-    <para>
-     Set the user for SSH access to the nodes:
-    </para>
-<screen>&prompt.user;export VM_ACCESS_USERNAME="<replaceable>cap-user</replaceable>"</screen>
-   </listitem>
-   <listitem>
-    <para>
-     Create a unique nodepool name. The default is
-     <literal>aks-nodepool</literal> followed by an auto-generated number, for
-     example <literal>aks-nodepool1-39318075-2</literal>. You have the option
-     to change <literal>nodepool1</literal> and create your own unique
-     identifier. For example, <literal>mypool</literal> results in
-     <literal>aks-mypool-39318075-2</literal>. Note that uppercase characters
-     are considered invalid in a nodepool name and should not be used.
-    </para>
-<screen>&prompt.user;export NODEPOOL_NAME="<replaceable>mypool</replaceable>"</screen>
    </listitem>
   </itemizedlist>
 
   <para>
-   The below is an example <filename>env.sh</filename> file after all the
-   environment variables have been defined.
+   Specify the following additional parameters for creating the cluster: node
+   count, a username for SSH access to the nodes, SSH key, VM type, VM disk size
+   and optionally, the &kube; version and a nodepool name.
   </para>
 
-<screen>### example environment variable definition file
-### env.sh
-
-export RG_NAME="cap-aks"
-export AKS_NAME="cjs"
-export REGION="eastus"
-export NODE_COUNT="3"
-export NODE_TYPE="Standard_DS4_v2"
-export NODE_DISK_SIZE="&node_size;"
-export SSH_KEY_VALUE="~/.ssh/id_rsa.pub"
-export VM_ACCESS_USERNAME="cap-user"
-export NODEPOOL_NAME="mypool"
+<screen>&prompt.user;az aks create --resource-group <replaceable>my-resource-group</replaceable> --name <replaceable>cap-aks</replaceable> \
+ --node-count <replaceable>3</replaceable> --admin-username <replaceable>cap-user</replaceable> \
+ --ssh-key-value <replaceable>/path/to/some_key.pub</replaceable> --node-vm-size <replaceable>Standard_DS4_v2</replaceable> \
+ --node-osdisk-size <replaceable>&node_size;</replaceable> --nodepool-name <replaceable>my-pool</replaceable>
 </screen>
 
   <para>
-   Now that your environment variables are in place, load the file:
+   For more <command>az aks create</command> options see
+   <link xlink:href="https://docs.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest#az-aks-create"/>.
   </para>
-
-<screen>&prompt.user;source ./env.sh</screen>
-
-  <para>
-   Create a new resource group:
-  </para>
-
-<screen>&prompt.user;az group create --name $RG_NAME --location $REGION</screen>
-
-
-  <para>
-   Create a new AKS managed cluster. For a full list of options for the
-   <command>az aks create</command>, refer to the documentation at
-   <link xlink:href="https://docs.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest#az-aks-create"/>:
-  </para>
-
-<screen>&prompt.user;az aks create --resource-group $RG_NAME --name $AKS_NAME \
- --node-count $NODE_COUNT --admin-username $VM_ACCESS_USERNAME \
- --ssh-key-value $SSH_KEY_VALUE --node-vm-size $NODE_TYPE \
- --node-osdisk-size=NODE_DISK_SIZE --nodepool-name $NODEPOOL_NAME
-</screen>
-
-  <para>
-   If you wish to create a cluster with a specific &kube; version, pass the
-   <command>kubernetes-version</command> flag. To see the list the &kube;
-   versions currently supported by AKS (see
-   <link xlink:href="https://docs.microsoft.com/en-us/azure/aks/supported-kubernetes-versions"/>
-   for more information on the AKS version support policy):
-  </para>
-
-<screen>&prompt.user;az aks get-versions --location $REGION --output table
-</screen>
 
   <para>
    This takes a few minutes. When it is completed, fetch your
@@ -653,7 +497,7 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
      Set the number of &kube; nodes the cluster will be expanded to. Replace the
      example value with the number of nodes required for your workload.
     </para>
-<screen>&prompt.user;export NEW_NODE_COUNT=<replaceable>4</replaceable></screen>
+<screen>&prompt.user;export NEW_NODE_COUNT=<replaceable>5</replaceable></screen>
    </step>
    <step>
     <para>
@@ -680,7 +524,7 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
     </para>
 <screen>sizing:
   diego_cell:
-    count: <replaceable>4</replaceable>
+    instances: <replaceable>5</replaceable>
 </screen>
    </step>
    <step>
