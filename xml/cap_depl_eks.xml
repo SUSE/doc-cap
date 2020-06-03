@@ -34,7 +34,7 @@
    <listitem>
     <para>
      An Amazon AWS account with sufficient permissions. For details, refer to
-     <link xlink:href="https://aws.amazon.com/"/>.
+     <link xlink:href="https://docs.aws.com/eks/latest/userguide/security-iam.html"/>.
     </para>
    </listitem>
    <listitem>
@@ -79,10 +79,6 @@
      The &kube; version is at least &min_kube;.
     </para>
    </listitem>
-   <listitem>
-    <!-- para -->
-    &kernel-prereq;
-   </listitem>
   </itemizedlist>
   <para>
    As a minimal example, the following command will create an EKS cluster. To
@@ -93,7 +89,7 @@
 --nodegroup-name <replaceable>standard-workers</replaceable> --node-type <replaceable>t2.large</replaceable> \
 --nodes <replaceable>3</replaceable> --node-volume-size <replaceable>&node_size;</replaceable> \
 --region <replaceable>us-east-2</replaceable> --managed \
---ssh-access --ssh-public-key <replaceable>~/.ssh/id_rsa.pub</replaceable>
+--ssh-access --ssh-public-key <replaceable>/path/to/some_key.pub</replaceable>
 </screen>
  </sect1>
 
