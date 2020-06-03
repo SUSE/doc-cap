@@ -1014,8 +1014,9 @@ agent.log</screen>
  </title>
  <para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
   In &productname; some instance groups, such as <literal>bits</literal>,
-  <literal>database</literal> and <literal>singleton-blobstore</literal>
-  require a storage class. To learn more about storage classes, see
+  <literal>database</literal>, <literal>diego-cell</literal>, and
+  <literal>singleton-blobstore</literal> require a storage class. To learn more
+  about storage classes, see
   <link xlink:href="https://kubernetes.io/docs/concepts/storage/storage-classes/"/>. 
  </para>
  <para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -1063,7 +1064,7 @@ agent.log</screen>
    </listitem>
    <listitem>
     <para>
-     The certificate&apos;s Subject Alternative Name (SAN) include the domain
+     The certificate&apos;s Subject Alternative Names (SAN) include the domain
      <replaceable>*.example.com</replaceable>, where <replaceable>example.com</replaceable>
      is replaced with the <literal>system_domain</literal> in your
      <filename>&values-file;</filename>.
@@ -1123,7 +1124,7 @@ agent.log</screen>
  <para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
   By default, a &productname; cluster is exposed through its &kube; services.
   This section describes how to use an ingress (see <link xlink:href="https://kubernetes.io/docs/concepts/services-networking/ingress/"/>)
-  to expose your cluster instead.
+  to manage access to the services in the cluster.
  </para>
  <para xmlns="http://docbook.org/ns/docbook">
   Note that only the NGINX Ingress Controller has been verified to be
@@ -1135,7 +1136,7 @@ agent.log</screen>
   <procedure>
    <step>
     <para>
-     Create a configuration file with the below. The file is called
+     Create a configuration file with the section below. The file is called
      <filename>nginx-ingress.yaml</filename> in this example.
     </para>
 <screen>tcp:
@@ -1415,7 +1416,7 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
  </title>
  <para xmlns="http://docbook.org/ns/docbook">
   By default, &productname; includes a single-availability database provided by
-  the <literal>pxc</literal>. &productname; can be configured to
+  the Percona XtraDB Cluster (PXC). &productname; can be configured to
   use an external database system, such as a data service offered by a cloud
   service provider or an existing high availability database server.
  </para>
