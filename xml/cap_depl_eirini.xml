@@ -72,7 +72,7 @@ env:
       </listitem>
       <listitem>
        <para>
-        Eirini will only work on a cluster that has <literal>cluster.local</literal> as the cluster <literal>DOMAIN</literal>.
+        Eirini will only work on a cluster that has the parameter <literal>--cluster-domain</literal> set to <literal>cluster.local</literal>.
        </para>
       </listitem>
      </itemizedlist>
