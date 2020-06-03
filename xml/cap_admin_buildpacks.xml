@@ -49,52 +49,52 @@
     <tbody>
      <row>
       <entry>Staticfile</entry>
-      <entry>1.5.5.1</entry>
+      <entry>1.5.5</entry>
       <entry><link xlink:href="https://github.com/SUSE/cf-staticfile-buildpack"/></entry>
      </row>
      <row>
       <entry>NGINX</entry>
-      <entry>1.1.7.1</entry>
+      <entry>1.1.7</entry>
       <entry><link xlink:href="https://github.com/SUSE/cf-nginx-buildpack"/></entry>
      </row>
      <row>
       <entry>Java</entry>
-      <entry>4.29.1.1</entry>
+      <entry>4.29.1</entry>
       <entry><link xlink:href="https://github.com/SUSE/cf-java-buildpack"/></entry>
      </row>
      <row>
       <entry>Ruby</entry>
-      <entry>1.8.15.1</entry>
+      <entry>1.8.15</entry>
       <entry><link xlink:href="https://github.com/SUSE/cf-ruby-buildpack"/></entry>
      </row>
      <row>
       <entry>Node.js</entry>
-      <entry>1.7.17.1</entry>
+      <entry>1.7.17</entry>
       <entry><link xlink:href="https://github.com/SUSE/cf-nodejs-buildpack"/></entry>
      </row>
      <row>
       <entry>Go</entry>
-      <entry>1.9.11.1</entry>
+      <entry>1.9.11</entry>
       <entry><link xlink:href="https://github.com/SUSE/cf-go-buildpack"/></entry>
      </row>
      <row>
       <entry>Python</entry>
-      <entry>1.7.12.1</entry>
+      <entry>1.7.12</entry>
       <entry><link xlink:href="https://github.com/SUSE/cf-python-buildpack"/></entry>
      </row>
      <row>
       <entry>PHP</entry>
-      <entry>4.4.12.1</entry>
+      <entry>4.4.12</entry>
       <entry><link xlink:href="https://github.com/SUSE/cf-php-buildpack"/></entry>
      </row>
      <row>
       <entry>Binary</entry>
-      <entry>1.0.36.1</entry>
+      <entry>1.0.36</entry>
       <entry><link xlink:href="https://github.com/SUSE/cf-binary-builder"/></entry>
      </row>
      <row>
       <entry>.NET Core</entry>
-      <entry>2.3.9.1</entry>
+      <entry>2.3.9</entry>
       <entry><link xlink:href="https://github.com/SUSE/cf-dotnet-core-buildpack"/></entry>
      </row>
     </tbody>
