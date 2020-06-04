@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  daps:
+    image: lkucharczyk/daps
+    container_name: daps
+    volumes:
+      - ./:/files

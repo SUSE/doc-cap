@@ -434,9 +434,9 @@ the version of the application as defined in "The <literal>appVersion</literal>
   </para>
 </sect1>'>
 
-<!--ENTITY scf-deploy-complete..............................................-->
+<!--ENTITY kubecf-deploy-complete..............................................-->
 
-<!ENTITY scf-deploy-complete
+<!ENTITY kubecf-deploy-complete
 '<para xmlns="http://docbook.org/ns/docbook">
   Wait until you have a successful <literal>scf</literal> deployment before
   going to the next steps, which you can monitor with the
@@ -444,7 +444,7 @@ the version of the application as defined in "The <literal>appVersion</literal>
  </para>
 <screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch --color &apos;kubectl get pods --namespace kubecf&apos;</screen>
  <para xmlns="http://docbook.org/ns/docbook">
-  When <literal>scf</literal> is successfully deployed, the following is
+  When <literal>kubecf</literal> is successfully deployed, the following is
   observed:
  </para>
  <itemizedlist xmlns="http://docbook.org/ns/docbook">
@@ -944,7 +944,7 @@ done
      </para>
      <para>
       The following example retrieves the logs of the <literal>router</literal>
-      container of <literal>router-0</literal> pod in the <literal>scf</literal>
+      container of <literal>router-0</literal> pod in the <literal>kubecf</literal>
       namespace
      </para>
 <screen>&prompt.user;kubectl logs --namespace kubecf <replaceable>router-0</replaceable> <replaceable>router</replaceable></screen>
@@ -1247,7 +1247,7 @@ nginx-ingress-controller   LoadBalancer   <replaceable>10.63.248.70</replaceable
    <title>Finding Default and Allowable Sizing Values</title>
    <para>
     The <literal>sizing:</literal> section in the &helm;
-    <filename>values.yaml</filename> files for the <literal>scf</literal> chart
+    <filename>values.yaml</filename> files for the <literal>kubecf</literal> chart
     describes which roles can be scaled, and the scaling options for each role.
     You may use <command>helm inspect</command> to read the
     <literal>sizing:</literal> section in the &helm; chart:
@@ -1598,7 +1598,7 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
    <step>
     <para>
      Verify the LDAP identify provider has been created in the
-     <replaceable>scf</replaceable> zone. The output should now contain an entry for
+     <replaceable>kubecf</replaceable> zone. The output should now contain an entry for
      the <literal>ldap</literal> type.
     </para>
 <screen>&prompt.user;uaac curl /identity-providers --insecure --header "X-Identity-Zone-Id: <replaceable>uaa</replaceable>"</screen>

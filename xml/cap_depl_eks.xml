@@ -400,7 +400,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
     </step>
     <step>
      <para>
-      Create a service broker in <literal>scf</literal>. Note the name of the
+      Create a service broker in <literal>kubecf</literal>. Note the name of the
       service broker should be the same as the one specified for the
       the <command>helm install</command> step (for example
       <literal>aws-servicebroker</literal>. Note that the username and password
@@ -471,7 +471,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
     </step>
     <step>
      <para>
-      Delete the service broker in <literal>scf</literal>:
+      Delete the service broker in <literal>kubecf</literal>:
      </para>
 <screen>&prompt.user;cf delete-service-broker aws-servicebroker</screen>
     </step>

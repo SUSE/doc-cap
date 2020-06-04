@@ -50,7 +50,7 @@
     <para>
      Create a new user:
     </para>
-    <screen>&prompt.user;uaac user add <replaceable>new-admin</replaceable> --password <replaceable>password</replaceable> --emails <replaceable>new-admin@example.com</replaceable> --zone <replaceable>scf</replaceable></screen>
+    <screen>&prompt.user;uaac user add <replaceable>new-admin</replaceable> --password <replaceable>password</replaceable> --emails <replaceable>new-admin@example.com</replaceable> --zone <replaceable>kubecf</replaceable></screen>
    </step>
    <step>
     <para>
@@ -58,21 +58,21 @@
      to the cluster (see
      <link xlink:href="https://docs.cloudfoundry.org/concepts/architecture/uaa.html#uaa-scopes"/> for information on privileges provided by each group):
     </para>
-<screen>&prompt.user;uaac member add scim.write <replaceable>new-admin</replaceable> --zone <replaceable>scf</replaceable>
+<screen>&prompt.user;uaac member add scim.write <replaceable>new-admin</replaceable> --zone <replaceable>kubecf</replaceable>
 
-&prompt.user;uaac member add scim.read <replaceable>new-admin</replaceable> --zone <replaceable>scf</replaceable>
+&prompt.user;uaac member add scim.read <replaceable>new-admin</replaceable> --zone <replaceable>kubecf</replaceable>
 
-&prompt.user;uaac member add cloud_controller.admin <replaceable>new-admin</replaceable> --zone <replaceable>scf</replaceable>
+&prompt.user;uaac member add cloud_controller.admin <replaceable>new-admin</replaceable> --zone <replaceable>kubecf</replaceable>
 
-&prompt.user;uaac member add clients.read <replaceable>new-admin</replaceable> --zone <replaceable>scf</replaceable>
+&prompt.user;uaac member add clients.read <replaceable>new-admin</replaceable> --zone <replaceable>kubecf</replaceable>
 
-&prompt.user;uaac member add clients.write <replaceable>new-admin</replaceable> --zone <replaceable>scf</replaceable>
+&prompt.user;uaac member add clients.write <replaceable>new-admin</replaceable> --zone <replaceable>kubecf</replaceable>
 
-&prompt.user;uaac member add doppler.firehose <replaceable>new-admin</replaceable> --zone <replaceable>scf</replaceable>
+&prompt.user;uaac member add doppler.firehose <replaceable>new-admin</replaceable> --zone <replaceable>kubecf</replaceable>
 
-&prompt.user;uaac member add routing.router_groups.read <replaceable>new-admin</replaceable> --zone <replaceable>scf</replaceable>
+&prompt.user;uaac member add routing.router_groups.read <replaceable>new-admin</replaceable> --zone <replaceable>kubecf</replaceable>
 
-&prompt.user;uaac member add routing.router_groups.write <replaceable>new-admin</replaceable> --zone <replaceable>scf</replaceable>
+&prompt.user;uaac member add routing.router_groups.write <replaceable>new-admin</replaceable> --zone <replaceable>kubecf</replaceable>
 </screen>
    </step>
    <step>

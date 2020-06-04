@@ -42,7 +42,7 @@
   </para>
 
 <screen>       NOTES:
-    Welcome to your new deployment of SCF.
+    Welcome to your new deployment of &kubecf;.
 
     The endpoint for use by the `cf` client is
         https://api.example.com

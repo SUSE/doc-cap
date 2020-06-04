@@ -97,16 +97,16 @@
 
   <para>
    &productname; describes the complete software stack, including the operating
-   system, &kube;, and &scf;.
+   system, &kube;, and &kubecf;.
   </para>
 
   <para>
-   &productname; is comprised of &scf; (<literal>scf</literal>), the Stratos
+   &productname; is comprised of &kubecf; (<literal>kubecf</literal>), the Stratos
    Web user interface, and Stratos Metrics.
   </para>
 
   <para>
-   The &cf; code base provides the basic functionality. &scf; differentiates
+   The &cf; code base provides the basic functionality. &kubecf; differentiates
    itself from other &cf; distributions by running in Linux containers managed
    by &kube;, rather than virtual machines managed with &bosh;, for greater
    fault tolerance and lower memory use.
@@ -210,8 +210,8 @@
 
   <para>
    The principle interface and API for deploying applications to &productname;
-   is &scf;. Most &cf; distributions run on virtual machines managed
-   by &bosh;. &scf; runs in &sle; containers managed by &kube;.
+   is &kubecf;. Most &cf; distributions run on virtual machines managed
+   by &bosh;. &kubecf; runs in &sle; containers managed by &kube;.
    Containerizing the components of the platform itself has these advantages:
   </para>
 
@@ -225,7 +225,7 @@
    </listitem>
    <listitem>
     <para>
-     Reduces physical memory overhead. &scf; components deployed in containers
+     Reduces physical memory overhead. &kubecf; components deployed in containers
      consume substantially less memory, as host-level operations are shared
      between containers by &kube;.
     </para>
@@ -244,7 +244,7 @@
   <title>Minimum Requirements</title>
 
   <para>
-   This guide details the steps for deploying &scf; on
+   This guide details the steps for deploying &kubecf; on
    supported &kube; environments, namely &caasp;, &aks-full;, &gke-full;, and &eks-full;.
   </para>
 
@@ -254,7 +254,7 @@
     Installing and administering &productname; requires knowledge of Linux,
     &docker;, &kube;, and your &kube; platform. You must plan resource allocation
     and network architecture by taking into account the requirements of your
-    &kube; platform in addition to &scf; requirements. &scf; is a discrete
+    &kube; platform in addition to &kubecf; requirements. &kubecf; is a discrete
     component in your cloud stack, but it still requires knowledge of
     administering and troubleshooting the underlying stack.
    </para>
@@ -263,11 +263,11 @@
   <para>
    You may create a minimal deployment on four &kube; nodes for testing.
    However, this is insufficient for a production deployment. A supported
-   deployment includes &scf; installed on &caasp;, &eks;, &gke;, or &aks;.
+   deployment includes &kubecf; installed on &caasp;, &eks;, &gke;, or &aks;.
    You also need a storage back-end such as &ses; or NFS, a DNS/DHCP
    server, and an Internet connection to download additional packages during
    installation and ~10 GB of &docker; images. <xref linkend="fig-cap-min-prod-arch"/> describes a minimal production
-   deployment with &scf; deployed on a &kube; cluster containing three &kube;
+   deployment with &kubecf; deployed on a &kube; cluster containing three &kube;
    masters and three workers, plus an ingress controller, administration
    workstation, DNS/DHCP server, and a &ses; cluster.
   </para>
@@ -289,7 +289,7 @@
   <para>
    Note that after you have deployed your cluster and start building and
    running applications, your applications may depend on buildpacks that are
-   not bundled in the container images that ship with &scf;. These will be
+   not bundled in the container images that ship with &kubecf;. These will be
    downloaded at runtime, when you are pushing applications to the platform.
    Some of these buildpacks may include components with proprietary licenses.
    (See
@@ -391,15 +391,15 @@
   </figure>
 
   <sect2 xml:id="sec-cap-components">
-   <title>&scf; Components</title>
+   <title>&kubecf; Components</title>
    <para>
-    &scf; is comprised of developer and administrator clients, trusted download
+    &kubecf; is comprised of developer and administrator clients, trusted download
     sites, transient and long-running components, APIs, and authentication:
    </para>
    <itemizedlist>
     <listitem>
      <para>
-      Clients for developers and admins to interact with &scf;: the &cfcli;,
+      Clients for developers and admins to interact with &kubecf;: the &cfcli;,
       which provides the <command>cf</command> command, Stratos Web interface,
       IDE plugins.
      </para>
@@ -438,19 +438,19 @@
     </listitem>
     <listitem>
      <para>
-      Long-running &scf; components.
+      Long-running &kubecf; components.
      </para>
     </listitem>
     <listitem>
      <para>
-      &scf; post-deployment components: Transient &scf; components that start
-      after all &scf; components are started, perform their tasks, and then
+      &kubecf; post-deployment components: Transient &kubecf; components that start
+      after all &kubecf; components are started, perform their tasks, and then
       exit.
      </para>
     </listitem>
     <listitem>
      <para>
-      &scf; Linux cell, an elastic runtime component that runs Linux
+      &kubecf; Linux cell, an elastic runtime component that runs Linux
       applications.
      </para>
     </listitem>
@@ -469,13 +469,13 @@
   </sect2>
 
   <sect2 xml:id="sec-cap-containers">
-   <title>&scf; Containers</title>
+   <title>&kubecf; Containers</title>
    <para>
-    <xref linkend="fig-cap-cap-containers"/> provides a look at &scf;'s
+    <xref linkend="fig-cap-cap-containers"/> provides a look at &kubecf;'s
     containers.
    </para>
    <figure xml:id="fig-cap-cap-containers">
-    <title>&scf; Containers, Grouped by Function</title>
+    <title>&kubecf; Containers, Grouped by Function</title>
     <mediaobject>
      <imageobject role="fo">
       <imagedata fileref="cap-containers.svg" format="SVG" width="75%"/>
@@ -483,13 +483,13 @@
      <imageobject role="html">
       <imagedata fileref="cap-containers.svg" format="SVG"/>
      </imageobject>
-     <textobject role="description"><phrase>&scf;'s containers, grouped
+     <textobject role="description"><phrase>&kubecf;'s containers, grouped
             by functionality.</phrase>
      </textobject>
     </mediaobject>
    </figure>
    <variablelist>
-    <title>List of &scf; Containers</title>
+    <title>List of &kubecf; Containers</title>
     <varlistentry>
      <term>adapter</term>
      <listitem>
@@ -503,7 +503,7 @@
      <term>api-group</term>
      <listitem>
       <para>
-       Contains the &scf; Cloud Controller, which implements the CF API. It is
+       Contains the &kubecf; Cloud Controller, which implements the CF API. It is
        exposed via the router.
       </para>
      </listitem>
@@ -569,7 +569,7 @@
      <term>diego-cell (privileged)</term>
      <listitem>
       <para>
-       The elastic layer of &scf;, where applications live.
+       The elastic layer of &kubecf;, where applications live.
       </para>
      </listitem>
     </varlistentry>
@@ -703,9 +703,9 @@
   </sect2>
 
   <sect2 xml:id="sec-cap-service-diagram">
-   <title>&scf; Service Diagram</title>
+   <title>&kubecf; Service Diagram</title>
    <para>
-    This simple service diagram illustrates how &scf; components communicate
+    This simple service diagram illustrates how &kubecf; components communicate
     with each other (<xref linkend="fig-cap-simple-services"/>). See
     <xref linkend="fig-cap-detailed-services"/> for a more detailed view.
    </para>
@@ -872,7 +872,7 @@
        </entry>
        <entry>
 	<para>
-	 &scf; components ask <literal>uaa</literal> for tokens so they can talk
+	 &kubecf; components ask <literal>uaa</literal> for tokens so they can talk
 	 to each other
 	</para>
        </entry>
@@ -888,10 +888,10 @@
        </entry>
        <entry>
         <para>
-         <emphasis role="bold">Requestor</emphasis>: &scf; clients
+         <emphasis role="bold">Requestor</emphasis>: &kubecf; clients
 	</para>
         <para>
-         <emphasis role="bold">Request</emphasis>: &scf; API Requests
+         <emphasis role="bold">Request</emphasis>: &kubecf; API Requests
 	</para>
        </entry>
        <entry>
@@ -900,7 +900,7 @@
 	 token
         </para>
         <para>                                                                  
-	 <emphasis role="bold">Request Authorization</emphasis>: &scf;
+	 <emphasis role="bold">Request Authorization</emphasis>: &kubecf;
 	 application management             
         </para>
        </entry>
@@ -919,7 +919,7 @@
        </entry>
        <entry>
         <para>
-	 &cap; Clients interact with the &scf; API (for example users deploying
+	 &cap; Clients interact with the &kubecf; API (for example users deploying
 	 apps)
         </para>
        </entry>
@@ -935,7 +935,7 @@
        </entry>
        <entry>
         <para>
-         <emphasis role="bold">Requestor</emphasis>: &scf; clients
+         <emphasis role="bold">Requestor</emphasis>: &kubecf; clients
 	</para>
 	<para>
          <emphasis role="bold">Request</emphasis>: Log streaming
@@ -947,7 +947,7 @@
 	 token
 	</para>
 	<para>
-	 <emphasis role="bold">Request Authorization</emphasis>: &scf;
+	 <emphasis role="bold">Request Authorization</emphasis>: &kubecf;
 	 application management
 	</para>
        </entry>
@@ -956,7 +956,7 @@
          <emphasis role="bold">Listener</emphasis>: &cap; components
 	</para>
 	<para>
-         <emphasis role="bold">Response</emphasis>: A stream of &scf; logs
+         <emphasis role="bold">Response</emphasis>: A stream of &kubecf; logs
 	</para>
 	<para>
 	 <emphasis role="bold">Response Credentials</emphasis>: TLS certificate
@@ -965,7 +965,7 @@
        </entry>
        <entry>
 	<para>
-	 &scf; clients ask for logs (for example user looking at application
+	 &kubecf; clients ask for logs (for example user looking at application
 	 logs or administrator viewing system logs)
 	</para>
        </entry> 
@@ -981,7 +981,7 @@
        </entry>
        <entry>
         <para>
-         <emphasis role="bold">Requestor</emphasis>: &scf; clients, SSH clients
+         <emphasis role="bold">Requestor</emphasis>: &kubecf; clients, SSH clients
 	</para>
 	<para>
          <emphasis role="bold">Request</emphasis>: SSH Access to Application
@@ -993,7 +993,7 @@
 	 token
 	</para>
 	<para>
-	 <emphasis role="bold">Request Authorization</emphasis>: &scf;
+	 <emphasis role="bold">Request Authorization</emphasis>: &kubecf;
 	 application management
 	</para>
        </entry>
@@ -1012,7 +1012,7 @@
        </entry> 
        <entry>
 	<para>
-	 &scf; Clients open an SSH connection to an application's container (for
+	 &kubecf; Clients open an SSH connection to an application's container (for
 	 example users debugging their applications)
 	</para>
        </entry>
@@ -1071,7 +1071,7 @@
    <title>Detailed Services Diagram</title>
    <para>
     <xref linkend="fig-cap-detailed-services"/> presents a more detailed view
-    of &scf; services and how they interact with each other. Services labeled
+    of &kubecf; services and how they interact with each other. Services labeled
     in red are unencrypted, while services labeled in green run over HTTPS.
    </para>
    <figure xml:id="fig-cap-detailed-services">

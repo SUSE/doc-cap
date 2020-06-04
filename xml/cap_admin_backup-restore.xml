@@ -26,11 +26,11 @@
 
   <para>
    <literal>cf-plugin-backup</literal> is not a general-purpose backup and
-   restore plugin. It is designed to save the state of a &scf; instance before
+   restore plugin. It is designed to save the state of a &kubecf; instance before
    making changes to it. If the changes cause problems, use
    <literal>cf-plugin-backup</literal> to restore the instance from scratch. Do
-   not use it to restore to a non-pristine &scf; instance. Some of the
-   limitations for applying the backup to a non-pristine &scf; instance are:
+   not use it to restore to a non-pristine &kubecf; instance. Some of the
+   limitations for applying the backup to a non-pristine &kubecf; instance are:
   </para>
 
   <itemizedlist>
@@ -52,9 +52,9 @@
    </listitem>
    <listitem>
     <para>
-     The set of available stacks is part of the &scf; instance setup, and is
+     The set of available stacks is part of the &kubecf; instance setup, and is
      not part of the CC configuration. Trying to restore applications using
-     stacks not available on the target &scf; instance will fail. Setting up
+     stacks not available on the target &kubecf; instance will fail. Setting up
      the necessary stacks must be performed separately before the backup plugin
      is invoked.
     </para>
@@ -62,7 +62,7 @@
    <listitem>
     <para>
      Buildpacks are not saved. Applications using custom buildpacks not
-     available on the target &scf; instance will not be restored.
+     available on the target &kubecf; instance will not be restored.
      Custom buildpacks must be managed separately, and relevant buildpacks must
      be in place before the affected applications are restored.
     </para>
@@ -332,7 +332,7 @@
    <para>
     <command>cf backup-restore</command> reads the
     <filename>cf-backup.json</filename> snapshot file found in the current
-    working directory, and then talks to the targeted &scf; instance to upload
+    working directory, and then talks to the targeted &kubecf; instance to upload
     the following information, in the specified order:
    </para>
    <itemizedlist>
@@ -512,7 +512,7 @@
    An existing &productname; deployment's data can be migrated to a new
    &productname; deployment through a backup and restore of its raw data. The
    process involves performing a backup and restore of the
-   <literal>scf</literal> components respectively. This procedure is agnostic of
+   <literal>kubecf</literal> components respectively. This procedure is agnostic of
    the underlying &kube; infrastructure and can be included as part of your
    disaster recovery solution.
   </para>
@@ -527,13 +527,13 @@
    <itemizedlist>
     <listitem>
      <para>
-      Access to a running deployment of <literal>scf</literal> to create backups
+      Access to a running deployment of <literal>kubecf</literal> to create backups
       with
      </para>
     </listitem>
     <listitem>
      <para>
-      Access to new deployments of <literal>scf</literal> (deployed with a
+      Access to new deployments of <literal>kubecf</literal> (deployed with a
       &values-filename; configured according to
       <xref linkend="prepare-config-for-new-cluster"/> of
       <xref linkend="sec-cap-raw-data-restore-procedure"/>) to perform the
@@ -608,13 +608,13 @@
     <para>
      This process is intended for backing up and restoring to a target
      deployment with the same version as the source deployment. For example,
-     data from a backup of <literal>scf</literal> version 2.18.0 should be
-     restored to a version version 2.18.0 <literal>scf</literal> deployment.
+     data from a backup of <literal>kubecf</literal> version 2.18.0 should be
+     restored to a version version 2.18.0 <literal>kubecf</literal> deployment.
     </para>
    </note>
    <para>
     Perform the following steps to create a backup of your source
-    <literal>scf</literal> deployment.
+    <literal>kubecf</literal> deployment.
    </para>
    <procedure>
     <step>
@@ -635,7 +635,7 @@
      <para>
       Copy the archive to a location outside of the pod:
      </para>
-<screen>&prompt.user;kubectl cp scf/blobstore-0:blobstore-src.tgz <replaceable>/tmp/blobstore-src.tgz</replaceable></screen>
+<screen>&prompt.user;kubectl cp kubecf/blobstore-0:blobstore-src.tgz <replaceable>/tmp/blobstore-src.tgz</replaceable></screen>
     </step>
     <step>
      <para>
@@ -696,12 +696,12 @@
    </important>
    <para>
     Perform the following steps to restore your backed up data to the target
-    <literal>scf</literal> deployment.
+    <literal>kubecf</literal> deployment.
    </para>
    <procedure>
     <step xml:id="prepare-config-for-new-cluster">
      <para>
-      The target <literal>scf</literal> cluster needs to be deployed with the
+      The target <literal>kubecf</literal> cluster needs to be deployed with the
       correct database encryption key(s) set in your
       &values-filename; before data can be restored.
       How the encryption key(s) will be prepared in your
@@ -748,7 +748,7 @@ secrets:
     </step>
     <step>
      <para>
-      Deploy a non-high-availability configuration of <literal>scf</literal>
+      Deploy a non-high-availability configuration of <literal>kubecf</literal>
       and wait until all pods are ready before proceeding.
      </para>
     </step>
@@ -777,7 +777,7 @@ done
       Copy the <filename>blobstore-src.tgz</filename> archive to the
       <literal>blobstore</literal> pod:
      </para>
-<screen>&prompt.user;kubectl cp <replaceable>/tmp/blobstore-src.tgz</replaceable> scf/blobstore-0:/.</screen>
+<screen>&prompt.user;kubectl cp <replaceable>/tmp/blobstore-src.tgz</replaceable> kubecf/blobstore-0:/.</screen>
     </step>
     <step>
      <para>
