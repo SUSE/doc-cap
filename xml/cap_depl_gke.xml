@@ -98,9 +98,8 @@
   <itemizedlist>
    <listitem>
     <para>
-     Is a <literal>Zonal</literal>, <literal>Regional</literal>, or
-     <literal>Private</literal> type. Do not use a <literal>Alpha</literal>
-     cluster.
+     Is a <literal>Zonal</literal> or <literal>Regional</literal> type. Do not
+     use a <literal>Alpha</literal> cluster.
     </para>
    </listitem>
    <listitem>
@@ -128,17 +127,13 @@
     </para>
    </listitem>
    <listitem>
-    <!-- para -->
-    &kernel-prereq;
-   </listitem>
-   <listitem>
     <para>
      Has at least &node_size; GB local storage per node.
     </para>
    </listitem>
    <listitem>
     <para>
-     (Optional) Uses preemptible nodes to keep costs low. For detials, see
+     (Optional) Uses preemptible nodes to keep costs low. For details, see
      <link xlink:href="https://cloud.google.com/kubernetes-engine/docs/how-to/preemptible-vms"/>.
     </para>
    </listitem>
@@ -173,8 +168,7 @@
 --num-nodes=$NODE_COUNT \
 --no-enable-basic-auth \
 --no-issue-client-certificate \
---no-enable-autoupgrade \
---metadata disable-legacy-endpoints=true
+--no-enable-autoupgrade
 </screen>
     <itemizedlist>
      <listitem>
@@ -212,7 +206,7 @@
    Get the <literal>kubeconfig</literal> file for your cluster.
   </para>
 
-<screen>&prompt.user;gcloud container clusters get-credentials --zone ${CLUSTER_ZONE:?required} ${CLUSTER_NAME:?required}</screen>
+<screen>&prompt.user;gcloud container clusters get-credentials --zone ${CLUSTER_ZONE:?required} ${CLUSTER_NAME:?required} --project <replaceable>example-project</replaceable></screen>
 
  </sect1>
 
