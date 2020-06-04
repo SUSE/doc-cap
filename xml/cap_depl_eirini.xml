@@ -86,7 +86,7 @@ env:
    </step>
    <step>
     <para>
-     Deploy <literal>scf</literal>.
+     Deploy <literal>kubecf</literal>.
     </para>
     <para>
      Refer to the following for platform-specific instructions:
@@ -96,13 +96,13 @@ env:
    <step>
     <para>
      After initiating the <command>helm install</command> command to deploy
-     <literal>scf</literal>, The secret generator will create a certificate
+     <literal>kubecf</literal>, The secret generator will create a certificate
      signing request that must be approved by an administrator before deployment
-     will continue. To do so, run the command below where <literal>scf</literal>
-     should be replaced with your namespace of your <literal>scf</literal>
+     will continue. To do so, run the command below where <literal>kubecf</literal>
+     should be replaced with your namespace of your <literal>kubecf</literal>
      deployment.
     </para>
-<screen>&prompt.user;kubectl certificate approve <replaceable>scf</replaceable>-bits-service-ssl-cert</screen>
+<screen>&prompt.user;kubectl certificate approve <replaceable>kubecf</replaceable>-bits-service-ssl-cert</screen>
     <para>
      Note that manual approval of CSRs is recommended.
     </para>

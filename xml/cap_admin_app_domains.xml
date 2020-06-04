@@ -19,8 +19,8 @@
   </dm:docmanager>
  </info>
  <para>
-  In a standard &scf; deployment, applications will use the same domain as the
-  one configured in your &values-filename; for SCF.
+  In a standard &kubecf; deployment, applications will use the same domain as the
+  one configured in your &values-filename; for &kubecf;.
   For example, if <literal>DOMAIN</literal> is set as
   <replaceable>example.com</replaceable> in your
   &values-filename; and you deploy an application
@@ -52,7 +52,7 @@
 
   <para>
    If this is an initial deployment, use <command>helm install</command> to
-   deploy <literal>scf</literal>:
+   deploy <literal>kubecf</literal>:
   </para>
 <screen>&prompt.user;kubectl create namespace <replaceable>kubecf</replaceable>
 
@@ -70,15 +70,15 @@
 --version &kubecf_chart;
 </screen>
 
-  &scf-deploy-complete;
+  &kubecf-deploy-complete;
 
   <para>
-   When the <literal>scf</literal> is complete, do the following to confirm
+   When the <literal>kubecf</literal> is complete, do the following to confirm
    custom application domains have been configured correctly.
   </para>
 
   <para>
-   Run <command>cf curl /v2/info</command> and verify the SCF domain is not
+   Run <command>cf curl /v2/info</command> and verify the &kubecf; domain is not
    <replaceable>appdomain.com</replaceable>:
   </para>
 

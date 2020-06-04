@@ -524,7 +524,7 @@ suse       https://kubernetes-charts.suse.com/
   </para>
 <screen>&prompt.user;watch --color 'kubectl get pods --namespace osba'</screen>
   <para>
-   When all pods are running, create the service broker in &scf; using the &cfcli;:
+   When all pods are running, create the service broker in &kubecf; using the &cfcli;:
   </para>
 <screen>
 &prompt.user;cf login
@@ -556,9 +556,9 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
 <screen>
 &prompt.user;cf create-org <replaceable>testorg</replaceable>
 
-&prompt.user;cf create-space <replaceable>scftest</replaceable> -o <replaceable>testorg</replaceable>
+&prompt.user;cf create-space <replaceable>kubecftest</replaceable> -o <replaceable>testorg</replaceable>
 
-&prompt.user;cf target -o "<replaceable>testorg</replaceable>" -s "<replaceable>scftest</replaceable>"
+&prompt.user;cf target -o "<replaceable>testorg</replaceable>" -s "<replaceable>kubecftest</replaceable>"
 
 &prompt.user;cf create-service azure-mysql-5-7 basic <replaceable>question2answer-db</replaceable> \
 -c "{ \"location\": \"${REGION}\", \"resourceGroup\": \"${SBRG_NAME}\", \"firewallRules\": [{\"name\": \
@@ -579,7 +579,7 @@ awk '($2 ~ /basic/) { system("cf enable-service-access " $1 " -p " $2)}'
 &prompt.user;az mysql server list --resource-group $SBRG_NAME
 
 &prompt.user;az mysql server update --resource-group $SBRG_NAME \
---name <replaceable>scftest</replaceable> --ssl-enforcement Disabled
+--name <replaceable>kubecftest</replaceable> --ssl-enforcement Disabled
 </screen>
 
   <para>

@@ -197,10 +197,10 @@
     </para>
     <para>
      If you are using &ses; you must copy the Ceph admin secret to the
-     <literal>scf</literal> namespaces used by &productname;:
+     <literal>kubecf</literal> namespaces used by &productname;:
     </para>
 <screen>&prompt.user;kubectl get secret ceph-secret-admin --output json --namespace default | \
-sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create --filename -
+sed's/"namespace": "default"/"namespace": "kubecf"/' | kubectl create --filename -
 </screen>
    </listitem>
    <listitem>

@@ -17,7 +17,7 @@
  </info>
  <para>
   The App-AutoScaler service is used for automatically managing an
-  application's instance count when deployed on &scf;. The scaling behavior is
+  application's instance count when deployed on &kubecf;. The scaling behavior is
   determined by a set of criteria defined in a policy (See
   <xref linkend="sec-cap-app-autoscaler-policies"/>).
  </para>
@@ -31,7 +31,7 @@
   <itemizedlist>
    <listitem>
     <para>
-     A running deployment of <literal>scf</literal>
+     A running deployment of <literal>kubecf</literal>
     </para>
    </listitem>
 

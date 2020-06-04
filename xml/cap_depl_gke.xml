@@ -338,7 +338,7 @@ suse       https://kubernetes-charts.suse.com/
   </para>
   <para>
    This section describes the how to deploy and use the GCP Service Broker, as a
-   &scf; application, on &productname;.
+   &kubecf; application, on &productname;.
   </para>
 
   <sect2 xml:id="sec-cap-gke-service-broker-apis">
@@ -822,7 +822,7 @@ applications:
     </step>
     <step>
      <para>
-      Create the service broker in &scf; using the &cfcli;.
+      Create the service broker in &kubecf; using the &cfcli;.
      </para>
 <screen>&prompt.user;cf create-service-broker <replaceable>gcp-service-broker</replaceable> <replaceable>cfgcpbrokeruser</replaceable> <replaceable>cfgcpbrokerpassword</replaceable> <replaceable>https://gcp-service-broker.example.com</replaceable></screen>
      <para>

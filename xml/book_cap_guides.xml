@@ -20,7 +20,7 @@
   <abstract>
    <para>
     Introducing &productname;, a software platform for cloud-native application
-    deployment based on &scf; and &kube;.
+    deployment based on &kubecf; and &kube;.
    </para>
   </abstract>
   <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">

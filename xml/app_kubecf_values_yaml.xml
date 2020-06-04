@@ -10,7 +10,7 @@
  xmlns:xi="http://www.w3.org/2001/XInclude"
  xmlns:xlink="http://www.w3.org/1999/xlink"
  version="5.0">
- <title>Complete suse/scf values.yaml File</title>
+ <title>Complete suse/kubecf values.yaml File</title>
 
  <para>
   This is the complete output of <command>helm inspect suse/cf</command> for

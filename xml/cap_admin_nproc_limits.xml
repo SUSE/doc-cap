@@ -26,12 +26,12 @@
 
  <para>
   Nproc is the maximum number of processes allowed per user. In the case of
-  <literal>scf</literal>, the nproc value applies to the
-  <literal>vcap</literal> user. In <literal>scf</literal>, there are parameters,
+  <literal>kubecf</literal>, the nproc value applies to the
+  <literal>vcap</literal> user. In <literal>kubecf</literal>, there are parameters,
   <command>kube.limits.nproc.soft</command> and
   <command>kube.limits.nproc.hard</command>, to configure a soft nproc limit
   and a hard nproc limit for processes spawned by the <literal>vcap</literal>
-  user in <literal>scf</literal> pods. By default, the soft limit is 1024 while
+  user in <literal>kubecf</literal> pods. By default, the soft limit is 1024 while
   the hard limit is 2048. The soft and hard limits can be changed
   to suit your workloads. Note that the limits are applied to all pods.
  </para>
@@ -85,7 +85,7 @@
    <procedure>
     <step>
      <para>
-      Deploy <literal>scf</literal>:
+      Deploy <literal>kubecf</literal>:
      </para>
 <screen>&prompt.user;kubectl create namespace <replaceable>kubecf</replaceable>
 
