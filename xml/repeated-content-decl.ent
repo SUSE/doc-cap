@@ -291,7 +291,7 @@ Before you start deploying &productname;, review the following documents:
 <!--ENTITY helm-search-suse.................................................-->
 
 <!ENTITY helm-search-suse
-'<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;helm search suse
+'<screen xmlns="http://docbook.org/ns/docbook">&prompt.user;helm search repo <replaceable>suse</replaceable>
 NAME                            CHART VERSION   APP VERSION     DESCRIPTION
 suse/cf-operator                &operator_chart;          &chart_appversion;         A Helm chart for cf-operator, the k8s operator ....
 suse/console                    &stratos_chart;           &chart_appversion;         A Helm chart for deploying SUSE Stratos Console
