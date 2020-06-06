@@ -13,7 +13,7 @@
  <title>Complete suse/kubecf values.yaml File</title>
 
  <para>
-  This is the complete output of <command>helm inspect suse/cf</command> for
+  This is the complete output of <command>helm inspect chart suse/kubecf</command> for
   the current &productname; &productnumber; release.
  </para>
 
