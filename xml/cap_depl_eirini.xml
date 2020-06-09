@@ -83,28 +83,6 @@ features:
    </step>
    <step>
     <para>
-     After initiating the <command>helm install</command> command to deploy
-     <literal>kubecf</literal>, The secret generator will create a certificate
-     signing request that must be approved by an administrator before deployment
-     will continue. To do so, run the command below where <literal>kubecf</literal>
-     should be replaced with your namespace of your <literal>kubecf</literal>
-     deployment.
-    </para>
-<screen>&prompt.user;kubectl certificate approve <replaceable>kubecf</replaceable>-bits-service-ssl-cert</screen>
-    <para>
-     Note that manual approval of CSRs is recommended.
-    </para>
-    <para>
-     An alternative to manual approval of the CSR is to pass
-     <command>--set env.KUBE_CSR_AUTO_APPROVAL=true</command> as part of the
-     <command>helm install</command> command. This flag will allow the CSR to
-     be automatically approved. Operators should take caution with this approach
-     as it will provide the secrets genrator with a cluster role binding that
-     allows it to approve <emphasis>all</emphasis> CSRs made to the &kube; signer.
-    </para>
-   </step>
-   <step>
-    <para>
      Depending on your cluster configuration, Metrics Server may need to be
      deployed. Use &helm; to install the latest stable Metrics Server.
     </para>
