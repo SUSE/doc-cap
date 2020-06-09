@@ -32,16 +32,8 @@
   </para>
   <para>
    As a technology preview, Eirini contains certain limitations to its
-   functionality. These are outlined below:
+   functionality.
   </para>
-  <itemizedlist>
-   <listitem>
-    <para>
-     Air gapped environments or usage of manual certificates are currently not
-     supported.
-    </para>
-   </listitem>
-  </itemizedlist>
  </warning>
 
  <sect1 xml:id="sec-cap-eirini-enable">
@@ -57,16 +49,18 @@
 features:
   eirini:
     enabled: true
-kube:
-  auth: rbac
-env:
-  DEFAULT_STACK: cflinuxfs3
 </screen>
+    <para>
+     When Eirini is enabled, both <literal>features.suse_default_stack</literal>
+     and <literal>features.suse_buildpacks</literal> must be enabled as well.
+     A cflinuxfs3 Eirini image is currently not available, and the &suse; stack
+     must be used. By default, both the &suse; stack and buildpacks are enabled. 
+    </para>
     <note>
      <itemizedlist>
       <listitem>
        <para>
-        Even after enabling Eirini, you will still see the
+        After enabling Eirini, you will still see the
         <literal>diego-api</literal> pod. This is normal behavior because the Diego pod has a component required by Eirini.
        </para>
       </listitem>
