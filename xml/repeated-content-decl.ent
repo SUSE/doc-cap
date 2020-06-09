@@ -244,8 +244,7 @@ Before you start deploying &productname;, review the following documents:
 <!ENTITY kernel-prereq
 '<para xmlns="http://docbook.org/ns/docbook">
  Ensure nodes use a mininum kernel version of &kernel_version; and the kernel
- parameter <literal>max_user_namespaces</literal> should be set to at least
- 10000. 
+ parameter <literal>max_user_namespaces</literal> should be set greater than 0. 
 </para>'>
 
 <!--ENTITY uaac-prereq......................................................-->

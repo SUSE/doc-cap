@@ -67,10 +67,6 @@
      A SSH key that can be used for access to the nodes of the cluster. 
     </para>
    </listitem>
-  <listitem>
-    <!-- para -->
-    &kernel-prereq;
-   </listitem>
 
    <!-- listitems: Install steps and links -->
    &cfcli-prereq;
