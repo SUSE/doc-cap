@@ -74,12 +74,6 @@ features:
    </step>
    <step>
     <para>
-     To enable persistence, refer to the instructions at
-     <link xlink:href="https://github.com/SUSE/scf/wiki/Persistence-with-Eirini-in-SCF"/>.
-    </para>
-   </step>
-   <step>
-    <para>
      Deploy <literal>kubecf</literal>.
     </para>
     <para>
