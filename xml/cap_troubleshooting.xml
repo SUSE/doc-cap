@@ -98,7 +98,7 @@ routing-api-0            0/1   Running   0         16h</screen>
    and status:
   </para>
 
-<screen>&prompt.user;kubectl describe pod --namespace kubecf router-3137013061-wlhxb</screen>
+<screen>&prompt.user;kubectl describe pod --namespace kubecf router-0</screen>
 
   <para>
    This prints a lot of information, including IP addresses, routine events,
@@ -115,55 +115,55 @@ routing-api-0            0/1   Running   0         16h</screen>
 
   <para>
    There may be times when you want to delete and rebuild a deployment, for
-   example when there are errors in your
-   &values-filename; file, you wish to test
-   configuration changes, or a deployment fails and you want to try it again.
-   This has five steps: first delete the StatefulSets of the namespace
-   associated with the release or releases you want to re-deploy, then delete
-   the release or releases, delete its namespace, then re-create the namespace
-   and re-deploy the release.
+   example when there are errors in your &values-filename; file, you wish to
+   test configuration changes, or a deployment fails and you want to try it again.
   </para>
 
-  <para>
-   The namespace is also deleted as part of the process because the
-   <literal>kubecf</literal>
-   namespace contain generated secrets which Helm is not aware of and will not
-   remove when a release is deleted. When deleting a release, busy systems may
-   encounter timeouts. By first deleting the StatefulSets, it ensures that this
-   operation is more likely to succeed. Using the <command>delete
-   statefulsets</command> command requires <command>kubectl</command> v1.9.6 or
-   newer.
-  </para>
-
-  <para>
-   Use <command>helm</command> to see your releases:
-  </para>
-
-<screen>&prompt.user;helm list
-NAME            REVISION  UPDATED                  STATUS    CHART           NAMESPACE
-<replaceable>susecf-console</replaceable>  1         Tue Aug 14 11:53:28 2018 DEPLOYED  &stratos_chart;   stratos
-<replaceable>kubecf</replaceable>      1         Tue Aug 14 10:58:16 2018 DEPLOYED  &kubecf_chart;       kubecf
-</screen>
-
-  <para>
-   This example deletes the <literal>kubecf</literal> release and
-   <literal>kubecf</literal> namespace:
-  </para>
-
-<screen>&prompt.user;kubectl delete statefulsets --all --namespace kubecf
-statefulset "adapter" deleted                                                   
-statefulset "api-group" deleted                                                 
-... 
-
-&prompt.user;helm delete kubecf
-release "kubecf" deleted
-
-&prompt.user;kubectl delete namespace kubecf
-namespace "kubecf" deleted</screen>
-
- <para>
-   Then you can start over. Be sure to create new release and namespace names.
-  </para>
+  <procedure>
+   <step>
+    <para>
+     Remove the <literal>kubecf</literal> release. All resources associated with
+     the release of the <literal>suse/kubecf</literal> chart will be removed.
+     Replace the example release name with the one used during your installation. 
+    </para>
+<screen>&prompt.user;helm uninstall <replaceable>kubecf</replaceable></screen>
+   </step>
+   <step>
+    <para>
+     Remove the <literal>kubecf</literal> namespace. Replace with the namespace
+     where the <literal>suse/kubecf</literal> chart was installed.
+    </para>
+<screen>&prompt.user;kubectl delete namespace <replaceable>kubecf</replaceable></screen>
+   </step>
+   <step>
+    <para>
+     Remove the <literal>cf-operator</literal> release. All resources associated
+     with the release of the <literal>suse/cf-operator</literal> chart will be
+     removed. Replace the example release name with the one used during your
+     installation.
+    </para>
+<screen>&prompt.user;helm uninstall <replaceable>cf-operator</replaceable></screen>
+   </step>
+   <step>
+    <para>
+     Remove the <literal>cf-operator</literal> namespace. Replace with the namespace
+     where the <literal>suse/cf-operator</literal> chart was installed.
+    </para>
+<screen>&prompt.user;kubectl delete namespace <replaceable>cf-operator</replaceable></screen>
+   </step>
+   <step>
+    <para>
+     Verify all of the releases are removed.
+    </para>
+<screen>&prompt.user;helm list --all-namespaces</screen>
+   </step>
+   <step>
+    <para>
+     Verify all of the namespaces are removed.
+    </para>
+<screen>&prompt.user;kubectl get namespaces</screen>
+   </step>
+  </procedure>
  </sect1>
  <sect1 xml:id="sec-cap-tbl-kubectl-queries">
   <title>Querying with Kubectl</title>
@@ -251,224 +251,13 @@ jq '.items[] | {name: .metadata.name, cap: .status.capacity}'</screen>
    </listitem>
   </itemizedlist>
  </sect1>
- <sect1 xml:id="sec-cap-tbl-autoscaler-metrics-lock">
-  <title><literal>autoscaler-metrics</literal> Pod Liquibase Error</title>
-
-  <para>
-   In some situations, the <literal>autoscaler-metrics</literal> pod may fail to
-   reach a fully ready state due to a Liquibase error,
-   <literal>liquibase.exception.LockException: Could not acquire change log lock
-   </literal>.
-  </para>
-  <para>
-   When this occurs, use the following procedure to resolve the issue.
-  </para>
-  <procedure>
-   <step>
-    <para>
-     Verify whether the error has occurred by examining the logs.
-    </para>
-<screen>&prompt.user;kubectl logs autoscaler-metrics-0 autoscaler-metrics --follow --namespace kubecf</screen>
-    <para>
-     If the error has occurred, the log will contain entires similar to the following.
-    </para>
-<screen># Starting Liquibase at Wed, 21 Aug 2019 22:38:00 UTC (version 3.6.3 built at 2019-01-29 11:34:48)
-# Unexpected error running Liquibase: Could not acquire change log lock.  Currently locked by autoscaler-metrics-0.autoscaler-metrics-set.cf.svc.cluster.local (172.16.0.173) since 8/21/19, 9:20 PM
-# liquibase.exception.LockException: Could not acquire change log lock.  Currently locked by autoscaler-metrics-0.autoscaler-metrics-set.cf.svc.cluster.local (172.16.0.173) since 8/21/19, 9:20 PM
-#         at liquibase.lockservice.StandardLockService.waitForLock(StandardLockService.java:230)
-#         at liquibase.Liquibase.update(Liquibase.java:184)
-#         at liquibase.Liquibase.update(Liquibase.java:179)
-#         at liquibase.integration.commandline.Main.doMigration(Main.java:1220)
-#         at liquibase.integration.commandline.Main.run(Main.java:199)
-#         at liquibase.integration.commandline.Main.main(Main.java:137)
-</screen>
-   </step>
-   <step>
-    <para>
-     After confirming the error has occurred, use the provided Ruby script to
-     recover from the error.
-    </para>
-    <substeps>
-     <step>
-      <para>
-       Save the script below to a file. In this example, it is saved to a file
-       named <filename>recovery-autoscaler-metrics-liquidbase-stale-lock</filename>.
-      </para>
-<screen>#!/usr/bin/env ruby
-
-# This script recovers from autoscaler-metrics failing to start because it could
-# not continue schema migrations.  The error looks something like:
-
-# Starting Liquibase at Wed, 21 Aug 2019 22:38:00 UTC (version 3.6.3 built at 2019-01-29 11:34:48)
-# Unexpected error running Liquibase: Could not acquire change log lock.  Currently locked by autoscaler-metrics-0.autoscaler-metrics-set.cf.svc.cluster.local (172.16.0.173) since 8/21/19, 9:20 PM
-# liquibase.exception.LockException: Could not acquire change log lock.  Currently locked by autoscaler-metrics-0.autoscaler-metrics-set.cf.svc.cluster.local (172.16.0.173) since 8/21/19, 9:20 PM
-#         at liquibase.lockservice.StandardLockService.waitForLock(StandardLockService.java:230)
-#         at liquibase.Liquibase.update(Liquibase.java:184)
-#         at liquibase.Liquibase.update(Liquibase.java:179)
-#         at liquibase.integration.commandline.Main.doMigration(Main.java:1220)
-#         at liquibase.integration.commandline.Main.run(Main.java:199)
-#         at liquibase.integration.commandline.Main.main(Main.java:137)
-
-require 'json'
-require 'open3'
-
-EXPECTED_ERROR='Could not acquire change log lock.  Currently locked by'
-
-def capture(*args)
-    stdout, status = Open3.capture2(*args)
-    return stdout if status.success?
-    cmd = args.dup
-    cmd.shift while Hash.try_convert(cmd.first)
-    cmd.pop while Hash.try_convert(cmd.last)
-    fail %Q&lt;"#{cmd.join(' ')}" failed with exit status #{status.exitstatus}>
-end
-
-def namespace
-    $namespace ||= JSON.parse(capture('helm list --output json'))['Releases']
-        .select { |r| r['Status'].downcase == 'deployed' }
-        .select { |r| r['Chart'].start_with? 'cf-' }
-        .first['Namespace']
-end
-
-def run(*args)
-    Process.wait Process.spawn(*args)
-    return if $?.success?
-    cmd = args.dup
-    cmd.shift while Hash.try_convert(cmd.first)
-    cmd.pop while Hash.try_convert(cmd.last)
-    fail %Q&lt;"#{cmd.join(' ')}" failed with exit status #{$?.exitstatus}>
-end
-
-postgres_pod = JSON.load(capture('kubectl', 'get', 'pods',
-    '--namespace', namespace,
-    '--selector', 'skiff-role-name==autoscaler-postgres',
-    '--output', 'json'))['items']
-    .find { |pod|
-        pod['status']['conditions']
-            .find {|status| status['type'] == 'Ready'}['status'] == 'True'
-    }['metadata']['name']
-
-psql_binary = capture('kubectl', 'exec', postgres_pod,
-    '--namespace', namespace,
-    '--', 'sh', '-c', 'echo /var/vcap/packages/postgres-*/bin/psql').split.first
-
-run 'kubectl', 'exec', postgres_pod,
-    '--namespace', namespace,
-    '--',
-    psql_binary,
-    '--username', 'postgres',
-    '--dbname', 'autoscaler',
-    '--command', 'SELECT * FROM databasechangeloglock'
-
-locked_bys = (1..Float::INFINITY).each do |count|
-    STDOUT.printf "\rWaiting for pod to get stuck (try %s)...", count
-    candidate_locked_bys = capture('kubectl', 'get', 'pods',
-                        '--namespace', namespace,
-                        '--selector', 'skiff-role-name==autoscaler-metrics',
-                        '--output', 'jsonpath={.items[*].metadata.name}')
-        .split
-        .map do |pod_name|
-            capture('kubectl', 'logs', pod_name,
-                    '--namespace', namespace,
-                    '--container', 'autoscaler-metrics')
-        end
-        .select { |message| message.include? EXPECTED_ERROR }
-        .map { |message| /Currently locked by (.*?) since /.match(message)[1]}
-
-    break candidate_locked_bys unless candidate_locked_bys.empty?
-    sleep 1
-end
-puts '' # new line after the wait
-locked_bys.each do |locked_by|
-    puts "Releasing lock for #{locked_by}"
-    run 'kubectl', 'exec', postgres_pod,
-        '--namespace', namespace,
-        '--',
-        psql_binary,
-        '--username', 'postgres',
-        '--dbname', 'autoscaler',
-        '--command', %Q&lt;UPDATE databasechangeloglock SET locked = FALSE WHERE lockedby = '#{locked_by}'>
-end
-</screen>
-     </step>
-     <step>
-      <para>
-       Run the script.
-      </para>
-<screen>&prompt.user;ruby <replaceable>recovery-autoscaler-metrics-liquidbase-stale-lock</replaceable></screen>
-      <para>
-       All <literal>autoscaler</literal> pods should now enter a fully ready state.
-      </para>
-     </step>
-    </substeps>
-   </step>
-  </procedure>
- </sect1>
- <sect1 xml:id="sec-cap-tbl-buildpack-with-stack">
-  <title><literal>api-group</literal> Pod Not Ready after Buildpack Update</title>
-  <para>
-   When a built-in buildpack is updated as described in one of the scenarios
-   below, the <literal>api-group</literal> pod will fail to reach a fully ready
-   state upon restart. A built-in buildpack is a buildpack that is included as
-   part of a &productname; release and has no stack association by default.
-  </para>
-  <para>
-   The following scenarios can result in the <literal>api-group</literal> not
-   being fully ready:
-  </para>
-  <itemizedlist>
-   <listitem>
-    <para>
-     A built-in buildpack is assigned a stack association. For example:
-    </para>
-<screen>&prompt.user;cf update-buildpack <replaceable>ruby_buildpack</replaceable> --assign-stack <replaceable>sle15</replaceable></screen>
-   </listitem>
-   <listitem>
-    <para>
-     A built-in buildpack is updated to to a version with an inherent stack
-     association, such as those provided by upstream &cf;. For example:
-    </para>
-<screen>&prompt.user;cf update-buildpack <replaceable>ruby_buildpack</replaceable> -p <replaceable>https://github.com/cloudfoundry/ruby-buildpack/releases/download/v1.7.43/ruby-buildpack-cflinuxfs3-v1.7.43.zip</replaceable></screen>
-   </listitem>
-  </itemizedlist>
-
-  <sect2 xml:id="sec-cap-tbl-buildpack-with-stack-recovery-prevention">
-   <title>Recovery and Prevention</title>
-   <para>
-    In order to bring the <literal>api-group</literal> pod back to a fully ready
-    state, use the following procedure.
-   </para>
-   <procedure>
-    <step>
-     <para>
-      Delete the buildpack that was updated to have a stack association.
-     </para>
-<screen>&prompt.user;cf delete-buildpack <replaceable>ruby_buildpack</replaceable></screen>
-    </step>
-    <step>
-     <para>
-      Restart the <literal>api-group</literal> pod.
-     </para>
-<screen>&prompt.user;kubectl delete pod api-group-0 --namespace <replaceable>kubecf</replaceable></screen>
-    </step>
-   </procedure>
-   <para>
-    In order to use a buildpack with a stack association and not encounter the
-    issue described in this section, do the following. Instead of updating one
-    of the built-in buildpacks to either assign a stack or update to one with an
-    inherent stack association, create a new buildpack with the desired buildpack
-    files and associated stack.
-   </para>
-<screen>&prompt.user;cf create-buildpack <replaceable>ruby_cflinuxfs3</replaceable> <replaceable>https://github.com/cloudfoundry/ruby-buildpack/releases/download/v1.7.41/ruby-buildpack-cflinuxfs3-v1.7.41.zip</replaceable> <replaceable>1</replaceable> <replaceable>--enable</replaceable></screen>
-  </sect2>
- </sect1>
  <sect1 xml:id="sec-cap-tbl-admission-webhook">
   <title>Admission webhook denied</title>
   <para>
     When switching back to Diego from Eirini, the error below can occur:
   </para>
 <screen>
-&prompt.user;helm install kubecf <replaceable>kubecf.tgz</replaceable> --namespace <replaceable>kubecf</replaceable> --values <replaceable>kubecf-values.yaml</replaceable>
+&prompt.user;helm install <replaceable>kubecf</replaceable> suse/kubecf --namespace <replaceable>kubecf</replaceable> --values &values-file;
 Error: admission webhook "validate-boshdeployment.quarks.cloudfoundry.org" denied the request: Failed to resolve manifest: Failed to interpolate ops 'kubecf-user-provided-properties' for manifest 'kubecf': Applying ops on manifest obj failed in interpolator: Expected to find exactly one matching array item for path '/instance_groups/name=eirini' but found 0
   </screen>
   <para>

@@ -280,13 +280,6 @@ dotnet-core_buildpack    11         true      false    dotnet-core-buildpack-v2.
    <command>cf update-buildpack</command> command. To see all values that can be
    updated, run <command>cf update-buildpack -h</command>.
   </para>
-  <important>
-   <para>
-    Before updating a built-in buildpack, take note of the scenarios that could
-    lead to the <literal>api-group</literal> pod not being in a ready state as
-    described in <xref linkend="sec-cap-tbl-buildpack-with-stack"/>.
-   </para>
-  </important>
   <procedure>
    <step>
     <para>
