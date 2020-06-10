@@ -502,36 +502,11 @@
      </listitem>
     </varlistentry>
     <varlistentry>
-     <term>api-group</term>
+     <term>api</term>
      <listitem>
       <para>
        Contains the &kubecf; Cloud Controller, which implements the CF API. It is
        exposed via the router.
-      </para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
-     <term>blobstore</term>
-     <listitem>
-      <para>
-       A WebDAV blobstore for storing application bits, buildpacks, and stacks.
-      </para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
-     <term>cc-clock</term>
-     <listitem>
-      <para>
-       Sidekick to the Cloud Controller, periodically performing maintenance
-       tasks such as resource cleanup.
-      </para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
-     <term>cc-uploader</term>
-     <listitem>
-      <para>
-       Assists droplet upload from Diego.
       </para>
      </listitem>
     </varlistentry>
@@ -544,13 +519,14 @@
      </listitem>
     </varlistentry>
     <varlistentry>
-     <term>configgin-helper</term>
+     <term>database</term>
      <listitem>
       <para>
+       A PXC server and component to route requests to replicas.
       </para>
      </listitem>
     </varlistentry>
-    <varlistentry>
+   <varlistentry>
      <term>diego-api</term>
      <listitem>
       <para>
@@ -559,27 +535,10 @@
      </listitem>
     </varlistentry>
     <varlistentry>
-     <term>diego-brain</term>
-     <listitem>
-      <para>
-       Contains the Diego auctioning system that schedules user applications
-       across the elastic layer.
-      </para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
      <term>diego-cell (privileged)</term>
      <listitem>
       <para>
        The elastic layer of &kubecf;, where applications live.
-      </para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
-     <term>diego-ssh</term>
-     <listitem>
-      <para>
-       Provides SSH access to user applications, exposed via a &kube; service.
       </para>
      </listitem>
     </varlistentry>
@@ -607,7 +566,7 @@
       </para>
      </listitem>
     </varlistentry>
-<varlistentry>
+    <varlistentry>
      <term>doppler</term>
      <listitem>
       <para>
@@ -626,36 +585,10 @@
      </listitem>
     </varlistentry>
     <varlistentry>
-     <term>mysql</term>
-     <listitem>
-      <para>
-       A &mariadb; server and component to route requests to replicas.
-      </para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
      <term>nats</term>
      <listitem>
       <para>
        A pub-sub messaging queue for the routing system.
-      </para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
-     <term>nfs-broker (privileged)</term>
-     <listitem>
-      <para>
-       A service broker for enabling NFS-based application persistent storage
-       when using the Diego scheduler.
-      </para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
-     <term>post-deployment-setup</term>
-     <listitem>
-      <para>
-       Used as a &kube; job, performs cluster setup after installation has
-       completed.
       </para>
      </listitem>
     </varlistentry>
@@ -676,16 +609,7 @@
      </listitem>
     </varlistentry>
     <varlistentry>
-     <term>secret-generation</term>
-     <listitem>
-      <para>
-       Used as a &kube; job to create secrets (certificates) when the cluster
-       is installed.
-      </para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
-     <term>syslog-scheduler</term>
+     <term>scheduler</term>
      <listitem>
       <para>
        Part of the logging system that allows user applications to be bound to
@@ -694,10 +618,26 @@
      </listitem>
     </varlistentry>
     <varlistentry>
+     <term>singleton-blobstore</term>
+     <listitem>
+      <para>
+       A WebDAV blobstore for storing application bits, buildpacks, and stacks.
+      </para>
+     </listitem>
+    </varlistentry>
+   <varlistentry>
      <term>tcp-router</term>
      <listitem>
       <para>
        Routes TCP traffic for your applications.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>uaa</term>
+     <listitem>
+      <para>
+       User account and authentication.
       </para>
      </listitem>
     </varlistentry>
@@ -711,7 +651,6 @@
     with each other (<xref linkend="fig-cap-simple-services"/>). See
     <xref linkend="fig-cap-detailed-services"/> for a more detailed view.
    </para>
-   <!-- TODO-CAP2 update diagram -->
    <figure xml:id="fig-cap-simple-services">
     <title>Simple Services Diagram</title>
     <mediaobject>
@@ -728,7 +667,6 @@
    <para>
     This table describes how these services operate.
    </para>
-   <!-- TODO-CAP2 update descriptions -->
    <informaltable>
     <tgroup cols="5">
      <thead>
