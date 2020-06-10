@@ -13,29 +13,26 @@ found" errors
 <!--ENTITY deployment-pod-status............................................-->
 
 <!ENTITY deployment-pod-status
-'<!-- TODO-CAP2 update description -->
-<variablelist xmlns="http://docbook.org/ns/docbook">
-<varlistentry>
-     <term>Some Pods Show as Not Running</term>
-     <listitem>
-      <para>
-       During deployment, pods are spawned over time, starting with a single
-       pod whose name stars with <literal>ig-</literal>. This pod will eventually
-       disappear and will be replaced by other pods whose progress
-       then can be followed as usual.
-
-       The whole process can take around 20—30 minutes to finish.
-
-       The initial stage may look like this:
-      </para>
-<screen>
+'<para xmlns="http://docbook.org/ns/docbook">
+  During deployment, pods are spawned over time, starting with a single
+  pod whose name stars with <literal>ig-</literal>. This pod will eventually
+  disappear and will be replaced by other pods whose progress
+  then can be followed as usual.
+ </para>
+ <para xmlns="http://docbook.org/ns/docbook">
+  The whole process can take around 20—30 minutes to finish.
+ </para>
+ <para xmlns="http://docbook.org/ns/docbook">
+  The initial stage may look like this:
+ </para>
+<screen xmlns="http://docbook.org/ns/docbook">
 &prompt.user;kubectl get pods --namespace kubecf
 ig-kubecf-f9085246244fbe70-jvg4z   1/21    Running             0          8m28s
 </screen>
-      <para>
-       Later the progress may look like this:
-      </para>
-<screen>
+ <para xmlns="http://docbook.org/ns/docbook">
+  Later the progress may look like this:
+ </para>
+<screen xmlns="http://docbook.org/ns/docbook">
 NAME                        READY   STATUS       RESTARTS   AGE
 adapter-0                   4/4     Running      0          6m45s
 api-0                       0/15    Init:30/63   0          6m38s
@@ -56,45 +53,15 @@ scheduler-0                 0/8     Init:8/17    0          6m35s
 singleton-blobstore-0       0/6     Init:6/11    0          6m46s
 tcp-router-0                0/5     Init:5/11    0          6m37s
 uaa-0                       0/6     Init:8/13    0          6m36s
-</screen>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
-     <term>Some Pods Terminate and Restart during Deployment</term>
-     <listitem>
-      <para>
-       When monitoring the status of a deployment, pods can be observed
-       transitioning from a <literal>Running</literal> state to a
-       <literal>Terminating</literal> state, then returning to a
-       <literal>Running</literal> again.
-      </para>
-      <para>
-       If a <literal>RESTARTS</literal> count of 0 is maintained during this
-       process, this is normal behavior and not due to failing pods. It is not
-       necessary to stop the deployment. During deployment, pods will modify
-       annotations on itself via the StatefulSet pod spec. In order to get the
-       correct annotations on the running pod, it is stopped and restarted.
-       Under normal circumstances, this behavior should only result in a pod
-       restarting once.
-      </para>
-     </listitem>
-    </varlistentry>
-</variablelist>'>
+</screen>'>
 
 <!--ENTITY release-name-length ................................................-->
 
 <!ENTITY release-name-length
-'<variablelist xmlns="http://docbook.org/ns/docbook">
-<varlistentry>
-     <term>Length of release names</term>
-     <listitem>
-      <para>
-       Release names (for example, when you run <command>helm install --name</command>)
-have a maximum length of 36 characters.
-      </para>
-     </listitem>
-    </varlistentry>
-</variablelist>'>
+'<para xmlns="http://docbook.org/ns/docbook">
+  Release names (for example, when you run <command>helm install
+  RELEASE_NAME</command>) have a maximum length of 36 characters.
+ </para>'>
 
 <!--ENTITY readmefirst......................................................-->
 

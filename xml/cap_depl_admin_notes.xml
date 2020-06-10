@@ -32,7 +32,7 @@
   &deployment-pod-status;
  </sect1>
  <sect1>
-  <title>Namespaces</title>
+  <title>Length of Release Names</title>
   &release-name-length;
  </sect1>
  <sect1 xml:id="cha-cap-depl-notes-releases">
