@@ -242,64 +242,6 @@
    by leveraging &kubecf;, a version of &cf; deployed as &helm; chart.
   </para>
  </sect1>
- <sect1 xml:id="sec-cap-requirements">
-  <title>Minimum Requirements</title>
-
-  <para>
-   This guide details the steps for deploying &kubecf; on
-   supported &kube; environments, namely &caasp;, &aks-full;, &gke-full;, and &eks-full;.
-  </para>
-
-  <important>
-   <title>Required Knowledge</title>
-   <para>
-    Installing and administering &productname; requires knowledge of Linux,
-    &docker;, &kube;, and your &kube; platform. You must plan resource allocation
-    and network architecture by taking into account the requirements of your
-    &kube; platform in addition to &kubecf; requirements. &kubecf; is a discrete
-    component in your cloud stack, but it still requires knowledge of
-    administering and troubleshooting the underlying stack.
-   </para>
-  </important>
-
-  <para>
-   You may create a minimal deployment on four &kube; nodes for testing.
-   However, this is insufficient for a production deployment. A supported
-   deployment includes &kubecf; installed on &caasp;, &eks;, &gke;, or &aks;.
-   You also need a storage back-end such as &ses; or NFS, a DNS/DHCP
-   server, and an Internet connection to download additional packages during
-   installation and ~10 GB of &docker; images. <xref linkend="fig-cap-min-prod-arch"/> describes a minimal production
-   deployment with &kubecf; deployed on a &kube; cluster containing three &kube;
-   masters and three workers, plus an ingress controller, administration
-   workstation, DNS/DHCP server, and a &ses; cluster.
-  </para>
-
-  <figure xml:id="fig-cap-min-prod-arch">
-   <title>Minimal Example Production Deployment</title>
-   <mediaobject>
-    <imageobject role="fo">
-     <imagedata fileref="cap-arch-prod.svg" format="SVG" width="90%"/>
-    </imageobject>
-    <imageobject role="html">
-     <imagedata fileref="cap-arch-prod.svg"/>
-    </imageobject>
-    <textobject role="description"><phrase>network architecture of minimal production setup</phrase>
-    </textobject>
-   </mediaobject>
-  </figure>
-
-  <para>
-   Note that after you have deployed your cluster and start building and
-   running applications, your applications may depend on buildpacks that are
-   not bundled in the container images that ship with &kubecf;. These will be
-   downloaded at runtime, when you are pushing applications to the platform.
-   Some of these buildpacks may include components with proprietary licenses.
-   (See
-   <link xlink:href="https://docs.cloudfoundry.org/buildpacks/developing-buildpacks.html">Customizing
-   and Developing Buildpacks</link> to learn more about buildpacks, and
-   creating and managing your own.)
-  </para>
- </sect1>
  <sect1 xml:id="sec-cap-architecture">
   <title>&productname; Architecture</title>
 
