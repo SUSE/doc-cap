@@ -293,6 +293,10 @@ suse       https://kubernetes-charts.suse.com/
   </para>
 
   <para>
+   Usage of the broker requires a cluster running &kube; 1.15 or earlier.
+  </para>
+
+  <para>
    Start by extracting and setting a batch of environment variables:
   </para>
 
@@ -320,7 +324,10 @@ suse       https://kubernetes-charts.suse.com/
 </screen>
 
   <para>
-   Add the necessary &helm; repositories and download the charts:
+   Add and install the catalog  &helm; chart. The CPU and memory's requests and
+   limits must be increased, otherewise the installation fails due to a
+   <literal>OOMKilled</literal> state. This example, increases these to double
+   the default:
   </para>
 
 <screen>&prompt.user;helm repo add svc-cat https://svc-catalog-charts.storage.googleapis.com
@@ -330,9 +337,13 @@ suse       https://kubernetes-charts.suse.com/
 &prompt.user;kubectl create namespace <replaceable>catalog</replaceable>
 
 &prompt.user;helm install <replaceable>catalog</replaceable> svc-cat/catalog \
- --namespace <replaceable>catalog</replaceable> \
+ --namespace catalog \
  --set controllerManager.healthcheck.enabled=false \
- --set apiserver.healthcheck.enabled=false
+ --set apiserver.healthcheck.enabled=false \
+ --set controllerManager.resources.requests.cpu=200m \
+ --set controllerManager.resources.requests.memory=40Mi \
+ --set controllerManager.resources.limits.cpu=200m \
+ --set controllerManager.resources.limits.memory=40Mi
 
 &prompt.user;kubectl get apiservice
 
