@@ -101,8 +101,9 @@
   </para>
 
   <para>
-   &productname; is comprised of &kubecf; (<literal>kubecf</literal>), the Stratos
-   Web user interface, and Stratos Metrics.
+   &productname; is comprised of &operator; (<literal>&operator;</literal>),
+   &kubecf; (<literal>kubecf</literal>), the Stratos Web user interface, and
+   Stratos Metrics.
   </para>
 
   <para>
@@ -123,7 +124,8 @@
   </para>
 
   <para>
-   &cap; is designed to run on any &kube; cluster. This guide describes how
+   &cap; is designed to run on any &kube; cluster as described in
+   <xref linkend="sec-cap-platform-support"/>. This guide describes how
    to deploy it:
   </para>
   <!-- Platforms covered by guide -->
