@@ -57,7 +57,7 @@
    efforts basis.
   </para>
  </sect2>
- <sect2>
+ <sect2 xml:id="sec-cap-platform-support">
   <title>Platform Support</title>
   <para>
    &productname; is fully supported on Amazon EKS, Microsoft Azure AKS and
