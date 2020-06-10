@@ -32,16 +32,8 @@
   </para>
   <para>
    As a technology preview, Eirini contains certain limitations to its
-   functionality. These are outlined below:
+   functionality.
   </para>
-  <itemizedlist>
-   <listitem>
-    <para>
-     Air gapped environments or usage of manual certificates are currently not
-     supported.
-    </para>
-   </listitem>
-  </itemizedlist>
  </warning>
 
  <sect1 xml:id="sec-cap-eirini-enable">
@@ -57,16 +49,18 @@
 features:
   eirini:
     enabled: true
-kube:
-  auth: rbac
-env:
-  DEFAULT_STACK: cflinuxfs3
 </screen>
+    <para>
+     When Eirini is enabled, both <literal>features.suse_default_stack</literal>
+     and <literal>features.suse_buildpacks</literal> must be enabled as well.
+     A cflinuxfs3 Eirini image is currently not available, and the &suse; stack
+     must be used. By default, both the &suse; stack and buildpacks are enabled. 
+    </para>
     <note>
      <itemizedlist>
       <listitem>
        <para>
-        Even after enabling Eirini, you will still see the
+        After enabling Eirini, you will still see the
         <literal>diego-api</literal> pod. This is normal behavior because the Diego pod has a component required by Eirini.
        </para>
       </listitem>
@@ -80,40 +74,12 @@ env:
    </step>
    <step>
     <para>
-     To enable persistence, refer to the instructions at
-     <link xlink:href="https://github.com/SUSE/scf/wiki/Persistence-with-Eirini-in-SCF"/>.
-    </para>
-   </step>
-   <step>
-    <para>
      Deploy <literal>kubecf</literal>.
     </para>
     <para>
      Refer to the following for platform-specific instructions:
     </para>
     &deployment-platforms;
-   </step>
-   <step>
-    <para>
-     After initiating the <command>helm install</command> command to deploy
-     <literal>kubecf</literal>, The secret generator will create a certificate
-     signing request that must be approved by an administrator before deployment
-     will continue. To do so, run the command below where <literal>kubecf</literal>
-     should be replaced with your namespace of your <literal>kubecf</literal>
-     deployment.
-    </para>
-<screen>&prompt.user;kubectl certificate approve <replaceable>kubecf</replaceable>-bits-service-ssl-cert</screen>
-    <para>
-     Note that manual approval of CSRs is recommended.
-    </para>
-    <para>
-     An alternative to manual approval of the CSR is to pass
-     <command>--set env.KUBE_CSR_AUTO_APPROVAL=true</command> as part of the
-     <command>helm install</command> command. This flag will allow the CSR to
-     be automatically approved. Operators should take caution with this approach
-     as it will provide the secrets genrator with a cluster role binding that
-     allows it to approve <emphasis>all</emphasis> CSRs made to the &kube; signer.
-    </para>
    </step>
    <step>
     <para>
