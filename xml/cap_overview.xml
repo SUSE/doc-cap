@@ -396,10 +396,10 @@
    <title>&productname; Stack</title>
    <mediaobject>
     <imageobject role="fo">
-     <imagedata fileref="cap-kube.png" format="PNG" width="75%"/>
+     <imagedata fileref="cap-kube.svg" format="SVG" width="75%"/>
     </imageobject>
     <imageobject role="html">
-     <imagedata fileref="cap-kube.png"/>
+     <imagedata fileref="cap-kube.svg"/>
     </imageobject>
     <textobject role="description"><phrase>Relationships of the main &cap;
             components.</phrase>
