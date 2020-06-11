@@ -168,7 +168,6 @@
 
 &prompt.user;kubectl exec --stdin --tty --namespace scf api-group-0 -- bash -c "cat /var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml | grep -A 10 db_encryption" > enc_key_rotated
 </screen>
-     </para>
     </step>
     <step>
      <para>
