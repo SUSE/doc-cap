@@ -83,7 +83,7 @@
    the subsections below.
   </para>
 
-  <sect2 xml:id="sec-cap-upgrade-1.5.2-export">
+  <sect2 xml:id="sec-cap-upgrade-152-export">
    <title>Export Data from Existing &productname; 1.5.2 Deployment</title>
 
    <procedure>
@@ -185,7 +185,7 @@
    </procedure>
   </sect2>
 
-  <sect2 xml:id="sec-cap-upgrade-2.0-import">
+  <sect2 xml:id="sec-cap-upgrade-20-import">
    <title>Import Data into &productname; 2.0 Deployment</title>
 
    <procedure>
