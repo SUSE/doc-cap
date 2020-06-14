@@ -228,6 +228,8 @@
       target platform.
      </para>
      &deployment-platforms;
+    </step>
+    <step>
      <para>
       Import the UAA database.
      </para>
@@ -363,24 +365,62 @@ while (&lt;>) {
 </screen>
      <para>
       For a CCDB that has not been rotated:
-     </para> 
-<screen>&prompt.user;sed "s/<replaceable>SCF_DOMAIN</replaceable>/<replaceable>KubeCF_system_domain</replaceable>/g" ccdb-src.sql > ccdb-src-kubecf.sql
-&prompt.user;perl normalize.pl ccdb-src-kubecf.sql > normal.sql
-
-&prompt.user;echo "drop database cloud_controller; create database cloud_controller;" | \
+     </para>
+     <orderedlist>
+      <listitem>
+       <para>
+        Update the routes for the new cluster in the
+        <filename>ccdb-src.sql</filename> file. Replace the placeholders values
+        with the value of <literal>DOMAIN</literal> from the SCF cluster and the
+        value of <literal>system_domain</literal> from the &kubecf; cluster.
+       </para>
+<screen>&prompt.user;sed "s/<replaceable>SCF_DOMAIN</replaceable>/<replaceable>KubeCF_system_domain</replaceable>/g" ccdb-src.sql > ccdb-src-kubecf.sql</screen>
+      </listitem>
+      <listitem>
+       <para>
+        Filter out the squashed migrations.
+       </para>
+<screen>&prompt.user;perl normalize.pl ccdb-src-kubecf.sql > normal.sql</screen>
+      </listitem>
+      <listitem>
+       <para>
+        Drop the current CCDB and import the dump from SCF.
+       </para> 
+<screen>&prompt.user;echo "drop database cloud_controller; create database cloud_controller;" | \
      kubectl exec -i database-0 --namespace kubecf -- mysql
 &prompt.user;kubectl exec -i database-0 --namespace kubecf -- mysql cloud_controller &lt; normal.sql
 </screen>
+      </listitem>
+     </orderedlist>
      <para>
       For a CCDB that has already been rotated before:
      </para>
-<screen>&prompt.user;sed "s/<replaceable>SCF_DOMAIN</replaceable>/<replaceable>KubeCF_system_domain</replaceable>/g" ccdb-rotated-src.sql > ccdb-src-kubecf.sql
-&prompt.user;perl normalize.pl ccdb-src-minikube.sql > normal.sql
-
-&prompt.user;echo "drop database cloud_controller; create database cloud_controller;" | \
+     <orderedlist>
+      <listitem>
+       <para>
+        Update the routes for the new cluster in the
+        <filename>ccdb-rotated-src.sql</filename> file. Replace the placeholders values
+        with the value of <literal>DOMAIN</literal> from the SCF cluster and the
+        value of <literal>system_domain</literal> from the &kubecf; cluster.
+       </para>
+<screen>&prompt.user;sed "s/<replaceable>SCF_DOMAIN</replaceable>/<replaceable>KubeCF_system_domain</replaceable>/g" ccdb-rotated-src.sql > ccdb-src-kubecf.sql</screen>
+      </listitem>
+      <listitem>
+       <para>
+        Filter out the squashed migrations.
+       </para>
+<screen>&prompt.user;perl normalize.pl ccdb-src-kubecf.sql > normal.sql</screen>
+      </listitem>
+      <listitem>
+       <para>
+        Drop the current CCDB and import the dump from SCF.
+       </para>
+<screen>&prompt.user;echo "drop database cloud_controller; create database cloud_controller;" | \
      kubectl exec -i database-0 --namespace kubecf -- mysql
 &prompt.user;kubectl exec -i database-0 --namespace kubecf -- mysql cloud_controller &lt; normal.sql
 </screen>
+      </listitem>
+     </orderedlist>
     </step>
     <step>
      <para>
@@ -389,8 +429,8 @@ while (&lt;>) {
      <para>
       For a CCDB that has not been rotated:
      </para>
-     <procedure>
-      <step>
+     <orderedlist>
+      <listitem>
 <screen>&prompt.user;cat enc_key
 db_encryption_key: qmF4BZxVUZoVkvDdYi2crkezdNWww6mLRh32W77VsLY5xhinpunVNp1d2mzc3O7F
 
@@ -399,8 +439,8 @@ database_encryption:
   current_key_label: ""
   pbkdf2_hmac_iterations: 2048
 </screen>     
-      </step>
-      <step>
+      </listitem>
+      <listitem>
        <para>
         When only <literal>db_encryption_key</literal> is set, we must use the
         same legacy mechanism in &kubecf; as well.
@@ -422,13 +462,13 @@ credentials:
 --values enc_key_values.yaml \
 --version &kubecf_chart;
 </screen>
-      </step>
-     </procedure>
+      </listitem>
+     </orderedlist>
      <para>
       For a CCDB that has already been rotated before:
      </para>
-     <procedure>
-      <step>
+     <orderedlist>
+      <listitem>
 <screen>&prompt.user;cat enc_key_rotated
 db_encryption_key: qmF4BZxVUZoVkvDdYi2crkezdNWww6mLRh32W77VsLY5xhinpunVNp1d2mzc3O7F
 
@@ -437,8 +477,8 @@ database_encryption:
   current_key_label: "NEW_KEY"
   pbkdf2_hmac_iterations: 2048
 </screen>
-      </step>
-      <step>
+      </listitem>
+      <listitem>
        <para>
         Since a rotated key exists, <literal>db_encryption_key</literal> can be
         ignored. The <literal>current_key_label</literal> setting must be copied
@@ -471,9 +511,8 @@ credentials:
 --values enc_key_values.yaml \
 --version &kubecf_chart;
 </screen>
-
-      </step>
-     </procedure>
+      </listitem>
+     </orderedlist>
      <para>
       Wait until <literal>api</literal>, <literal>cc-worker</literal>, and
       <literal>scheduler</literal> have restarted. To monitor the progress run
