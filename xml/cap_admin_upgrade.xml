@@ -83,8 +83,22 @@
    the subsections below.
   </para>
 
-  <sect2 xml:id="sec-cap-upgrade-152-export">
-   <title>Export Data from Existing &productname; 1.5.2 Deployment</title>
+  <important>
+   <title>Scope of Migration</title>
+   <para>
+    This procedure only imports the UAA and CC databases. It does not import the
+    Credhub and Diego BBS databases. Service credentials from Credhub are
+    missing, and Diego does not know anything about the desired app states
+    All running apps need to be restarted so that Diego knows about them.
+   </para>
+   <para>
+    This whole procedure also does not deal with exporting and recreating
+    services.
+   </para>
+  </important>
+
+  <sect2 xml:id="sec-cap-upgrade-export-scf">
+   <title>Export Data from Existing SCF Deployment</title>
 
    <procedure>
     <step>
@@ -136,13 +150,29 @@
     </step>
     <step>
      <para>
-      Rotate secrets and database encryption key.
+      Rotate secrets and database encryption key. Do not copy the example as is, ensure a secure key is used in place of the example value of <replaceable>abcdef</replaceable>.
      </para>
      <substeps>
       <step>
-<screen>&prompt.user;upgrade --set env.CC_DB_CURRENT_KEY_LABEL=<replaceable>NEW_KEY</replaceable> --set secrets.CC_DB_ENCRYPTION_KEYS.<replaceable>NEW_KEY</replaceable>=<replaceable>abcdef</replaceable></screen>
+       <para>
+        Use <command>helm upgrade</command> to apply the configuration update
+        and rotate all generated secrets. If secrets have been rotated
+        previously (<literal>kube.secrets_generation_counter</literal> has
+        already been set), be sure the new value provided is an increment of the
+        existing one.
+       </para>
+<screen>&prompt.user;helm upgrade susecf-scf suse/cf \
+--set env.CC_DB_CURRENT_KEY_LABEL=<replaceable>NEW_KEY</replaceable> \
+--set secrets.CC_DB_ENCRYPTION_KEYS.<replaceable>NEW_KEY</replaceable>=<replaceable>abcdef</replaceable> \
+--set kube.secrets_generation_counter=<replaceable>2</replaceable>
+--values scf-config-values.yaml \
+--version 2.20.3
+</screen>
       </step>
       <step>
+       <para>
+        With the new encryption key in place, perform the rotation.
+       </para>
 <screen>&prompt.user;kubectl exec --namespace scf api-group-0 -- bash -c 'source /var/vcap/jobs/cloud_controller_ng/bin/ruby_version.sh; \
     export CLOUD_CONTROLLER_NG_CONFIG=/var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml; \
     cd /var/vcap/packages/cloud_controller_ng/cloud_controller_ng; \
@@ -150,6 +180,9 @@
 </screen>
       </step>
       <step>
+       <para>
+        Restart the pods for the changes to take effect.
+       </para>
 <screen>&prompt.user;kubectl delete pod api-group-0 --namespace scf
 &prompt.user;kubectl delete pod cc-worker-0 --namespace scf
 &prompt.user;kubectl delete pod cc-clock-0 --namespace scf
@@ -185,11 +218,16 @@
    </procedure>
   </sect2>
 
-  <sect2 xml:id="sec-cap-upgrade-20-import">
-   <title>Import Data into &productname; 2.0 Deployment</title>
+  <sect2 xml:id="sec-cap-upgrade-import-kube">
+   <title>Import Data into New &kubecf; Deployment</title>
 
    <procedure>
     <step>
+     <para>
+      Deploy a &productname; 2.0 cluster. Refer to the instructions for your
+      target platform.
+     </para>
+     &deployment-platforms;
      <para>
       Import the UAA database.
      </para>
@@ -211,19 +249,63 @@ EOF
       setup, none of the users should exist. Except for <literal>admin</literal>
       , so we are only updating the password for that user.
     </para>
-<!-- TODO insert content of script -->
      <para>
       The <filename>adduser.pl</filename> script will also update all identity
       zone ids to <literal>uaa</literal>, in case the export comes from an
       external and not an embedded UAA.
      </para>
+<screen># adduser.pl
+use strict;
+use warnings;
+
+my %table;
+while (&lt;>) {
+    my($insert,$table,$values) = /^(INSERT INTO `(.*?)` VALUES) (.*);$/ or next;
+
+    my $literal_value = qr/ ' (?: [^'\\] | '' | \\. )* ' | -?\w+ /x;
+    # Each row contains the comma-separated list of values including the surrounding parens.
+    my @rows = $values =~ / \( (?: (?: $literal_value ) ,? )+ \) /gx;
+
+    my @records;
+    # Each record is a reference to a list of all fields of a row.
+    foreach my $record (map [/$literal_value/g], @rows) {
+        # Replace old identity_zone_id with 'uaa'.
+        my %zone_id_column = (group_membership => 7, groups => 5, oauth_client_details => 11,
+                              user_google_mfa_credentials => 5, users => 15);
+        $record->[$zone_id_column{$table}] = "'uaa'" if defined $zone_id_column{$table};
+
+        # Admin user name has changed from uaaadmin to uaa.
+        $record->[6] = 'uaa' if $table eq "schema_version";
+
+        push @records, $record;
+    }
+    $table{$table} = \@records;
+}
+
+my $users = $table{users};
+my $admin = (grep $_->[4] eq "'admin'", @$users)[0];
+die unless $admin;
+my $admin_id = $admin->[0];
+
+# Set admin password to exported value.
+printf "UPDATE `users` SET password = %s WHERE username = 'admin';\n", $admin->[5];
+
+# Export all tables that have a user_id column.
+my %id_column = (user_google_mfa_credentials => 0, user_info => 0, users => 0);
+for my $table (keys %id_column) {
+    # Add records for all users, except 'admin'.
+    for my $record (grep $_->[$id_column{$table}] ne $admin_id, @{$table{$table}}) {
+        printf "INSERT INTO `$table` VALUES(%s);\n", join(",", @$record);
+    }
+}
+</screen>
 <screen>&prompt.user;perl adduser.pl uaadb-src.sql > adduser.sql
 cat adduser.sql
 
 kubectl exec -i database-0 --namespace kubecf -- mysql uaa &lt; adduser.sql
 
 echo "select username from uaa.users;" | kubectl exec -i database-0 --namespace kubecf -- mysql
-cf login --skip-ssl-validation -a https://api.$(m ip).omg.howdoi.website -u admin -p changeme
+cf login --skip-ssl-validation -a https://api. -u admin -p changeme
 </screen>
     </step>
     <step>
@@ -245,14 +327,54 @@ cf login --skip-ssl-validation -a https://api.$(m ip).omg.howdoi.website -u admi
       Import the Cloud Controller database (CCDB).
      </para>
      <para>
-      The CC database includes routes, that may need to be updated for the new
+      The CC database includes routes, that <emphasis>may</emphasis> need to be updated for the new
       cluster. The list of migrations also includes artificial
       "squashed migrations" that are generated by SCF to combine all previous
       migrations into a single transaction. These squashed migrations don't
       exist in &kubecf; and must be filtered out. The original migrations still
       exist in the table, so no other actions are required.
      </para>
-<screen>&prompt.user;sed "s/cf-dev.io/$(minikube ip).omg.howdoi.website/g" ccdb-src.sql >ccdb-src-minikube.sql
+<screen># normalize.pl
+use strict;
+use warnings;
+
+while (&lt;>) {
+    if (my($insert,$table,$values) = /^(INSERT INTO `(.*?)` VALUES) (.*);$/) {
+        my $literal_value = qr/ ' (?: [^'\\] | '' | \\. )* ' | -?\w+ /x;
+        # Each row contains the comma-separated list of values including the surrounding parens.
+        my @rows = $values =~ / \( (?: (?: $literal_value ) ,? )+ \) /gx;
+
+        my @records;
+        # Each record is a reference to a list of all fields of a row.
+        foreach my $record (map [/$literal_value/g], @rows) {
+            # Squashed migration are an SCF optimization that doesn't exist in kubecf.
+            next if $table eq "schema_migrations" &amp;&amp; $record->[0] =~ /^'\d+_squashed_migrations.rb'$/;
+            push @records, $record;
+        }
+
+        # Print each row on a separate line for easier reading/comparison.
+        printf "$insert\n%s;\n", join(",\n", map(sprintf("  (%s)", join(",", @$_)), @records));
+        next;
+    }
+
+    print;
+}
+
+</screen>
+     <para>
+      For a CCDB that has not been rotated:
+     </para> 
+<screen>&prompt.user;sed "s/<replaceable>SCF_DOMAIN</replaceable>/<replaceable>KubeCF_system_domain</replaceable>/g" ccdb-src.sql > ccdb-src-kubecf.sql
+&prompt.user;perl normalize.pl ccdb-src-kubecf.sql > normal.sql
+
+&prompt.user;echo "drop database cloud_controller; create database cloud_controller;" | \
+     kubectl exec -i database-0 --namespace kubecf -- mysql
+&prompt.user;kubectl exec -i database-0 --namespace kubecf -- mysql cloud_controller &lt; normal.sql
+</screen>
+     <para>
+      For a CCDB that has already been rotated before:
+     </para>
+<screen>&prompt.user;sed "s/<replaceable>SCF_DOMAIN</replaceable>/<replaceable>KubeCF_system_domain</replaceable>/g" ccdb-rotated-src.sql > ccdb-src-kubecf.sql
 &prompt.user;perl normalize.pl ccdb-src-minikube.sql > normal.sql
 
 &prompt.user;echo "drop database cloud_controller; create database cloud_controller;" | \
@@ -264,6 +386,11 @@ cf login --skip-ssl-validation -a https://api.$(m ip).omg.howdoi.website -u admi
      <para>
       Update the encryption key.
      </para>
+     <para>
+      For a CCDB that has not been rotated:
+     </para>
+     <procedure>
+      <step>
 <screen>&prompt.user;cat enc_key
 db_encryption_key: qmF4BZxVUZoVkvDdYi2crkezdNWww6mLRh32W77VsLY5xhinpunVNp1d2mzc3O7F
 
@@ -272,31 +399,87 @@ database_encryption:
   current_key_label: ""
   pbkdf2_hmac_iterations: 2048
 </screen>     
-     <para>
-      When only <literal>db_encryption_key</literal> is set, we must use the
-      same legacy mechanism in &kubecf; as well.
-     </para>
+      </step>
+      <step>
+       <para>
+        When only <literal>db_encryption_key</literal> is set, we must use the
+        same legacy mechanism in &kubecf; as well.
+       </para>
+       <para>
+        Create a YAML configuration file with the structure below. Replace the
+        example values with the values found in the
+        <filename>enc_key</filename> file.
+       </para>
 <screen>&prompt.user;cat enc_key_values.yaml
-properties:
-  api:
-    cloud_controller_ng: &amp;cc_encryption
-      cc:
-        db_encryption_key: "qmF4BZxVUZoVkvDdYi2crkezdNWww6mLRh32W77VsLY5xhinpunVNp1d2mzc3O7F"
-  cc-worker:
-    cloud_controller_worker: *cc_encryption
-  scheduler:
-    cc_deployment_updater: *cc_encryption
-    cloud_controller_clock: *cc_encryption
+credentials:
+  cc_db_encryption_key: <replaceable>qmF4BZxVUZoVkvDdYi2crkezdNWww6mLRh32W77VsLY5xhinpunVNp1d2mzc3O7F</replaceable>
 </screen>
+       <para>
+         Use <command>helm upgrade</command> to apply the configuration update.
+       </para>
 <screen>&prompt.user;helm upgrade kubecf suse/kubecf \
 --values &values-file; \
 --values enc_key_values.yaml \
 --version &kubecf_chart;
 </screen>
+      </step>
+     </procedure>
+     <para>
+      For a CCDB that has already been rotated before:
+     </para>
+     <procedure>
+      <step>
+<screen>&prompt.user;cat enc_key_rotated
+db_encryption_key: qmF4BZxVUZoVkvDdYi2crkezdNWww6mLRh32W77VsLY5xhinpunVNp1d2mzc3O7F
+
+database_encryption:
+  keys: {"NEW_KEY":"abcdef"}
+  current_key_label: "NEW_KEY"
+  pbkdf2_hmac_iterations: 2048
+</screen>
+      </step>
+      <step>
+       <para>
+        Since a rotated key exists, <literal>db_encryption_key</literal> can be
+        ignored. The <literal>current_key_label</literal> setting must be copied
+        over, with the exact same name and value. Any other (older) keys in that
+        set can be ignored, as long as encryption key rotation has been
+        performed in SCF since the last update to that list.
+       </para>
+       <para>
+        Create a YAML configuration file with the structure below. Replace the
+        example values with the values found in the
+       <filename>enc_key_rotated</filename> file.
+       </para>
+<screen>&prompt.user;cat enc_key_values.yaml
+ccdb:
+  encryption:
+    rotation:
+      key_labels:
+      - NEW_KEY
+      current_key_label: NEW_KEY
+
+credentials:
+  cc_db_encryption_key: qmF4BZxVUZoVkvDdYi2crkezdNWww6mLRh32W77VsLY5xhinpunVNp1d2mzc3O7F
+  ccdb_key_label_new_key: abcdef
+</screen>
+       <para>
+         Use <command>helm upgrade</command> to apply the configuration update.
+       </para>
+<screen>&prompt.user;helm upgrade kubecf suse/kubecf \
+--values &values-file; \
+--values enc_key_values.yaml \
+--version &kubecf_chart;
+</screen>
+
+      </step>
+     </procedure>
      <para>
       Wait until <literal>api</literal>, <literal>cc-worker</literal>, and
-      <literal>scheduler</literal> have restarted.
+      <literal>scheduler</literal> have restarted. To monitor the progress run
+      the following command.
      </para>
+<screen>&prompt.user;watch --color &apos;kubectl get pods --namespace kubecf&apos;</screen>
     </step>
     <step>
      <para>
@@ -318,65 +501,113 @@ properties:
      <para>
       Verify everything works.
      </para>
+     <substeps>     
+      <step>
+       <para>
+        Target an existing <literal>org</literal> and <literal>space</literal>
+        from your previous &productname; 1.5.2 deployment.
+       </para>
+<screen>&prompt.user;cf target -o EXISTING_ORG -s EXISTING_SPACE</screen>
+      </step>
+      <step>
+       <para>
+        Verify the apps that were previously deployed to the
+        <literal>org</literal> and <literal>space</literal> are listed.
+       </para>
+<screen>&prompt.user;cf apps
+name        requested state   instances   memory   disk   urls
+12factor    started           0/1         64M      256M   12factor.example.com 
+</screen>
+      </step>
+      <step>
+       <para>
+        The <literal>started</literal> value for
+        <literal>requested state</literal> is misleading. Since we did not
+        import the BBS database, Diego does not know anything about these apps.
+        No app instances will be started until the <command>cf restart</command>
+        command is manually issued (it does not require restaging).
+       </para>
+<screen>&prompt.user;cf restart 12factor</screen>
+       <para>
+        Repeat for all apps.
+       </para>
+      </step>
+      <step>
+       <para>
+        Check the encryption key.
+       </para>
+<screen>&prompt.user;kubectl exec --stdin --tty --namespace kubecf api-0 -- bash -c "cat /var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml | grep -A 10 db_encryption"
+Defaulting container name to cloud-controller-ng-cloud-controller-ng.
+Use 'kubectl describe pod/api-0 -n kubecf' to see all of the containers in this pod.
+db_encryption_key: qmF4BZxVUZoVkvDdYi2crkezdNWww6mLRh32W77VsLY5xhinpunVNp1d2mzc3O7F
+
+database_encryption:
+  keys: {"ccdb_key_label_encryption_key_0":"jHlbjl11nZ2wqdh9bCA9ZIOCMxgseIf7OyVP2aSrESmZEuovqLXSWPTKTEcU0CCo"}
+  current_key_label: "ccdb_key_label_encryption_key_0"
+  pbkdf2_hmac_iterations: 2048
+</screen>
+      </step>
+      <step>
+       <para>
+        List the buildpacks.
+       </para>
+<screen>&prompt.user;cf buildpacks
+Getting buildpacks...
+
+buildpack               position   enabled   locked   filename                                                stack
+staticfile_buildpack    1          true      false    staticfile-buildpack-sle15-v1.5.5.1-5.1-eaf36a02.zip    sle15
+staticfile_buildpack    2          true      false    staticfile_buildpack-cflinuxfs3-v1.5.4.zip              cflinuxfs3
+...
+</screen>
+       <para>
+        These are the buildpacks bundled with &kubecf;. Since buildpacks in the
+        CCDB were not locked, they were upgraded when the <literal>api</literal>
+        (or <literal>cc-worker</literal>) pods were restarted.
+       </para>
+      </step>
+     </substeps>
+    </step>
+    <step>
+     <para>
+      To update previously locked buildpacks to the &kubecf; version, unlock the
+      buildpack and restart the Cloud Controller.
+     </para>
+     <substeps>
+      <step>
+       <para>
+        This example unlocks all buildpacks associated with the
+        <literal>cflinuxfs3</literal> stack.
+       </para>
+<screen>&prompt.user;for BP in $(cf buildpacks | perl -ne 'print if s/(_buildpack).*/\1/' | uniq); do cf update-buildpack $BP -s cflinuxfs3 --unlock; done
+Updating buildpack staticfile_buildpack with stack cflinuxfs3 as admin...
+OK
+</screen>
+      </step>
+      <step>
+       <para>
+        Restart the <literal>api</literal> pod. Restarting the
+        <literal>api</literal> pod will cause a restart of the CC. As the CC
+        starts, all <emphasis>unlocked</emphasis> admin buildpacks will be
+        replaced with versions bundled in the release.
+       </para>
+<screen>&prompt.user;kubectl delete pod api-0 --namespace kubecf
+pod "api-0" deleted
+</screen>
+       <para>
+        After restarting the <literal>api-0i</literal> pod, wait for it to be
+        ready again. To monitor the progress run the following command.
+       </para>
+<screen>&prompt.user;watch --color &apos;kubectl get pods --namespace kubecf&apos;</screen>
+      </step>
+      <step>
+       <para>
+        Verify the buildpacks have been updated to the &kubecf; version.  
+       </para>
+<screen>&prompt.user;cf buildpacks</screen>
+      </step>
+     </substeps>
     </step>
    </procedure>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   </sect2>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
  </sect1>
 </chapter>
