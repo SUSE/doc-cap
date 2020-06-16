@@ -73,8 +73,8 @@ ccdb:
       Update the &kubecf; &helm; installation:
      </para>
 <screen>
-&prompt.user;helm upgrade kubecf --values <replaceable>rotate-secret.yaml</replaceable> --reuse-values
-     </screen>
+&prompt.user;helm upgrade kubecf --namespace <replaceable>kubecf</replaceable> --values <replaceable>rotate-secret.yaml</replaceable> --reuse-values
+</screen>
     </step>
     <step>
      <para>

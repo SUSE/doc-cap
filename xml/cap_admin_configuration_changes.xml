@@ -55,6 +55,7 @@
   </para>
 
 <screen>&prompt.user;helm upgrade <replaceable>kubecf</replaceable> suse/kubecf \
+--namespace <replaceable>kubecf</replaceable> \
 --values <replaceable>&values-file;</replaceable> \
 --version &kubecf_chart;
 </screen>
