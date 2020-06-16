@@ -139,6 +139,7 @@
       Use <command>helm upgrade</command> to apply the change:
      </para>
 <screen>&prompt.user;helm upgrade kubecf suse/kubecf \
+--namespace <replaceable>kubecf</replaceable> \
 --values &values-file; \
 --version &kubecf_chart;
 </screen>

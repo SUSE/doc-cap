@@ -162,6 +162,7 @@
         existing one.
        </para>
 <screen>&prompt.user;helm upgrade susecf-scf suse/cf \
+--namespace <replaceable>kubecf</replaceable> \
 --set env.CC_DB_CURRENT_KEY_LABEL=<replaceable>NEW_KEY</replaceable> \
 --set secrets.CC_DB_ENCRYPTION_KEYS.<replaceable>NEW_KEY</replaceable>=<replaceable>abcdef</replaceable> \
 --set kube.secrets_generation_counter=<replaceable>2</replaceable>
@@ -458,6 +459,7 @@ credentials:
          Use <command>helm upgrade</command> to apply the configuration update.
        </para>
 <screen>&prompt.user;helm upgrade kubecf suse/kubecf \
+--namespace <replaceable>kubecf</replaceable> \
 --values &values-file; \
 --values enc_key_values.yaml \
 --version &kubecf_chart;
@@ -507,6 +509,7 @@ credentials:
          Use <command>helm upgrade</command> to apply the configuration update.
        </para>
 <screen>&prompt.user;helm upgrade kubecf suse/kubecf \
+--namespace <replaceable>kubecf</replaceable> \
 --values &values-file; \
 --values enc_key_values.yaml \
 --version &kubecf_chart;
