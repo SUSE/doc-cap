@@ -66,7 +66,7 @@
   <itemizedlist>
    <listitem>
     <para>
-     Node sizes are at least <literal>t2.large</literal>.
+     Node sizes are at least <literal>t3.xlarge</literal>.
     </para>
    </listitem>
    <listitem>
@@ -86,7 +86,7 @@
   </para>
 
 <screen>&prompt.user;eksctl create cluster --name <replaceable>kubecf</replaceable> --version <replaceable>&min_kube;</replaceable> \
---nodegroup-name <replaceable>standard-workers</replaceable> --node-type <replaceable>t2.large</replaceable> \
+--nodegroup-name <replaceable>standard-workers</replaceable> --node-type <replaceable>t3.xlarge</replaceable> \
 --nodes <replaceable>3</replaceable> --node-volume-size <replaceable>&node_size;</replaceable> \
 --region <replaceable>us-east-2</replaceable> --managed \
 --ssh-access --ssh-public-key <replaceable>/path/to/some_key.pub</replaceable>
