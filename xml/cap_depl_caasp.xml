@@ -250,12 +250,7 @@ sed's/"namespace": "default"/"namespace": "kubecf"/' | kubectl create --filename
 
   &supported-domains;
 
-<screen>
-### example deployment configuration file
-### &values-file;
-
-<!-- TODO-CAP2 -->
-</screen>
+  &example-config;
  </sect1>
 
  <!-- Begin optional features -->

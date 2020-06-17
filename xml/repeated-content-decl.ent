@@ -1849,14 +1849,8 @@ User:           username@ldap.example.com
  </para>
 <screen xmlns="http://docbook.org/ns/docbook">&prompt.user;cf api --skip-ssl-validation "https://api.&lt;system_domain>"
 
-# Copy the admin cluster password.
-&prompt.user;admin_pass=$(kubectl get secret \
-  --namespace <replaceable>kubecf</replaceable> kubecf.var-cf-admin-password \
-  --output jsonpath=&apos;{.data.password}&apos; \
-  | base64 --decode)
-
-# Use the password from the previous step when requested.
-&prompt.user;cf auth admin "${admin_pass}"
+# Use the cf_admin_password set in &values-file;
+&prompt.user;cf auth admin <replaceable>changeme</replaceable>
 </screen>'>
 
 <!--ENTITY sizing-priority...................................................-->
@@ -1868,3 +1862,16 @@ User:           username@ldap.example.com
    When sizing values are specified, it takes precedence over the <literal>high_availability</literal> property.
   </para>
  </important>'>
+
+<!--ENTITY example-config....................................................-->
+
+<!ENTITY example-config
+'<screen xmlns="http://docbook.org/ns/docbook">### example deployment configuration file
+### &values-file;
+
+system_domain: cap.example.come
+
+credentials:
+  cf_admin_password: <replaceable>changeme</replaceable>
+  uaa_admin_client_secret: <replaceable>alsochangeme</replaceable>
+ </screen>'>
