@@ -24,15 +24,44 @@
   <itemizedlist>
    <listitem>
     <para>
-     &kubecf; has been updated to version &kubecf_chart;:
+     &productname; 2.0 is based on &kubecf; (<link xlink:href="https://www.cloudfoundry.org/kubecf/"/>, which uses the Quarks operator (<link xlink:href="https://www.cloudfoundry.org/project-quarks/"/>, also referred to as &operator;, to deploy releases from cf-deployment into &kube; environments. With this release, &kubecf; replaces SCF as the Cloud Foundry Application Runtime (CFAR) component of &productname;. Each &kubecf; release must be paired with a corresponding release of the Quarks operator, a &kube; operator (<link xlink:href="https://kubernetes.io/docs/concepts/extend-kubernetes/operator/"/>) implementation. In the case of &productname; 2.0, &kubecf; 2.2.2 must be paired with &operator; 4.5.6.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     &kubecf; 2.2.2 replaces &suse; &cf;:
     </para>
     <itemizedlist>
      <listitem>
-      &values-file-changes;
+      <para>
+       cf-deployment has been updated to 12.36
+      </para>
      </listitem>
      <listitem>
       <para>
-       TODO-CAP2 ITEM1
+       Support for external Blobstore configuration
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       &kubecf; 2.2.2 is paired with &operator; 4.5.6
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       For a full list of features and fixes see <link xlink:href="https://github.com/cloudfoundry-incubator/kubecf/releases/tag/v2.2.2"/>
+      </para>
+     </listitem>
+    </itemizedlist>
+   </listitem>
+   <listitem>
+    <para>
+     &operator; 4.5.6 has been added:
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       For a full list of features and fixes see <link xlink:href="https://github.com/cloudfoundry-incubator/quarks-operator/releases/tag/v4.5.6"/>
       </para>
      </listitem>
     </itemizedlist>
@@ -44,12 +73,12 @@
     <itemizedlist>
      <listitem>
       <para>
-	TODO-CAP2 ITEM 1
+       Improved SSO whitelist checks
       </para>
      </listitem>
      <listitem>
       <para>
-       For a full list of features and fixes see <link xlink:href="https://github.com/SUSE/stratos/blob/v2-master/CHANGELOG.md#300"/>
+       For a full list of features and fixes see <link xlink:href="https://github.com/SUSE/stratos/blob/v2-master/CHANGELOG.md#321"/>
       </para>
      </listitem>
     </itemizedlist>
@@ -61,12 +90,7 @@
     <itemizedlist>
      <listitem>
       <para>
-	TODO-CAP2 ITEM 1
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       For a full list of updates see <link xlink:href="https://github.com/SUSE/stratos-metrics/blob/master/CHANGELOG.md#112"/>
+       For a full list of updates see <link xlink:href="https://github.com/SUSE/stratos-metrics/blob/master/CHANGELOG.md#121"/>
       </para>
      </listitem>
     </itemizedlist>
