@@ -308,7 +308,7 @@ cat adduser.sql
 kubectl exec -i database-0 --namespace kubecf -- mysql uaa &lt; adduser.sql
 
 echo "select username from uaa.users;" | kubectl exec -i database-0 --namespace kubecf -- mysql
-cf login --skip-ssl-validation -a https://api. -u admin -p changeme
+cf login --skip-ssl-validation -a https://api.&lt;system_domain&gt; -u admin -p changeme
 </screen>
     </step>
     <step>
