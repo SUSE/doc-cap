@@ -1722,7 +1722,7 @@ User:           username@ldap.example.com
   </para>
 <screen>&prompt.user;helm install <replaceable>kubecf</replaceable> suse/kubecf \
 --namespace <replaceable>kubecf</replaceable> \
---values <replaceable>kubecf-values.yaml</replaceable> \
+--values <replaceable>&values-file;</replaceable> \
 --version &kubecf_chart;
 </screen>
  </step>
