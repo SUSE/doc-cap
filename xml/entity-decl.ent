@@ -17,7 +17,7 @@
 <!ENTITY metrics_chart "1.2.1">
 <!ENTITY minibroker_chart "0.3.1">
 <!ENTITY chart_appversion "2.0.0">
-<!ENTITY node_size    "80">
+<!ENTITY node_size    "100">
 <!ENTITY cfcli        "cf CLI">
 <!ENTITY values-file  "kubecf-config-values.yaml">
 <!ENTITY values-filename   "<filename xmlns='http://docbook.org/ns/docbook'>&values-file;</filename>">
