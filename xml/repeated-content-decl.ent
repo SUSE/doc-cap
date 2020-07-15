@@ -393,7 +393,7 @@ the version of the application as defined in "The <literal>appVersion</literal>
    If your remote management workstation has the &caasp; package repository,
    install <command>helm</command> by running
   </para>
-<screen>&prompt.user;sudo zypper install helm</screen>
+<screen>&prompt.user;sudo zypper install helm3</screen>
   <para>
    Otherwise, <command>helm</command> can be installed  by referring to the
    documentation at <link xlink:href="https://helm.sh/docs/intro/install/"/>.
