@@ -488,7 +488,7 @@
      <term>database</term>
      <listitem>
       <para>
-       A PXC server and component to route requests to replicas.
+       A PXC database to store persistent data for various CAP components such as the cloud controller, UAA, etc.
       </para>
      </listitem>
     </varlistentry>
