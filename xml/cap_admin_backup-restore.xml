@@ -733,7 +733,8 @@ secrets:
         If <literal>current_key_label</literal> was not set, create one for the
         new cluster through &values-filename; and set
         it to the <literal>$DB_ENCRYPTION_KEY</literal> value from the old
-        cluster. In this example, <literal>migrated_key</literal> is the new
+         cluster. Also set up the <literal>db_encryption_key</literal> bosh property
+         to use the previous key. In this example, <literal>migrated_key</literal> is the new
         <literal>current_key_label</literal> created:
        </para>
 <screen>env:
@@ -742,6 +743,15 @@ secrets:
 secrets:
   CC_DB_ENCRYPTION_KEYS:
     <replaceable>migrated_key</replaceable>: "<replaceable>OLD_CLUSTER_DB_ENCRYPTION_KEY</replaceable>"
+bosh:
+  instance_groups:
+  - name: api-group
+    jobs:
+    - name: cloud_controller_ng
+      properties:
+        cc:
+          db_encryption_key: "<replaceable>OLD_CLUSTER_DB_ENCRYPTION_KEY</replaceable>"
+
 </screen>
       </listitem>
      </itemizedlist>
