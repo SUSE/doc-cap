@@ -385,7 +385,7 @@ the version of the application as defined in "The <literal>appVersion</literal>
   <para>
    &helm; is a &kube; package manager used to install and manage &productname;.
    This requires installing the &helm; client, <command>helm</command>, on your
-   remote management workstation. Examples in this guide are based on &helm; 3.
+   remote management workstation. &cap; requires &helm; 3.
    For more information regarding &helm;, refer to the documentation at
    <link xlink:href="https://helm.sh/docs/"/>.
   </para>
