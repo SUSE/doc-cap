@@ -1147,7 +1147,7 @@ agent.log</screen>
     <para>
      Find the external IP or hostname.
     </para>
-<screen>&prompt.user;kubectl get services nginx-ingress-controller --namespace ingress</screen>
+<screen>&prompt.user;kubectl get services nginx-ingress-controller --namespace nginx-ingress</screen>
     <para>
      You will get output similar to the following.
     </para>
