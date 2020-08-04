@@ -1218,7 +1218,7 @@ nginx-ingress-controller   LoadBalancer   <replaceable>10.63.248.70</replaceable
     You may use <command>helm inspect</command> to read the
     <literal>sizing:</literal> section in the &helm; chart:
    </para>
-<screen>&prompt.user;helm inspect suse/kubecf | less +/sizing:</screen>
+<screen>&prompt.user;helm show suse/kubecf | less +/sizing:</screen>
    <para>
     Another way is to use Perl to extract the information for each role from
     the <literal>sizing:</literal> section.
@@ -1263,7 +1263,7 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
    </para>
 
    <para>
-    The following is an of a example &ha; configuration. The example values are not meant to be
+    The following is an example &ha; configuration. The example values are not meant to be
     copied, as these depend on your particular deployment and requirements.
    </para>
 <screen>sizing:
