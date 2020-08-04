@@ -23,6 +23,11 @@
   and <link xlink:href="http://eirini.cf"/>
  </para>
 
+ <para>
+  Different schedulers and stacks have different memory requirements.
+  Not every combination is tested so there is no universal memory setting for &cap;.
+ </para>
+
  <warning>
   <title>Technology Preview</title>
   <para>
