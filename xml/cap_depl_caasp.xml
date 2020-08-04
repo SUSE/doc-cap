@@ -200,7 +200,7 @@
      <literal>kubecf</literal> namespaces used by &productname;:
     </para>
 <screen>&prompt.user;kubectl get secret ceph-secret-admin --output json --namespace default | \
-sed's/"namespace": "default"/"namespace": "kubecf"/' | kubectl create --filename -
+sed 's/"namespace": "default"/"namespace": "kubecf"/' | kubectl create --filename -
 </screen>
    </listitem>
    <listitem>
