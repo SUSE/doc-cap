@@ -1031,7 +1031,7 @@ agent.log</screen>
    <listitem>
     <para>
      The certificate&apos;s Subject Alternative Names (SAN) include the domain
-     <replaceable>*.cap.example.com</replaceable>, where <replaceable>cap.example.com</replaceable>
+     <replaceable>*.example.com</replaceable>, where <replaceable>example.com</replaceable>
      is replaced with the <literal>system_domain</literal> in your
      <filename>&values-file;</filename>.
     </para>
@@ -1869,7 +1869,7 @@ User:           username@ldap.example.com
 '<screen xmlns="http://docbook.org/ns/docbook">### example deployment configuration file
 ### &values-file;
 
-system_domain: cap.example.come
+system_domain: example.come
 
 credentials:
   cf_admin_password: <replaceable>changeme</replaceable>
