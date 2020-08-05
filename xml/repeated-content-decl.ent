@@ -93,7 +93,7 @@ Before you start deploying &productname;, review the following documents:
   <para>
    When selecting a domain, &productname; expects <literal>DOMAIN</literal> to
    be either a subdomain or a root domain. Setting <literal>DOMAIN</literal> to
-   a top-level domain, such <literal>suse</literal>, is not supported.
+   a top-level domain, such as <literal>suse</literal>, is not supported.
   </para>
  </warning>'>
 
