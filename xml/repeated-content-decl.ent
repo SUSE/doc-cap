@@ -1031,7 +1031,7 @@ agent.log</screen>
    <listitem>
     <para>
      The certificate&apos;s Subject Alternative Names (SAN) include the domain
-     <replaceable>*.example.com</replaceable>, where <replaceable>example.com</replaceable>
+     <replaceable>*.cap.example.com</replaceable>, where <replaceable>cap.example.com</replaceable>
      is replaced with the <literal>system_domain</literal> in your
      <filename>&values-file;</filename>.
     </para>
