@@ -28,7 +28,7 @@
   easy to operate. As a result, enterprises that use &caasp; can reduce
   application delivery cycle times and improve business agility. This chapter
   describes the steps to prepare a &productname; deployment on &caasp;. See
-  <link xlink:href="https://documentation.suse.com/suse-caasp/4.1/"/>              
+  <link xlink:href="https://documentation.suse.com/suse-caasp/4.2/"/>              
   for more information on &caasp;.
  </para>
 
@@ -170,7 +170,7 @@
 
   <para>
    For steps to deploy a &caasp; cluster, refer to the &caasp; Deployment Guide
-   at <link xlink:href="https://documentation.suse.com/suse-caasp/4.1/single-html/caasp-deployment/"/>
+   at <link xlink:href="https://documentation.suse.com/suse-caasp/4.2/single-html/caasp-deployment/"/>
   </para>
   <para>
    When proceeding through the instructions, take note of the following to
@@ -187,7 +187,7 @@
     <para>
      This ensures the presence of extra CRI-O capabilities compatible with
      &docker; containers. For more details refer to the
-     <link xlink:href="https://documentation.suse.com/suse-caasp/4.1/single-html/caasp-deployment/#_transitioning_from_docker_to_cri_o"/>
+     <link xlink:href="https://documentation.suse.com/suse-caasp/4.2/single-html/caasp-deployment/#_transitioning_from_docker_to_cri_o"/>
     </para>
    </listitem>
   </itemizedlist>
@@ -216,7 +216,7 @@
   <para>
    &tiller;, the &helm; server component, needs to be installed on your &kube;
    cluster. To install, follow the instructions at
-   <link xlink:href="https://documentation.suse.com/suse-caasp/4.1/single-html/caasp-admin/#_installing_tiller"/>. Alternatively, refer to the upstream documentation at
+   <link xlink:href="https://documentation.suse.com/suse-caasp/4.2/single-html/caasp-admin/#_installing_tiller"/>. Alternatively, refer to the upstream documentation at
    <link xlink:href="https://helm.sh/docs/using_helm/#installing-tiller"/> to
    install &tiller; with a service account and ensure your installation is
    appropriately secured according to your requirements as described in
@@ -239,7 +239,7 @@
    <listitem>
     <para>
      &ses; (see
-     <link xlink:href="https://documentation.suse.com/suse-caasp/4.1/single-html/caasp-admin/#_RBD-dynamic-persistent-volumes"/>)
+     <link xlink:href="https://documentation.suse.com/suse-caasp/4.2/single-html/caasp-admin/#_RBD-dynamic-persistent-volumes"/>)
     </para>
     <para>
      If you are using &ses; you must copy the Ceph admin secret to the
@@ -283,7 +283,7 @@ sed's/"namespace": "default"/"namespace": "scf"/' | kubectl create --filename -
   <para> 
    Ensure <literal>DOMAIN</literal> maps to the load balancer configured for
    your &caasp; cluster (see
-   <link xlink:href="https://documentation.suse.com/suse-caasp/4.1/single-html/caasp-deployment/#loadbalancer"/>). 
+   <link xlink:href="https://documentation.suse.com/suse-caasp/4.2/single-html/caasp-deployment/#loadbalancer"/>). 
   </para>
 
   &supported-domains;
@@ -428,7 +428,7 @@ suse       https://kubernetes-charts.suse.com/
    <step>
     <para>
      Add additional nodes to your &susecaaspreg; cluster as described in
-     <link xlink:href="https://documentation.suse.com/suse-caasp/4.1/html/caasp-admin/_cluster_management.html#adding_nodes"/>.
+     <link xlink:href="https://documentation.suse.com/suse-caasp/4.2/html/caasp-admin/_cluster_management.html#adding_nodes"/>.
     </para>
    </step>
    <step>
