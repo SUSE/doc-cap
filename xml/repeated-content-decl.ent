@@ -1869,7 +1869,7 @@ User:           username@ldap.example.com
 '<screen xmlns="http://docbook.org/ns/docbook">### example deployment configuration file
 ### &values-file;
 
-system_domain: example.come
+system_domain: example.com
 
 credentials:
   cf_admin_password: <replaceable>changeme</replaceable>
