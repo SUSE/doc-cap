@@ -36,44 +36,9 @@
 
   <para>
    The following examples demonstrate some of the commonly-used commands. The
-   first task is to log into your new &suse; &cf; instance. When your
-   installation completes it prints a welcome screen with the information you
-   need to access it.
-  </para>
-
-<screen>       NOTES:
-    Welcome to your new deployment of &kubecf;.
-
-    The endpoint for use by the `cf` client is
-        https://api.example.com
-
-    To target this endpoint run
-        cf api --skip-ssl-validation https://api.example.com
-
-    Your administrative credentials are:
-        Username: admin
-        Password: password
-
-    Please remember, it may take some time for everything to come online.
-
-    You can use
-        kubectl get pods --namespace kubecf
-
-    to spot-check if everything is up and running, or
-        watch --color 'kubectl get pods --namespace kubecf'
-
-    to monitor continuously.</screen>
-
-  <para>
-   You can display this message anytime with this command:
-  </para>
-
-<screen>&prompt.user;helm status $(helm list | awk '/cf-([0-9]).([0-9]).*/{print$1}') | \
-sed --quiet --expression '/NOTES/,$p'</screen>
-
-  <para>
+   first task is to log into your new &cap; instance.
    You need to provide the API endpoint of your &productname; instance to log
-   in. The API endpoint is the <envar>DOMAIN</envar> value you provided in
+   in. The API endpoint is the <envar>system_domain</envar> value you provided in
    &values-filename;, plus the
    <literal>api.</literal> prefix, as it shows in the above welcome screen. Set
    your endpoint, and use <command>--skip-ssl-validation</command> when you
