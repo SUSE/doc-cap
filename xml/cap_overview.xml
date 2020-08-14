@@ -578,8 +578,8 @@
      <term>scheduler</term>
      <listitem>
       <para>
-       Part of the logging system that allows user applications to be bound to
-       a syslog drain.
+       Service used to create, schedule and interact with jobs that execute on
+       &cf;
       </para>
      </listitem>
     </varlistentry>
