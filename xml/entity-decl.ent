@@ -4,19 +4,19 @@
 
 <!ENTITY productname    "&suse; &cap;">
 <!ENTITY productnamereg "&suse;&reg; &cap;">
-<!ENTITY productnumber  "2.0">
+<!ENTITY productnumber  "2.0.1">
 <!ENTITY github.url     "https://github.com/SUSE/doc-cap">
 <!ENTITY cap            "Cloud Application Platform">
 <!ENTITY kubecf         "KubeCF">
 <!ENTITY operator       "cf-operator">
 <!ENTITY kernel_version "3.19">
 <!ENTITY min_kube       "1.14">
-<!ENTITY operator_chart "4.5.6+0.gffc6f942">
-<!ENTITY kubecf_chart "2.2.2">
-<!ENTITY stratos_chart "3.2.1">
+<!ENTITY operator_chart "4.5.13+0.gd4738712">
+<!ENTITY kubecf_chart "2.2.3">
+<!ENTITY stratos_chart "4.0.0">
 <!ENTITY metrics_chart "1.2.1">
 <!ENTITY minibroker_chart "0.3.1">
-<!ENTITY chart_appversion "2.0.0">
+<!ENTITY chart_appversion "2.0.1">
 <!ENTITY node_size    "100">
 <!ENTITY cfcli        "cf CLI">
 <!ENTITY values-file  "kubecf-config-values.yaml">
