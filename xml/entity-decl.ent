@@ -13,7 +13,7 @@
 <!ENTITY min_kube       "1.14">
 <!ENTITY operator_chart "4.5.13+0.gd4738712">
 <!ENTITY kubecf_chart "2.2.3">
-<!ENTITY stratos_chart "4.0.0">
+<!ENTITY stratos_chart "4.0.1">
 <!ENTITY metrics_chart "1.2.1">
 <!ENTITY minibroker_chart "0.3.1">
 <!ENTITY chart_appversion "2.0.1">
