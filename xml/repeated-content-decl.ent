@@ -1684,7 +1684,7 @@ User:           username@ldap.example.com
     Install the operator.
    </para>
    <para>
-    The value of <literal>global.operator.watchNamespace</literal> indicates the
+    The value of <literal>global.singleNamespace.name</literal> indicates the
     namespace the operator will monitor for a &kubecf; deployment. This
     namespace should be separate from the namespace used by the operator. In
     this example, this means &kubecf; will be deployed into a namespace called
@@ -1692,7 +1692,7 @@ User:           username@ldap.example.com
    </para>
 <screen>&prompt.user;helm install <replaceable>cf-operator</replaceable> suse/cf-operator \
 --namespace <replaceable>cf-operator</replaceable> \
---set "global.operator.watchNamespace=<replaceable>kubecf</replaceable>" \
+--set "global.singleNamespace.name=<replaceable>kubecf</replaceable>" \
 --version &operator_chart;
 </screen>
   </step>
