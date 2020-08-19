@@ -14,4 +14,5 @@
   </dm:docmanager>
  </info>
  <xi:include href="app_kubecf_values_yaml.xml"/>
+ <xi:include href="app_cf_operator_values_yaml.xml"/>
 </appendix>
