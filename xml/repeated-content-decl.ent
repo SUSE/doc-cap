@@ -404,7 +404,7 @@ the version of the application as defined in "The <literal>appVersion</literal>
 
 <!ENTITY kubecf-deploy-complete
 '<para xmlns="http://docbook.org/ns/docbook">
-  Wait until you have a successful <literal>scf</literal> deployment before
+  Wait until you have a successful <literal>kubecf</literal> deployment before
   going to the next steps, which you can monitor with the
   <command>watch</command> command:
  </para>
