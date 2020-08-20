@@ -1387,10 +1387,10 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
   service provider or an existing high availability database server.
  </para>
  <para xmlns="http://docbook.org/ns/docbook">
-  To configure your deployment to use an external database, please contact
-  &suse; support or services for guidance.
+  To configure your deployment to use an external database, please follow the
+  instructions below.
  </para>
-<!--
+
  <para xmlns="http://docbook.org/ns/docbook">
   The current &productname; release is compatible with the following types of
   external databases:
@@ -1401,11 +1401,11 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
     &mysql;
    </para>
   </listitem>
-  <listitem>
+  <!-- <listitem>
    <para>
     &postgresql;
    </para>
-  </listitem>
+  </listitem> -->
  </itemizedlist>
  <sect2 xmlns="http://docbook.org/ns/docbook">
   <title>Configuration</title>
@@ -1429,16 +1429,17 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
    The following snippet of the <filename>&values-file;</filename>
    contains an example of an external database configuration.
   </para>
-<screen>features:
+<screen>
+features:
   embedded_database:
     enabled: false
   external_database:
     enabled: true
     require_ssl: false
     ca_cert: ~
-    type: ~
-    host: ~
-    port: ~
+    type: mysql
+    host: <replaceable>hostname</replaceable>
+    port: <replaceable>3306</replaceable>
     databases:
       uaa:
         name: uaa
@@ -1473,7 +1474,7 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
         password: <replaceable>root</replaceable>
         username: <replaceable>root</replaceable>
 </screen>
- </sect2>-->'>
+ </sect2>'>
 
 <!--ENTITY ldap..............................................................-->
 
