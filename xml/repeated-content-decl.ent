@@ -1212,7 +1212,7 @@ nginx-ingress-controller   LoadBalancer   <replaceable>10.63.248.70</replaceable
   <link xlink:href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity"/>). 
  </para>
  <para xmlns="http://docbook.org/ns/docbook">
-  In &productname;, a default configuration of will have following
+  In &productname;, a default configuration will have following
   affinity/anti-affinity rules already in place:
  </para>
  <itemizedlist xmlns="http://docbook.org/ns/docbook">
