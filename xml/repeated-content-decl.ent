@@ -1195,6 +1195,131 @@ nginx-ingress-controller   LoadBalancer   <replaceable>10.63.248.70</replaceable
   </procedure>
  </sect2>'>
 
+<!--ENTITY affinity..........................................................-->
+
+<!ENTITY affinity
+'<title xmlns="http://docbook.org/ns/docbook">
+  Affinity and Anti-affinity
+ </title>
+ <para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  Operators can set affinity/anti-affinity rules to restrict how the scheduler
+  determines the placement of a given pod on a given node. This can be
+  achieved through node affinity/anti-affinity, where placement is determined
+  by node labels (see
+  <link xlink:href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity"/>),
+  or pod affinity/anti-affinity, where pod placement is determined by labels
+  on pods that are already running on the node (see
+  <link xlink:href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity"/>). 
+ </para>
+ <para xmlns="http://docbook.org/ns/docbook">
+  In &productname;, a default configuration will have following
+  affinity/anti-affinity rules already in place:
+ </para>
+ <itemizedlist xmlns="http://docbook.org/ns/docbook">
+  <listitem>
+   <para>
+    Instance groups have anti-affinity against themselves. This applies to all
+    instance groups, including <literal>database</literal>, but not to the
+    <literal>bits</literal>, <literal>eirini</literal>, and
+    <literal>eirini-extensions</literal> subcharts.
+   </para>
+  </listitem>
+  <listitem>
+   <para>
+    The <literal>diego-cell</literal> and <literal>router</literal> instance
+    groups have anti-affinity against each other.
+   </para>
+  </listitem>
+ </itemizedlist>
+ <sect2 xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Configuring Rules</title>
+  <para>
+   To add or override affinity/anti-affinity settings, add a
+   <literal>sizing.INSTANCE_GROUP.affinity</literal> block to your
+   &values-filename;. Repeat as necessary for each instance group where
+   affinity/anti-affinity settings need to be applied. For information on
+   the available fields and valid values within the <literal>affinity:</literal>
+   block, see
+   <link xlink:href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity"/>.
+   Repeat as necessary for each instance group where affinity/anti-affinity
+   settings need to be applied.
+  </para>
+  <para>
+   Example 1, node affinity.
+  </para>
+  <para>
+   Using this configuration, the &kube; scheduler would place both the
+   <literal>asactors</literal> and <literal>asapi</literal> instance groups on a
+   node with a label where the key is
+   <literal>topology.kubernetes.io/zone</literal> and the value is
+   <literal>0</literal>.
+  </para>
+<screen>sizing:
+   asactors:
+     affinity:
+       nodeAffinity:
+         requiredDuringSchedulingIgnoredDuringExecution:
+           nodeSelectorTerms:
+           - matchExpressions:
+             - key: topology.kubernetes.io/zone
+               operator: In
+               values:
+               - 0
+   asapi:
+     affinity:
+       nodeAffinity:
+         requiredDuringSchedulingIgnoredDuringExecution:
+           nodeSelectorTerms:
+           - matchExpressions:
+             - key: topology.kubernetes.io/zone
+               operator: In
+               values:
+               - 0
+</screen>
+  <para>
+   Example 2, pod anti-affinity.
+  </para>
+<screen>sizing:
+  api:
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+              - key: quarks.cloudfoundry.org/quarks-statefulset-name
+                operator: In
+                values:
+                - sample_group
+            topologyKey: kubernetes.io/hostname
+  database:
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+              - key: quarks.cloudfoundry.org/quarks-statefulset-name
+                operator: In
+                values:
+                - sample_group
+            topologyKey: kubernetes.io/hostname
+</screen>
+  <para>
+   Example 1 above uses <literal>topology.kubernetes.io/zone</literal> as its
+   label, which is one of the standard labels that get attached to nodes by
+   default. The list of standard labels can be found at
+   <link xlink:href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#built-in-node-labels"/>. 
+  </para>
+  <para>
+   In addition to the standard labels, custom labels can be specified as in
+   Example 2. To use custom labels, following the process described in this
+   section <link xlink:href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector"/>.
+  </para>
+ </sect2>'>
+
 <!--ENTITY high-availability.................................................-->
 
 <!ENTITY high-availability

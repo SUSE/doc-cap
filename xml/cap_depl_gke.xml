@@ -243,6 +243,11 @@
   &ingress-controller;
  </sect1>
 
+ <sect1 xml:id="sec-cap-gke-affinity">
+  <!-- Entry defined in xml/repeated-content-decl.ent -->
+  &affinity;
+ </sect1>
+
  <sect1 xml:id="sec-cap-gke-high-availability">
   <!-- Entry defined in xml/repeated-content-decl.ent -->
   &high-availability;
