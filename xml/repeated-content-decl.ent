@@ -1231,6 +1231,15 @@ nginx-ingress-controller   LoadBalancer   <replaceable>10.63.248.70</replaceable
    </para>
   </listitem>
  </itemizedlist>
+ <para xmlns="http://docbook.org/ns/docbook">
+  Note that to ensure an optimal spread of the pods across worker nodes we
+  recommend running 5 or more worker nodes to satisfy both of the default
+  anti-affinity constraints. An operator can also specify custom affinity rules
+  via the
+  <literal>sizing.<replaceable>instance-group</replaceable>.affinity</literal>
+  helm parameter and any affinity rules specified here will overwrite the
+  default rule, not merge with it.
+ </para>
  <sect2 xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
   <title>Configuring Rules</title>
   <para>
