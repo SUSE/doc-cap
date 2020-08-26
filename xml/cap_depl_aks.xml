@@ -134,8 +134,10 @@
 <screen>&prompt.user;az aks create --resource-group <replaceable>my-resource-group</replaceable> --name <replaceable>cap-aks</replaceable> \
  --node-count <replaceable>3</replaceable> --admin-username <replaceable>cap-user</replaceable> \
  --ssh-key-value <replaceable>/path/to/some_key.pub</replaceable> --node-vm-size <replaceable>Standard_DS4_v2</replaceable> \
- --node-osdisk-size <replaceable>&node_size;</replaceable> --nodepool-name <replaceable>my-pool</replaceable>
+ --node-osdisk-size <replaceable>&node_size;</replaceable> --nodepool-name <replaceable>mypool</replaceable>
 </screen>
+<!-- The nodepool's name above is without hyphen because AKS apparently stopped
+supporting alphanumeric characters in nodepool names. -->
 
   <para>
    For more <command>az aks create</command> options see
