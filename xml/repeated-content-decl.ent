@@ -1426,6 +1426,12 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
    </para>
   </important>
   <para>
+    All the databases listed in the config snippet below need to exist before
+    installing &kubecf;. One way of doing that is manually running
+    <literal>CREATE DATABASE IF NOT EXISTS
+    <replaceable>database-name</replaceable></literal> for each database.
+  </para>
+  <para>
    The following snippet of the <filename>&values-file;</filename>
    contains an example of an external database configuration.
   </para>
