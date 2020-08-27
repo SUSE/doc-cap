@@ -1392,13 +1392,13 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
  </para>
 
  <para xmlns="http://docbook.org/ns/docbook">
-  The current &productname; release is compatible with the following types of
-  external databases:
+  The current &productname; release is compatible with the following types and
+  versions of external databases:
  </para>
  <itemizedlist xmlns="http://docbook.org/ns/docbook">
   <listitem>
    <para>
-    &mysql;
+    &mysql; 5.7
    </para>
   </listitem>
   <!-- <listitem>
