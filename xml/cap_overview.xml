@@ -24,78 +24,48 @@
   <itemizedlist>
    <listitem>
     <para>
-     &productname; 2.0 is based on &kubecf; (<link xlink:href="https://www.cloudfoundry.org/kubecf/"/>, which uses the Quarks operator (<link xlink:href="https://www.cloudfoundry.org/project-quarks/"/>, also referred to as &operator;, to deploy releases from cf-deployment into &kube; environments. With this release, &kubecf; replaces SCF as the Cloud Foundry Application Runtime (CFAR) component of &productname;. Each &kubecf; release must be paired with a corresponding release of the Quarks operator, a &kube; operator (<link xlink:href="https://kubernetes.io/docs/concepts/extend-kubernetes/operator/"/>) implementation. In the case of &productname; 2.0, &kubecf; 2.2.2 must be paired with &operator; 4.5.6.
-    </para>
-   </listitem>
-   <listitem>
-    <para>
-     &kubecf; 2.2.2 replaces &suse; &cf;:
+     &kubecf; has been updated to 2.2.3:
     </para>
     <itemizedlist>
      <listitem>
       <para>
-       cf-deployment has been updated to 12.36
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       Support for external Blobstore configuration
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       &kubecf; 2.2.2 is paired with &operator; 4.5.6
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       For a full list of features and fixes see <link xlink:href="https://github.com/cloudfoundry-incubator/kubecf/releases/tag/v2.2.2"/>
+       For a full list of features and fixes see <link
+       xlink:href="https://github.com/cloudfoundry-incubator/kubecf/releases/tag/v2.2.3"/>
       </para>
      </listitem>
     </itemizedlist>
    </listitem>
    <listitem>
     <para>
-     &operator; 4.5.6 has been added:
+     &operator; has been updated to 4.5.13:
     </para>
     <itemizedlist>
      <listitem>
       <para>
-       For a full list of features and fixes see <link xlink:href="https://github.com/cloudfoundry-incubator/quarks-operator/releases/tag/v4.5.6"/>
+       For a full list of features and fixes see <link
+       xlink:href="https://github.com/cloudfoundry-incubator/quarks-operator/releases/tag/v4.5.13"/>
       </para>
      </listitem>
     </itemizedlist>
    </listitem>
    <listitem>
     <para>
-     Stratos Console has been updated to version &stratos_chart;:
+     Stratos Console has been updated to 4.0.1:
     </para>
     <itemizedlist>
      <listitem>
       <para>
-       Improved SSO whitelist checks
+       Configurable NGINX protocols and ciphers using Helm values
       </para>
      </listitem>
      <listitem>
       <para>
-       For a full list of features and fixes see <link xlink:href="https://github.com/SUSE/stratos/blob/v2-master/CHANGELOG.md#321"/>
+       For a full list of features and fixes see <link
+       xlink:href="https://github.com/SUSE/stratos/blob/master/CHANGELOG.md#401"/>
       </para>
      </listitem>
     </itemizedlist>
    </listitem>
-   <listitem>
-    <para>
-     Stratos Metrics has been updated to version &metrics_chart;:
-    </para>
-    <itemizedlist>
-     <listitem>
-      <para>
-       For a full list of updates see <link xlink:href="https://github.com/SUSE/stratos-metrics/blob/master/CHANGELOG.md#121"/>
-      </para>
-     </listitem>
-    </itemizedlist>
-   </listitem>
-
   </itemizedlist>
 
   <para>
@@ -107,7 +77,7 @@
    <title>Read the Release Notes</title>
    <para>
     Make sure to review the release notes for &productname; published at
-    <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/1/"/>.
+    <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/2.0/"/>.
    </para>
   </tip>
  </sect1>
