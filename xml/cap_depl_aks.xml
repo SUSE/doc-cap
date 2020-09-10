@@ -180,7 +180,7 @@ supporting alphanumeric characters in nodepool names. -->
   <title>Deployment Configuration</title>
   <para>
    The following file, &values-filename;, provides a
-   complete example deployment configuration.
+   minimal example deployment configuration.
   </para>
 
   &values-file-changes;

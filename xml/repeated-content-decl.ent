@@ -1989,8 +1989,9 @@ User:           username@ldap.example.com
 
 <!ENTITY values-file-changes
 '<para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
-  The format of the &values-filename; file has been restructured completely.
-  Do not re-use the previous version of the file. Instead, source the default file from the appendix in
+  The format of the &values-filename; file has been restructured completely in
+  &cap; 2.0. Do not re-use the &cap; 1.x version of the file. Instead, source the
+  default file from the appendix in
   <xref linkend="app-kubecf-values-yaml"/>.
  </para>'>
 
