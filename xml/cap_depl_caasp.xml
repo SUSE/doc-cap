@@ -193,7 +193,7 @@
    <listitem>
     <para>
      &ses; (see
-     <link xlink:href="&caasp-url;/single-html/caasp-admin/#_RBD-dynamic-persistent-volumes"/>)
+     <link xlink:href="&caasp-url;/single-html/caasp-admin/#RBD-dynamic-persistent-volumes"/>)
     </para>
     <para>
      If you are using &ses; you must copy the Ceph admin secret to the
@@ -364,7 +364,7 @@ suse       https://kubernetes-charts.suse.com/
    <step>
     <para>
      Add additional nodes to your &susecaaspreg; cluster as described in
-     <link xlink:href="&caasp-url;/html/caasp-admin/_cluster_management.html#adding_nodes"/>.
+     <link xlink:href="&caasp-url;/html/caasp-admin/#adding_nodes"/>.
     </para>
    </step>
    <step>
