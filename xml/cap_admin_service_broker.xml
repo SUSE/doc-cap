@@ -382,7 +382,8 @@
      with these and will need to be added during the <command>cf
      create-service</command> step using the <literal>-c</literal> flag. To find
      out the exact parameter to be used, reference the <literal>values.yaml</literal>
-     file in the upstream &helm; charts at https://github.com/helm/charts
+     file in the upstream &helm; charts at <link
+     xlink:href="https://github.com/helm/charts"/>
      located in the <literal>stable</literal> directory.
     </para>
    </important>
