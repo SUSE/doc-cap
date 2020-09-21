@@ -183,7 +183,7 @@
   <title>Storage Class</title>
 
   <para>
-   In &productname; some instance groups, such as <literal>bits</literal>,
+   In some &productname; instance groups, such as <literal>bits</literal>,
    <literal>database</literal> and <literal>singleton-blobstore</literal>
    require a storage class. To learn more about storage classes, see
    <link xlink:href="https://kubernetes.io/docs/concepts/storage/storage-classes/"/>.
@@ -214,15 +214,30 @@ sed 's/"namespace": "default"/"namespace": "kubecf"/' | kubectl create --filenam
    By default, &productname; will use the cluster&apos;s default storage class.
    To designate or change the default storage class, refer to
    <link xlink:href="https://kubernetes.io/docs/tasks/administer-cluster/change-default-storage-class/"/>
+   for instructions.
   </para>
   <para>
-   A storage class can be chosen by setting the
-   <literal>kube.storage_class</literal> value in your &values-filename;
-   configuration file as seen in this example. Note that if there is no storage
-   class designated as the default this values
-   <emphasis role="bold">must</emphasis> be set.
+   In some cases, the default and predefined storage classes may not be suitable
+   for certain workloads. If this is the case, operators can define their own
+   custom StorageClass resource according to the specification at
+   <link xlink:href="https://kubernetes.io/docs/concepts/storage/storage-classes/#the-storageclass-resource"/>.
   </para>
-<screen xmlns="http://docbook.org/ns/docbook">kube:
+  <para>
+   With the storage class defined, run:
+  </para>
+<screen>&prompt.user;kubectl create --filename <replaceable>my-storage-class.yaml</replaceable></screen>
+  <para>
+   Then verify the storage class is available by running
+  </para>
+<screen>&prompt.user;kubectl get storageclass</screen>
+  <para>
+   If operators do no want to use the default storage class or one does not
+   exist, a storage class <emphasis role="bold">must</emphasis> be specified by
+   setting the <literal>kube.storage_class</literal> value in your
+   &values-filename; configuration file to the name of the storage class as seen
+   in this example.
+  </para>
+<screen>kube:
   storage_class: <replaceable>my-storage-class</replaceable>
 </screen>
  </sect1>
