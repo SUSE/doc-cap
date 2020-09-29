@@ -977,11 +977,17 @@ agent.log</screen>
   <link xlink:href="https://github.com/SUSE/stratos/blob/master/CHANGELOG.md"/>.
  </para>
  <para>
-  To enable technology preview features, set the
-  <literal>console.techPreview</literal> &helm; value to <literal>true</literal>
-  . For example, when running <command>helm install</command> add
-  <command>--set console.techPreview=true</command>.
+  To enable technology preview features, add the
+  <literal>console.techPreview</literal> &helm; value to your
+  <filename>&stratos-tech-preview-note</filename> and set it to
+  <literal>true</literal>.
  </para>
+<screen>### example Stratos deployment configuration file                        
+### &stratos-values-file;                                                        
+                                                                                 
+console:
+  techPreview: true
+</screen>
 </note>'>
 
 <!--ENTITY storage-class.....................................................-->

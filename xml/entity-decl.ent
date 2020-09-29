@@ -21,6 +21,7 @@
 <!ENTITY cfcli        "cf CLI">
 <!ENTITY values-file  "kubecf-config-values.yaml">
 <!ENTITY values-filename   "<filename xmlns='http://docbook.org/ns/docbook'>&values-file;</filename>">
+<!ENTITY stratos-values-file  "stratos-config-values.yaml">
 <!ENTITY guide         "<citetitle xmlns='http://docbook.org/ns/docbook'>Deployment, Administration, and User Guide</citetitle>">
 <!-- ====================================================================== -->
 <!-- Company and Products                                                   -->
