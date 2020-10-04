@@ -32,29 +32,6 @@
  <itemizedlist>
   <listitem>
    <para>
-    When &productname; is deployed on a cloud service provider (CSP), use
-    service brokers provided by the CSP.
-   </para>
-   <itemizedlist>
-    <listitem>
-     <para>
-      For deployments on &aks-full;, see <xref linkend="sec-cap-azure-service-broker"/>.
-     </para>
-    </listitem>
-    <listitem>
-     <para>
-      For deployments on &eks-full;, see <xref linkend="sec-cap-aws-service-broker"/>.
-     </para>
-    </listitem>
-    <listitem>
-     <para>
-      For deployments on &gke-full;, see <xref linkend="sec-cap-gke-service-broker"/>.
-     </para>
-    </listitem>
-   </itemizedlist>
-  </listitem>
-  <listitem>
-   <para>
     When you want services deployed on demand to &kube;, use Minibroker. See
     <xref linkend="sec-cap-minibroker"/> for more information.
    </para>
