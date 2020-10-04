@@ -979,11 +979,11 @@ agent.log</screen>
  <para>
   To enable technology preview features, add the
   <literal>console.techPreview</literal> &helm; value to your
-  <filename>&stratos-tech-preview-note</filename> and set it to
+  <filename>&stratos-values-file;</filename> and set it to
   <literal>true</literal>.
  </para>
 <screen>### example Stratos deployment configuration file                        
-### &stratos-values-file;                                                        
+### &stratos-values-file;
                                                                                  
 console:
   techPreview: true
