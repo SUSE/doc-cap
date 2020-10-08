@@ -533,7 +533,7 @@
     </listitem>
     <listitem>
      <para>
-      Access to new deployments of <literal>kubecf</literal> (deployed with a
+      Access to a new deployment of <literal>kubecf</literal> (deployed with a
       &values-filename; configured according to
       <xref linkend="prepare-config-for-new-cluster"/> of
       <xref linkend="sec-cap-raw-data-restore-procedure"/>) to perform the
@@ -561,7 +561,7 @@
     </listitem>
     <listitem>
      <para>
-      The Cloud Controller Blobstore, which includes the types of binary large
+      The Cloud Controller blobstore, which includes the types of binary large
       object (blob) files listed below. (See
       <link xlink:href="https://docs.cloudfoundry.org/concepts/architecture/cloud-controller.html#blob-store"/>
       to learn more about each blob type.)
@@ -608,81 +608,63 @@
     <para>
      This process is intended for backing up and restoring to a target
      deployment with the same version as the source deployment. For example,
-     data from a backup of <literal>kubecf</literal> version 2.18.0 should be
-     restored to a version version 2.18.0 <literal>kubecf</literal> deployment.
+     data from a backup of &productname; &productnumber; should be restored to a
+     &productname; &productnumber; deployment.
     </para>
    </note>
    <para>
     Perform the following steps to create a backup of your source
-    <literal>kubecf</literal> deployment.
+    &productname; deployment.
    </para>
    <procedure>
     <step>
      <para>
-      Connect to the <literal>blobstore</literal> pod:
+      Export the blobstore into a file.
      </para>
-<screen>&prompt.user;kubectl exec --stdin --tty blobstore-0 --namespace kubecf -- env /bin/bash</screen>
+<screen>&prompt.user;kubectl exec --namespace kubecf singleton-blobstore-0 --
+tar cfz - --exclude=/var/vcap/store/shared/tmp /var/vcap/store/shared >
+blob.tgz</screen>
     </step>
     <step>
      <para>
-      Create an archive of the blobstore directory to preserve all needed files
-      (see the Cloud Controller Blobstore content of <xref linkend="sec-cap-raw-data-scope"/>) then disconnect from the pod:
+      The current UAA database configuration does not allow exporting of a
+      mysqldump, so need to be more permissive.
      </para>
-<screen>&prompt.user;tar cfvz <replaceable>blobstore-src.tgz</replaceable> /var/vcap/store/shared</screen>
-<screen>&prompt.user;exit</screen>
-    </step>
-    <step>
-     <para>
-      Copy the archive to a location outside of the pod:
-     </para>
-<screen>&prompt.user;kubectl cp kubecf/blobstore-0:blobstore-src.tgz <replaceable>/tmp/blobstore-src.tgz</replaceable></screen>
-    </step>
-    <step>
-     <para>
-      Export the Cloud Controller Database (CCDB) into a file:
-     </para>
-<screen>&prompt.user;kubectl exec mysql-0 --namespace kubecf -- bash -c \
-  '/var/vcap/packages/mariadb/bin/mysqldump \
-  --defaults-file=/var/vcap/jobs/mysql/config/mylogin.cnf \
-  --socket /var/vcap/sys/run/pxc-mysql/mysqld.sock \
-  ccdb' > <replaceable>/tmp/ccdb-src.sql</replaceable>
+<screen>&prompt.user;cat &lt;&lt;EOF | kubectl exec --stdin database-0 --namespace kubecf
+-- mysql
+SET GLOBAL pxc_strict_mode=PERMISSIVE;
+SET GLOBAL
+sql_mode='STRICT_ALL_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';
+set GLOBAL innodb_strict_mode='OFF';
+EOF
 </screen>
+    </step>
+    <step>
+     <para>
+      Export the UAA database into a file.
+     </para>
+<screen>&prompt.user;kubectl exec --stdin database-0 --namespace kubecf --
+mysqldump uaa > uaadb-src.sql</screen>
+    </step>
+    <step>
+     <para>
+      Export the Cloud Controller Database (CCDB) into a file.
+     </para>
+<screen>&prompt.user;kubectl exec --stdin database-0 --namespace kubecf --
+mysqldump cloud_controller > ccdb-src.sql</screen>
     </step>
     <step xml:id="get-encryption-key">
      <para>
-      Next, obtain the CCDB encryption key(s). The method used to capture the
-      key will depend on whether <literal>current_key_label</literal> has been
-      defined on the source cluster. This value is defined in
-      <filename>/var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml</filename>
-      of the <literal>api-0</literal> pod and also found in various
-      tables of the &mysql; database.
+      Save the CCDB encryption key(s). Adjust the <command>A</command> flag as
+      needed to include all keys.
      </para>
-     <para>
-      Begin by examining the configuration file for
-      the<literal>current_key_label</literal> setting:
-     </para>
-<screen>&prompt.user;kubectl exec --stdin --tty --namespace kubecf api-0 -- bash -c "cat /var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml | grep -A 3 database_encryption"</screen>
-     <itemizedlist>
-      <listitem>
-       <para>
-        If the output contains the <literal>current_key_label</literal>
-        setting, save the output for the restoration process. Adjust the
-        <command>-A</command> flag as needed to include all keys.
-       </para>
-      </listitem>
-      <listitem>
-       <para>
-        If the output does not contain the <literal>current_key_label</literal>
-        setting, run the following command and save the output for the
-        restoration process:
-       </para>
-<screen>&prompt.user;kubectl exec api-0 --namespace kubecf -- bash -c 'echo $DB_ENCRYPTION_KEY'</screen>
-      </listitem>
-     </itemizedlist>
+<screen>&prompt.user;kubectl exec --stdin --tty --namespace kubecf api-0 -- bash
+-c "cat /var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml | grep
+-A 10 db_encryption" > enc_key
+</screen>
     </step>
    </procedure>
   </sect2>
-
   <sect2 xml:id="sec-cap-raw-data-restore-procedure">
    <title>Performing a Raw Data Restore</title>
    <important>
@@ -696,179 +678,131 @@
    </important>
    <para>
     Perform the following steps to restore your backed up data to the target
-    <literal>kubecf</literal> deployment.
+    &productname; deployment.
    </para>
    <procedure>
     <step xml:id="prepare-config-for-new-cluster">
      <para>
-      The target <literal>kubecf</literal> cluster needs to be deployed with the
-      correct database encryption key(s) set in your
-      &values-filename; before data can be restored.
-      How the encryption key(s) will be prepared in your
-      &values-filename; depends on the result of
-      <xref linkend="get-encryption-key"/> in
-      <xref linkend="sec-cap-raw-data-backup-procedure"/>
+      Deploy the target &productname; cluster following the steps for your
+      platform.
      </para>
-     <itemizedlist>
-      <listitem>
-       <para>
-        If <literal>current_key_label</literal> was set, use the
-        <literal>current_key_label</literal> obtained as the value of
-        <literal>CC_DB_CURRENT_KEY_LABEL</literal> and all the keys under the
-        <literal>keys</literal> are defined under
-        <literal>CC_DB_ENCRYPTION_KEYS</literal>. See the following example
-        &values-filename;:
-       </para>
-<screen>env:
-  CC_DB_CURRENT_KEY_LABEL: <replaceable>migrated_key_1</replaceable>
+     &deployment-platforms;
+    </step>
+    <step>
+     <para>
+      The current UAA database configuration does not allow importing of a
+      mysqldump, so needs to be made more permissive.
+     </para>
+<screen>&prompt.user;cat &lt;&lt;EOF | kubectl exec --stdin database-0 --namespace kubecf
+-- mysql
+SET GLOBAL pxc_strict_mode=PERMISSIVE;
+SET GLOBAL
+sql_mode='STRICT_ALL_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';
+set GLOBAL innodb_strict_mode='OFF';
+EOF
+</screen>
+    </step>
+    <step>
+     <para>
+      Import the UAA database.
+     </para>
+<screen>&prompt.user;kubectl exec --stdin database-0 --namespace kubecf -- mysql
+uaa &lt; uaadb-src.sql</screen>
+     <para>
+      Verify the import is successful. The output should list the users from the
+      deployment the backup was taken from.
+     </para>
+<screen>&prompt.user;echo "select username from uaa.users;" | kubectl exec -i
+database-0 --namespace kubecf -- mysql</screen>
+    </step>
+    <step>
+     <para>
+      Import the blobstore and restart the pod for changes to take affect.
+     </para>
+<screen>&prompt.user;kubectl exec --stdin singleton-blobstore-0 --namespace kubecf -- tar xfz - -C
+/ &lt; blob.tgz
 
-secrets:
-  CC_DB_ENCRYPTION_KEYS:
-    <replaceable>migrated_key_1</replaceable>: "<replaceable>&lt;key_goes_here></replaceable>"
-    <replaceable>migrated_key_2</replaceable>: "<replaceable>&lt;key_goes_here></replaceable>"
-</screen>
-      </listitem>
-      <listitem>
-       <para>
-        If <literal>current_key_label</literal> was not set, create one for the
-        new cluster through &values-filename; and set
-        it to the <literal>$DB_ENCRYPTION_KEY</literal> value from the old
-         cluster. Also set up the <literal>db_encryption_key</literal> bosh property
-         to use the previous key. In this example, <literal>migrated_key</literal> is the new
-        <literal>current_key_label</literal> created:
-       </para>
-<screen>env:
-  CC_DB_CURRENT_KEY_LABEL: <replaceable>migrated_key</replaceable>
-
-secrets:
-  CC_DB_ENCRYPTION_KEYS:
-    <replaceable>migrated_key</replaceable>: "<replaceable>OLD_CLUSTER_DB_ENCRYPTION_KEY</replaceable>"
-bosh:
-  instance_groups:
-  - name: api-group
-    jobs:
-    - name: cloud_controller_ng
-      properties:
-        cc:
-          db_encryption_key: "<replaceable>OLD_CLUSTER_DB_ENCRYPTION_KEY</replaceable>"
-
-</screen>
-      </listitem>
-     </itemizedlist>
-    </step>
-    <step>
-     <para>
-      Deploy a non-high-availability configuration of <literal>kubecf</literal>
-      and wait until all pods are ready before proceeding.
-     </para>
-    </step>
-    <step>
-     <para>
-      In the <filename>ccdb-src.sql</filename> file created earlier, replace
-      the domain name of the source deployment with the domain name of the
-      target deployment.
-     </para>
-<screen>&prompt.user;sed --in-place 's/old-example.com/new-example.com/g' /tmp/ccdb-src.sql</screen>
-    </step>
-    <step>
-     <para>
-      Stop the monit services on the <literal>api-0</literal>,
-      <literal>cc-worker-0</literal>, and <literal>cc-clock-0</literal> pods:
-     </para>
-<!-- CAP 1.3 NOTE
-It appears that on 2.14.5 I need to manually terminate the loggregator_agent processes whenever I do a monit stop all, as they were not shutting down correctly (monit was just losing reference to the processes instead). Once I ensure that they were all actually terminated before proceeding to whatever the next step was, things worked fine. -->
-<screen>&prompt.user;for n in api-0 cc-worker-0 cc-clock-0; do
-  kubectl exec --stdin --tty --namespace kubecf $n -- bash -l -c 'monit stop all'
-done
+&prompt.user;kubectl delete pod --namespace kubecf singleton-blobstore-0
 </screen>
     </step>
     <step>
      <para>
-      Copy the <filename>blobstore-src.tgz</filename> archive to the
-      <literal>blobstore</literal> pod:
+      Drop the current CCDB and create a new instance.
      </para>
-<screen>&prompt.user;kubectl cp <replaceable>/tmp/blobstore-src.tgz</replaceable> kubecf/blobstore-0:/.</screen>
-    </step>
-    <step>
-     <para>
-      Restore the contents of the archive created during the backup process to
-      the <literal>blobstore</literal> pod:
-     </para>
-<!-- CAP 1.3 NOTE
-It appears that on 2.14.5 I need to manually terminate the loggregator_agent processes whenever I do a monit stop all, as they were not shutting down correctly (monit was just losing reference to the processes instead). Once I ensure that they were all actually terminated before proceeding to whatever the next step was, things worked fine. -->
-<screen>&prompt.user;kubectl exec --stdin --tty --namespace kubecf blobstore-0 -- bash -l -c 'monit stop all &amp;&amp; sleep 10 &amp;&amp; rm -rf /var/vcap/store/shared/* &amp;&amp; tar xvf blobstore-src.tgz &amp;&amp; monit start all &amp;&amp; rm blobstore-src.tgz'</screen>
-    </step>
-    <step>
-     <para>
-      Recreate the CCDB on the <literal>mysql</literal> pod:
-     </para>
-<screen>&prompt.user;kubectl exec mysql-0 --namespace kubecf -- bash -c \
-  "/var/vcap/packages/mariadb/bin/mysql \
-  --defaults-file=/var/vcap/jobs/mysql/config/mylogin.cnf \
-  --socket /var/vcap/sys/run/pxc-mysql/mysqld.sock \
-  -e 'drop database ccdb; create database ccdb;'"</screen>
-    </step>
-    <step>
-     <para>
-      Restore the CCDB on the <literal>mysql</literal> pod:
-     </para>
-<screen>&prompt.user;kubectl exec --stdin mysql-0 --namespace kubecf -- bash -c \
-  '/var/vcap/packages/mariadb/bin/mysql \
-  --defaults-file=/var/vcap/jobs/mysql/config/mylogin.cnf \
-  --socket /var/vcap/sys/run/pxc-mysql/mysqld.sock \
-  ccdb' &lt; <replaceable>/tmp/ccdb-src.sql</replaceable>
+<screen>&prompt.user;echo "drop database cloud_controller; create database
+cloud_controller;" | \
+     kubectl exec -i database-0 --namespace kubecf -- mysql
 </screen>
     </step>
     <step>
      <para>
-      Start the monit services on the <literal>api-0</literal>,
-      <literal>cc-worker-0</literal>, and <literal>cc-clock-0</literal> pods
+      Import the CCDB.
      </para>
-<screen>&prompt.user;for n in api-0 cc-worker-0 cc-clock-0; do
-  kubectl exec --stdin --tty --namespace kubecf $n -- bash -l -c 'monit start all'
-done
-</screen>
+<screen>&prompt.user;kubectl exec --stdin database-0 --namespace kubecf -- mysql
+cloud_controller &lt; ccdb-src.sql</screen>
     </step>
     <step>
      <para>
-      If your old cluster did not have <literal>current_key_label</literal>
-      defined, perform a key rotation. Otherwise, a key rotation is not
-      necessary.
+      Update the encryption key.
      </para>
      <substeps>
       <step>
        <para>
-        Run the rotation for the encryption keys:
+        Create a YAML configuration file containing the encryption key
+        information. The file structure should look similar to the following
+        example, called <filename>enc_key_values.yaml</filename>. Replace 
+        the example values using the values from the <filename>enc_key</filename>
+        file generated earlier. Depending on the state of the cluster the
+        encryption keys were retrieved from, the key labels may differ and not
+        be <literal>encryption_key_0</literal>. 
        </para>
-<screen>&prompt.user;kubectl exec --namespace kubecf api-0 -- bash -c \
-"source /var/vcap/jobs/cloud_controller_ng/bin/ruby_version.sh; \
-export CLOUD_CONTROLLER_NG_CONFIG=/var/vcap/jobs/cloud_controller_ng/config/cloud_controller_ng.yml; \
-cd /var/vcap/packages/cloud_controller_ng/cloud_controller_ng; \
-bundle exec rake rotate_cc_database_key:perform"
+<screen>ccdb:
+  encryption:
+    rotation:
+      key_labels:
+      - <replaceable>encryption_key_0</replaceable>
+      current_key_label: <replaceable>encryption_key_0</replaceable>
+
+credentials:
+  cc_db_encryption_key:
+<replaceable>elqdi7TARO6NYELa9cUr6WwMYIvqaG4U0nMyfL1loDYi02C1Rrneov6fxxfd64je</replaceable>
+  ccdb_key_label_<replaceable>encryption_key_0</replaceable>:
+<replaceable>tPhZZbMNYVWKs0II8e8pMxsJMokeReUrJAnQNdLaXEheTZVv5OpMe7vdyThhrkEP</replaceable>
 </screen>
+       <para>
+        In the above, the key
+        <literal>credentials.ccdb_key_label_encryption_key_0</literal> is
+        based on the generic form
+        <literal>credentials.ccdb_key_label_XYZ</literal>. The
+        <literal>XYZ</literal> should be replaced with the value of the
+        <literal>current_key_label</literal>.
+       </para>
+       <para>
+        For example, if the <literal>current_key_label</literal> is
+        <literal>new_key</literal>, then
+        <literal>credentials.ccdb_key_label_new_key</literal> should be used.
+       </para>
       </step>
       <step>
        <para>
-        Restart the <literal>api</literal> pod.
+        Perform a <command>helm upgrade</command> for the changes to take
+        affect.
        </para>
-<screen>&prompt.user;kubectl delete pod api-0 --namespace kubecf --force --grace-period=0</screen>
+<screen>&prompt.user;helm upgrade <replaceable>kubecf</replaceable> suse/kubecf
+\
+--namespace <replaceable>kubecf</replaceable> \
+--values &values-file; \
+--values <replaceable>enc_key_values.yaml</replaceable> \
+--version &kubecf_chart;
+</screen>
       </step>
      </substeps>
     </step>
     <step>
      <para>
-      Perform a <command>cf restage appname</command> for existing applications to
-      ensure their existing data is updated with the new encryption key.
-     </para>
-    </step>
-    <step>
-     <para>
-      The data restore is now complete. Run some <command>cf</command>
-      commands, such as <command>cf apps</command>, <command>cf
-      marketplace</command>, or <command>cf services</command>, and verify data
-      from the old cluster is returned.
-     </para>
-     <para>
+      When all pods are fully running, verify the restore is successful. Example
+      commands to run include <command>cf apps</command>,
+      <command>cf marketplace</command>, or <command>cf services</command>.
      </para>
     </step>
    </procedure>
