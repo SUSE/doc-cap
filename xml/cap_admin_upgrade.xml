@@ -98,18 +98,18 @@
    <listitem>
     <para>
      For upgrades from &productname; 1.5.2 to &productname; 2.0, see
-     <xref linkend="sec-cap-update-1.5.2-to-2.0"/>.
+     <xref linkend="sec-cap-update-152-to-20"/>.
     </para>
    </listitem>
    <listitem>                                                                    
     <para>                                                                       
      For upgrades from &productname; 2.0 to &productname; 2.0.1, see                 
-     <xref linkend="sec-cap-update-2.0-plus"/>.                                
+     <xref linkend="sec-cap-update-20-plus"/>.                                
     </para>                                                                      
    </listitem>
   </itemizedlist>
 
-  <sect2 xml:id="sec-cap-update-2.0-plus">
+  <sect2 xml:id="sec-cap-update-20-plus">
    <title>Upgrading from &productname; 2.0 to &productname; 2.0.1</title>
    <para>
     The following procedure will upgrade &productname; 2.0 to &productname;
@@ -154,7 +154,7 @@
     </step>
    </procedure>
   </sect2>
-  <sect2 xml:id="sec-cap-update-1.5.2-to-2.0">
+  <sect2 xml:id="sec-cap-update-152-to-20">
    <title>Upgrading from &productname; 1.5.2 to &productname; 2.0</title>  
    <para>
     The transition from &productname; 1.5.2 to &productname; 2.0 involves a
