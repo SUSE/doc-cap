@@ -71,8 +71,7 @@ console:
    Create a namespace for your Stratos deployment.
   </para>
 
-<screen>&prompt.user;kubectl create namespace
-<replaceable>stratos</replaceable></screen>
+<screen>&prompt.user;kubectl create namespace <replaceable>stratos</replaceable></screen>
 
   <para>
    Deploy Stratos using &helm;.
@@ -291,8 +290,7 @@ kube:
    Create a namespace for your Stratos deployment.
   </para>
 
-<screen>&prompt.user;kubectl create namespace
-<replaceable>stratos</replaceable></screen>
+<screen>&prompt.user;kubectl create namespace <replaceable>stratos</replaceable></screen>
 
   <para>
    Deploy Stratos using &helm;.
@@ -445,8 +443,7 @@ services:
    Create a namespace for your Stratos deployment.
   </para>
 
-<screen>&prompt.user;kubectl create namespace
-<replaceable>stratos</replaceable></screen>
+<screen>&prompt.user;kubectl create namespace <replaceable>stratos</replaceable></screen>
 
   <para>
    Deploy Stratos using &helm;.
@@ -586,8 +583,7 @@ services:
    Create a namespace for your Stratos deployment.
   </para>
 
-<screen>&prompt.user;kubectl create namespace
-<replaceable>stratos</replaceable></screen>
+<screen>&prompt.user;kubectl create namespace <replaceable>stratos</replaceable></screen>
 
   <para>
    Deploy Stratos using &helm;.
