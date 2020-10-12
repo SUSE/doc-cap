@@ -250,7 +250,7 @@ Before you start deploying &productname;, review the following documents:
 <para>
  Use UAAC to target your <literal>uaa</literal> server.
 </para>
-<screen>&prompt.user;uaac target --skip-ssl-validation <replaceable>https://uaa.example.com:2793</replaceable></screen>
+<screen>&prompt.user;uaac target --skip-ssl-validation <replaceable>https://uaa.example.com</replaceable></screen>
 </step>'>
 
 <!--ENTITY uaac-authenticate................................................-->
@@ -260,7 +260,7 @@ Before you start deploying &productname;, review the following documents:
 <para>
  Authenticate to the <literal>uaa</literal> server as
  <literal>admin</literal> using the
- <literal>UAA_ADMIN_CLIENT_SECRET</literal> set in your
+ <literal>uaa_admin_client_secret</literal> set in your
  &values-filename; file.
 </para>
 <screen>&prompt.user;uaac token client get admin --secret <replaceable>password</replaceable></screen>
@@ -1692,8 +1692,47 @@ features:
    &uaac-authenticate;
    <step>
     <para>
-     Create the LDAP identity provider. A 201 response will be returned when
-     the identity provider is successfully created. See the
+     List the current identity providers.
+    </para>
+<screen>&prompt.user;uaac curl /identity-providers --insecure</screen>
+   </step>
+   <step>
+    <para>
+     From the output, locate the default <literal>ldap</literal> entry and take
+     note of its <literal>id</literal>. The entry will be similar to the
+     following.
+    </para>
+<screen>{
+  "type": "ldap",
+  "config": "{\"emailDomain\":null,\"additionalConfiguration\":null,\"providerDescription\":null,\"externalGroupsWhitelist\":[],\"attributeMappings\":{},\"addShadowUserOnLogin\":true,\"storeCustomAttributes\":true,\"ldapProfileFile\":\"ldap/ldap-search-and-bind.xml\",\"baseUrl\":\"ldap://localhost:389/\",\"referral\":null,\"skipSSLVerification\":false,\"userDNPattern\":null,\"userDNPatternDelimiter\":null,\"bindUserDn\":\"cn=admin,dc=test,dc=com\",\"userSearchBase\":\"dc=test,dc=com\",\"userSearchFilter\":\"cn={0}\",\"passwordAttributeName\":null,\"passwordEncoder\":null,\"localPasswordCompare\":null,\"mailAttributeName\":\"mail\",\"mailSubstitute\":null,\"mailSubstituteOverridesLdap\":false,\"ldapGroupFile\":null,\"groupSearchBase\":null,\"groupSearchFilter\":null,\"groupsIgnorePartialResults\":null,\"autoAddGroups\":true,\"groupSearchSubTree\":true,\"maxGroupSearchDepth\":10,\"groupRoleAttribute\":null,\"tlsConfiguration\":\"none\"}",
+  "id": "53gc6671-2996-407k-b085-2346e216a1p0",
+  "originKey": "ldap",
+  "name": "UAA LDAP Provider",
+  "version": 3,
+  "created": 946684800000,
+  "last_modified": 1602208214000,
+  "active": false,
+  "identityZoneId": "uaa"
+},
+</screen>
+   </step>
+   <step>
+    <para>
+     Delete the default <literal>ldap</literal> identity provider. If the
+     default entry is not removed, adding another identity provider of type ldap
+     will result in a <literal>409 Conflict</literal> response. Replace the
+     example <literal>id</literal> with one found in the previous step.
+    </para>
+<screen>&prompt.user;uaac curl /identity-providers/<replaceable>53gc6671-2996-407k-b085-2346e216a1p0</replaceable> \
+    --request DELETE \
+    --insecure
+</screen>
+   </step>
+   <step>
+    <para>
+     Create your own LDAP identity provider. A <literal>201 Created</literal>
+     response will be returned when the identity provider is successfully
+     created. See the
      <link xlink:href="http://docs.cloudfoundry.org/api/uaa/version/4.21.0/index.html#ldap">UAA
      API Reference</link> and
      <link xlink:href="https://github.com/cloudfoundry/uaa/blob/4.21.0/docs/UAA-LDAP.md">&cf;
@@ -1712,7 +1751,6 @@ features:
     --request POST \
     --insecure \
     --header &apos;Content-Type: application/json&apos; \
-    --header &apos;X-Identity-Zone-Subdomain: <replaceable>uaa</replaceable>&apos; \
     --data &apos;{
   "type" : "ldap",
   "config" : {
@@ -1734,11 +1772,10 @@ features:
    </step>
    <step>
     <para>
-     Verify the LDAP identify provider has been created in the
-     <replaceable>kubecf</replaceable> zone. The output should now contain an entry for
-     the <literal>ldap</literal> type.
+     Verify the LDAP identify provider has been created. The output should now
+     contain an entry for the <literal>ldap</literal> type you created.
     </para>
-<screen>&prompt.user;uaac curl /identity-providers --insecure --header "X-Identity-Zone-Id: <replaceable>uaa</replaceable>"</screen>
+<screen>&prompt.user;uaac curl /identity-providers --insecure</screen>
    </step>
    <step>
     <para>
@@ -1808,31 +1845,6 @@ OK
 API endpoint:   https://api.example.com (API version: 2.115.0)
 User:           username@ldap.example.com
 </screen>
-   </step>
-  </procedure>
-  <para>
-   If the LDAP identity provider is no longer needed, it can be removed with the following
-   steps.
-  </para>
-  <procedure>
-   <step>
-    <para>
-     Obtain the ID of your identity provider.
-    </para>
-<screen>&prompt.user;uaac curl /identity-providers \
-    --insecure \
-    --header "Content-Type:application/json" \
-    --header "Accept:application/json" \
-    --header"X-Identity-Zone-Id:<replaceable>uaa</replaceable>"</screen>
-   </step>
-   <step>
-    <para>
-     Delete the identity provider.
-    </para>
-<screen>&prompt.user;uaac curl /identity-providers/<replaceable>IDENTITY_PROVIDER_ID</replaceable> \
-    --request DELETE \
-    --insecure \
-    --header "X-Identity-Zone-Id:<replaceable>uaa</replaceable>"</screen>
    </step>
   </procedure>
  </sect2>'>
