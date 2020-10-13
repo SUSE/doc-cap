@@ -1719,9 +1719,10 @@ features:
    <step>
     <para>
      Delete the default <literal>ldap</literal> identity provider. If the
-     default entry is not removed, adding another identity provider of type ldap
-     will result in a <literal>409 Conflict</literal> response. Replace the
-     example <literal>id</literal> with one found in the previous step.
+     default entry is not removed, adding another identity provider of type
+     <literal>ldap</literal> will result in a <literal>409 Conflict</literal>
+     response. Replace the example <literal>id</literal> with one found in the
+     previous step.
     </para>
 <screen>&prompt.user;uaac curl /identity-providers/<replaceable>53gc6671-2996-407k-b085-2346e216a1p0</replaceable> \
     --request DELETE \
