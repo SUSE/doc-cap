@@ -19,8 +19,7 @@
    <para>
    The Stratos user interface (UI) is a modern web-based management application
    for &cf;. It provides a graphical management console for both
-   developers and system administrators. Install Stratos with &helm; after all
-   of the <literal>kubecf</literal> pods are running.
+   developers and system administrators.
   </para>
 
  <sect1 xml:id="sec-cap-stratos-prod">
@@ -53,19 +52,34 @@ sed 's/"namespace": "default"/"namespace": "stratos"/' | kubectl create --filena
 
 &helm-search-suse;
 
- <para>
-     Use &helm; to install Stratos, using the same
-     &values-filename; configuration file you used to
-     deploy <literal>kubecf</literal>:
+  <para>
+   Create a YAML file, called <filename>&stratos-values-file;</filename> in this
+   example, and use it to make configurations to the Stratos &helm; chart.
   </para>
+
+<screen>### example Stratos deployment configuration file
+### &stratos-values-file;
+
+console:
+  # Use local admin user instead of UAA
+  localAdminPassword: <replaceable>changeme</replaceable>
+</screen>
 
   &stratos-tech-preview-note;
 
-<screen>&prompt.user;kubectl create namespace <replaceable>stratos</replaceable>
+  <para>
+   Create a namespace for your Stratos deployment.
+  </para>
 
-&prompt.user;helm install <replaceable>susecf-console</replaceable> suse/console \
+<screen>&prompt.user;kubectl create namespace <replaceable>stratos</replaceable></screen>
+
+  <para>
+   Deploy Stratos using &helm;.
+  </para>
+
+<screen>&prompt.user;helm install <replaceable>susecf-console</replaceable> suse/console \
 --namespace <replaceable>stratos</replaceable> \
---values &values-file;
+--values &stratos-values-file;
 </screen>
 
   &stratos-deploy-complete;
@@ -112,7 +126,7 @@ stratos  1        1        3h
           domain you created for it, and its port, for example
           https://example.com:8443. Wade through the nag screens about the self-signed
    certificates and log in as <literal>admin</literal> with the password you
-   created in &values-filename;.
+   created in &stratos-values-file;
   </para>
 
   <!-- Image of Stratos UI console -->
@@ -249,19 +263,43 @@ NAME            PROVISIONER             AGE
 gp2 (default)   kubernetes.io/aws-ebs   1d
 gp2scoped       kubernetes.io/aws-ebs   1d
 </screen>
+
   <para>
-   Use &helm; to install Stratos:
+   Create a YAML file, called <filename>&stratos-values-file;</filename> in this
+   example, and use it to make configurations to the Stratos &helm; chart.
   </para>
+
+<screen>### example Stratos deployment configuration file
+### &stratos-values-file;
+
+console:
+  # Use local admin user instead of UAA
+  localAdminPassword: <replaceable>changeme</replaceable>
+
+services:
+  loadbalanced: true
+
+kube:
+  storage_class:
+    persistent: gp2scoped
+</screen>
 
   &stratos-tech-preview-note;
 
-<screen>&prompt.user;kubectl create namespace <replaceable>stratos</replaceable>
+  <para>
+   Create a namespace for your Stratos deployment.
+  </para>
 
-&prompt.user;helm install <replaceable>susecf-console</replaceable> suse/console \
+<screen>&prompt.user;kubectl create namespace <replaceable>stratos</replaceable></screen>
+
+  <para>
+   Deploy Stratos using &helm;.
+  </para>
+
+<screen>&prompt.user;helm install <replaceable>susecf-console</replaceable> suse/console
+\
 --namespace <replaceable>stratos</replaceable> \
---values &values-file; \
---set kube.storage_class.persistent=gp2scoped \
---set services.loadbalanced=true
+--values &stratos-values-file;
 </screen>
 
   &stratos-deploy-complete;
@@ -383,17 +421,38 @@ gp2scoped       kubernetes.io/aws-ebs   1d
    deployed on &aks; (see <xref linkend="cha-cap-depl-aks"/>).
   </para>
 
+  <para>
+   Create a YAML file, called <filename>&stratos-values-file;</filename> in this
+   example, and use it to make configurations to the Stratos &helm; chart.
+  </para>
+
+<screen>### example Stratos deployment configuration file
+### &stratos-values-file;
+
+console:
+  # Use local admin user instead of UAA
+  localAdminPassword: <replaceable>changeme</replaceable>
+
+services:
+  loadbalanced: true
+</screen>
+
   &stratos-tech-preview-note;
 
   <para>
-   Use &helm; to install Stratos:
+   Create a namespace for your Stratos deployment.
   </para>
-<screen>&prompt.user;kubectl create namespace <replaceable>stratos</replaceable>
-	  
-&prompt.user;helm install <replaceable>susecf-console</replaceable> suse/console \
+
+<screen>&prompt.user;kubectl create namespace <replaceable>stratos</replaceable></screen>
+
+  <para>
+   Deploy Stratos using &helm;.
+  </para>
+
+<screen>&prompt.user;helm install <replaceable>susecf-console</replaceable> suse/console
+\
 --namespace <replaceable>stratos</replaceable> \
---values &values-file; \
---set services.loadbalanced=true
+--values &stratos-values-file;
 </screen>
 
   &stratos-deploy-complete;
@@ -502,18 +561,38 @@ gp2scoped       kubernetes.io/aws-ebs   1d
    deployed on &gke; (see <xref linkend="cha-cap-depl-gke"/>).
   </para>
 
-  <para>
-   Use &helm; to install Stratos:
+<para>
+   Create a YAML file, called <filename>&stratos-values-file;</filename> in this
+   example, and use it to make configurations to the Stratos &helm; chart.
   </para>
+
+<screen>### example Stratos deployment configuration file
+### &stratos-values-file;
+
+console:
+  # Use local admin user instead of UAA
+  localAdminPassword: <replaceable>changeme</replaceable>
+
+services:
+  loadbalanced: true
+</screen>
 
   &stratos-tech-preview-note;
 
-<screen>&prompt.user;kubectl create namespace <replaceable>stratos</replaceable>
+  <para>
+   Create a namespace for your Stratos deployment.
+  </para>
 
-&prompt.user;helm install <replaceable>susecf-console</replaceable> suse/console \
+<screen>&prompt.user;kubectl create namespace <replaceable>stratos</replaceable></screen>
+
+  <para>
+   Deploy Stratos using &helm;.
+  </para>
+
+<screen>&prompt.user;helm install <replaceable>susecf-console</replaceable> suse/console
+\
 --namespace <replaceable>stratos</replaceable> \
---values &values-file; \
---set services.loadbalanced=true
+--values &stratos-values-file;
 </screen>
 
   &stratos-deploy-complete;
@@ -793,31 +872,29 @@ firehoseExporter:
    <title>Install Stratos Metrics with &helm;</title>
    <para>
     In order to display metrics data with Stratos, you need to deploy the
-    <literal>stratos-metrics</literal> &helm; chart. As with deploying Stratos,
-    you should deploy the metrics &helm; chart using the same
-    &values-filename; file that was used for deploying
-    <literal>kubecf</literal>.
+    <literal>stratos-metrics</literal> &helm; chart. As with othe examples in
+    this guide, a YAML file is defined to change configurations of the &helm;
+    chart.
    </para>
    <para>
-    Additionally, create a new YAML file, named
-    <filename>stratos-metrics-values.yaml</filename> in this example, for
+    Create a new YAML file, named <filename>stratos-metrics-values.yaml</filename> in this example, for
     configuration options specific to Stratos Metrics.
    </para>
    <para>
     The following is an example <filename>stratos-metrics-values.yaml</filename>
     file.
    </para>
-<screen>cloudFoundry:                                                                   
+<screen>cloudFoundry:
   apiEndpoint: <replaceable>https://api.example.com</replaceable>
-  uaaAdminClient: admin                                                         
+  uaaAdminClient: admin
   uaaAdminClientSecret: <replaceable>password</replaceable>
-  skipSslVerification: "true"  
+  skipSslVerification: "true"
 env:
   DOPPLER_PORT: 443
 kubernetes:
   apiEndpoint: <replaceable>kube_server_address.example.com</replaceable>
 metrics:
-  username: <replaceable>username</replaceable>                                 
+  username: <replaceable>username</replaceable>
   password: <replaceable>password</replaceable>
 prometheus:
   kubeStateMetrics:
@@ -855,8 +932,8 @@ services:
     </listitem>
     <listitem>
      <para>
-      <literal>metrics.password</literal> is the password used to authenticate  
-      with the nginx server that fronts Prometheus. This username is also used  
+      <literal>metrics.password</literal> is the password used to authenticate
+      with the nginx server that fronts Prometheus. This username is also used
       during the <xref linkend="sec-cap-stratos-metrics-connect"/>) process.
       Ensure a secure password is chosen.
      </para>
