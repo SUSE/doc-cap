@@ -1234,6 +1234,11 @@ nginx-ingress-controller   LoadBalancer   <replaceable>10.63.248.70</replaceable
 '<title xmlns="http://docbook.org/ns/docbook">
   Affinity and Anti-affinity
  </title>
+ <important xmlns="http://docbook.org/ns/docbook">
+  <para>
+   This feature requires &productname; 2.0.1 or newer.
+  </para>
+ </important>
  <para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
   Operators can set affinity/anti-affinity rules to restrict how the scheduler
   determines the placement of a given pod on a given node. This can be
