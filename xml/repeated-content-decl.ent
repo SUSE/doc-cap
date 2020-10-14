@@ -1887,7 +1887,7 @@ User:           username@ldap.example.com
    </para>
 <screen>&prompt.user;helm install <replaceable>cf-operator</replaceable> suse/cf-operator \
 --namespace <replaceable>cf-operator</replaceable> \
---set "global.operator.watchNamespace=<replaceable>kubecf</replaceable>" \
+--set "global.singleNamespace.name=<replaceable>kubecf</replaceable>" \
 --version &operator_chart;
 </screen>
   </step>
