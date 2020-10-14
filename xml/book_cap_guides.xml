@@ -66,6 +66,7 @@ Part: CAP Administration Guide
   <xi:include href="cap_admin_create_admin.xml"/>
   <xi:include href="cap_admin_passwords.xml"/>
   <xi:include href="cap_admin_uaa_ui.xml"/>
+  <xi:include href="cap_admin_memory_limits.xml"/>
   <xi:include href="cap_admin_ccdb_key_rotation.xml"/>
   <xi:include href="cap_admin_secret_rotation.xml"/>
   <xi:include href="cap_admin_backup-restore.xml"/>
