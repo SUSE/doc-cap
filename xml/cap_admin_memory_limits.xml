@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha-cap-memory-limits"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <title>Container Memory Limits and Requests</title>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+ </info>
+ <para>
+  In &productname;, containers have predefined memory limits and request sizes.
+  Depending on the workload, these may need to be adjusted in some cases.
+ </para>
+ <sect1 xml:id="sec-cap-memory-limits-enable">
+  <title>Enabling and Disabling Memory Limits and Request Sizes</title>
+  <para>
+   By default, memory limits and request sizes are enabled. To disable it, add
+   the following block to your &values-filename; file.
+  </para>
+<screen>features:
+  memory_limits:
+    enabled: false
+</screen>
+  <para>
+   To enable memory limits again, update the above block in your
+   &values-filename; so that <literal>enabled</literal> is set to
+   <literal>true</literal>.
+  </para>
+
+  <!-- Applying change to new vs existing deployments -->
+  &config-new-vs-existing;
+ </sect1>
+ <sect1 xml:id="sec-cap-memory-limits-configure">
+  <title>Configuring Memory Limits and Request Sizes</title>
+  <para>
+   Configuring memory limits and request sizes requires that
+   <literal>feature.memory_limits</literal> is enabled. The default memory limits
+   and request sizes can be found by examining the <literal>resources</literal>
+   block at
+   <link xlink:href="https://github.com/SUSE/kubernetes-charts-suse-com/blob/master/stable/kubecf/config/resources.yaml"/>.
+   To configure memory limits and request sizes, add a
+   <literal>resources</literal> block to your &values-file;. It contains a
+   mapping of instance groups to jobs to processes. The process then contains a
+   resource definition with limits and requests. All values are integers and
+   represent the number of megabytes (Mi) for the given limit or request. A fully
+   expanded tree looks like:
+  </para>
+<screen>resources:
+  some_ig:
+    some_job:
+      some_process:
+        memory:
+          limit: ~
+          request: ~
+</screen>
+  <para>
+   Each level can define a <literal>$defaults</literal> resource definition that
+   will be applied to all processes below it, that don't have their own
+   definition (or a default further down the tree closer to them):
+  </para>
+<screen>resources:
+  '$defaults':
+    memory:
+      limit: ~
+      request: ~
+  some_ig:
+    '$defaults': { ... }
+    some_job:
+      '$defaults': { ... }
+       some_process: ~
+</screen>
+  <para>
+   For convenience a <literal>$defaults</literal> value can be just an integer.
+   This
+  </para>
+<screen>resources:
+  '$defaults': 32
+</screen>
+  <para>
+   is a shortcut for:
+  </para>
+<screen>resources:
+  '$defaults': {memory: {limit: 32, request: ~}, cpu: {limit: ~, request:~}}
+</screen>
+  <para>
+   In addition, an instance group, job, or process can also be set to just an
+   integer. This:
+  </para>
+<screen>resources:
+  some_ig: 32
+</screen>
+  <para>
+   is a shortcut for:
+  </para>
+<screen>resources:
+  some_ig:
+    $defaults': 32
+</screen>
+  <para>
+   Of course this means that any lower level jobs and processes will have to
+   share this specific resource definition, as there is no way to explicitly
+   enumerate the jobs or processes when the value is just an integer and not a
+   map.
+  </para>
+  <para>
+   Note that there is a difference between this
+  </para>
+<screen>resources:
+  '$defaults': 32
+  some_ig: 64
+</screen>
+  <para>
+   and this:
+  </para>
+<screen>resources:
+  '$defaults': 32
+  some_ig:
+    some_job: 64
+</screen>
+  <para>
+   The former definitions sets the memory limit of
+   <emphasis role="bold">all</emphasis> jobs under <literal>some_ig</literal>
+   while the latter only specifies the limit for <literal>some_job</literal>. If
+   there are more jobs in <literal>some_ig</literal>, then they will use the
+   global limit (32) and only <literal>some_job</literal> will use the specific
+   limit (64).
+  </para>
+  <para>
+   Memory requests will have a calculated default value, which is a configurable
+   percentage of the limit, at least some configurable minimum value, and never
+   higher than the limit itself. The default is always at least a minimum value,
+   but never larger than the limit itself. These defaults can be configured by
+   using <literal>features.memory_limits.default_request_minimum</literal> and
+   <literal>features.memory_limits.default_request_in_percent</literal>. The
+   following is an example configuration where the example values are the
+   respective defaults. 
+  </para>
+<screen>features:
+  memory_limits:
+    default_request_minimum: 32
+    default_request_in_percent: 25
+</screen>
+
+  <!-- Applying change to new vs existing deployments -->                        
+  &config-new-vs-existing;
+ </sect1>
+</chapter>
