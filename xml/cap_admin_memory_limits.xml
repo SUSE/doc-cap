@@ -47,7 +47,7 @@
    block at
    <link xlink:href="https://github.com/SUSE/kubernetes-charts-suse-com/blob/master/stable/kubecf/config/resources.yaml"/>.
    To configure memory limits and request sizes, add a
-   <literal>resources</literal> block to your &values-file;. It contains a
+   <literal>resources</literal> block to your &values-filename;. It contains a
    mapping of instance groups to jobs to processes. The process then contains a
    resource definition with limits and requests. All values are integers and
    represent the number of megabytes (Mi) for the given limit or request. A fully
