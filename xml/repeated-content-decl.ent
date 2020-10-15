@@ -2063,7 +2063,7 @@ User:           username@ldap.example.com
 <!--ENTITY example-config....................................................-->
 
 <!ENTITY example-config
-'<screen xmlns="http://docbook.org/ns/docbook">### example deployment configuration file
+'<screen xmlns="http://docbook.org/ns/docbook">### Example deployment configuration file
 ### &values-file;
 
 system_domain: example.com
@@ -2071,4 +2071,46 @@ system_domain: example.com
 credentials:
   cf_admin_password: <replaceable>changeme</replaceable>
   uaa_admin_client_secret: <replaceable>alsochangeme</replaceable>
- </screen>'>
+
+### This block is required due to the log-cache issue described below
+properties:
+  log-cache:
+    log-cache:
+      memory_limit_percent: 3
+
+### This block is required due to the log-cache issue described below
+###
+### The value for <literal>key</literal> may need to be replaced depending on
+### how notes in your cluster are labeled
+###
+### The value(s) listed under <literal>values</literal> may need to be
+### replaced depending on how notes in your cluster are labeled
+operations:
+  inline:
+  - type: replace
+    path: /instance_groups/name=log-cache/env?/bosh/agent/settings/affinity
+    value:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: <replaceable>kubernetes.io/hostname</replaceable>
+              operator: In
+              values:
+              - <replaceable>0</replaceable>
+</screen>
+<para xmlns="http://docbook.org/ns/docbook">
+ The log-cache component currently has a memory allocation issue where the node
+ memory available is reported instead of the one assigned to the container under
+ cgroups. In such a situation, log-cache would start allocating memory based on
+ these values, causing a varying range of issues (OOMKills, performance
+ degradation, etc.). To address this issue, node affinity must be used to tie
+ log-cache to nodes of a uniform size, and then declaring the cache percentage
+ based on that number. A limit of 3&percnt; has been identified as sufficient.
+</para>
+<para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+ In the node affinity configuration, the values for <literal>key</literal> and
+ <literal>values</literal> may need to be changed depending on how notes in your
+ cluster are labeled. For more information on labels, see
+ <link xlink:href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#built-in-node-labels"/>.
+</para>'>

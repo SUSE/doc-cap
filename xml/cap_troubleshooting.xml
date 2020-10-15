@@ -276,4 +276,42 @@ Error: admission webhook "validate-boshdeployment.quarks.cloudfoundry.org" denie
 &prompt.user;kubectl create namespace <replaceable>name</replaceable>
   </screen>
  </sect1>
+ <sect1 xml:id="sec-cap-tbl-log-cache-memory">
+  <title>Log-cache Memory Allocation Issue</title>
+  <para>
+   The log-cache component currently has a memory allocation issue where the node
+   memory available is reported instead of the one assigned to the container under
+   cgroups. In such a situation, log-cache would start allocating memory based on
+   these values, causing a varying range of issues (OOMKills, performance
+   degradation, etc.). To address this issue, node affinity must be used to tie
+   log-cache to nodes of a uniform size, and then declaring the cache percentage
+   based on that number. A limit of 3% has been identified as sufficient.
+  </para>
+  <para>
+   Add the following to your &values-filename;. In the node affinity
+   configuration, the values for <literal>key</literal> and
+   <literal>values</literal> may need to be changed depending on how notes in
+   your cluster are labeled. For more information on labels, see
+   <link xlink:href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#built-in-node-labels"/>.
+  </para>
+<screen>properties:
+  log-cache:
+    log-cache:
+      memory_limit_percent: 3
+
+operations:
+  inline:
+  - type: replace
+    path: /instance_groups/name=log-cache/env?/bosh/agent/settings/affinity
+    value:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: <replaceable>kubernetes.io/hostname</replaceable>
+              operator: In
+              values:
+              - <replaceable>0</replaceable>
+</screen>
+ </sect1>
 </chapter>
