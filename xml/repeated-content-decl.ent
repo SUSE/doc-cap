@@ -1438,9 +1438,6 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
     The following is an example &ha; configuration. The example values are not meant to be
     copied, as these depend on your particular deployment and requirements.
    </para>
-   <para>
-    The number of database instances must be odd.
-   </para>
 <screen>sizing:
   adapter:
     instances: 2
@@ -1463,7 +1460,7 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
   credhub:
     instances: 2
   database:
-    instances: 3
+    instances: 1
   diego_api:
     instances: 2
   diego_cell:
