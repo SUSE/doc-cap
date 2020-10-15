@@ -131,6 +131,18 @@ Before you start deploying &productname;, review the following documents:
       <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.49.0"/></entry>
      </row>
      <row>
+      <entry>2.0.1</entry>
+      <entry>4.5.13+.gd4738712</entry>
+      <entry>2.2.3</entry>
+      <entry>4.0.1</entry>
+      <entry>1.2.1</entry>
+      <entry>&min_kube;</entry>
+      <!-- cf-deployment 12.17: 2.144.0, cf api result: -->
+      <entry>2.144.0</entry>
+      <entry>6.49.0</entry>
+      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.49.0"/></entry>
+     </row>
+     <row>
       <entry>2.0</entry>
       <entry>4.5.6+0.gffc6f942</entry>
       <entry>2.2.2</entry>
