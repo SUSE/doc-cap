@@ -29,20 +29,61 @@
   setting for &cap;, and because it depends on the application deployed, it is
   up to the user to adjust the setting based on their application.
  </para>
-
- <warning>
-  <title>Technology Preview</title>
+ 
+ <sect1 xml:id="sec-cap-eirini-considerations">
+  <title>Limitations and Other Considerations</title>
   <para>
-   Eirini is currently included in &productname; as a technology preview to
-   allow users to evaluate. It is <emphasis>not</emphasis> supported for use in
-   production deployments.
+   When using Eirini, it is important to take into consideration:
   </para>
-  <para>
-   As a technology preview, Eirini contains certain limitations to its
-   functionality.
-  </para>
- </warning>
-
+  <itemizedlist>
+   <listitem>
+    <para>
+     If you are upgrading from &productname; 2.0.1 to 2.1.0 and plan to convert
+     from Diego to Eirini, please upgrade your Diego environment to &productname;
+     2.1.0 first and then migrate to Eirini as the earlier CAP versions relied a
+     technical preview version of Eirini.
+    </para>
+    <para>
+     In this situation, your current applications relying on the
+     <literal>cflinuxfs3</literal> stack need to be converted to the
+     <literal>sle15</literal> stack. You can re-push your applications with
+     <command>cf push APP_NAME -s sle15</command> to do so, otherwise your
+     applications will crash on Eirini.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Applications on Eirini will require slightly more memory than on Diego.
+     From testing, add an additional 32 MB to your application's manifest. The
+     increase may vary, depending on your application.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     TCP routing is not available in Eirini deployments at this time.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Eirini requires the <literal>k8s-metrics-server</literal> to be installed
+     on the &kube; environment where &productname; is installed in order for
+     Stratos Metrics to work.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Stratos Metrics will not show disk stats on Eirini.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     When there is a &kube; outage, Eirini will not automatically restart
+     applications upon its return. You will need to manually start them up at
+     present.
+    </para>
+   </listitem>
+  </itemizedlist>
+ </sect1>
  <sect1 xml:id="sec-cap-eirini-enable">
   <title>Enabling Eirini</title>
 
@@ -90,8 +131,9 @@ features:
    </step>
    <step>
     <para>
-     Depending on your cluster configuration, Metrics Server may need to be
-     deployed. Use &helm; to install the latest stable Metrics Server.
+     In order for Eirini to report application metrics, Metrics Server
+     (link xlink:href="https://github.com/kubernetes-sigs/metrics-server"/> must 
+     be installed.
     </para>
     <para>
      Note that <literal>--kubelet-insecure-tls</literal> is not recommended for
