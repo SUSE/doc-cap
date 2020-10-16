@@ -85,8 +85,119 @@
 	     
 &prompt.user;helm install <replaceable>minibroker</replaceable> suse/minibroker \
 --namespace <replaceable>minibroker</replaceable> \
+--set "deployServiceCatalog=false" \
 --set "defaultNamespace=minibroker"
 </screen>
+     <note>
+      <para>
+       Platform users provisioning service instances will be able to set
+       arbitrary parameters, which can be potentially dangerous, e.g. if setting
+       a high number of replicas. To prevent this, it is possible to define
+       override parameters per service in the according fields of the
+       <literal>provisioning</literal> chart value. If defined, the user-defined
+       parameters are dropped and the override parameters are used instead. 
+      </para>
+      <para>
+       The below is an example <filename>values.yaml</filename> file where the
+       <literal>provisioning</literal> chart value contains a series of override
+       definitions for different services. When the override parameters (or
+       other configurations) are defined in a <filename>values.yaml</filename>
+       file, ensure the file is used by including <command>--values
+       FILE</command> in the <command>helm install</command> command.
+      </para>
+<screen>### Example configuration file
+### minibroker-values.yaml
+
+provisioning:
+  mariadb:
+    overrideParams:
+      db:
+        user: "dbuser"
+        name: "default"
+      replication:
+        enabled: false
+      metrics:
+        enabled: false
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 200m
+          memory: 256Mi
+  postgresql:
+    overrideParams:
+      postgresqlUsername: "dbuser"
+      postgresqlDatabase: "default"
+      replication:
+        enabled: false
+      metrics:
+        enabled: false
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 200m
+          memory: 256Mi
+  redis:
+    overrideParams:
+      cluster:
+        enabled: false
+      networkPolicy:
+        enabled: false
+      securityContext:
+        enabled: true
+      sentinel:
+        enabled: false
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 200m
+          memory: 256Mi
+  rabbitmq:
+    overrideParams:
+      rabbitmq:
+        username: "dbuser"
+      replicas: 1
+      networkPolicy:
+        enabled: false
+      ingress:
+        enabled: false
+      metrics:
+        enabled: false
+      forceBoot:
+        enabled: false
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 200m
+          memory: 256Mi
+  mongodb:
+    overrideParams:
+      volumePermissions:
+        enabled: false
+      service:
+        type: ClusterIP
+      replicaSet:
+        enabled: false
+      ingress:
+        enabled: false
+      metrics:
+        enabled: false
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 200m
+          memory: 256Mi
+</screen>
+     </note>
      <para>
       The following tables list the services provided by Minibroker, along with
       the latest chart and application version combination known to work with
