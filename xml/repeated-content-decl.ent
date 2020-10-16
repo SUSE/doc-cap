@@ -2096,18 +2096,54 @@ operations:
               values:
               - <replaceable>0</replaceable>
 </screen>
-<para xmlns="http://docbook.org/ns/docbook">
- The log-cache component currently has a memory allocation issue where the node
- memory available is reported instead of the one assigned to the container under
- cgroups. In such a situation, log-cache would start allocating memory based on
- these values, causing a varying range of issues (OOMKills, performance
- degradation, etc.). To address this issue, node affinity must be used to tie
- log-cache to nodes of a uniform size, and then declaring the cache percentage
- based on that number. A limit of 3&percnt; has been identified as sufficient.
-</para>
-<para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
- In the node affinity configuration, the values for <literal>key</literal> and
- <literal>values</literal> may need to be changed depending on how notes in your
- cluster are labeled. For more information on labels, see
- <link xlink:href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#built-in-node-labels"/>.
-</para>'>
+<sect2 xmlns="http://docbook.org/ns/docbook">
+ <title>Log-cache Memory Allocation</title>
+ <para>
+  The log-cache component currently has a memory allocation issue where the node
+  memory available is reported instead of the one assigned to the container under
+  cgroups. In such a situation, log-cache would start allocating memory based on
+  these values, causing a varying range of issues (OOMKills, performance
+  degradation, etc.). To address this issue, node affinity must be used to tie
+  log-cache to nodes of a uniform size, and then declaring the cache percentage
+  based on that number. A limit of 3&percnt; has been identified as sufficient.
+ </para>
+ <para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  In the node affinity configuration, the values for <literal>key</literal> and
+  <literal>values</literal> may need to be changed depending on how notes in your
+  cluster are labeled. For more information on labels, see
+  <link xlink:href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#built-in-node-labels"/>.
+ </para>
+</sect2>
+<sect2 xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <title>Diego Cell Affinities and Tainted Nodes</title>
+ <para>
+  Note that the <literal>diego-cell</literal> pods used by the Diego standard
+  scheduler are
+ </para>
+ <itemizedlist>
+  <listitem>
+   <para>
+    privileged
+   </para>
+  </listitem>
+  <listitem>
+   <para>
+    use large local emptyDir volumes (i.e. require node disk storage)
+   </para>
+  </listitem>
+  <listitem>
+   <para>
+    and set kernel parameters on the node
+   </para>
+  </listitem>
+ </itemizedlist>
+ <para>
+  These things all mean that these pods should not live next to other &kube;
+  workloads. They should all be placed on their own
+  <emphasis role="bold">dedicated nodes</emphasis> instead where possible.
+ </para>
+ <para>
+  This can be done by setting affinities and tolerations, as explained in
+the associated tutorial at <link xlink:href="https://kubecf.io/docs/deployment/affinities-and-tolerations/"/>.
+ </para>
+</sect2>'>
