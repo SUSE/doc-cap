@@ -67,7 +67,7 @@
   </para>
 <screen>#!/bin/bash
 
-MIRROR=registry.home
+MIRROR=myregistry.com
 
 set -ex
 
@@ -87,9 +87,11 @@ function mirror {
     rm -r ${CHARTDIR}
 }
 
-mirror cf
+mirror cf-operator
+mirror kubecf
 mirror console
 mirror metrics
+mirror minibroker
 </screen>
   <para>
    The script above will both mirror to a local registry and save the images in
@@ -101,13 +103,6 @@ mirror metrics
    Also take note of the following regarding the script provided above.
   </para>
   <itemizedlist>
-   <listitem>
-    <para>
-     The <literal>minibroker</literal> chart is currently not supported as it
-     does not use a tagged image, but <literal>minibroker:latest</literal>. It
-     will use a tagged imaged in the next release and supported at that time.
-    </para>
-   </listitem>
    <listitem>
     <para>
      The <literal>nginx-ingress</literal> chart is not supported by this
@@ -131,7 +126,7 @@ mirror metrics
 <screen>kube:
   registry:
     # example registry domain
-    hostname: <replaceable>"registry.home"</replaceable>
+    hostname: <replaceable>"myregistry.com"</replaceable>
     username: ""
     password: ""
   organization: "cap"
