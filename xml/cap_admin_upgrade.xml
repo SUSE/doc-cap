@@ -97,23 +97,29 @@
   <itemizedlist>
    <listitem>
     <para>
-     For upgrades from &productname; 1.5.2 to &productname; 2.0, see
-     <xref linkend="sec-cap-update-152-to-20"/>.
+     For upgrades from &productname; 2.0.1 to &productname; 2.1.0, see
+     <xref linkend="sec-cap-update-201-to-210"/>.
     </para>
    </listitem>
    <listitem>                                                                    
     <para>                                                                       
      For upgrades from &productname; 2.0 to &productname; 2.0.1, see                 
-     <xref linkend="sec-cap-update-20-plus"/>.                                
+     <xref linkend="sec-cap-update-20-to-201"/>.                                
     </para>                                                                      
+   </listitem>
+   <listitem>
+    <para>
+     For upgrades from &productname; 1.5.2 to &productname; 2.0, see
+     <xref linkend="sec-cap-update-152-to-20"/>.
+    </para>
    </listitem>
   </itemizedlist>
 
-  <sect2 xml:id="sec-cap-update-20-plus">
-   <title>Upgrading from &productname; 2.0 to &productname; 2.0.1</title>
+  <sect2 xml:id="sec-cap-update-201-to-210">
+   <title>Upgrading from &productname; 2.0.1 to &productname; 2.1.0</title>
    <para>
-    The following procedure will upgrade &productname; 2.0 to &productname;
-    &productnumber;.
+    The following procedure will upgrade &productname; 2.0.1 to &productname;
+    2.1.0
    </para>
 
    <procedure>
@@ -124,7 +130,73 @@
  <screen>&prompt.user;helm upgrade <replaceable>cf-operator</replaceable> suse/cf-operator \
  --namespace <replaceable>cf-operator</replaceable> \
  --set "global.operator.watchNamespace=<replaceable>kubecf</replaceable>" \
- --version &operator_chart;
+ --version 6.1.17+0.gec409fd7
+ </screen>
+    </step>
+    <step>
+     <para>
+     Wait until &operator; is successfully upgraded before proceeding. Monitor
+     the status of your &operator; upgrade using the <command>watch</command>
+     command.
+    </para>
+ <screen>&prompt.user;watch --color &apos;kubectl get pods --namespace <replaceable>cf-operator</replaceable>&apos;</screen>
+    </step>
+    <step>
+     <para>
+      When the &operator; upgrade is completed, upgrade &kubecf;. If you are
+      planning to convert from Diego to Eirini, please upgrade your environment
+      to CAP 2.1.0 first, then migrate to Eirini as the earlier CAP versions
+      relied on a technical preview version of Eirini.
+     </para>
+     <substeps>
+      <step>
+       <para>
+        Skip this step f you are not using an HA setup of the internal database
+        in CAP 2.0.1. Otherwise you will need to scale down
+        <literal>sizing.database.instances</literal> to 1 in order to upgrade to
+        CAP 2.1.0. Running a high available version of the internal database
+        during the upgrade will result in confusion during the password rotation
+        process and you will run into difficulties recovering from it.
+     </para>
+    </step>
+    <step>
+     <para>
+      Perform the &kubecf; upgrade. During the upgrade, applications will
+      experience some downtime.
+     </para>
+ <screen>&prompt.user;helm upgrade <replaceable>kubecf</replaceable> suse/kubecf \
+ --namespace <replaceable>kubecf</replaceable> \
+ --values &values-file; \
+ --version 2.5.8
+ </screen>
+       </step>
+     </substeps>
+    </step>
+    <step>
+     <para>
+      Monitor the status of your &kubecf; upgrade using the <command>watch</command>
+      command.
+     </para>
+ <screen>&prompt.user;watch --color &apos;kubectl get pods --namespace <replaceable>kubecf</replaceable>&apos;</screen>
+    </step>
+   </procedure>
+  </sect2>
+  <sect2 xml:id="sec-cap-update-20-to-201">
+   <title>Upgrading from &productname; 2.0 to &productname; 2.0.1</title>
+   <para>
+    The following procedure will upgrade &productname; 2.0 to &productname;
+    2.0.1.
+   </para>
+
+   <procedure>
+    <step>
+     <para>
+      Begin by upgrading &operator;.
+     </para>
+ <screen>&prompt.user;helm upgrade <replaceable>cf-operator</replaceable> suse/cf-operator \
+ --namespace <replaceable>cf-operator</replaceable> \
+ --set "global.operator.watchNamespace=<replaceable>kubecf</replaceable>" \
+ --version 4.5.13+.gd4738712
  </screen>
     </step>
     <step>
@@ -142,7 +214,7 @@
  <screen>&prompt.user;helm upgrade <replaceable>kubecf</replaceable> suse/kubecf \
  --namespace <replaceable>kubecf</replaceable> \
  --values &values-file; \
- --version &kubecf_chart;
+ --version 2.2.3
  </screen>
     </step>
     <step>
@@ -358,7 +430,8 @@
      <step>
       <para>
        Deploy a &productname; 2.0 cluster. Refer to the instructions for your
-       target platform.
+       target platform. Use <literal>4.5.6+0.gffc6f942</literal> as the
+       &operator; version and <literal>2.2.2</literal> as the &kubecf; version.
       </para>
       &deployment-platforms;
      </step>
