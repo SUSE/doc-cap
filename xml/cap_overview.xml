@@ -24,33 +24,33 @@
   <itemizedlist>
    <listitem>
     <para>
-     &kubecf; has been updated to 2.2.3:
+     &kubecf; has been updated to 2.5.8:
     </para>
     <itemizedlist>
      <listitem>
       <para>
        For a full list of features and fixes see <link
-       xlink:href="https://github.com/cloudfoundry-incubator/kubecf/releases/tag/v2.2.3"/>
+       xlink:href="https://github.com/cloudfoundry-incubator/kubecf/releases/tag/v2.5.8"/>
       </para>
      </listitem>
     </itemizedlist>
    </listitem>
    <listitem>
     <para>
-     &operator; has been updated to 4.5.13:
+     &operator; has been updated to 6.1.17:
     </para>
     <itemizedlist>
      <listitem>
       <para>
        For a full list of features and fixes see <link
-       xlink:href="https://github.com/cloudfoundry-incubator/quarks-operator/releases/tag/v4.5.13"/>
+       xlink:href="https://github.com/cloudfoundry-incubator/quarks-operator/releases/tag/v6.1.17"/>
       </para>
      </listitem>
     </itemizedlist>
    </listitem>
    <listitem>
     <para>
-     Stratos Console has been updated to 4.0.1:
+     Stratos Console has been updated to 4.2.0:
     </para>
     <itemizedlist>
      <listitem>
@@ -61,7 +61,7 @@
      <listitem>
       <para>
        For a full list of features and fixes see <link
-       xlink:href="https://github.com/SUSE/stratos/blob/master/CHANGELOG.md#401"/>
+       xlink:href="https://github.com/SUSE/stratos/blob/master/CHANGELOG.md#420"/>
       </para>
      </listitem>
     </itemizedlist>
