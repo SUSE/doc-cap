@@ -1532,11 +1532,28 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
   <title>Configuration</title>
   <para>
    Currently &productname; supports Amazon Simple Storage Service (Amazon S3,
-   see <link xlink:href="https://aws.amazon.com/s3/"/>) as an external blobstore
-   . In order to configure Amazon S3 as an external blobstore, set the following
-   in your <filename>&values-file;</filename> file and replace the
-   example values.
+   see <link xlink:href="https://aws.amazon.com/s3/"/>) as an external blobstore. 
   </para>
+  <procedure>
+   <step>
+    <para>
+     Using the Amazon S3 service, create four buckets. A bucket should be
+     created for app packages, buildpacks, droplets, and resources. For
+     instructions on how to create Amazone S3 buckets, see
+     <link xlink:href="https://docs.aws.amazon.com/AmazonS3/latest/user-guide/create-bucket.html"/>.
+    </para>
+   </step>
+   <step>
+    <para>
+     To grant proper access to the create buckets, configure an additional IAM
+     role as described in the first step of <link xlink:href="https://docs.cloudfoundry.org/deploying/common/cc-blobstore-config.html#fog-aws-iam"/>.
+    </para>
+   </step>
+   <step>
+    <para>
+     Set the following in your <filename>&values-file;</filename> file and replace the
+     example values.
+    </para>
 <screen>features:
   blobstore:
     provider: s3
@@ -1552,10 +1569,8 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
       droplet_directory_key: <replaceable>DROPLET-BUCKET-NAME</replaceable>
       resource_directory_key: <replaceable>RESOURCE-BUCKET-NAME</replaceable>
 </screen>
-  <para>
-   Ensure the supplied AWS credentials have appropriate permissions as described
-   at <link xlink:href="https://docs.cloudfoundry.org/deploying/common/cc-blobstore-config.html#fog-aws-iam"/>.
-  </para>
+   </step>
+  </procedure>
  </sect2>'>
 
 <!--ENTITY external-database................................................-->
