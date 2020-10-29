@@ -1057,7 +1057,9 @@ console:
  <para xmlns="http://docbook.org/ns/docbook">
   This section describes the process to secure traffic passing through your
   &productname; deployment. This is achieved by using certificates to set up
-  Transport Layer Security (TLS) for the router component.
+  Transport Layer Security (TLS) for the router component. Providing
+  certificates for the router traffic is optional. In a default deployment,
+  without operator-provided certificates, generated certificates will be used.
  </para>
  <sect2 xmlns="http://docbook.org/ns/docbook">
   <title>Certificate Characteristics</title>
@@ -1135,9 +1137,10 @@ console:
   Using an Ingress Controller
  </title>
  <para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
-  By default, a &productname; cluster is exposed through its &kube; services.
-  This section describes how to use an ingress (see <link xlink:href="https://kubernetes.io/docs/concepts/services-networking/ingress/"/>)
-  to manage access to the services in the cluster.
+  This section describes how to use an ingress controller
+  (see <link xlink:href="https://kubernetes.io/docs/concepts/services-networking/ingress/"/>)
+  to manage access to the services in the cluster. Using an ingress controller
+  is optional. In a default deployment, load balancers are used instead.
  </para>
  <para xmlns="http://docbook.org/ns/docbook">
   Note that only the NGINX Ingress Controller has been verified to be
@@ -1390,6 +1393,10 @@ nginx-ingress-controller   LoadBalancer   <replaceable>10.63.248.70</replaceable
  <sect2 xmlns="http://docbook.org/ns/docbook">
   <title>Configuring &cap; for &ha;</title>
   <para>
+   High availability mode is optional. In a default deployment, &productname; is
+   deployed in single availability mode.
+  </para>
+  <para>
    There are two ways to make your &productname; deployment highly available.
    The first method is to set the <literal>high_availability</literal> parameter
    in your deployment configuration file to <literal>true</literal>. The second
@@ -1413,7 +1420,6 @@ nginx-ingress-controller   LoadBalancer   <replaceable>10.63.248.70</replaceable
 &prompt.user;helm inspect values suse/kubecf | \
 perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail|scale|count/ }&apos;
 
-<!-- TODO-CAP2 replace example -->
 </screen>
    <para>
     The default <filename>values.yaml</filename> files are also included in
@@ -1510,9 +1516,10 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
  <para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
   &cf; Application Runtime (CFAR) uses a blobstore (see
   <link xlink:href="https://docs.cloudfoundry.org/concepts/cc-blobstore.html"/>)
-  to store the source code that developers push, stage, and run. This  section
+  to store the source code that developers push, stage, and run. This section
   explains how to configure an external blobstore for the Cloud Controller
-  component of your &productname; deployment.
+  component of your &productname; deployment. Using an external blobstore is
+  optional. In a default deployment, an internal blobstore is used.
  </para>
  <para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
   &productname; relies on <filename>ops files</filename> (see
@@ -1567,10 +1574,10 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
   External Database
  </title>
  <para xmlns="http://docbook.org/ns/docbook">
-  By default, &productname; includes a single-availability database provided by
-  the Percona XtraDB Cluster (PXC). &productname; can be configured to
-  use an external database system, such as a data service offered by a cloud
-  service provider or an existing high availability database server.
+  &productname; can be configured to use an external database system, such as a
+  data service offered by a cloud service provider or an existing high
+  availability database server. In a default deployment, an internal single
+  availability database is used.
  </para>
  <para xmlns="http://docbook.org/ns/docbook">
   To configure your deployment to use an external database, please follow the
@@ -1677,12 +1684,17 @@ features:
  <para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
   &productname; can be integrated with
   <link xlink:href="https://docs.cloudfoundry.org/uaa/identity-providers.html">identity
-  providers</link> to help manage authentication of users. The Lightweight
-  Directory Access Protocol (LDAP) is an example of an identity provider that
+  providers</link> to help manage authentication of users. Integrating
+  &productname; with other identity providers is optional. In a default
+  deployment, a built-in UAA server (<link xlink:href="https://docs.cloudfoundry.org/uaa/uaa-overview.html"/>)
+  is used to manage user accounts and authentication.
+ </para>
+ <para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  The Lightweight Directory Access Protocol (LDAP) is an example of an identity provider that
   &cap; integrates with. This section describes the necessary components and
   steps in order to configure the integration. See
-  <link xlink:href="https://docs.cloudfoundry.org/uaa/uaa-user-management.html">User
-  Account and Authentication LDAP Integration</link> for more information.
+  <link xlink:href="https://github.com/cloudfoundry/uaa/blob/master/docs/UAA-LDAP.md">User
+  Account and Authentication LDAP Integration</link> for more information. 
  </para>
  <sect2 xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
   <title>Prerequisites</title>
