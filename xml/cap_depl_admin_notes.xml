@@ -27,7 +27,7 @@
  <sect1>
   <title>Important Changes</title>
   <para>
-   Different schedulers, such as Diego and Eirini, and different stacks, such as
+   Schedulers such as Diego and Eirini, and stacks such as
    <literal>cflinuxfs3</literal> or <literal>sle15</literal>, have different
    memory requirements for applications. Not every combination is tested so
    there is no universal memory setting for &cap;, and because it depends on the
