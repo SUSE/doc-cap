@@ -278,7 +278,7 @@ suse       https://kubernetes-charts.suse.com/
     </step>
     <step>
      <para>
-      When all pods are fully ready, verify your deployment.
+      When all pods are fully ready, verify your deployment. See <xref linkend="sec-pod-status"/> for more information.
      </para>
      &cf-auth;
     </step>
