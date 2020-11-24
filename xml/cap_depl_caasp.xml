@@ -231,7 +231,7 @@ sed 's/"namespace": "default"/"namespace": "kubecf"/' | kubectl create --filenam
   </para>
 <screen>&prompt.user;kubectl get storageclass</screen>
   <para>
-   If operators do no want to use the default storage class or one does not
+   If operators do not want to use the default storage class or one does not
    exist, a storage class <emphasis role="bold">must</emphasis> be specified by
    setting the <literal>kube.storage_class</literal> value in your
    &values-filename; configuration file to the name of the storage class as seen
@@ -351,7 +351,7 @@ suse       https://kubernetes-charts.suse.com/
     </step>
     <step>
      <para>
-      When all pods are fully ready, verify your deployment.
+      When all pods are fully ready, verify your deployment. See <xref linkend="sec-pod-status"/> for more information.
      </para>
      &cf-auth;
     </step>

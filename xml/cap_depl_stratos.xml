@@ -124,7 +124,7 @@ stratos  1        1        3h
   Find the external IP address with
   <command>kubectl get service susecf-console-ui-ext --namespace stratos</command> to access your new Stratos Web console, for example https://10.86.101.115:8443, or use the
           domain you created for it, and its port, for example
-          https://example.com:8443. Wade through the nag screens about the self-signed
+          https://example.com:8443. Proceed past the warnings about the self-signed
    certificates and log in as <literal>admin</literal> with the password you
    created in &stratos-values-file;
   </para>
@@ -877,7 +877,8 @@ firehoseExporter:
     chart.
    </para>
    <para>
-    Create a new YAML file, named <filename>stratos-metrics-values.yaml</filename> in this example, for
+    Create a new YAML file. In this example, it is named
+    <filename>stratos-metrics-values.yaml</filename> and it contains
     configuration options specific to Stratos Metrics.
    </para>
    <para>
