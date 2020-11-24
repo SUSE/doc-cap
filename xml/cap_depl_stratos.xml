@@ -877,7 +877,8 @@ firehoseExporter:
     chart.
    </para>
    <para>
-    Create a new YAML file, named <filename>stratos-metrics-values.yaml</filename> in this example, for
+    Create a new YAML file. In this example, it is named
+    <filename>stratos-metrics-values.yaml</filename> and it contains
     configuration options specific to Stratos Metrics.
    </para>
    <para>
