@@ -215,7 +215,7 @@
     </itemizedlist>
     <para>
      Note that these modifications are not persistent and will need to be
-     reapplied in the eventof a &caasp; node restart or update.
+     reapplied in the event of a &caasp; node restart or update.
     </para>
    </listitem>
    <listitem>
