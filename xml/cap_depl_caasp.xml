@@ -157,11 +157,67 @@
    at <link xlink:href="&caasp-url;/single-html/caasp-deployment/"/>
   </para>
   <para>
-   When proceeding through the instructions, take note of the following to
+   Before proceeding with the deployment, take note of the following to
    ensure the &caasp; cluster is suitable for a deployment of &productname;:
   </para>
 
   <itemizedlist>
+   <listitem>
+    <para>
+     Additional changes need to be applied to increase the maximum number of
+     processes allowed in a container. If the maximum is insufficient,
+     &productname; clusters with multiple application deployed will observe
+     applications failing to start.
+    </para>
+    <para>
+     Operators should be aware there are potential security concerns when raising
+     the PIDs limit/maximum (fork bombs for example). As a best practice, these
+     should be kept as low as possible. The example values are for guidance
+     purposes only. Operators are encouraged to identify the typical PIDs usage
+     for their workloads and adjust the modifications accordingly. If problems
+     persist, these can be raised to a maximum of 32768 provided &productname;
+     is the only workload on the &caasp; cluster.
+    </para>
+    <para>
+     For &caasp; 4.5 clusters, apply the following changes directly to each node
+     in the cluster.
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       Prior to rebooting/bootstrapping, modify
+       <filename>/etc/crio/crio.conf.d/00-default.conf</filename> to increase the
+       PIDs limit:
+      </para>
+<screen>&prompt.user;sudo sed -i -e 's|pids_limit = 1024|pids_limit = 3072|g' /etc/crio/crio.conf.d/00-default.conf</screen>
+     </listitem>
+    </itemizedlist>
+    <para>
+     For &caasp; 4.2 clusters, apply the following changes directly to each node
+     in the cluster.
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       Prior to rebooting/bootstrapping, modify
+       <filename>/etc/crio/crio.conf</filename> to increase the PIDs limit:
+      </para>
+<screen>&prompt.user;sudo sed -i -e 's|pids_limit = 1024|pids_limit = 3072|g' /etc/crio/crio.conf</screen>
+     </listitem>
+     <listitem>
+      <para> 
+       After rebooting/bootstrapping modify
+       <filename>/sys/fs/cgroup/pids/kubepods/pids.max</filename> to increase the
+       PIDs maximum:
+      </para>
+<screen>&prompt.user;sudo bash -c \"echo '3072' > /sys/fs/cgroup/pids/kubepods/pids.max\"</screen>
+     </listitem>
+    </itemizedlist>
+    <para>
+     Note that these modifications are not persistent and will need to be
+     reapplied in the event of a &caasp; node restart or update.
+    </para>
+   </listitem>
    <listitem>
     <para>
      At the cluster initialization step, <emphasis role="bold">do not</emphasis>
