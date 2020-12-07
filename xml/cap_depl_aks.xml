@@ -15,9 +15,7 @@
    <dm:translation>yes</dm:translation>
   </dm:docmanager>
  </info>
- <important>
-     &readmefirst;
- </important>
+ &readmefirst;
  <para>
   &productname; supports deployment on &aks-full;
   (AKS), Microsoft's managed &kube; service. This chapter describes the steps

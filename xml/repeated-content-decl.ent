@@ -66,8 +66,10 @@ uaa-0                       0/6     Init:8/13    0          6m36s
 <!--ENTITY readmefirst......................................................-->
 
 <!ENTITY readmefirst
-'<para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+'<important xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <para>
   Before you start deploying &productname;, review the following documents:
+  </para>
   <itemizedlist>
     <listitem>
       <para>
@@ -81,7 +83,7 @@ uaa-0                       0/6     Init:8/13    0          6m36s
       </para>
     </listitem>
   </itemizedlist>        
-    </para>'>
+</important>'>
 
 <!--ENTITY supported-domains................................................-->
 <!ENTITY supported-domains

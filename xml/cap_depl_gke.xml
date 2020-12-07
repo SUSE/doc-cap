@@ -15,9 +15,7 @@
    <dm:translation>yes</dm:translation>
   </dm:docmanager>
  </info>
- <important>
-     &readmefirst;
- </important>
+ &readmefirst;
  <para>
   &productname; supports deployment on &gke-full; (GKE). This chapter describes the steps
   to prepare a &productname; deployment on GKE using its integrated network load balancers. See
