@@ -21,10 +21,6 @@
   Important things to know before deploying &productname;.
  </para>
  <sect1>
-  <title>README First</title>
-&readmefirst;
- </sect1>
- <sect1>
   <title>Important Changes</title>
   <para>
    Schedulers such as Diego and Eirini, and stacks such as

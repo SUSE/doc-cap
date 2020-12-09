@@ -66,25 +66,24 @@ uaa-0                       0/6     Init:8/13    0          6m36s
 <!--ENTITY readmefirst......................................................-->
 
 <!ENTITY readmefirst
-'<variablelist xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
-<varlistentry>
-     <term>README first!</term>
-     <listitem>
+'<important xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <para>
+  Before you start deploying &productname;, review the following documents:
+  </para>
+  <itemizedlist>
+    <listitem>
       <para>
-Before you start deploying &productname;, review the following documents:
+        <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/2.0/">
+        &productname; Release Notes</link>
       </para>
-              <para>
-         Read the Release Notes:
-         <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/1/">
-           Release Notes &productname;</link>
-        </para>
-                <para>
-            Read
-         <xref linkend="cha-cap-depl-notes"/>
-        </para>
-     </listitem>
-     </varlistentry>
-     </variablelist>'>
+    </listitem>
+    <listitem>
+      <para>
+        <xref linkend="cha-cap-depl-notes"/>
+      </para>
+    </listitem>
+  </itemizedlist>        
+</important>'>
 
 <!--ENTITY supported-domains................................................-->
 <!ENTITY supported-domains
