@@ -335,7 +335,7 @@ provisioning:
      <para>
       This example enables access to the Redis service:
      </para>
- <screen>&prompt.user;cf enable-service-access <replaceable>redis</replaceable> -b <replaceable>minibroker</replaceable> -p <replaceable>4-0-10</replaceable></screen>
+ <screen>&prompt.user;cf enable-service-access <replaceable>redis</replaceable> -b <replaceable>minibroker</replaceable> -p <replaceable>5-0-5</replaceable></screen>
      <para>
       Use <command>cf marketplace</command> to verify the service has been
       enabled:
@@ -345,7 +345,7 @@ provisioning:
  OK
 
  service      plans     description
- redis        4-0-10    Helm Chart for redis
+ redis        5-0-5     Helm Chart for redis
 
  TIP:  Use 'cf marketplace -s SERVICE' to view descriptions of individual plans of a given service.
  </screen>
@@ -399,7 +399,7 @@ provisioning:
       marketplace</command> or <command>cf marketplace -s redis</command>
       commands can be used to see the available plans for the service:
      </para>
- <screen>&prompt.user;cf create-service <replaceable>redis</replaceable> <replaceable>4-0-10</replaceable> <replaceable>redis-example-service</replaceable></screen>
+ <screen>&prompt.user;cf create-service <replaceable>redis</replaceable> <replaceable>5-0-5</replaceable> <replaceable>redis-example-service</replaceable></screen>
      <para>
       Monitor the progress of the pods and wait until all pods are in a ready
       state. The example below shows the additional <literal>redis</literal>
