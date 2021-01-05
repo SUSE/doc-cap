@@ -311,7 +311,7 @@ operations:
             - key: <replaceable>kubernetes.io/hostname</replaceable>
               operator: In
               values:
-              - <replaceable>0</replaceable>
+              - <replaceable>LABEL_VALUE_OF_NODE</replaceable>
 </screen>
  </sect1>
 </chapter>

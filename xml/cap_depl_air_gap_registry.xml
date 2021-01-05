@@ -65,7 +65,7 @@
   </para>
 <screen>#!/bin/bash
 
-MIRROR=myregistry.com
+MIRROR=<replaceable>MY_REGISTRY.COM</replaceable>
 
 set -ex
 
@@ -124,7 +124,7 @@ mirror minibroker
 <screen>kube:
   registry:
     # example registry domain
-    hostname: <replaceable>"myregistry.com"</replaceable>
+    hostname: <replaceable>"MY_REGISTRY.COM"</replaceable>
     username: ""
     password: ""
   organization: "cap"

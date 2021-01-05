@@ -22,10 +22,10 @@
   In a standard &kubecf; deployment, applications will use the same domain as the
   one configured in your &values-filename; for &kubecf;.
   For example, if <literal>DOMAIN</literal> is set as
-  <replaceable>example.com</replaceable> in your
+  <replaceable>EXAMPLE.COM</replaceable> in your
   &values-filename; and you deploy an application
-  called <replaceable>myapp</replaceable> then the application's URL will be
-  <literal>myapp.example.com</literal>.
+  called <replaceable>MY_APP</replaceable> then the application's URL will be
+  <literal>MY_APP.EXAMPLE.COM</literal>.
  </para>
  <para>
   This chapter describes the changes required to allow applications to use a
@@ -36,7 +36,7 @@
 
   <para>
    Begin by adding the following to your &values-filename;. Replace
-   <replaceable>appdomain.com</replaceable> with the domain to use with your
+   <replaceable>MY_APP_DOMAIN.COM</replaceable> with the domain to use with your
    applications:
   </para>
 
@@ -47,7 +47,7 @@
     - name: cloud_controller_ng
       properties:
         app_domains:
-	- <replaceable>appdomain.com</replaceable>
+	- <replaceable>MY_APP_DOMAIN.COM</replaceable>
 </screen>
 
   <para>
@@ -80,44 +80,44 @@
 
   <para>
    Run <command>cf curl /v2/info</command> and verify the &kubecf; domain is not
-   <replaceable>appdomain.com</replaceable>:
+   <replaceable>MY_APP_DOMAIN.COM</replaceable>:
   </para>
 
-<screen>&prompt.user;cf api --skip-ssl-validation https://api.example.com
+<screen>&prompt.user;cf api --skip-ssl-validation https://api.EXAMPLE.COM
 &prompt.user;cf curl /v2/info | grep endpoint
 </screen>
 
   <para>
    Deploy an application and examine the <literal>routes</literal> field to
-   verify <replaceable>appdomain.com</replaceable> is being used:
+   verify <replaceable>MY_APP_DOMAIN.COM</replaceable> is being used:
   </para>
 
 <screen>&prompt.user;cf login
-&prompt.user;cf create-org <replaceable>org</replaceable>
-&prompt.user;cf create-space <replaceable>space</replaceable> -o <replaceable>org</replaceable>
-&prompt.user;cf target -o <replaceable>org</replaceable> -s <replaceable>space</replaceable>
-&prompt.user;cf push <replaceable>myapp</replaceable>
-cf push myapp
-Pushing app <replaceable>myapp</replaceable> to org <replaceable>org</replaceable> / space <replaceable>space</replaceable> as <replaceable>admin</replaceable>...
+&prompt.user;cf create-org <replaceable>MY_ORG</replaceable>
+&prompt.user;cf create-space <replaceable>MY_SPACE</replaceable> -o<replaceable>MY_ORG</replaceable>
+&prompt.user;cf target -o <replaceable>MY_ORG</replaceable> -s<replaceable>MY_SPACE</replaceable>
+&prompt.user;cf push <replaceable>MY_APP</replaceable>
+cf push <replaceable>MY_APP</replaceable>
+Pushing app <replaceable>MY_APP</replaceable> to org<replaceable>MY_ORG</replaceable> / space <replaceable>MY_SPACE</replaceable> as <replaceable>admin</replaceable>...
 Getting app info...
 Creating app with these attributes...
-  name:       <replaceable>myapp</replaceable>
-  path:       <replaceable>/path/to/myapp</replaceable>
+  name:       <replaceable>MY_APP</replaceable>
+  path:       <replaceable>/path/to/MY_APP</replaceable>
   routes:
-+   <replaceable>myapp.appdomain.com</replaceable>
++   <replaceable>MY_APP.MY_APP_DOMAIN.COM</replaceable>
 
-Creating app <replaceable>myapp...</replaceable>
+Creating app <replaceable>MY_APP...</replaceable>
 Mapping routes...
 
 ...
 
 Waiting for app to start...
 
-name:              <replaceable>myapp</replaceable>
+name:              <replaceable>MY_APP</replaceable>
 requested state:   started
 instances:         1/1
 usage:             1G x 1 instances
-routes:            <replaceable>myapp.appdomain.com</replaceable>
+routes:            <replaceable>MY_APP.MY_APP_DOMAIN.COM</replaceable>
 last uploaded:     Mon 14 Jan 11:08:02 PST 2019
 stack:             sle15
 buildpack:         ruby

@@ -78,7 +78,7 @@
    location, and &cap; namespace. In these guides the example namespace is
    <literal>kubecf</literal>:
   </para>
-<screen>&prompt.user;CH_CLI=~/.chclient/credhub
+<screen>&prompt.user;CH_CLI=~/chclient/credhub
 &prompt.user;CH_SERVICE=<replaceable>https://credhub.example.com</replaceable>
 &prompt.user;NAMESPACE=<replaceable>kubecf</replaceable>
 </screen>
