@@ -274,7 +274,7 @@ uaa-0                       0/6     Init:8/13    0          6m36s
  <literal>uaa_admin_client_secret</literal> set in your
  &values-filename; file.
 </para>
-<screen>&prompt.user;uaac token client get admin --secret <replaceable>password</replaceable></screen>
+<screen>&prompt.user;uaac token client get admin --secret <replaceable>PASSWORD</replaceable></screen>
 </step>'>
 
 <!--ENTITY helm-search-suse.................................................-->
@@ -2124,7 +2124,7 @@ operations:
             - key: <replaceable>kubernetes.io/hostname</replaceable>
               operator: In
               values:
-              - <replaceable>0</replaceable>
+              - <replaceable>LABEL_VALUE_OF_NODE</replaceable>
 </screen>
 <sect2 xmlns="http://docbook.org/ns/docbook">
  <title>Log-cache Memory Allocation</title>

@@ -50,7 +50,7 @@
     <para>
      Create a new user:
     </para>
-    <screen>&prompt.user;uaac user add <replaceable>new-admin</replaceable> --password <replaceable>password</replaceable> --emails <replaceable>new-admin@example.com</replaceable> --zone <replaceable>kubecf</replaceable></screen>
+    <screen>&prompt.user;uaac user add <replaceable>NEW_ADMIN</replaceable> --password <replaceable>PASSWORD</replaceable> --emails <replaceable>new-admin@example.com</replaceable> --zone <replaceable>kubecf</replaceable></screen>
    </step>
    <step>
     <para>
@@ -58,21 +58,21 @@
      to the cluster (see
      <link xlink:href="https://docs.cloudfoundry.org/concepts/architecture/uaa.html#uaa-scopes"/> for information on privileges provided by each group):
     </para>
-<screen>&prompt.user;uaac member add scim.write <replaceable>new-admin</replaceable> --zone <replaceable>kubecf</replaceable>
+<screen>&prompt.user;uaac member add scim.write <replaceable>NEW_ADMIN</replaceable> --zone <replaceable>kubecf</replaceable>
 
-&prompt.user;uaac member add scim.read <replaceable>new-admin</replaceable> --zone <replaceable>kubecf</replaceable>
+&prompt.user;uaac member add scim.read <replaceable>NEW_ADMIN</replaceable> --zone <replaceable>kubecf</replaceable>
 
-&prompt.user;uaac member add cloud_controller.admin <replaceable>new-admin</replaceable> --zone <replaceable>kubecf</replaceable>
+&prompt.user;uaac member add cloud_controller.admin <replaceable>NEW_ADMIN</replaceable> --zone <replaceable>kubecf</replaceable>
 
-&prompt.user;uaac member add clients.read <replaceable>new-admin</replaceable> --zone <replaceable>kubecf</replaceable>
+&prompt.user;uaac member add clients.read <replaceable>NEW_ADMIN</replaceable> --zone <replaceable>kubecf</replaceable>
 
-&prompt.user;uaac member add clients.write <replaceable>new-admin</replaceable> --zone <replaceable>kubecf</replaceable>
+&prompt.user;uaac member add clients.write <replaceable>NEW_ADMIN</replaceable> --zone <replaceable>kubecf</replaceable>
 
-&prompt.user;uaac member add doppler.firehose <replaceable>new-admin</replaceable> --zone <replaceable>kubecf</replaceable>
+&prompt.user;uaac member add doppler.firehose <replaceable>NEW_ADMIN</replaceable> --zone <replaceable>kubecf</replaceable>
 
-&prompt.user;uaac member add routing.router_groups.read <replaceable>new-admin</replaceable> --zone <replaceable>kubecf</replaceable>
+&prompt.user;uaac member add routing.router_groups.read <replaceable>NEW_ADMIN</replaceable> --zone <replaceable>kubecf</replaceable>
 
-&prompt.user;uaac member add routing.router_groups.write <replaceable>new-admin</replaceable> --zone <replaceable>kubecf</replaceable>
+&prompt.user;uaac member add routing.router_groups.write <replaceable>NEW_ADMIN</replaceable> --zone <replaceable>kubecf</replaceable>
 </screen>
    </step>
    <step>
@@ -81,18 +81,18 @@
     </para>
 <screen>&prompt.user;cf api --skip-ssl-validation <replaceable>https://api.example.com</replaceable>
 
-&prompt.user;cf login -u <replaceable>new-admin</replaceable>
+&prompt.user;cf login -u <replaceable>NEW_ADMIN</replaceable>
 </screen>
    </step>
    <step>
     <para>
      The following commands can be used to verify the new administrator account has sufficient permissions:
     </para>
-<screen>&prompt.user;cf create-shared-domain <replaceable>test-domain.com</replaceable>
+<screen>&prompt.user;cf create-shared-domain <replaceable>TEST_DOMAIN.COM</replaceable>
 
-&prompt.user;cf set-org-role <replaceable>new-admin</replaceable> org OrgManager
+&prompt.user;cf set-org-role <replaceable>NEW_ADMIN</replaceable> org OrgManager
 
-&prompt.user;cf create-buildpack <replaceable>test_buildpack</replaceable> <replaceable>/tmp/ruby_buildpack-cached-sle15-v1.7.30.1.zip</replaceable> <replaceable>1</replaceable>
+&prompt.user;cf create-buildpack <replaceable>TEST_BUILDPACK</replaceable> <replaceable>/tmp/ruby_buildpack-cached-sle15-v1.7.30.1.zip</replaceable> <replaceable>1</replaceable>
 </screen>
     <para>
      If the account has sufficient permissions, you should not receive any authorization message similar to the following:

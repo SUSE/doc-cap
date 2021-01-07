@@ -76,7 +76,7 @@ Space:          No space targeted, use 'cf target -s SPACE'</screen>
    command:
   </para>
 
-<screen>&prompt.user;cf login -u admin -p password --skip-ssl-validation -a https://api.example.com</screen>
+<screen>&prompt.user;cf login -u admin -p <replaceable>PASSWORD</replaceable> --skip-ssl-validation -a https://api.example.com</screen>
 
   <para>
    Log out with <command>cf logout</command>.
@@ -104,8 +104,8 @@ Please log in again</screen>
    Switch to a different org or space:
   </para>
 
-<screen>&prompt.user;cf target -o <replaceable>org</replaceable>
-&prompt.user;cf target -s <replaceable>space</replaceable></screen>
+<screen>&prompt.user;cf target -o <replaceable>MY_ORG</replaceable>
+&prompt.user;cf target -s <replaceable>MY_SPACE</replaceable></screen>
 
   <para>
    List all apps in the current space:
@@ -117,7 +117,7 @@ Please log in again</screen>
    Query the health and status of a particular app:
   </para>
 
-<screen>&prompt.user;cf app <replaceable>appname</replaceable></screen>
+<screen>&prompt.user;cf app <replaceable>MY_APP</replaceable></screen>
 
   <para>
    View app logs. The first example tails the log of a running app. The
@@ -125,47 +125,47 @@ Please log in again</screen>
    which is useful for stopped and crashed apps:
   </para>
 
-<screen>&prompt.user;cf logs <replaceable>appname</replaceable>
-&prompt.user;cf logs --recent <replaceable>appname</replaceable></screen>
+<screen>&prompt.user;cf logs <replaceable>MY_APP</replaceable>
+&prompt.user;cf logs --recent <replaceable>MY_APP</replaceable></screen>
 
   <para>
    Restart all instances of an app:
   </para>
 
-<screen>&prompt.user;cf restart <replaceable>appname</replaceable></screen>
+<screen>&prompt.user;cf restart <replaceable>MY_APP</replaceable></screen>
 
   <para>
    Restart a single instance of an app, identified by its index number, and
    restart it with the same index number:
   </para>
 
-<screen>&prompt.user;cf restart-app-instance <replaceable>appname</replaceable> <replaceable>index</replaceable></screen>
+<screen>&prompt.user;cf restart-app-instance <replaceable>MY_APP</replaceable> <replaceable>APP_INSTANCE</replaceable></screen>
 
   <para>
    After you have set up a service broker (see
    <xref linkend="cha-cap-service-brokers"/>), create new services:
   </para>
 
-<screen>&prompt.user;cf create-service <replaceable>service-name</replaceable> <replaceable>default</replaceable> <replaceable>mydb</replaceable></screen>
+<screen>&prompt.user;cf create-service <replaceable>SERVICE_NAME</replaceable> <replaceable>default</replaceable> <replaceable>MY_DB</replaceable></screen>
 
   <para>
    Then you may bind a service instance to an app:
   </para>
 
-<screen>&prompt.user;cf bind-service <replaceable>appname</replaceable> <replaceable>service-instance</replaceable></screen>
+<screen>&prompt.user;cf bind-service <replaceable>MY_APP</replaceable> <replaceable>SERVICE_INSTANCE</replaceable></screen>
 
   <para>
    The most-used command is <command>cf push</command>, for pushing new apps
    and changes to existing apps.
   </para>
 
-<screen>&prompt.user;cf push <replaceable>new-app</replaceable> -b <replaceable>buildpack</replaceable></screen>
+<screen>&prompt.user;cf push <replaceable>NEW_APP</replaceable> -b <replaceable>buildpack</replaceable></screen>
 
   <para>
    If you need to debug your application or run one-off tasks, start an SSH
    session into your application container.
   </para>
-<screen>&prompt.user;cf ssh <replaceable>appname</replaceable></screen>
+<screen>&prompt.user;cf ssh <replaceable>MY_APP</replaceable></screen>
 
   <para>
    When the SSH connection is established, run the following to have the

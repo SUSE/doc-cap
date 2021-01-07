@@ -295,21 +295,22 @@ provisioning:
       space to work with, creating them if needed:
      </para>
  <screen>&prompt.user;cf api --skip-ssl-validation <replaceable>https://api.example.com</replaceable>
- &prompt.user;cf login -u <replaceable>admin</replaceable> -p <replaceable>password</replaceable>
- &prompt.user;cf create-org <replaceable>org</replaceable>
- &prompt.user;cf create-space <replaceable>space</replaceable> -o <replaceable>org</replaceable>
- &prompt.user;cf target -o <replaceable>org</replaceable> -s <replaceable>space</replaceable>
+ &prompt.user;cf login -u <replaceable>admin</replaceable> -p <replaceable>PASSWORD</replaceable>
+ &prompt.user;cf create-org <replaceable>MY_ORG</replaceable>
+ &prompt.user;cf create-space <replaceable>MY_SPACE</replaceable> -o <replaceable>MY_ORG</replaceable>
+ &prompt.user;cf target -o <replaceable>MY_ORG</replaceable> -s <replaceable>MY_SPACE</replaceable>
  </screen>
     </step>
     <step>
      <para>
       Create the service broker. Note that Minibroker does not require
-      authentication and the <literal>username</literal> and
-      <literal>password</literal> parameters act as dummy values to pass to the
+      authentication and the <literal>USERNAME</literal> and
+      <literal>PASSWORD</literal> parameters act as dummy values to pass to the
       <command>cf</command> command. These parameters do not need to be
       customized for the &cap; installation:
      </para>
- <screen>&prompt.user;cf create-service-broker <replaceable>minibroker</replaceable> <replaceable>username</replaceable> <replaceable>password</replaceable> http://minibroker-minibroker.minibroker.svc.cluster.local</screen>
+ <screen>&prompt.user;cf create-service-broker
+<replaceable>minibroker</replaceable> <replaceable>USERNAME</replaceable> <replaceable>PASSWORD</replaceable> http://minibroker-minibroker.minibroker.svc.cluster.local</screen>
      <para>
       After the service broker is ready, it can be seen on your deployment:
      </para>

@@ -45,11 +45,11 @@
     <para>
      The plugin can be installed by running the following command:
     </para>
-<screen>&prompt.user;cf install-plugin -r CF-Community app-autoscaler-plugin</screen>
+<screen>&prompt.user;cf install-plugin -r <replaceable>CF-Community</replaceable> app-autoscaler-plugin</screen>
     <para>
       If the plugin repo is not found, add it first:
     </para>
-<screen>&prompt.user;cf add-plugin-repo "CF-Community" "https://plugins.cloudfoundry.org"</screen>
+<screen>&prompt.user;cf add-plugin-repo <replaceable>CF-Community</replaceable> https://plugins.cloudfoundry.org</screen>
    </listitem>
   </itemizedlist>
  </sect1>
@@ -90,18 +90,17 @@
    first:
   </para>
 
-<screen>&prompt.user;cf push <replaceable>my_application</replaceable> --no-start
+<screen>&prompt.user;cf push <replaceable>MY_APPLICATION</replaceable> --no-start
 </screen>
 
   <para>
    Attach autoscaling policy to the application:
   </para>
 
-<screen>&prompt.user;cf attach-autoscaling-policy <replaceable>my_application</replaceable> <replaceable>my-policy.json</replaceable>
-</screen>
+<screen>&prompt.user;cf attach-autoscaling-policy<replaceable>MY_APPLICATION</replaceable> <replaceable>MY_POLICY.json</replaceable></screen>
 
   <para>
-    Policy has to be defined as a JSON file
+    The policy is defined as a JSON file
     (See <xref linkend="sec-cap-app-autoscaler-policies"/>) in a proper format
     (See <link xlink:href="https://github.com/cloudfoundry/app-autoscaler/blob/develop/docs/policy.md"/>).
   </para>
@@ -110,7 +109,7 @@
    Start the application:
   </para>
 
-<screen>&prompt.user;cf start <replaceable>my_application</replaceable></screen>
+<screen>&prompt.user;cf start <replaceable>MY_APPLICATION</replaceable></screen>
 
   <para>
    Autoscaling policies can be managed using &cfcli; with the App-AutoScaler plugin
