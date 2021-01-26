@@ -1136,7 +1136,9 @@ console:
    <step>
     <para>
      Create a configuration file with the section below. The file is called
-     <filename>nginx-ingress.yaml</filename> in this example.
+     <filename>nginx-ingress.yaml</filename> in this example. When using
+     Eirini instead of Diego, replace the first line with
+     <literal>2222: "kubecf/eirinix-ssh-proxy:2222"</literal>.
     </para>
 <screen>tcp:
   2222: "kubecf/scheduler:2222"
