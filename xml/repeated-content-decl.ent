@@ -892,18 +892,6 @@ done
  </para>
 <screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch --color &apos;kubectl get pods --namespace kubecf&apos;</screen>'>
 
-<!--ENTITY min-deploy-note..................................................-->
-
-<!ENTITY min-deploy-note
-'<important xmlns="http://docbook.org/ns/docbook">
-  <para>
-   The prerequisites and configurations described is this chapter only reflect
-   the requirements for a minimal &productname; deployment. For a more
-   production-ready environment, consider incoporating some of following optional
-   features in this chapter and the &admin; at <xref linkend="part-cap-administration"/>
-  </para>
- </important>'>
-
 <!--ENTITY log-types-and-fetch..............................................-->
 
 <!ENTITY log-types-and-fetch

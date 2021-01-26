@@ -61,8 +61,6 @@
    &curl-prereq;
    &sed-prereq;
   </itemizedlist>
-
-  &min-deploy-note;
  </sect1>
 
  <sect1 xml:id="sec-cap-create-caasp-cluster">

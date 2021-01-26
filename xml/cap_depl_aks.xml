@@ -73,8 +73,6 @@
    &curl-prereq;
    &sed-prereq;
   </itemizedlist>
-
-  &min-deploy-note;
  </sect1>
  <sect1 xml:id="sec-cap-create-aks-instance">
   <title>Create Resource Group and AKS Instance</title>
