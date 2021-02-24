@@ -1045,7 +1045,6 @@ suse/uaa                        &latestscfchart;          &chart-appversion;    
   </para>
   <para>
    Note that PVs can only be expanded, but cannot be shrunk.
-   shrunk.
   </para>
   <sect2>
    <title>Prerequisites</title>
