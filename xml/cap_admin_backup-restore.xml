@@ -609,7 +609,7 @@
      This process is intended for backing up and restoring to a target
      deployment with the same version as the source deployment. For example,
      data from a backup of <literal>kubecf</literal> version 2.18.0 should be
-     restored to a version version 2.18.0 <literal>kubecf</literal> deployment.
+     restored to a version 2.18.0 <literal>kubecf</literal> deployment.
     </para>
    </note>
    <para>
