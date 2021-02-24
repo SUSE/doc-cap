@@ -950,7 +950,7 @@ services:
     <listitem>
      <para>
       <literal>metrics.password</literal> is the password used to authenticate
-      with the nginx server that fronts Prometheus. This username is also used
+      with the nginx server that fronts Prometheus. This password is also used
       during the <xref linkend="sec-cap-stratos-metrics-connect"/>) process.
       Ensure a secure password is chosen.
      </para>
