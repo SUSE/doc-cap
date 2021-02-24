@@ -711,7 +711,6 @@ the version of the application as defined in "The <literal>appVersion</literal>
   </para>
   <para>
    Note that PVs can only be expanded, but cannot be shrunk.
-   shrunk.
   </para>
   <sect2>
    <title>Prerequisites</title>
