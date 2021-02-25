@@ -86,7 +86,8 @@
 &prompt.user;helm install <replaceable>minibroker</replaceable> suse/minibroker \
 --namespace <replaceable>minibroker</replaceable> \
 --set "deployServiceCatalog=false" \
---set "defaultNamespace=minibroker"
+--set "defaultNamespace=minibroker" \
+--values minibroker-values.yaml
 </screen>
      <para>                                                                        
       If you are using &ses;, you must copy the Ceph admin secret to the           
