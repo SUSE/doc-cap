@@ -320,8 +320,7 @@ provisioning:
       <command>cf</command> command. These parameters do not need to be
       customized for the &cap; installation:
      </para>
- <screen>&prompt.user;cf create-service-broker
-<replaceable>minibroker</replaceable> <replaceable>USERNAME</replaceable> <replaceable>PASSWORD</replaceable> http://minibroker-minibroker.minibroker.svc.cluster.local</screen>
+ <screen>&prompt.user;cf create-service-broker <replaceable>minibroker</replaceable> <replaceable>USERNAME</replaceable> <replaceable>PASSWORD</replaceable> http://minibroker-minibroker.minibroker.svc.cluster.local</screen>
      <para>
       After the service broker is ready, it can be seen on your deployment:
      </para>
