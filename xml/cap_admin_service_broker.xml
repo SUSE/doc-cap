@@ -88,6 +88,15 @@
 --set "deployServiceCatalog=false" \
 --set "defaultNamespace=minibroker"
 </screen>
+     <para>                                                                        
+      If you are using &ses;, you must copy the Ceph admin secret to the           
+      <literal>minibroker</literal> namespace:                                        
+     </para>                                                                       
+<screen>&prompt.user;kubectl get secret ceph-secret-admin --output json
+--namespace default | \
+sed 's/"namespace": "default"/"namespace": "minibroker"/' | kubectl create
+--filename -
+</screen>
      <note>
       <para>
        Platform users provisioning service instances will be able to set
@@ -292,7 +301,9 @@ provisioning:
     <step>
      <para>
       Begin by logging into your &cap; deployment. Select an organization and
-      space to work with, creating them if needed:
+      space to work with, creating them if needed. Be sure to replace
+      <literal>example.com</literal> with the <literal>system_domain</literal>
+      set in your &values-filename;.
      </para>
  <screen>&prompt.user;cf api --skip-ssl-validation <replaceable>https://api.example.com</replaceable>
  &prompt.user;cf login -u <replaceable>admin</replaceable> -p <replaceable>PASSWORD</replaceable>
@@ -448,7 +459,8 @@ provisioning:
     <step>
      <para>
       When the application is ready, it can be tested by storing a value into
-      the Redis service:
+      the Redis service. Be sure to replace <literal>example.com</literal> with
+      the <literal>system_domain</literal> set in your &values-filename;.
      </para>
  <screen>&prompt.user;export APP=redis-example-app.example.com
  &prompt.user;curl --request GET $APP/foo
