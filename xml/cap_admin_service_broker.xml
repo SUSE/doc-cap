@@ -86,7 +86,17 @@
 &prompt.user;helm install <replaceable>minibroker</replaceable> suse/minibroker \
 --namespace <replaceable>minibroker</replaceable> \
 --set "deployServiceCatalog=false" \
---set "defaultNamespace=minibroker"
+--set "defaultNamespace=minibroker" \
+--values minibroker-values.yaml
+</screen>
+     <para>                                                                        
+      If you are using &ses;, you must copy the Ceph admin secret to the           
+      <literal>minibroker</literal> namespace:                                        
+     </para>                                                                       
+<screen>&prompt.user;kubectl get secret ceph-secret-admin --output json
+--namespace default | \
+sed 's/"namespace": "default"/"namespace": "minibroker"/' | kubectl create
+--filename -
 </screen>
      <note>
       <para>
@@ -292,24 +302,26 @@ provisioning:
     <step>
      <para>
       Begin by logging into your &cap; deployment. Select an organization and
-      space to work with, creating them if needed:
+      space to work with, creating them if needed. Be sure to replace
+      <literal>example.com</literal> with the <literal>system_domain</literal>
+      set in your &values-filename;.
      </para>
  <screen>&prompt.user;cf api --skip-ssl-validation <replaceable>https://api.example.com</replaceable>
- &prompt.user;cf login -u <replaceable>admin</replaceable> -p <replaceable>password</replaceable>
- &prompt.user;cf create-org <replaceable>org</replaceable>
- &prompt.user;cf create-space <replaceable>space</replaceable> -o <replaceable>org</replaceable>
- &prompt.user;cf target -o <replaceable>org</replaceable> -s <replaceable>space</replaceable>
+ &prompt.user;cf login -u <replaceable>admin</replaceable> -p <replaceable>PASSWORD</replaceable>
+ &prompt.user;cf create-org <replaceable>MY_ORG</replaceable>
+ &prompt.user;cf create-space <replaceable>MY_SPACE</replaceable> -o <replaceable>MY_ORG</replaceable>
+ &prompt.user;cf target -o <replaceable>MY_ORG</replaceable> -s <replaceable>MY_SPACE</replaceable>
  </screen>
     </step>
     <step>
      <para>
       Create the service broker. Note that Minibroker does not require
-      authentication and the <literal>username</literal> and
-      <literal>password</literal> parameters act as dummy values to pass to the
+      authentication and the <literal>USERNAME</literal> and
+      <literal>PASSWORD</literal> parameters act as dummy values to pass to the
       <command>cf</command> command. These parameters do not need to be
       customized for the &cap; installation:
      </para>
- <screen>&prompt.user;cf create-service-broker <replaceable>minibroker</replaceable> <replaceable>username</replaceable> <replaceable>password</replaceable> http://minibroker-minibroker.minibroker.svc.cluster.local</screen>
+ <screen>&prompt.user;cf create-service-broker <replaceable>minibroker</replaceable> <replaceable>USERNAME</replaceable> <replaceable>PASSWORD</replaceable> http://minibroker-minibroker.minibroker.svc.cluster.local</screen>
      <para>
       After the service broker is ready, it can be seen on your deployment:
      </para>
@@ -335,7 +347,7 @@ provisioning:
      <para>
       This example enables access to the Redis service:
      </para>
- <screen>&prompt.user;cf enable-service-access <replaceable>redis</replaceable> -b <replaceable>minibroker</replaceable> -p <replaceable>4-0-10</replaceable></screen>
+ <screen>&prompt.user;cf enable-service-access <replaceable>redis</replaceable> -b <replaceable>minibroker</replaceable> -p <replaceable>5-0-5</replaceable></screen>
      <para>
       Use <command>cf marketplace</command> to verify the service has been
       enabled:
@@ -345,7 +357,7 @@ provisioning:
  OK
 
  service      plans     description
- redis        4-0-10    Helm Chart for redis
+ redis        5-0-5     Helm Chart for redis
 
  TIP:  Use 'cf marketplace -s SERVICE' to view descriptions of individual plans of a given service.
  </screen>
@@ -399,7 +411,7 @@ provisioning:
       marketplace</command> or <command>cf marketplace -s redis</command>
       commands can be used to see the available plans for the service:
      </para>
- <screen>&prompt.user;cf create-service <replaceable>redis</replaceable> <replaceable>4-0-10</replaceable> <replaceable>redis-example-service</replaceable></screen>
+ <screen>&prompt.user;cf create-service <replaceable>redis</replaceable> <replaceable>5-0-5</replaceable> <replaceable>redis-example-service</replaceable></screen>
      <para>
       Monitor the progress of the pods and wait until all pods are in a ready
       state. The example below shows the additional <literal>redis</literal>
@@ -447,7 +459,8 @@ provisioning:
     <step>
      <para>
       When the application is ready, it can be tested by storing a value into
-      the Redis service:
+      the Redis service. Be sure to replace <literal>example.com</literal> with
+      the <literal>system_domain</literal> set in your &values-filename;.
      </para>
  <screen>&prompt.user;export APP=redis-example-app.example.com
  &prompt.user;curl --request GET $APP/foo
@@ -475,16 +488,6 @@ provisioning:
      located in the <literal>stable</literal> directory.
     </para>
    </important>
-  </sect2>
-  <sect2 xml:id="sec-cap-minibroker-upgrades">
-   <title>Upgrading &productname; When Using Minibroker</title>                 
-   <para>                                                                       
-    If you are upgrading &productname; to 1.5.2 and already use Minibroker to   
-    connect to external databases and are using &kube; 1.16 or higher, which is 
-    the case with &caasp; 4.1, you will need to update the database version to  
-    a compatible version and migrate your data over via the database’s suggested
-    mechanism. This may require a database export/import.                       
-   </para>                                                                      
   </sect2>
  </sect1>
 </chapter>

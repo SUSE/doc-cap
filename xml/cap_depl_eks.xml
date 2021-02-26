@@ -51,8 +51,6 @@
    &kubectl-prereq;
    &curl-prereq;
   </itemizedlist>
-
-  &min-deploy-note;
  </sect1>
 
  <sect1 xml:id="sec-cap-create-eks-cluster">
@@ -200,7 +198,7 @@ suse            https://kubernetes-charts.suse.com/</screen>
     </step>
     <step>
      <para>
-      When all pods are fully ready, verify your deployment.
+      When all pods are fully ready, verify your deployment. See <xref linkend="sec-pod-status"/> for more information.
      </para>
      &cf-auth;
     </step>
@@ -219,4 +217,77 @@ suse            https://kubernetes-charts.suse.com/</screen>
 
  <!-- sect1 for PV resizing -->
  <!-- &resize-persistent-volume; -->
+
+ <sect1 xml:id="sec-cap-eks-add-capacity">
+  <title>Expanding Capacity of a &cap; Deployment on &eks;</title>
+
+  <para>
+   If the current capacity of your &cap; deployment is insufficient for your
+   workloads, you can expand the capacity using the procedure in this section.
+  </para>
+
+  <para>
+   These instructions assume you have followed the procedure in
+   <xref linkend="cha-cap-depl-eks"/> and have a running &cap; deployment on
+   &eks;.
+  </para>
+
+  <procedure>
+   <step>
+    <para>
+     Get the current number of &kube; nodes in the cluster.
+    </para>
+<screen>&prompt.user;eksctl get nodegroup --name <replaceable>standard-workers</replaceable> \
+--cluster <replaceable>kubecf</replaceable> \
+--region <replaceable>us-east-2</replaceable>
+</screen>
+   </step>
+   <step>
+    <para>
+     Scale the nodegroup to the desired node count.
+    </para>
+<screen>&prompt.user;eksctl scale nodegroup --name <replaceable>standard-workers</replaceable> \
+--cluster <replaceable>kubecf</replaceable> \
+--nodes <replaceable>4</replaceable> \
+--region <replaceable>us-east-2</replaceable>
+</screen>
+   </step>
+   <step>
+    <para>
+     Verify the new nodes are in a <literal>Ready</literal> state before
+proceeding.
+    </para>
+<screen>&prompt.user;kubectl get nodes</screen>
+   </step>
+   <step>
+    <para>
+     Add or update the following in your
+     &values-filename; file to increase the number of
+     <literal>diego-cell</literal> in your &cap; deployment. Replace the
+     example value with the number required by your workflow.
+    </para>
+<screen>sizing:
+  diego_cell:
+    instances: <replaceable>5</replaceable>
+</screen>
+   </step>
+   <step>
+    <para>
+     Perform a <command>helm upgrade</command> to apply the change.
+    </para>
+<screen>&prompt.user;helm upgrade kubecf suse/kubecf \
+--namespace <replaceable>kubecf</replaceable> \
+--values &values-file; \
+--version &kubecf_chart;
+</screen>
+   </step>
+   <step>
+    <para>
+     Monitor progress of the additional <literal>diego-cell</literal> pods:
+    </para>
+<screen>&prompt.user;watch --color 'kubectl get pods --namespace
+kubecf'</screen>
+   </step>
+  </procedure>
+ </sect1>
 </chapter>

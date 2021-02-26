@@ -53,7 +53,9 @@ Part: CAP Deployment Guide
   <xi:include href="cap_depl_gke.xml"/>
   <xi:include href="cap_depl_stratos.xml"/>
   <xi:include href="cap_depl_eirini.xml"/>
+  <xi:include href="cap_depl_terraform.xml"/>
   <xi:include href="cap_depl_air_gap_registry.xml"/>
+  <xi:include href="cap_depl_private_registry.xml"/>
  </part>
 <!--============================================================================
 Part: CAP Administration Guide

@@ -124,7 +124,7 @@ stratos  1        1        3h
   Find the external IP address with
   <command>kubectl get service susecf-console-ui-ext --namespace stratos</command> to access your new Stratos Web console, for example https://10.86.101.115:8443, or use the
           domain you created for it, and its port, for example
-          https://example.com:8443. Wade through the nag screens about the self-signed
+          https://example.com:8443. Proceed past the warnings about the self-signed
    certificates and log in as <literal>admin</literal> with the password you
    created in &stratos-values-file;
   </para>
@@ -207,7 +207,8 @@ stratos  1        1        3h
     <step>
      <para>
       In the Stratos UI, go to <guimenu>&kube;</guimenu> in the left-hand side
-      navigation. Information for your &susecaaspreg; environment should now be displayed.
+      navigation. Information for your &susecaaspreg; environment should now be
+      displayed as in the following figure.
      </para>
     </step>
    </procedure>
@@ -309,7 +310,11 @@ kube:
   </para>
 <screen>&prompt.user;kubectl get service susecf-console-ui-ext --namespace stratos</screen>
   <para>
-   Use this host name to create a CNAME record.
+   Use this host name to create a CNAME record. After the record is created,
+   access the console in a web browser by navigating to the domain mapped to the
+   host name of the service retrieved from the
+   <command>kubectl get service</command> step. Upon successfully logging in,
+   you should see something similar to the following figure.
   </para>
 
   <!-- Image of Stratos UI console -->
@@ -403,7 +408,8 @@ kube:
     <step>
      <para>
       In the Stratos UI, go to <guimenu>&kube;</guimenu> in the left-hand side
-      navigation. Information for your &eks; environment should now be displayed.
+      navigation. Information for your &eks; environment should now be displayed
+      as in the following figure.
      </para>
     </step>
    </procedure>
@@ -462,7 +468,11 @@ services:
   </para>
 <screen>&prompt.user;kubectl get service susecf-console-ui-ext --namespace stratos</screen>
   <para>
-   Use this IP address to create an A record.
+   Use this IP address to create an A record. After the record is created,     
+   access the console in a web browser by navigating to the domain mapped to the 
+   IP address of the service retrieved from the                                   
+   <command>kubectl get service</command> step. Upon successfully logging in,    
+   you should see something similar to the following figure.
   </para>
 
   <!-- Image of Stratos UI console -->
@@ -543,7 +553,8 @@ services:
     <step>
      <para>
       In the Stratos UI, go to <guimenu>&kube;</guimenu> in the left-hand side
-      navigation. Information for your &aks; environment should now be displayed.
+      navigation. Information for your &aks; environment should now be displayed
+      as in the following figure.
      </para>
     </step>
    </procedure>
@@ -602,7 +613,11 @@ services:
   </para>
 <screen>&prompt.user;kubectl get service susecf-console-ui-ext --namespace stratos</screen>
   <para>
-   Use this IP address to create an A record.
+   Use this IP address to create an A record. After the record is created,     
+   access the console in a web browser by navigating to the domain mapped to the 
+   IP address of the service retrieved from the                                   
+   <command>kubectl get service</command> step. Upon successfully logging in,    
+   you should see something similar to the following figure.
   </para>
 
   <!-- Image of Stratos UI console -->
@@ -687,7 +702,8 @@ services:
     <step>
      <para>
       In the Stratos UI, go to <guimenu>&kube;</guimenu> in the left-hand side
-      navigation. Information for your &gke; environment should now be displayed.
+      navigation. Information for your &gke; environment should now be displayed
+      as in the following figure.
      </para>
     </step>
    </procedure>
@@ -877,7 +893,8 @@ firehoseExporter:
     chart.
    </para>
    <para>
-    Create a new YAML file, named <filename>stratos-metrics-values.yaml</filename> in this example, for
+    Create a new YAML file. In this example, it is named
+    <filename>stratos-metrics-values.yaml</filename> and it contains
     configuration options specific to Stratos Metrics.
    </para>
    <para>
@@ -933,7 +950,7 @@ services:
     <listitem>
      <para>
       <literal>metrics.password</literal> is the password used to authenticate
-      with the nginx server that fronts Prometheus. This username is also used
+      with the nginx server that fronts Prometheus. This password is also used
       during the <xref linkend="sec-cap-stratos-metrics-connect"/>) process.
       Ensure a secure password is chosen.
      </para>

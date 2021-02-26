@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter
+[
+  <!ENTITY % entities SYSTEM "entity-decl.ent">
+    %entities;
+]>
+<chapter version="5.0" xml:id="cha-cap-depl-terraform"
+  xmlns="http://docbook.org/ns/docbook"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+ <info>
+  <title>Deploying &productname; Using Terraform</title>
+  <dm:docmanager xmlns:dm="urn:x-suse:ns:docmanager">
+   <dm:bugtracker></dm:bugtracker>
+   <dm:translation>yes</dm:translation>
+  </dm:docmanager>
+ </info>
+ &readmefirst;
+ <para>
+  In addition to the manual deployment methods mentioned earlier in this guide,
+  operators have the option to deploy &productname; on AWS, Azure, or GCP using
+  Terraform. The Terraform scripts will deploy the entirety of &productname;,
+  including &kubecf;, &operator;, Stratos, and Stratos Metrics. Operators can
+  deploy using Terraform  by following the instructions from
+  <link xlink:href="https://github.com/SUSE/cap-terraform"/>.
+ </para>
+</chapter>

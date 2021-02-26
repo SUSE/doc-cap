@@ -66,25 +66,24 @@ uaa-0                       0/6     Init:8/13    0          6m36s
 <!--ENTITY readmefirst......................................................-->
 
 <!ENTITY readmefirst
-'<variablelist xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
-<varlistentry>
-     <term>README first!</term>
-     <listitem>
+'<important xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <para>
+  Before you start deploying &productname;, review the following documents:
+  </para>
+  <itemizedlist>
+    <listitem>
       <para>
-Before you start deploying &productname;, review the following documents:
+        <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/2.0/">
+        &productname; Release Notes</link>
       </para>
-              <para>
-         Read the Release Notes:
-         <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/1/">
-           Release Notes &productname;</link>
-        </para>
-                <para>
-            Read
-         <xref linkend="cha-cap-depl-notes"/>
-        </para>
-     </listitem>
-     </varlistentry>
-     </variablelist>'>
+    </listitem>
+    <listitem>
+      <para>
+        <xref linkend="cha-cap-depl-notes"/>
+      </para>
+    </listitem>
+  </itemizedlist>        
+</important>'>
 
 <!--ENTITY supported-domains................................................-->
 <!ENTITY supported-domains
@@ -275,7 +274,7 @@ Before you start deploying &productname;, review the following documents:
  <literal>uaa_admin_client_secret</literal> set in your
  &values-filename; file.
 </para>
-<screen>&prompt.user;uaac token client get admin --secret <replaceable>password</replaceable></screen>
+<screen>&prompt.user;uaac token client get admin --secret <replaceable>PASSWORD</replaceable></screen>
 </step>'>
 
 <!--ENTITY helm-search-suse.................................................-->
@@ -413,6 +412,9 @@ the version of the application as defined in "The <literal>appVersion</literal>
    For more information regarding &helm;, refer to the documentation at
    <link xlink:href="https://helm.sh/docs/"/>.
   </para>
+  <warning>
+    <para>Make sure that you are installing and using &helm; 3 and not &helm; 2.</para>
+  </warning>
   <para>
    If your remote management workstation has the &caasp; package repository,
    install <command>helm</command> by running
@@ -890,18 +892,6 @@ done
  </para>
 <screen xmlns="http://docbook.org/ns/docbook">&prompt.user;watch --color &apos;kubectl get pods --namespace kubecf&apos;</screen>'>
 
-<!--ENTITY min-deploy-note..................................................-->
-
-<!ENTITY min-deploy-note
-'<important xmlns="http://docbook.org/ns/docbook">
-  <para>
-   The prerequisites and configurations described is this chapter only reflect
-   the requirements for a minimal &productname; deployment. For a more
-   production-ready environment, consider incoporating some of following optional
-   features in this chapter and the &admin; at <xref linkend="part-cap-administration"/>
-  </para>
- </important>'>
-
 <!--ENTITY log-types-and-fetch..............................................-->
 
 <!ENTITY log-types-and-fetch
@@ -1057,7 +1047,9 @@ console:
  <para xmlns="http://docbook.org/ns/docbook">
   This section describes the process to secure traffic passing through your
   &productname; deployment. This is achieved by using certificates to set up
-  Transport Layer Security (TLS) for the router component.
+  Transport Layer Security (TLS) for the router component. Providing
+  certificates for the router traffic is optional. In a default deployment,
+  without operator-provided certificates, generated certificates will be used.
  </para>
  <sect2 xmlns="http://docbook.org/ns/docbook">
   <title>Certificate Characteristics</title>
@@ -1095,13 +1087,6 @@ console:
    <literal>router.tls.key</literal> &helm; values in the
    <literal>settings:</literal> section.
   </para>
-  <note>
-   <para>
-    Note the use of the "|" character which indicates the use of a literal
-    scalar. See the
-    <link xlink:href="http://yaml.org/spec/1.2/spec.html#id2795688"/> for more information.
-   </para>
-  </note>
 <screen>settings:
   router:
     tls:
@@ -1135,9 +1120,10 @@ console:
   Using an Ingress Controller
  </title>
  <para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
-  By default, a &productname; cluster is exposed through its &kube; services.
-  This section describes how to use an ingress (see <link xlink:href="https://kubernetes.io/docs/concepts/services-networking/ingress/"/>)
-  to manage access to the services in the cluster.
+  This section describes how to use an ingress controller
+  (see <link xlink:href="https://kubernetes.io/docs/concepts/services-networking/ingress/"/>)
+  to manage access to the services in the cluster. Using an ingress controller
+  is optional. In a default deployment, load balancers are used instead.
  </para>
  <para xmlns="http://docbook.org/ns/docbook">
   Note that only the NGINX Ingress Controller has been verified to be
@@ -1150,7 +1136,9 @@ console:
    <step>
     <para>
      Create a configuration file with the section below. The file is called
-     <filename>nginx-ingress.yaml</filename> in this example.
+     <filename>nginx-ingress.yaml</filename> in this example. When using
+     Eirini instead of Diego, replace the first line with
+     <literal>2222: "kubecf/eirinix-ssh-proxy:2222"</literal>.
     </para>
 <screen>tcp:
   2222: "kubecf/scheduler:2222"
@@ -1390,6 +1378,10 @@ nginx-ingress-controller   LoadBalancer   <replaceable>10.63.248.70</replaceable
  <sect2 xmlns="http://docbook.org/ns/docbook">
   <title>Configuring &cap; for &ha;</title>
   <para>
+   High availability mode is optional. In a default deployment, &productname; is
+   deployed in single availability mode.
+  </para>
+  <para>
    There are two ways to make your &productname; deployment highly available.
    The first method is to set the <literal>high_availability</literal> parameter
    in your deployment configuration file to <literal>true</literal>. The second
@@ -1413,7 +1405,6 @@ nginx-ingress-controller   LoadBalancer   <replaceable>10.63.248.70</replaceable
 &prompt.user;helm inspect values suse/kubecf | \
 perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail|scale|count/ }&apos;
 
-<!-- TODO-CAP2 replace example -->
 </screen>
    <para>
     The default <filename>values.yaml</filename> files are also included in
@@ -1510,9 +1501,10 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
  <para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
   &cf; Application Runtime (CFAR) uses a blobstore (see
   <link xlink:href="https://docs.cloudfoundry.org/concepts/cc-blobstore.html"/>)
-  to store the source code that developers push, stage, and run. This  section
+  to store the source code that developers push, stage, and run. This section
   explains how to configure an external blobstore for the Cloud Controller
-  component of your &productname; deployment.
+  component of your &productname; deployment. Using an external blobstore is
+  optional. In a default deployment, an internal blobstore is used.
  </para>
  <para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
   &productname; relies on <filename>ops files</filename> (see
@@ -1525,11 +1517,28 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
   <title>Configuration</title>
   <para>
    Currently &productname; supports Amazon Simple Storage Service (Amazon S3,
-   see <link xlink:href="https://aws.amazon.com/s3/"/>) as an external blobstore
-   . In order to configure Amazon S3 as an external blobstore, set the following
-   in your <filename>&values-file;</filename> file and replace the
-   example values.
+   see <link xlink:href="https://aws.amazon.com/s3/"/>) as an external blobstore. 
   </para>
+  <procedure>
+   <step>
+    <para>
+     Using the Amazon S3 service, create four buckets. A bucket should be
+     created for app packages, buildpacks, droplets, and resources. For
+     instructions on how to create Amazone S3 buckets, see
+     <link xlink:href="https://docs.aws.amazon.com/AmazonS3/latest/user-guide/create-bucket.html"/>.
+    </para>
+   </step>
+   <step>
+    <para>
+     To grant proper access to the create buckets, configure an additional IAM
+     role as described in the first step of <link xlink:href="https://docs.cloudfoundry.org/deploying/common/cc-blobstore-config.html#fog-aws-iam"/>.
+    </para>
+   </step>
+   <step>
+    <para>
+     Set the following in your <filename>&values-file;</filename> file and replace the
+     example values.
+    </para>
 <screen>features:
   blobstore:
     provider: s3
@@ -1545,19 +1554,8 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
       droplet_directory_key: <replaceable>DROPLET-BUCKET-NAME</replaceable>
       resource_directory_key: <replaceable>RESOURCE-BUCKET-NAME</replaceable>
 </screen>
-  <warning>
-   <title><literal>us-east-1</literal> as Only Valid Region</title>
-   <para>
-    Currently, there is a limitation where only <literal>us-east-1</literal> can
-    be chosen as the <literal>aws_region</literal>. For more information about
-    this issue, see
-    <link xlink:href="https://github.com/cloudfoundry-incubator/kubecf/issues/656"/>.
-   </para>
-  </warning>
-  <para>
-   Ensure the supplied AWS credentials have appropriate permissions as described
-   at <link xlink:href="https://docs.cloudfoundry.org/deploying/common/cc-blobstore-config.html#fog-aws-iam"/>.
-  </para>
+   </step>
+  </procedure>
  </sect2>'>
 
 <!--ENTITY external-database................................................-->
@@ -1567,10 +1565,10 @@ perl -ne &apos;/^sizing/..0 and do { print $.,":",$_ if /^ [a-z]/ || /high avail
   External Database
  </title>
  <para xmlns="http://docbook.org/ns/docbook">
-  By default, &productname; includes a single-availability database provided by
-  the Percona XtraDB Cluster (PXC). &productname; can be configured to
-  use an external database system, such as a data service offered by a cloud
-  service provider or an existing high availability database server.
+  &productname; can be configured to use an external database system, such as a
+  data service offered by a cloud service provider or an existing high
+  availability database server. In a default deployment, an internal single
+  availability database is used.
  </para>
  <para xmlns="http://docbook.org/ns/docbook">
   To configure your deployment to use an external database, please follow the
@@ -1677,12 +1675,17 @@ features:
  <para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
   &productname; can be integrated with
   <link xlink:href="https://docs.cloudfoundry.org/uaa/identity-providers.html">identity
-  providers</link> to help manage authentication of users. The Lightweight
-  Directory Access Protocol (LDAP) is an example of an identity provider that
+  providers</link> to help manage authentication of users. Integrating
+  &productname; with other identity providers is optional. In a default
+  deployment, a built-in UAA server (<link xlink:href="https://docs.cloudfoundry.org/uaa/uaa-overview.html"/>)
+  is used to manage user accounts and authentication.
+ </para>
+ <para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  The Lightweight Directory Access Protocol (LDAP) is an example of an identity provider that
   &cap; integrates with. This section describes the necessary components and
   steps in order to configure the integration. See
-  <link xlink:href="https://docs.cloudfoundry.org/uaa/uaa-user-management.html">User
-  Account and Authentication LDAP Integration</link> for more information.
+  <link xlink:href="https://github.com/cloudfoundry/uaa/blob/master/docs/UAA-LDAP.md">User
+  Account and Authentication LDAP Integration</link> for more information. 
  </para>
  <sect2 xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
   <title>Prerequisites</title>
@@ -2041,13 +2044,16 @@ User:           username@ldap.example.com
 <!--ENTITY values-file-changes...............................................-->
 
 <!ENTITY values-file-changes
-'<para xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
-  The format of the &values-filename; file has been restructured completely in
-  &cap; 2.x. Do not re-use the &cap; 1.x version of the file. Instead, see the
-  default file in the appendix in 
-  <xref linkend="app-kubecf-values-yaml"/> and pick parameters according to your
-  needs.
- </para>'>
+'<warning xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>&values-file; changes</title>
+  <para>
+    The format of the &values-filename; file has been restructured completely in
+    &cap; 2.x. Do not re-use the &cap; 1.x version of the file. Instead, see the
+    default file in the appendix in
+    <xref linkend="app-kubecf-values-yaml"/> and pick parameters according to
+    your needs.
+  </para>
+ </warning>'>
 
 <!--ENTITY cf-auth...........................................................-->
 
@@ -2108,7 +2114,7 @@ operations:
             - key: <replaceable>kubernetes.io/hostname</replaceable>
               operator: In
               values:
-              - <replaceable>0</replaceable>
+              - <replaceable>LABEL_VALUE_OF_NODE</replaceable>
 </screen>
 <sect2 xmlns="http://docbook.org/ns/docbook">
  <title>Log-cache Memory Allocation</title>

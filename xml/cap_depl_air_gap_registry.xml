@@ -15,9 +15,7 @@
    <dm:translation>yes</dm:translation>
   </dm:docmanager>
  </info>
- <important>
-     &readmefirst;
- </important>
+ &readmefirst;
  <para>
   &cap;, which consists of &docker; images, is deployed to a &kube; cluster
   through &helm;. These images are hosted on a &docker; registry at
@@ -67,7 +65,7 @@
   </para>
 <screen>#!/bin/bash
 
-MIRROR=myregistry.com
+MIRROR=<replaceable>MY_REGISTRY.COM</replaceable>
 
 set -ex
 
@@ -126,7 +124,7 @@ mirror minibroker
 <screen>kube:
   registry:
     # example registry domain
-    hostname: <replaceable>"myregistry.com"</replaceable>
+    hostname: <replaceable>"MY_REGISTRY.COM"</replaceable>
     username: ""
     password: ""
   organization: "cap"

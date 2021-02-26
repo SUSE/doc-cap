@@ -52,7 +52,7 @@
     <para>
      Create a new user.
     </para>
-<screen>&prompt.user;uaac user add NEW-USER -p PASSWORD --emails NEW-USER-EMAIL</screen>
+<screen>&prompt.user;uaac user add <replaceable>NEW-USER</replaceable> -p <replaceable>PASSWORD</replaceable> --emails <replaceable>NEW-USER-EMAIL</replaceable></screen>
    </step>
    <step>
     <para>
