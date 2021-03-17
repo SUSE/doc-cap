@@ -18,69 +18,13 @@
 <!--references-->
 <!--https://www.slideshare.net/NETWAYS/osdc-2018-highly-available-cloud-foundry-on-kubernetes-by-cornelius-schumacher -->
 <!-- https://github.com/SUSE/cloudfoundry/wiki/Documentation-for-Security-Review#service-architecture-diagram -->
- <sect1 xml:id="sec-cap-changes">
-  <title>New in Version &productnumber;</title>
-
-  <itemizedlist>
-   <listitem>
-    <para>
-     &kubecf; has been updated to 2.5.8:
-    </para>
-    <itemizedlist>
-     <listitem>
-      <para>
-       For a full list of features and fixes see <link
-       xlink:href="https://github.com/cloudfoundry-incubator/kubecf/releases/tag/v2.5.8"/>
-      </para>
-     </listitem>
-    </itemizedlist>
-   </listitem>
-   <listitem>
-    <para>
-     &operator; has been updated to 6.1.17:
-    </para>
-    <itemizedlist>
-     <listitem>
-      <para>
-       For a full list of features and fixes see <link
-       xlink:href="https://github.com/cloudfoundry-incubator/quarks-operator/releases/tag/v6.1.17"/>
-      </para>
-     </listitem>
-    </itemizedlist>
-   </listitem>
-   <listitem>
-    <para>
-     Stratos Console has been updated to 4.2.0:
-    </para>
-    <itemizedlist>
-     <listitem>
-      <para>
-       Configurable NGINX protocols and ciphers using Helm values
-      </para>
-     </listitem>
-     <listitem>
-      <para>
-       For a full list of features and fixes see <link
-       xlink:href="https://github.com/SUSE/stratos/blob/master/CHANGELOG.md#420"/>
-      </para>
-     </listitem>
-    </itemizedlist>
-   </listitem>
-  </itemizedlist>
-
+ <tip>
+  <title>Read the Release Notes</title>
   <para>
-   See all product manuals for &productname; 2.x at
-   <link xlink:href="https://documentation.suse.com/suse-cap/2/"/>.
+   Make sure to review the release notes for &productname; published at
+   <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/2.0/"/>.
   </para>
-
-  <tip>
-   <title>Read the Release Notes</title>
-   <para>
-    Make sure to review the release notes for &productname; published at
-    <link xlink:href="https://www.suse.com/releasenotes/x86_64/SUSE-CAP/2.0/"/>.
-   </para>
-  </tip>
- </sect1>
+ </tip>
  <sect1 xml:id="sec-cap-overview">
   <title>&productname; Overview</title>
    <para>
