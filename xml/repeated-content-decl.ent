@@ -130,6 +130,18 @@ uaa-0                       0/6     Init:8/13    0          6m36s
       <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.49.0"/></entry>
      </row>
      <row>
+      <entry>2.1.0</entry>
+      <entry>6.1.17+0.gec409fd7</entry>
+      <entry>2.5.8</entry>
+      <entry>4.2.0</entry>
+      <entry>1.3.0</entry>
+      <entry>&min_kube;</entry>
+      <!-- cf-deployment 12.17: 2.144.0, cf api result: -->
+      <entry>2.144.0</entry>
+      <entry>6.49.0</entry>
+      <entry><link xlink:href="https://github.com/cloudfoundry/cli/releases/tag/v6.49.0"/></entry>
+     </row>
+     <row>
       <entry>2.0.1</entry>
       <entry>4.5.13+.gd4738712</entry>
       <entry>2.2.3</entry>

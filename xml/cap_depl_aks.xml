@@ -54,7 +54,7 @@
    </listitem>
    <listitem>
     <para>
-     Your Azure account as sufficient quota. The minimal installation described
+     Your Azure account has sufficient quota. The minimal installation described
      in this chapter require 24 vCPUs. If your account has insufficient quota,
      you can request a quota increase by going to
      <link xlink:href="https://docs.microsoft.com/en-us/azure/azure-supportability/resource-manager-core-quotas-request"/>.
