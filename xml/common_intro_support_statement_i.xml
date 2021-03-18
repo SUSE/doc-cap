@@ -28,28 +28,15 @@
  </para>
  <sect2>
   <title>Version Support</title>
-  <variablelist>
-   <varlistentry>
-    <term>Technical Support and Troubleshooting (L1 - L2)</term>
-    <listitem>
-     <para>
-      Current and previous major versions (n-1). For example, &suse;  will
-      provide technical support and troubleshooting for versions 1.0, 1.1, 1.2,
-      1.3 (and all 2.x point releases) until the release of 3.0.
-     </para>
-    </listitem>
-   </varlistentry>
-   <varlistentry>
-    <term>Patches and updates (L3)</term>
-    <listitem>
-     <para>
-      On the latest or last minor release of each major release. For example,
-      &suse;  will provide patches and updates for 1.3 (and
-      2.<emphasis>latest</emphasis>) until the release of 3.0.
-     </para>
-    </listitem>
-   </varlistentry>
-  </variablelist>
+  <para>
+   Technical Support and Troubleshooting (L1 - L2): SUSE will provide technical
+   support and troubleshooting for version 2.1 until May 31, 2022.
+  </para>
+  <para>
+   Patches and updates (L3): SUSE will provide patches and updates for 2.1 (e.g.
+   2.1.1, 2.1.2) to resolve critical bugs or address high severity security issues.
+   The patches may include updates from upstream Cloud Foundry releases.
+  </para>
   <para>
    &productname; closely follows upstream &cf; releases which may implement
    fixes and changes which are not backwards compatible with previous releases.
@@ -60,8 +47,9 @@
  <sect2 xml:id="sec-cap-platform-support">
   <title>Platform Support</title>
   <para>
-   &productname; is fully supported on Amazon EKS, Microsoft Azure AKS and
-   Google GKE. Each release is tested by &productname; QA on these platforms.
+   &productname; is fully supported on Amazon EKS, Microsoft Azure AKS, Google
+   GKE, Rancher Kubernetes Engine (RKE), and RKE Government (RKE2) Each release
+   is tested by &productname; QA on these platforms.
   </para>
   <para>
    &productname; is fully supported on &caasp;, wherever it happens to be
