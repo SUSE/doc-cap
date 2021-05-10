@@ -97,7 +97,7 @@
    Attach autoscaling policy to the application:
   </para>
 
-<screen>&prompt.user;cf attach-autoscaling-policy<replaceable>MY_APPLICATION</replaceable> <replaceable>MY_POLICY.json</replaceable></screen>
+<screen>&prompt.user;cf attach-autoscaling-policy <replaceable>MY_APPLICATION</replaceable> <replaceable>MY_POLICY.json</replaceable></screen>
 
   <para>
     The policy is defined as a JSON file
