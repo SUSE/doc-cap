@@ -30,7 +30,7 @@
 
 <!ENTITY caasp        "&suse; CaaS Platform">
 <!ENTITY susecaaspreg "&suse;&reg; CaaS Platform">
-<!ENTITY caasp-url    "https://documentation.suse.com/suse-caasp/4.5">
+<!ENTITY caasp-url    "https://documentation.suse.com/suse-caasp">
 <!ENTITY cf           "Cloud Foundry">
 <!ENTITY scf          "&suse; Cloud Foundry">
 <!ENTITY uaa          "User Account and Authentication">
